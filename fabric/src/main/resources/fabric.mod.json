@@ -10,11 +10,11 @@
   ],
   "contact": {
     "homepage": "https://www.curseforge.com/minecraft/mc-mods/from-another-world",
-    "sources": "https://github.com/FakeACat/FromAnotherWorld",
-    "issues": "https://github.com/FakeACat/FromAnotherWorld/issues"
+    "sources": "https://github.com/FakeACat/FromAnotherWorld-Architectury",
+    "issues": "https://github.com/FakeACat/FromAnotherWorld-Architectury/issues"
   },
   "license": "MIT",
-  "icon": "icon.png",
+  "icon": "assets/fromanotherworld/icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [

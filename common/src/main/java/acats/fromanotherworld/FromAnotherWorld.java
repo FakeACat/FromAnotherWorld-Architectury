@@ -23,6 +23,8 @@ import software.bernie.geckolib.GeckoLib;
 import java.util.List;
 import java.util.Random;
 
+import static acats.fromanotherworld.tags.EntityTags.*;
+
 public class FromAnotherWorld {
     public static final String MOD_ID = "fromanotherworld";
 
@@ -63,7 +65,10 @@ public class FromAnotherWorld {
         }
     }
     public static boolean canAssimilate(Entity e){
-        return !isThing(e) && (Classification.isHumanoid(e) || Classification.isLargeQuadruped(e) || Classification.isQuadruped(e) || Classification.isSmall(e));
+        return !isThing(e) && (e.getType().isIn(HUMANOIDS) ||
+                e.getType().isIn(LARGE_QUADRUPEDS) ||
+                e.getType().isIn(QUADRUPEDS) ||
+                e.getType().isIn(SMALL));
     }
     public static int numThingsInList(List<LivingEntity> list){
         int t = 0;

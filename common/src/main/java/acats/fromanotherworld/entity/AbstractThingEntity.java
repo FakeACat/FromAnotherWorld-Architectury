@@ -1,13 +1,13 @@
 package acats.fromanotherworld.entity;
 
 import acats.fromanotherworld.FromAnotherWorld;
-import acats.fromanotherworld.config.Classification;
 import acats.fromanotherworld.config.General;
 import acats.fromanotherworld.entity.goal.ThingTargetGoal;
 import acats.fromanotherworld.entity.projectile.NeedleEntity;
 import acats.fromanotherworld.registry.BlockRegistry;
 import acats.fromanotherworld.registry.ParticleRegistry;
 import acats.fromanotherworld.registry.SoundRegistry;
+import acats.fromanotherworld.tags.EntityTags;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Material;
 import net.minecraft.entity.*;
@@ -148,7 +148,7 @@ public abstract class AbstractThingEntity extends HostileEntity implements GeoEn
         if (!FromAnotherWorld.isThing(target) &&
                 (target == this.currentThreat ||
                         FromAnotherWorld.canAssimilate(target) ||
-                        Classification.isAttackableButNotAssimilable(target))){
+                        target.getType().isIn(EntityTags.ATTACKABLE_BUT_NOT_ASSIMILABLE))){
             return super.canTarget(target);
         }
         return false;

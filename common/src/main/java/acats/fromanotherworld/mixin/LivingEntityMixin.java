@@ -1,7 +1,6 @@
 package acats.fromanotherworld.mixin;
 
 import acats.fromanotherworld.FromAnotherWorld;
-import acats.fromanotherworld.config.Classification;
 import acats.fromanotherworld.config.General;
 import acats.fromanotherworld.entity.AbstractThingEntity;
 import acats.fromanotherworld.entity.DisguisedThing;
@@ -33,6 +32,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
+
+import static acats.fromanotherworld.tags.EntityTags.*;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements DisguisedThing {
@@ -245,7 +246,7 @@ public abstract class LivingEntityMixin extends Entity implements DisguisedThing
             return;
         }
         AbstractThingEntity entity = null;
-        if (Classification.isHumanoid(this)){
+        if (this.getType().isIn(HUMANOIDS)){
             switch (this.chooseStrength()) {
                 case 0 -> {
                     entity = EntityRegistry.CRAWLER.get().create(this.world);
@@ -256,13 +257,13 @@ public abstract class LivingEntityMixin extends Entity implements DisguisedThing
                 case 2 -> entity = EntityRegistry.PALMER_THING.get().create(this.world);
             }
         }
-        else if (Classification.isLargeQuadruped(this)){
+        else if (this.getType().isIn(LARGE_QUADRUPEDS)){
             entity = EntityRegistry.BEAST.get().create(this.world);
             if (entity != null){
                 ((BeastEntity) entity).setTier(0, true);
             }
         }
-        else if (Classification.isQuadruped(this)){
+        else if (this.getType().isIn(QUADRUPEDS)){
             switch (this.chooseStrength()) {
                 case 0 -> {
                     entity = EntityRegistry.DOGBEAST_SPITTER.get().create(this.world);
@@ -272,7 +273,7 @@ public abstract class LivingEntityMixin extends Entity implements DisguisedThing
                 case 2 -> entity = EntityRegistry.IMPALER.get().create(this.world);
             }
         }
-        else if (Classification.isSmall(this)){
+        else if (this.getType().isIn(SMALL)){
             entity = EntityRegistry.BLOOD_CRAWLER.get().create(this.world);
         }
         if (entity != null){

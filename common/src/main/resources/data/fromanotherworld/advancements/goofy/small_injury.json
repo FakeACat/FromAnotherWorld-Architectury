@@ -1,0 +1,35 @@
+{
+  "display": {
+    "icon": {
+      "item": "fromanotherworld:impaler_spawn_egg"
+    },
+    "title": {
+      "translate": "fromanotherworld.advancements.small_injury.title"
+    },
+    "description": {
+      "translate": "fromanotherworld.advancements.small_injury.description"
+    },
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "fromanotherworld:from_another_world",
+  "criteria": {
+    "impaled": {
+      "trigger": "minecraft:entity_hurt_player",
+      "conditions": {
+        "damage": {
+          "blocked": false,
+          "source_entity": {
+            "type": "fromanotherworld:impaler"
+          }
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "impaled"
+    ]
+  ]
+}

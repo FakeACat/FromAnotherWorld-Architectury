@@ -1,0 +1,69 @@
+{
+  "criteria": {
+    "fromanotherworld:juliette_thing": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "fromanotherworld:juliette_thing"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:player_killed_entity"
+    },
+    "fromanotherworld:crawler": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "fromanotherworld:crawler"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:player_killed_entity"
+    },
+    "fromanotherworld:palmer_thing": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "fromanotherworld:palmer_thing"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:player_killed_entity"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "fromanotherworld.advancements.among_us_joke.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "fromanotherworld:juliette_thing_spawn_egg"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "fromanotherworld.advancements.among_us_joke.title"
+    }
+  },
+  "parent": "fromanotherworld:kills/dubious_little_creature",
+  "requirements": [
+    [
+      "fromanotherworld:juliette_thing",
+      "fromanotherworld:crawler",
+      "fromanotherworld:palmer_thing"
+    ]
+  ]
+}

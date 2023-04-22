@@ -1,0 +1,23 @@
+{
+  "required": true,
+  "package": "acats.fromanotherworld.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "minVersion": "0.8",
+  "mixins": [
+    "FoxEntityMixin",
+    "ItemMixin",
+    "LivingEntityMixin",
+    "TraderLlamaEntityMixin",
+    "VillagerHostilesSensorMixin",
+    "WanderingTraderEntityMixin"
+  ],
+  "client": [
+    "client.HorseMarkingFeatureRendererMixin",
+    "client.LivingEntityRendererMixin",
+    "client.SheepWoolFeatureRendererMixin",
+    "client.VillagerClothingFeatureRendererMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

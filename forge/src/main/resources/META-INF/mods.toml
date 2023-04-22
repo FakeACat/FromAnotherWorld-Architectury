@@ -1,0 +1,28 @@
+modLoader = "javafml"
+loaderVersion = "[45,)"
+issueTrackerURL = "https://github.com/FakeACat/FromAnotherWorld/issues"
+license = "MIT"
+
+[[mods]]
+modId = "fromanotherworld"
+version = "${version}"
+displayName = "From Another World"
+authors = "a cats (code, models, textures), ImpulsiveLad (Palmer Thing model and texture)"
+description = '''
+adds the thing from the thing
+'''
+logoFile = "assets/fromanotherworld/icon.png"
+
+[[dependencies.fromanotherworld]]
+modId = "forge"
+mandatory = true
+versionRange = "[45,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.fromanotherworld]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.19.4,)"
+ordering = "NONE"
+side = "BOTH"

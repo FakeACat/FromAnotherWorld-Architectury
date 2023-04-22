@@ -1,0 +1,28 @@
+{
+  "criteria": {
+  "impossible": {
+    "trigger": "minecraft:location"
+  }
+},
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "translate": "fromanotherworld.advancements.from_another_world.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "fromanotherworld:impostor_detector"
+    },
+    "show_toast": false,
+    "title": {
+      "translate": "fromanotherworld.advancements.from_another_world.title"
+    },
+    "background": "fromanotherworld:textures/block/thing_gore.png"
+  },
+  "requirements": [
+    [
+      "impossible"
+    ]
+  ]
+}

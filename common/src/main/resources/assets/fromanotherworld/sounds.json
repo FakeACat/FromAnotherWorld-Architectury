@@ -1,0 +1,90 @@
+{
+  "fromanotherworld.entity.thing.general.ambient": {
+    "subtitle": "subtitle.fromanotherworld.entity.thing.general.ambient",
+    "sounds": [
+      "fromanotherworld:entity/thing/general/walkerdragidle01",
+      "fromanotherworld:entity/thing/general/walkerdragidle02",
+      "fromanotherworld:entity/thing/general/walkergorillaidle01",
+      "fromanotherworld:entity/thing/general/walkerhumanidle01"
+    ]
+  },
+  "fromanotherworld.entity.thing.general.hurt": {
+    "subtitle": "subtitle.fromanotherworld.entity.thing.general.hurt",
+    "sounds": [
+      "fromanotherworld:entity/thing/general/thingdamage0",
+      "fromanotherworld:entity/thing/general/thingdamage1",
+      "fromanotherworld:entity/thing/general/thingdamage2",
+      "fromanotherworld:entity/thing/general/thingdamage3"
+    ]
+  },
+  "fromanotherworld.entity.thing.general.death": {
+    "subtitle": "subtitle.fromanotherworld.entity.thing.general.death",
+    "sounds": [
+      "fromanotherworld:entity/thing/general/thingdie1"
+    ]
+  },
+  "fromanotherworld.entity.thing.weak.ambient": {
+    "subtitle": "subtitle.fromanotherworld.entity.thing.weak.ambient",
+    "sounds": [
+      "fromanotherworld:entity/thing/weak/scutathleticamb",
+      "fromanotherworld:entity/thing/weak/scutbiteamb",
+      "fromanotherworld:entity/thing/weak/scutgooamb",
+      "fromanotherworld:entity/thing/weak/scutstabamb"
+    ]
+  },
+  "fromanotherworld.entity.thing.weak.hurt": {
+    "subtitle": "subtitle.fromanotherworld.entity.thing.weak.hurt",
+    "sounds": [
+      "fromanotherworld:entity/thing/weak/scutdamage"
+    ]
+  },
+  "fromanotherworld.entity.thing.weak.death": {
+    "subtitle": "subtitle.fromanotherworld.entity.thing.weak.death",
+    "sounds": [
+      "fromanotherworld:entity/thing/weak/scutathleticdeath",
+      "fromanotherworld:entity/thing/weak/scutbitedeath",
+      "fromanotherworld:entity/thing/weak/scutgoodeath",
+      "fromanotherworld:entity/thing/weak/scutstabdeath"
+    ]
+  },
+  "fromanotherworld.entity.thing.weak.alert": {
+    "subtitle": "subtitle.fromanotherworld.entity.thing.weak.alert",
+    "sounds": [
+      "fromanotherworld:entity/thing/weak/scutathleticsee",
+      "fromanotherworld:entity/thing/weak/scutbitesee",
+      "fromanotherworld:entity/thing/weak/scutgoosee",
+      "fromanotherworld:entity/thing/weak/scutstabsee"
+    ]
+  },
+  "fromanotherworld.entity.thing.strong.ambient": {
+    "subtitle": "subtitle.fromanotherworld.entity.thing.strong.ambient",
+    "sounds": [
+      "fromanotherworld:entity/thing/strong/rupture01idle01",
+      "fromanotherworld:entity/thing/strong/rupture02idle01",
+      "fromanotherworld:entity/thing/strong/rupture03idle01"
+    ]
+  },
+  "fromanotherworld.entity.thing.strong.hurt": {
+    "subtitle": "subtitle.fromanotherworld.entity.thing.strong.hurt",
+    "sounds": [
+      "fromanotherworld:entity/thing/strong/rupture01pain01",
+      "fromanotherworld:entity/thing/strong/rupture01pain02",
+      "fromanotherworld:entity/thing/strong/rupture02pain01",
+      "fromanotherworld:entity/thing/strong/rupture02pain02"
+    ]
+  },
+  "fromanotherworld.entity.thing.strong.death": {
+    "subtitle": "subtitle.fromanotherworld.entity.thing.strong.death",
+    "sounds": [
+      "fromanotherworld:entity/thing/strong/rupture01die",
+      "fromanotherworld:entity/thing/strong/rupture02die",
+      "fromanotherworld:entity/thing/strong/rupture03die"
+    ]
+  },
+  "fromanotherworld.entity.thing.strong.alert": {
+    "subtitle": "subtitle.fromanotherworld.entity.thing.strong.alert",
+    "sounds": [
+      "fromanotherworld:entity/thing/strong/rupture03intro"
+    ]
+  }
+}

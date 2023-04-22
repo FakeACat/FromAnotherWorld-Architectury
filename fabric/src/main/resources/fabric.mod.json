@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "fromanotherworld",
+  "version": "${version}",
+  "name": "From Another World",
+  "description": "adds the thing from the thing",
+  "authors": [
+    "a cats (code, models, textures)",
+    "ImpulsiveLad (Palmer Thing model and texture)"
+  ],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/from-another-world",
+    "sources": "https://github.com/FakeACat/FromAnotherWorld",
+    "issues": "https://github.com/FakeACat/FromAnotherWorld/issues"
+  },
+  "license": "MIT",
+  "icon": "icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "acats.fromanotherworld.fabric.FromAnotherWorldFabric"
+    ],
+    "client": [
+      "acats.fromanotherworld.fabric.FromAnotherWorldClientFabric"
+    ]
+  },
+  "mixins": [
+    "fromanotherworld.mixins.json",
+    "fromanotherworld-common.mixins.json"
+  ],
+  "depends": {
+    "fabric": "*",
+    "minecraft": ">=1.19.4"
+  }
+}

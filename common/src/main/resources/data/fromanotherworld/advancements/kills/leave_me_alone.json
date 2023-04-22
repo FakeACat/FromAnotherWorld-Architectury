@@ -1,0 +1,39 @@
+{
+  "criteria": {
+    "fromanotherworld:alien_thing": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "fromanotherworld:alien_thing"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:player_killed_entity"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "fromanotherworld.advancements.leave_me_alone.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "fromanotherworld:alien_thing_spawn_egg"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "fromanotherworld.advancements.leave_me_alone.title"
+    }
+  },
+  "parent": "fromanotherworld:kills/dubious_little_creature",
+  "requirements": [
+    [
+      "fromanotherworld:alien_thing"
+    ]
+  ]
+}

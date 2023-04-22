@@ -1,0 +1,39 @@
+{
+  "criteria": {
+    "fromanotherworld:beast": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "fromanotherworld:beast"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:player_killed_entity"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "fromanotherworld.advancements.weird_and_pissed_off.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "fromanotherworld:beast_spawn_egg"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "fromanotherworld.advancements.weird_and_pissed_off.title"
+    }
+  },
+  "parent": "fromanotherworld:kills/weird_looking_dog",
+  "requirements": [
+    [
+      "fromanotherworld:beast"
+    ]
+  ]
+}

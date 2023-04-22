@@ -1,0 +1,77 @@
+{
+  "item.fromanotherworld.crawler_spawn_egg": "Crawler Spawn Egg",
+  "item.fromanotherworld.juliette_thing_spawn_egg": "Juliette Thing Spawn Egg",
+  "item.fromanotherworld.assimilation_liquid": "Assimilation Liquid",
+  "item.fromanotherworld.impostor_detector" : "rock",
+  "item.fromanotherworld.dogbeast_spawn_egg": "DogBeast Spawn Egg",
+  "item.fromanotherworld.blood_crawler_spawn_egg": "Blood Crawler Spawn Egg",
+  "item.fromanotherworld.dogbeast_spitter_spawn_egg": "DogBeast Spitter Spawn Egg",
+  "item.fromanotherworld.impaler_spawn_egg": "Impaler Spawn Egg",
+  "item.fromanotherworld.beast_spawn_egg": "Beast Spawn Egg",
+  "item.fromanotherworld.palmer_thing_spawn_egg": "Palmer Thing Spawn Egg",
+  "item.fromanotherworld.blair_thing_spawn_egg": "Blair Thing Spawn Egg",
+  "item.fromanotherworld.gore_bottle": "Bottled Gore",
+  "item.fromanotherworld.alien_thing_spawn_egg": "Alien Thing Spawn Egg",
+
+  "block.fromanotherworld.thing_gore": "Thing Gore",
+
+  "entity.fromanotherworld.crawler": "Crawler",
+  "entity.fromanotherworld.chest_spitter": "Chest Spitter",
+  "entity.fromanotherworld.juliette_thing": "Juliette Thing",
+  "entity.fromanotherworld.dogbeast": "DogBeast",
+  "entity.fromanotherworld.blood_crawler": "Blood Crawler",
+  "entity.fromanotherworld.dogbeast_spitter": "DogBeast Spitter",
+  "entity.fromanotherworld.impaler": "Impaler",
+  "entity.fromanotherworld.needle": "Needle",
+  "entity.fromanotherworld.assimilation_liquid": "Assimilation Liquid",
+  "entity.fromanotherworld.starship": "Starship",
+  "entity.fromanotherworld.beast": "Beast",
+  "entity.fromanotherworld.palmer_thing": "Palmer Thing",
+  "entity.fromanotherworld.blair_thing": "Blair Thing",
+  "entity.fromanotherworld.alien_thing": "Alien Thing",
+
+  "fromanotherworld.advancements.from_another_world.title": "From Another World",
+  "fromanotherworld.advancements.from_another_world.description": "Hope you enjoy the mod!",
+
+  "fromanotherworld.advancements.get_assimilated_idiot.title": "Get Assimilated Idiot",
+  "fromanotherworld.advancements.get_assimilated_idiot.description": "You should use this on your friend's pets",
+
+  "fromanotherworld.advancements.dubious_little_creature.title": "Dubious Little Creature",
+  "fromanotherworld.advancements.dubious_little_creature.description": "Kill a blood crawler",
+  "fromanotherworld.advancements.weird_looking_dog.title": "Weird Looking Dog",
+  "fromanotherworld.advancements.weird_looking_dog.description": "Kill a quadruped Thing",
+  "fromanotherworld.advancements.among_us_joke.title": "Among Us Reference",
+  "fromanotherworld.advancements.among_us_joke.description": "Kill a humanoid Thing",
+  "fromanotherworld.advancements.weird_and_pissed_off.title": "Weird and Pissed Off",
+  "fromanotherworld.advancements.weird_and_pissed_off.description": "Kill a large quadruped Thing",
+  "fromanotherworld.advancements.fuck_you_too.title": "F### you too!",
+  "fromanotherworld.advancements.fuck_you_too.description": "Kill a Blair Thing",
+  "fromanotherworld.advancements.to_resist_us_is_futile.title": "To Resist Us Is Futile",
+  "fromanotherworld.advancements.to_resist_us_is_futile.description": "Reach the maximum level of Slow Assimilation",
+  "fromanotherworld.advancements.leave_me_alone.title": "Leave Me Alone!",
+  "fromanotherworld.advancements.leave_me_alone.description": "Kill an Alien Thing",
+
+  "fromanotherworld.advancements.small_injury.title": "Small Injury",
+  "fromanotherworld.advancements.small_injury.description": "Get impaled",
+
+  "death.attack.among_us_potion": "%s drank the Among Us potion",
+  "death.attack.among_us_potion.player": "%s drank the Among Us potion to escape %s",
+  "death.attack.assimilation": "%s was assimilated",
+  "death.attack.assimilation.player": "%s was assimilated while trying to escape %s",
+
+  "subtitle.fromanotherworld.entity.thing.general.ambient": "Thing growls",
+  "subtitle.fromanotherworld.entity.thing.general.hurt": "Thing hurts",
+  "subtitle.fromanotherworld.entity.thing.general.death": "Thing dies",
+
+  "subtitle.fromanotherworld.entity.thing.weak.ambient": "Weak Thing screeches",
+  "subtitle.fromanotherworld.entity.thing.weak.hurt": "Weak Thing hurts",
+  "subtitle.fromanotherworld.entity.thing.weak.death": "Weak Thing dies",
+  "subtitle.fromanotherworld.entity.thing.weak.alert": "Weak Thing alert",
+
+  "subtitle.fromanotherworld.entity.thing.strong.ambient": "Strong Thing growls",
+  "subtitle.fromanotherworld.entity.thing.strong.hurt": "Strong Thing hurts",
+  "subtitle.fromanotherworld.entity.thing.strong.death": "Strong Thing dies",
+  "subtitle.fromanotherworld.entity.thing.strong.alert": "Strong Thing alert",
+
+  "effect.fromanotherworld.slow_assimilation": "Slow Assimilation"
+}

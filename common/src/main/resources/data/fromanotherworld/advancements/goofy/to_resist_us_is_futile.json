@@ -1,0 +1,35 @@
+{
+  "criteria": {
+    "assimilation_X": {
+      "conditions": {
+        "effects": {
+          "fromanotherworld:slow_assimilation": {
+            "amplifier": 9
+          }
+        }
+      },
+      "trigger": "minecraft:effects_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "fromanotherworld.advancements.to_resist_us_is_futile.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "fromanotherworld:gore_bottle"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "fromanotherworld.advancements.to_resist_us_is_futile.title"
+    }
+  },
+  "parent": "fromanotherworld:from_another_world",
+  "requirements": [
+    [
+      "assimilation_X"
+    ]
+  ]
+}

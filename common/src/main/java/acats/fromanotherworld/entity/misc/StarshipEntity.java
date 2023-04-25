@@ -31,7 +31,6 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class StarshipEntity extends MobEntity implements GeoEntity {
 
-    //public boolean releasedThings;
     private static final TrackedData<Boolean> RELEASED_CONTENTS;
 
     public void setReleasedContents(boolean releasedContents){
@@ -62,7 +61,7 @@ public class StarshipEntity extends MobEntity implements GeoEntity {
         }
         if (this.isOnGround()){
             if (!this.world.isClient()){
-                this.world.createExplosion(this, this.getX(), this.getY(), this.getZ(), 9, World.ExplosionSourceType.MOB);
+                this.world.createExplosion(null, this.getX(), this.getY(), this.getZ(), 9, World.ExplosionSourceType.NONE);
                 AbstractThingEntity thing = EntityRegistry.ALIEN_THING.get().create(this.world);
                 if (thing != null) {
                     thing.setPosition(this.getPos());
@@ -78,6 +77,13 @@ public class StarshipEntity extends MobEntity implements GeoEntity {
                 this.world.addParticle(ParticleTypes.CAMPFIRE_SIGNAL_SMOKE, this.getX(), this.getY(), this.getZ(), (this.random.nextDouble() - 0.5D) / 2, ((this.random.nextDouble() - 0.5D) + this.getVelocity().y) / 2, (this.random.nextDouble() - 0.5D) / 2);
             }
         }
+    }
+
+    @Override
+    public boolean damage(DamageSource source, float amount) {
+        if (!this.releasedContents())
+            return false;
+        return super.damage(source, amount);
     }
 
     @Override

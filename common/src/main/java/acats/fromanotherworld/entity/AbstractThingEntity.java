@@ -36,7 +36,7 @@ import net.minecraft.world.biome.Biome;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 
-import java.util.Objects;
+import java.util.Optional;
 
 public abstract class AbstractThingEntity extends HostileEntity implements GeoEntity {
     private static final TrackedData<Integer> MERGED_THINGS;
@@ -446,15 +446,28 @@ public abstract class AbstractThingEntity extends HostileEntity implements GeoEn
         this.canShootNeedles = random.nextInt(chanceDenominator) == 0;
     }
 
+    private boolean wasVillager;
     public boolean wasVillager(){
-        return Objects.equals(this.getVictimType(), "minecraft:villager") ||
-                Objects.equals(this.getVictimType(), "minecraft:witch");
+        if (this.wasVillager)
+            return true;
+        Optional<EntityType<?>> quangus = EntityType.get(this.getVictimType());
+        if (quangus.isPresent() && quangus.get().isIn(EntityTags.VILLAGERS)){
+            this.wasVillager = true;
+            return true;
+        }
+        return false;
     }
 
+    private boolean wasIllager;
     public boolean wasIllager(){
-        return Objects.equals(this.getVictimType(), "minecraft:pillager") ||
-                Objects.equals(this.getVictimType(), "minecraft:evoker") ||
-                Objects.equals(this.getVictimType(), "minecraft:vindicator");
+        if (this.wasIllager)
+            return true;
+        Optional<EntityType<?>> quangus = EntityType.get(this.getVictimType());
+        if (quangus.isPresent() && quangus.get().isIn(EntityTags.ILLAGERS)){
+            this.wasIllager = true;
+            return true;
+        }
+        return false;
     }
 
     private void tickFreeze(){

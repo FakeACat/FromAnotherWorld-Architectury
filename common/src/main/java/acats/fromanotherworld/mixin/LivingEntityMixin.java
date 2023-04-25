@@ -193,7 +193,7 @@ public abstract class LivingEntityMixin extends Entity implements DisguisedThing
     }
 
     private boolean tooSmallToDisguise(){
-        return (this.getWidth() * this.getWidth() * this.getHeight()) < 0.125F;
+        return this.vol() < 0.125F;
     }
 
     @Inject(at = @At("HEAD"), method = "canTarget(Lnet/minecraft/entity/LivingEntity;)Z", cancellable = true)
@@ -259,7 +259,7 @@ public abstract class LivingEntityMixin extends Entity implements DisguisedThing
             }
         }
         else if (this.getType().isIn(QUADRUPEDS)){
-            if (this.getWidth() * this.getHeight() > 2.25F){
+            if (this.vol() > 2.25F){
                 entity = EntityRegistry.BEAST.get().create(this.world);
                 if (entity != null){
                     ((BeastEntity) entity).setTier(0, true);
@@ -277,7 +277,7 @@ public abstract class LivingEntityMixin extends Entity implements DisguisedThing
             }
         }
         else{
-            this.spawnCrawlers(MathHelper.ceil(this.getWidth() * this.getHeight() * 4.0F), this.getPos());
+            this.spawnCrawlers(MathHelper.ceil(this.vol() * 4.0F), this.getPos());
         }
         if (entity != null){
             entity.setVictimType(EntityType.getId(this.getType()).toString());
@@ -285,6 +285,10 @@ public abstract class LivingEntityMixin extends Entity implements DisguisedThing
             this.world.spawnEntity(entity);
         }
         this.discard();
+    }
+
+    float vol(){
+        return this.getWidth() * this.getWidth() * this.getHeight();
     }
 
     private void spawnCrawlers(int crawlers, Vec3d pos){

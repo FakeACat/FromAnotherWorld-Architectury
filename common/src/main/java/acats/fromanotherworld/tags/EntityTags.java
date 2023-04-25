@@ -11,6 +11,8 @@ public class EntityTags {
     public static final TagKey<EntityType<?>> QUADRUPEDS = entityCategory("quadrupeds");
     public static final TagKey<EntityType<?>> ATTACKABLE_BUT_NOT_ASSIMILABLE = entityCategory("attackable_but_not_assimilable");
     public static final TagKey<EntityType<?>> MISC = entityCategory("misc");
+    public static final TagKey<EntityType<?>> VILLAGERS = entityCategory("villagers");
+    public static final TagKey<EntityType<?>> ILLAGERS = entityCategory("illagers");
 
     private static TagKey<EntityType<?>> entityCategory(String id){
         return TagKey.of(RegistryKeys.ENTITY_TYPE, new Identifier(FromAnotherWorld.MOD_ID, id));

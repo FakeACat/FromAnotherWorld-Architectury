@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "alexsmobs:orca",
+    "alexsmobs:hammerhead_shark",
+    "alexsmobs:alligator_snapping_turtle",
+    "alexsmobs:cachalot_whale",
+    "alexsmobs:frilled_shark",
+    "alexsmobs:mimic_octopus",
+    "alexsmobs:giant_squid",
+    "alexsmobs:catfish"
+  ]
+}

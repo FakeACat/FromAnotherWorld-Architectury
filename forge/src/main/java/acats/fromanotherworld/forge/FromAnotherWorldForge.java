@@ -25,5 +25,7 @@ public class FromAnotherWorldForge {
         StatusEffectRegistryForge.register(eventBus);
 
         Config.load(FMLPaths.CONFIGDIR.get());
+
+        eventBus.addListener(DatapackRegistryForge::register);
     }
 }

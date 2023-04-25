@@ -11,10 +11,14 @@
     "minecraft:ocelot",
     "minecraft:pig",
     "minecraft:sheep",
-    "minecraft:turtle",
     "minecraft:wolf",
     "minecraft:trader_llama",
     "minecraft:goat",
-    "minecraft:camel"
+    "minecraft:camel",
+    "minecraft:hoglin",
+    "minecraft:panda",
+    "minecraft:polar_bear",
+    "minecraft:ravager",
+    "minecraft:sniffer"
   ]
 }

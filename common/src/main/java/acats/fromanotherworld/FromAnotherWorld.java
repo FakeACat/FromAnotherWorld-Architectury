@@ -18,6 +18,8 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import software.bernie.geckolib.GeckoLib;
 
 import java.util.List;
@@ -27,10 +29,12 @@ import static acats.fromanotherworld.tags.EntityTags.*;
 
 public class FromAnotherWorld {
     public static final String MOD_ID = "fromanotherworld";
+    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
     public static void init() {
         GeckoLib.initialize();
         ItemRegistry.register();
+        DatapackRegistry.register();
     }
 
     public static boolean isThing(Entity e){
@@ -66,9 +70,8 @@ public class FromAnotherWorld {
     }
     public static boolean canAssimilate(Entity e){
         return !isThing(e) && (e.getType().isIn(HUMANOIDS) ||
-                e.getType().isIn(LARGE_QUADRUPEDS) ||
                 e.getType().isIn(QUADRUPEDS) ||
-                e.getType().isIn(SMALL));
+                e.getType().isIn(MISC));
     }
     public static int numThingsInList(List<LivingEntity> list){
         int t = 0;

@@ -21,6 +21,7 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
@@ -257,24 +258,26 @@ public abstract class LivingEntityMixin extends Entity implements DisguisedThing
                 case 2 -> entity = EntityRegistry.PALMER_THING.get().create(this.world);
             }
         }
-        else if (this.getType().isIn(LARGE_QUADRUPEDS)){
-            entity = EntityRegistry.BEAST.get().create(this.world);
-            if (entity != null){
-                ((BeastEntity) entity).setTier(0, true);
-            }
-        }
         else if (this.getType().isIn(QUADRUPEDS)){
-            switch (this.chooseStrength()) {
-                case 0 -> {
-                    entity = EntityRegistry.DOGBEAST_SPITTER.get().create(this.world);
-                    this.spawnCrawlers(3, this.getPos());
+            if (this.getWidth() * this.getHeight() > 2.25F){
+                entity = EntityRegistry.BEAST.get().create(this.world);
+                if (entity != null){
+                    ((BeastEntity) entity).setTier(0, true);
                 }
-                case 1 -> entity = EntityRegistry.DOGBEAST.get().create(this.world);
-                case 2 -> entity = EntityRegistry.IMPALER.get().create(this.world);
+            }
+            else{
+                switch (this.chooseStrength()) {
+                    case 0 -> {
+                        entity = EntityRegistry.DOGBEAST_SPITTER.get().create(this.world);
+                        this.spawnCrawlers(3, this.getPos());
+                    }
+                    case 1 -> entity = EntityRegistry.DOGBEAST.get().create(this.world);
+                    case 2 -> entity = EntityRegistry.IMPALER.get().create(this.world);
+                }
             }
         }
-        else if (this.getType().isIn(SMALL)){
-            entity = EntityRegistry.BLOOD_CRAWLER.get().create(this.world);
+        else{
+            this.spawnCrawlers(MathHelper.ceil(this.getWidth() * this.getHeight() * 4.0F), this.getPos());
         }
         if (entity != null){
             entity.setVictimType(EntityType.getId(this.getType()).toString());

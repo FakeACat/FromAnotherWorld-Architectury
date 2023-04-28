@@ -3,6 +3,7 @@ package acats.fromanotherworld.entity;
 import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.config.General;
 import acats.fromanotherworld.entity.goal.ThingTargetGoal;
+import acats.fromanotherworld.entity.navigation.ThingNavigation;
 import acats.fromanotherworld.entity.projectile.NeedleEntity;
 import acats.fromanotherworld.registry.BlockRegistry;
 import acats.fromanotherworld.registry.ParticleRegistry;
@@ -13,7 +14,6 @@ import net.minecraft.block.Material;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.ActiveTargetGoal;
 import net.minecraft.entity.ai.pathing.EntityNavigation;
-import net.minecraft.entity.ai.pathing.SpiderNavigation;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.data.DataTracker;
@@ -59,7 +59,7 @@ public abstract class AbstractThingEntity extends HostileEntity implements GeoEn
 
     @Override
     protected EntityNavigation createNavigation(World world) {
-        return new SpiderNavigation(this, world);
+        return new ThingNavigation(this, world);
     }
 
     protected AbstractThingEntity(EntityType<? extends HostileEntity> entityType, World world){
@@ -370,7 +370,7 @@ public abstract class AbstractThingEntity extends HostileEntity implements GeoEn
 
     @Override
     public boolean damage(DamageSource source, float amount) {
-        if (!world.isClient()){
+        if (!world.isClient() && FromAnotherWorld.isVulnerable(this)){
             if (source.getAttacker() instanceof LivingEntity e){
                 FromAnotherWorld.angerNearbyThings(10, this, e);
                 this.currentThreat = e;

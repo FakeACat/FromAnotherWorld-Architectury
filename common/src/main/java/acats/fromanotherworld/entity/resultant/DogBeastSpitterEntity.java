@@ -66,7 +66,7 @@ public class DogBeastSpitterEntity extends AbstractThingEntity implements Ranged
     protected void initGoals() {
         this.addThingTargets(false);
         this.goalSelector.add(0, new FleeOnFireGoal(this, 16.0F, 1.2, 1.5));
-        this.goalSelector.add(1, new ThingProjectileAttackGoal(this, 1.0, 40, 80, 5.0F));
+        this.goalSelector.add(1, new ThingProjectileAttackGoal(this, 1.0, 40, 80, 10.0F));
         this.goalSelector.add(2, new MergeGoal(this, EntityRegistry.BEAST.get()));
         this.goalSelector.add(3, new WanderAroundFarGoal(this, 1.0D));
     }

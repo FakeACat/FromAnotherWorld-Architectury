@@ -43,7 +43,7 @@ public class BeastEntity extends AbstractMinibossThingEntity implements RangedAt
         this.addThingTargets(false);
         this.goalSelector.add(0, new SwimGoal(this));
         this.goalSelector.add(1, new BeastAttackGoal(this, 1.0D, false));
-        this.goalSelector.add(2, new FleeEntityGoal<>(this, LivingEntity.class, 10.0F, 1.0, 1.2));
+        this.goalSelector.add(2, new FleeEntityGoal<>(this, LivingEntity.class, 10.0F, 1.0, 1.2, (livingEntity) -> livingEntity.equals(this.getTarget())));
         this.goalSelector.add(3, new ThingProjectileAttackGoal(this, 1.0, 20, 20, 16.0F));
         this.goalSelector.add(4, new WanderAroundFarGoal(this, 1.0D));
     }

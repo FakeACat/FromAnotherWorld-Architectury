@@ -168,14 +168,17 @@ public abstract class LivingEntityMixin extends Entity implements DisguisedThing
     }
 
     private void tryReveal(){
-        int entityCheckDist = 12;
+        int entityCheckDistH = 12;
+        int entityCheckDistV = 2;
         int playerCheckDist = 32;
         PlayerEntity p = world.getClosestPlayer(this, playerCheckDist);
         if ((p == null || p.isSpectator() || p.isCreative()) && !this.world.isClient()){
-            List<LivingEntity> nearbyEntities = world.getNonSpectatingEntities(LivingEntity.class, new Box(this.getX() - entityCheckDist, this.getY() - entityCheckDist, this.getZ() - entityCheckDist, this.getX() + entityCheckDist, this.getY() + entityCheckDist, this.getZ() + entityCheckDist));
+            List<LivingEntity> nearbyEntities = world.getEntitiesByClass(LivingEntity.class,
+                    new Box(this.getX() - entityCheckDistH, this.getY() - entityCheckDistV, this.getZ() - entityCheckDistH, this.getX() + entityCheckDistH, this.getY() + entityCheckDistV, this.getZ() + entityCheckDistH),
+                    (entity) -> FromAnotherWorld.canSee(entity, this));
             int assimilables = FromAnotherWorld.numAssimilablesInList(nearbyEntities);
             int things = FromAnotherWorld.numThingsInList(nearbyEntities);
-            if (assimilables > 0 && assimilables < things * 3){
+            if (assimilables > 0 && assimilables < (2 + things * 3)){
                 this.reveal();
                 this.reveal_timer = 0;
             }
@@ -259,7 +262,7 @@ public abstract class LivingEntityMixin extends Entity implements DisguisedThing
             }
         }
         else if (this.getType().isIn(QUADRUPEDS)){
-            if (this.vol() > 2.25F){
+            if (this.vol() > 3.375F){
                 entity = EntityRegistry.BEAST.get().create(this.world);
                 if (entity != null){
                     ((BeastEntity) entity).setTier(0, true);

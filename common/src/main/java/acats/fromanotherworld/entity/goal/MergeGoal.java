@@ -14,7 +14,15 @@ import java.util.List;
 
 public class MergeGoal extends Goal {
     private static final int RANGE = 16;
-    private static final TargetPredicate VALID_MERGE_PREDICATE = TargetPredicate.createNonAttackable().setBaseMaxDistance(RANGE).ignoreVisibility();
+    private static final TargetPredicate VALID_MERGE_PREDICATE = TargetPredicate
+            .createNonAttackable()
+            .setPredicate((livingEntity) -> {
+                if (livingEntity instanceof AbstractThingEntity thing)
+                    return thing.canMerge() && !thing.mergeCore;
+                return false;
+            })
+            .setBaseMaxDistance(RANGE)
+            .ignoreVisibility();
     private final AbstractThingEntity thing;
     private final EntityType<? extends AbstractMinibossThingEntity> mergedForm;
     private AbstractThingEntity target;
@@ -34,7 +42,7 @@ public class MergeGoal extends Goal {
             return false;
         } else {
             this.target = this.findMergeable();
-            return this.target != null && this.target.canMerge() && !this.target.mergeCore;
+            return this.target != null;
         }
     }
     @Override
@@ -81,7 +89,7 @@ public class MergeGoal extends Goal {
             AbstractMinibossThingEntity miniboss = mergedForm.create(this.world);
             if (miniboss != null){
                 miniboss.setPosition(this.thing.getPos());
-                int tier = this.thing.getMergedThings() - 2;
+                int tier = this.thing.getMergedThings() - 3;
                 miniboss.setTier(tier, true);
                 this.world.spawnEntity(miniboss);
                 if (this.world.getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING))

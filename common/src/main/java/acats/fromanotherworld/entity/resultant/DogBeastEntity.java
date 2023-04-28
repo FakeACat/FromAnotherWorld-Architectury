@@ -32,7 +32,7 @@ public class DogBeastEntity extends AbstractThingEntity {
     @Override
     protected void initGoals() {
         this.addThingTargets(false);
-        this.goalSelector.add(0, new FleeOnFireGoal(this, 16.0F, 1.2, 1.5));
+        this.goalSelector.add(0, new FleeOnFireGoal(this, 16.0F, 1.0, 1.2));
         this.goalSelector.add(1, new ThingAttackGoal(this, 1.0D, false));
         this.goalSelector.add(2, new MergeGoal(this, EntityRegistry.BEAST.get()));
         this.goalSelector.add(3, new WanderAroundFarGoal(this, 1.0D));

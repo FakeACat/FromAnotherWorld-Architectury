@@ -40,14 +40,17 @@ public class CrawlerEntity extends AbstractThingEntity {
         if (this.isThingFrozen())
             return PlayState.STOP;
         if (this.hibernating()) {
+            event.getController().setAnimationSpeed(1.0D);
             event.getController().setAnimation(RawAnimation.begin().thenLoop("animation.crawler.sleeping"));
         }
         else {
             if (event.isMoving() || this.movingClimbing()){
                 event.getController().setAnimation(RawAnimation.begin().thenLoop("animation.crawler.walk"));
+                event.getController().setAnimationSpeed(1.5D);
             }
             else{
                 event.getController().setAnimation(RawAnimation.begin().thenLoop("animation.crawler.idle"));
+                event.getController().setAnimationSpeed(1.0D);
             }
         }
         return PlayState.CONTINUE;
@@ -63,7 +66,7 @@ public class CrawlerEntity extends AbstractThingEntity {
     }
 
     public static DefaultAttributeContainer.Builder createCrawlerAttributes(){
-        return HostileEntity.createHostileAttributes().add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.175D).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 4.0D);
+        return HostileEntity.createHostileAttributes().add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25D).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 4.0D);
     }
 
     @Override

@@ -61,7 +61,7 @@ public class StarshipEntity extends MobEntity implements GeoEntity {
         }
         if (this.isOnGround()){
             if (!this.world.isClient()){
-                this.world.createExplosion(null, this.getX(), this.getY(), this.getZ(), 9, World.ExplosionSourceType.NONE);
+                this.world.createExplosion(null, this.getX(), this.getY() + 3.0D, this.getZ(), 9, World.ExplosionSourceType.TNT);
                 AbstractThingEntity thing = EntityRegistry.ALIEN_THING.get().create(this.world);
                 if (thing != null) {
                     thing.setPosition(this.getPos());

@@ -13,10 +13,13 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.mob.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.predicate.entity.EntityPredicates;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Heightmap;
+import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -163,6 +166,20 @@ public class FromAnotherWorld {
             palmerThingEntity.setPosition(playerEntity.getPos());
             palmerThingEntity.setCustomName(playerEntity.getName());
             world.spawnEntity(palmerThingEntity);
+        }
+    }
+
+    public static boolean canSee(Entity observer, Entity entity){
+        if (entity.world != observer.world) {
+            return false;
+        } else {
+            Vec3d vec3d = new Vec3d(observer.getX(), observer.getEyeY(), observer.getZ());
+            Vec3d vec3d2 = new Vec3d(entity.getX(), entity.getEyeY(), entity.getZ());
+            if (vec3d2.squaredDistanceTo(vec3d) > 16384.0F) {
+                return false;
+            } else {
+                return observer.world.raycast(new RaycastContext(vec3d, vec3d2, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, observer)).getType() == HitResult.Type.MISS;
+            }
         }
     }
 }

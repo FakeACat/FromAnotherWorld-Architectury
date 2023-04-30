@@ -4,6 +4,7 @@
     "minecraft:snow_golem",
     "minecraft:wither",
     "minecraft:warden",
-    "minecraft:allay"
+    "minecraft:allay",
+    "minecraft:player"
   ]
 }

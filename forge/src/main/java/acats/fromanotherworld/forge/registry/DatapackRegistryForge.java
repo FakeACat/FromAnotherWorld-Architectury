@@ -21,7 +21,7 @@ public class DatapackRegistryForge {
 
     private static void registerDatapack(String modID, String name, final AddPackFindersEvent event){
         if (ModList.get().isLoaded(modID)){
-            FromAnotherWorld.LOGGER.info("Attempting to load compatibility datapack for mod: " + name);
+            FromAnotherWorld.LOGGER.info("Attempting to load From Another World compatibility datapack for mod: " + name);
             Path resourcePath = ModList.get().getModFileById(FromAnotherWorld.MOD_ID).getFile().findResource("resourcepacks/compat_" + modID);
             ResourcePackProfile pack = ResourcePackProfile.create("builtin/compat_" + modID, Text.literal("Assimilated " + name), false,
             (path) -> new PathPackResources(path, false, resourcePath), ResourceType.SERVER_DATA, ResourcePackProfile.InsertionPosition.BOTTOM, ResourcePackSource.BUILTIN);

@@ -40,10 +40,12 @@ public class BlairThingSpecialAttacksGoal extends Goal {
     }
 
     private void spit(){
-        AssimilationLiquidEntity assimilationLiquid = new AssimilationLiquidEntity(this.mob.world, this.mob.getX(), this.mob.getBodyY(0.55D), this.mob.getZ());
-        assimilationLiquid.setOwner(this.mob);
-        assimilationLiquid.setVelocity(this.mob.getTarget().getPos().add(0, this.mob.getTarget().getHeight() / 2, 0).subtract(assimilationLiquid.getPos()).normalize().add(new Vec3d(this.mob.getRandom().nextInt(40) - 20, this.mob.getRandom().nextInt(40) - 20, this.mob.getRandom().nextInt(40) - 20).multiply(0.01f)));
-        this.mob.world.spawnEntity(assimilationLiquid);
+        if (this.mob.getRandom().nextInt(2) == 0){
+            AssimilationLiquidEntity assimilationLiquid = new AssimilationLiquidEntity(this.mob.world, this.mob.getX(), this.mob.getBodyY(0.55D), this.mob.getZ());
+            assimilationLiquid.setOwner(this.mob);
+            assimilationLiquid.setVelocity(this.mob.getTarget().getPos().add(0, this.mob.getTarget().getHeight() / 2, 0).subtract(assimilationLiquid.getPos()).normalize().multiply(2.0D).add(new Vec3d(this.mob.getRandom().nextInt(40) - 20, this.mob.getRandom().nextInt(40) - 20, this.mob.getRandom().nextInt(40) - 20).multiply(0.01f)));
+            this.mob.world.spawnEntity(assimilationLiquid);
+        }
     }
 
     private void littleRats(){
@@ -60,6 +62,7 @@ public class BlairThingSpecialAttacksGoal extends Goal {
                 crawlerEntity.setVictimType("fromanotherworld:juliette_thing");
                 crawlerEntity.mergeCore = false;
                 crawlerEntity.setPosition(this.mob.getPos());
+                crawlerEntity.setVelocity(this.mob.getTarget().getPos().add(0, this.mob.getTarget().getHeight() / 2, 0).subtract(crawlerEntity.getPos()).normalize().multiply(1.5D).add(new Vec3d(this.mob.getRandom().nextInt(40) - 20, this.mob.getRandom().nextInt(40) - 20, this.mob.getRandom().nextInt(40) - 20).multiply(0.01f)));
                 this.mob.world.spawnEntity(crawlerEntity);
             }
         }

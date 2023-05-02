@@ -9,6 +9,7 @@ import acats.fromanotherworld.registry.BlockRegistry;
 import acats.fromanotherworld.registry.ParticleRegistry;
 import acats.fromanotherworld.registry.SoundRegistry;
 import acats.fromanotherworld.tags.EntityTags;
+import mod.azure.azurelib.animatable.GeoEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Material;
 import net.minecraft.entity.*;
@@ -34,7 +35,6 @@ import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.animatable.GeoEntity;
 
 import java.util.Optional;
 

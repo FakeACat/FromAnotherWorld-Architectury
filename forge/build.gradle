@@ -28,13 +28,13 @@ configurations {
 }
 
 repositories{
-    maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
+    maven { url 'https://dl.cloudsmith.io/public/azuredoom-mods/azurelib/maven/'}
 }
 
 dependencies {
     forge "net.minecraftforge:forge:${rootProject.forge_version}"
 
-    modImplementation 'software.bernie.geckolib:geckolib-forge-1.19.4:4.1.3'
+    modImplementation "mod.azure.azurelib:azurelib-forge-${rootProject.azurelib_version}"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }

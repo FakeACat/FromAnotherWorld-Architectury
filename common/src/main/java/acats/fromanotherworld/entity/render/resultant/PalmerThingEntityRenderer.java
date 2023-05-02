@@ -4,6 +4,7 @@ import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.entity.model.resultant.PalmerThingEntityModel;
 import acats.fromanotherworld.entity.render.AbstractThingEntityRenderer;
 import acats.fromanotherworld.entity.resultant.PalmerThingEntity;
+import mod.azure.azurelib.cache.object.BakedGeoModel;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
@@ -15,7 +16,6 @@ import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
-import software.bernie.geckolib.cache.object.BakedGeoModel;
 
 public class PalmerThingEntityRenderer extends AbstractThingEntityRenderer<PalmerThingEntity> {
 

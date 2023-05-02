@@ -5,6 +5,7 @@ import acats.fromanotherworld.entity.AbstractThingEntity;
 import acats.fromanotherworld.entity.DisguisedThing;
 import acats.fromanotherworld.entity.resultant.PalmerThingEntity;
 import acats.fromanotherworld.registry.*;
+import mod.azure.azurelib.AzureLib;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -23,7 +24,6 @@ import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import software.bernie.geckolib.GeckoLib;
 
 import java.util.List;
 import java.util.Random;
@@ -35,7 +35,7 @@ public class FromAnotherWorld {
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
     public static void init() {
-        GeckoLib.initialize();
+        AzureLib.initialize();
         ItemRegistry.register();
         DatapackRegistry.register();
     }

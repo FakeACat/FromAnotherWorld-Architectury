@@ -2,8 +2,8 @@ package acats.fromanotherworld.entity.model.special;
 
 import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.entity.special.AlienThingEntity;
+import mod.azure.azurelib.model.GeoModel;
 import net.minecraft.util.Identifier;
-import software.bernie.geckolib.model.GeoModel;
 
 public class AlienThingEntityModel extends GeoModel<AlienThingEntity> {
     @Override

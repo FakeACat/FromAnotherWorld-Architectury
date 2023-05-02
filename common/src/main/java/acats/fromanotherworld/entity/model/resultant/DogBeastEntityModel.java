@@ -2,9 +2,9 @@ package acats.fromanotherworld.entity.model.resultant;
 
 import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.entity.resultant.DogBeastEntity;
+import mod.azure.azurelib.model.GeoModel;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.util.Identifier;
-import software.bernie.geckolib.model.GeoModel;
 
 public class DogBeastEntityModel extends GeoModel<DogBeastEntity> {
     @Override

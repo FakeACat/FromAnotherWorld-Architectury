@@ -20,13 +20,13 @@ configurations {
 }
 
 repositories{
-    maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
+    maven { url 'https://dl.cloudsmith.io/public/azuredoom-mods/azurelib/maven/'}
 }
 
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
     modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
-    modImplementation 'software.bernie.geckolib:geckolib-fabric-1.19.4:4.1.3'
+    modImplementation "mod.azure.azurelib:azurelib-fabric-${rootProject.azurelib_version}"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }

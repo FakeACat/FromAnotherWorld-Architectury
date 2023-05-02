@@ -3,11 +3,11 @@ package acats.fromanotherworld.entity.render.resultant;
 import acats.fromanotherworld.entity.model.resultant.BlairThingEntityModel;
 import acats.fromanotherworld.entity.render.AbstractThingEntityRenderer;
 import acats.fromanotherworld.entity.resultant.BlairThingEntity;
+import mod.azure.azurelib.cache.object.BakedGeoModel;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
-import software.bernie.geckolib.cache.object.BakedGeoModel;
 
 public class BlairThingEntityRenderer extends AbstractThingEntityRenderer<BlairThingEntity> {
     public BlairThingEntityRenderer(EntityRendererFactory.Context renderManager) {

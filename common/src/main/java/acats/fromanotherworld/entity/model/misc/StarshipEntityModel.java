@@ -2,8 +2,8 @@ package acats.fromanotherworld.entity.model.misc;
 
 import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.entity.misc.StarshipEntity;
+import mod.azure.azurelib.model.GeoModel;
 import net.minecraft.util.Identifier;
-import software.bernie.geckolib.model.GeoModel;
 
 public class StarshipEntityModel extends GeoModel<StarshipEntity> {
     @Override

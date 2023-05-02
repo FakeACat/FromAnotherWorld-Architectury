@@ -2,9 +2,9 @@ package acats.fromanotherworld.entity.model.revealed;
 
 import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.entity.revealed.ChestSpitterEntity;
+import mod.azure.azurelib.model.GeoModel;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.util.Identifier;
-import software.bernie.geckolib.model.GeoModel;
 
 public class ChestSpitterEntityModel extends GeoModel<ChestSpitterEntity> {
     @Override

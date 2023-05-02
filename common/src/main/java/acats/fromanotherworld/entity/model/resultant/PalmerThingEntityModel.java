@@ -2,8 +2,8 @@ package acats.fromanotherworld.entity.model.resultant;
 
 import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.entity.resultant.PalmerThingEntity;
+import mod.azure.azurelib.model.GeoModel;
 import net.minecraft.util.Identifier;
-import software.bernie.geckolib.model.GeoModel;
 
 public class PalmerThingEntityModel extends GeoModel<PalmerThingEntity> {
     @Override

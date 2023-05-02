@@ -3,14 +3,14 @@ package acats.fromanotherworld.entity.render;
 import acats.fromanotherworld.entity.AbstractThingEntity;
 import acats.fromanotherworld.entity.render.feature.ThingDamagedFeatureRenderer;
 import acats.fromanotherworld.entity.render.feature.ThingSnowFeatureRenderer;
+import mod.azure.azurelib.cache.object.BakedGeoModel;
+import mod.azure.azurelib.model.GeoModel;
+import mod.azure.azurelib.renderer.GeoEntityRenderer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.*;
-import software.bernie.geckolib.cache.object.BakedGeoModel;
-import software.bernie.geckolib.model.GeoModel;
-import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class AbstractThingEntityRenderer<T extends AbstractThingEntity> extends GeoEntityRenderer<T> {
     public AbstractThingEntityRenderer(EntityRendererFactory.Context renderManager, GeoModel<T> model) {

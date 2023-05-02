@@ -2,13 +2,13 @@ package acats.fromanotherworld.entity.render.misc;
 
 import acats.fromanotherworld.entity.misc.StarshipEntity;
 import acats.fromanotherworld.entity.model.misc.StarshipEntityModel;
+import mod.azure.azurelib.cache.object.BakedGeoModel;
+import mod.azure.azurelib.renderer.GeoEntityRenderer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.RotationAxis;
-import software.bernie.geckolib.cache.object.BakedGeoModel;
-import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class StarshipEntityRenderer extends GeoEntityRenderer<StarshipEntity> {
     public StarshipEntityRenderer(EntityRendererFactory.Context renderManager) {

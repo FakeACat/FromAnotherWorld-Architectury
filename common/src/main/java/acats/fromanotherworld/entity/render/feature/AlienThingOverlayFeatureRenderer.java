@@ -2,13 +2,13 @@ package acats.fromanotherworld.entity.render.feature;
 
 import acats.fromanotherworld.entity.special.AlienThingEntity;
 import acats.fromanotherworld.entity.texture.ThingOverlayTexture;
+import mod.azure.azurelib.cache.object.BakedGeoModel;
+import mod.azure.azurelib.renderer.GeoRenderer;
+import mod.azure.azurelib.renderer.layer.GeoRenderLayer;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
-import software.bernie.geckolib.cache.object.BakedGeoModel;
-import software.bernie.geckolib.renderer.GeoRenderer;
-import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
 public class AlienThingOverlayFeatureRenderer<T extends AlienThingEntity> extends GeoRenderLayer<T> {
     public AlienThingOverlayFeatureRenderer(GeoRenderer<T> entityRendererIn) {

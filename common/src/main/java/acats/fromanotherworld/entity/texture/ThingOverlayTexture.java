@@ -64,17 +64,21 @@ public class ThingOverlayTexture implements AutoCloseable{
     public static final Identifier SNOW_OVERLAY_TEXTURE = new Identifier("textures/block/powder_snow.png");
     public static final Identifier INJURED_OVERLAY_TEXTURE = new Identifier(FromAnotherWorld.MOD_ID, "textures/entity/injured_overlay.png");
 
-    private static final HashMap<Identifier, ThingOverlayTexture> textureCacheFlesh = new HashMap<>();
-    private static final HashMap<Identifier, ThingOverlayTexture> textureCacheSnow = new HashMap<>();
-    private static final HashMap<Identifier, ThingOverlayTexture> textureCacheInjured = new HashMap<>();
+    private static final HashMap<Identifier, ThingOverlayTexture> FLESH = new HashMap<>();
+    private static final HashMap<Identifier, ThingOverlayTexture> SNOW = new HashMap<>();
+    private static final HashMap<Identifier, ThingOverlayTexture> INJURED = new HashMap<>();
 
     public static RenderLayer getFleshOverlayRenderLayer(Identifier entityTexture){
-        return textureCacheFlesh.computeIfAbsent(entityTexture, identifier -> new ThingOverlayTexture(MinecraftClient.getInstance().getTextureManager(), MinecraftClient.getInstance().getResourceManager(), entityTexture, FLESH_OVERLAY_TEXTURE, "flesh_overlay")).renderLayer;
+        return layer(entityTexture, FLESH_OVERLAY_TEXTURE, FLESH, "flesh_overlay");
     }
     public static RenderLayer getSnowOverlayRenderLayer(Identifier entityTexture){
-        return textureCacheSnow.computeIfAbsent(entityTexture, identifier -> new ThingOverlayTexture(MinecraftClient.getInstance().getTextureManager(), MinecraftClient.getInstance().getResourceManager(), entityTexture, SNOW_OVERLAY_TEXTURE, "snow_overlay")).renderLayer;
+        return layer(entityTexture, SNOW_OVERLAY_TEXTURE, SNOW, "snow_overlay");
     }
     public static RenderLayer getInjuredOverlayRenderLayer(Identifier entityTexture){
-        return textureCacheInjured.computeIfAbsent(entityTexture, identifier -> new ThingOverlayTexture(MinecraftClient.getInstance().getTextureManager(), MinecraftClient.getInstance().getResourceManager(), entityTexture, INJURED_OVERLAY_TEXTURE, "injured_overlay")).renderLayer;
+        return layer(entityTexture, INJURED_OVERLAY_TEXTURE, INJURED, "injured_overlay");
+    }
+
+    private static RenderLayer layer(Identifier entityTexture, Identifier overlayTexture, HashMap<Identifier, ThingOverlayTexture> hashMap, String prefix){
+        return hashMap.computeIfAbsent(entityTexture, identifier -> new ThingOverlayTexture(MinecraftClient.getInstance().getTextureManager(), MinecraftClient.getInstance().getResourceManager(), entityTexture, overlayTexture, prefix)).renderLayer;
     }
 }

@@ -1,7 +1,7 @@
 package acats.fromanotherworld.mixin.client;
 
 import acats.fromanotherworld.entity.render.feature.RevealedThingFeatureRenderer;
-import acats.fromanotherworld.entity.DisguisedThing;
+import acats.fromanotherworld.entity.interfaces.PossibleDisguisedThing;
 import acats.fromanotherworld.registry.EntityRegistry;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
@@ -27,7 +27,7 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
 
     @Inject(at = @At("HEAD"), method = "isShaking", cancellable = true)
     private void isShaking(T entity, CallbackInfoReturnable<Boolean> cir){
-        if (((DisguisedThing) entity).getSupercellConcentration() >= 1.0F){
+        if (((PossibleDisguisedThing) entity).getSupercellConcentration() >= 1.0F){
             cir.setReturnValue(true);
         }
     }

@@ -1,4 +1,4 @@
-package acats.fromanotherworld.fabric.event;
+package acats.fromanotherworld.fabric.events;
 
 import acats.fromanotherworld.events.CommonWorldEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;

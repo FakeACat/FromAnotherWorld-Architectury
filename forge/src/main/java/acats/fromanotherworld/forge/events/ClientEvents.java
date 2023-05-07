@@ -12,17 +12,17 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid = FromAnotherWorld.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientEvents {
     @SubscribeEvent
-    public static void registerLayersEvent(EntityRenderersEvent.RegisterLayerDefinitions event){
+    public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event){
         EntityRegistryForge.clientRegisterLayers(event);
     }
 
     @SubscribeEvent
-    public static void registerRenderersEvent(EntityRenderersEvent.RegisterRenderers event){
+    public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event){
         EntityRegistryForge.clientRegister(event);
     }
 
     @SubscribeEvent
-    public static void registerParticleProvidersEvent(RegisterParticleProvidersEvent event){
+    public static void registerParticleProviders(RegisterParticleProvidersEvent event){
         ParticleRegistryForge.clientRegister();
     }
 }

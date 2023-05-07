@@ -5,7 +5,6 @@
   "minVersion": "0.8",
   "mixins": [
     "FoxEntityMixin",
-    "ItemMixin",
     "LivingEntityMixin",
     "TraderLlamaEntityMixin",
     "VillagerHostilesSensorMixin",

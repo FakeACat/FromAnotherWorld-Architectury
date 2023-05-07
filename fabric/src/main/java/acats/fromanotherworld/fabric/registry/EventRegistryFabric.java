@@ -1,7 +1,7 @@
 package acats.fromanotherworld.fabric.registry;
 
-import acats.fromanotherworld.fabric.event.ServerLivingEntityDeathHandler;
-import acats.fromanotherworld.fabric.event.ServerWorldTickHandler;
+import acats.fromanotherworld.fabric.events.ServerLivingEntityDeathHandler;
+import acats.fromanotherworld.fabric.events.ServerWorldTickHandler;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 

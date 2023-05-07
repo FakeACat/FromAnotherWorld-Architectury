@@ -2,7 +2,7 @@ package acats.fromanotherworld;
 
 import acats.fromanotherworld.config.Classification;
 import acats.fromanotherworld.entity.AbstractThingEntity;
-import acats.fromanotherworld.entity.DisguisedThing;
+import acats.fromanotherworld.entity.interfaces.PossibleDisguisedThing;
 import acats.fromanotherworld.entity.resultant.PalmerThingEntity;
 import acats.fromanotherworld.registry.*;
 import mod.azure.azurelib.AzureLib;
@@ -41,7 +41,7 @@ public class FromAnotherWorld {
     }
 
     public static boolean isThing(Entity e){
-        return e instanceof LivingEntity && (e instanceof AbstractThingEntity || ((DisguisedThing) e).isAssimilated());
+        return e instanceof LivingEntity && (e instanceof AbstractThingEntity || ((PossibleDisguisedThing) e).isAssimilated());
     }
     public static boolean assimilate(Entity e){
         return assimilate(e, 1.0F);
@@ -60,7 +60,7 @@ public class FromAnotherWorld {
             return false;
         }
         if (canAssimilate(e)){
-            DisguisedThing thing = (DisguisedThing) e;
+            PossibleDisguisedThing thing = (PossibleDisguisedThing) e;
             thing.setSupercellConcentration(thing.getSupercellConcentration() + supercellConcentration);
             if (e instanceof MobEntity e2){
                 e2.setPersistent();
@@ -134,12 +134,12 @@ public class FromAnotherWorld {
                     if (entity1.canTarget(threat))
                         entity1.setTarget(threat);
                 }
-                else if (potentialThing instanceof DisguisedThing disguisedThing && disguisedThing.isAssimilated() && !disguisedThing.isRevealed()){
+                else if (potentialThing instanceof PossibleDisguisedThing possibleDisguisedThing && possibleDisguisedThing.isAssimilated() && !possibleDisguisedThing.isRevealed()){
                     if (jumpscare){
-                        disguisedThing.setSupercellConcentration(100);
+                        possibleDisguisedThing.setSupercellConcentration(100);
                     }
                     else{
-                        disguisedThing.setSupercellConcentration(disguisedThing.getSupercellConcentration() + 5);
+                        possibleDisguisedThing.setSupercellConcentration(possibleDisguisedThing.getSupercellConcentration() + 5);
                     }
                 }
             }

@@ -1,6 +1,6 @@
 package acats.fromanotherworld.mixin.client;
 
-import acats.fromanotherworld.entity.DisguisedThing;
+import acats.fromanotherworld.entity.interfaces.PossibleDisguisedThing;
 import acats.fromanotherworld.entity.render.feature.RevealedThingFeatureRenderer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.feature.SheepWoolFeatureRenderer;
@@ -24,7 +24,7 @@ public abstract class SheepWoolFeatureRendererMixin {
     @Inject(at = @At("TAIL"), method = "render(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;ILnet/minecraft/entity/passive/SheepEntity;FFFFFF)V")
     private void render(MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, SheepEntity sheepEntity, float f, float g, float h, float j, float k, float l, CallbackInfo ci){
         if (!sheepEntity.isInvisible()){
-            RevealedThingFeatureRenderer.renderFleshOverlay((DisguisedThing) sheepEntity, this.model, SKIN, matrixStack, vertexConsumerProvider, i, sheepEntity, f, g, h, j, k, l);
+            RevealedThingFeatureRenderer.renderFleshOverlay((PossibleDisguisedThing) sheepEntity, this.model, SKIN, matrixStack, vertexConsumerProvider, i, sheepEntity, f, g, h, j, k, l);
         }
     }
 }

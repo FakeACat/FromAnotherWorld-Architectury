@@ -1,6 +1,6 @@
 package acats.fromanotherworld.entity.model.revealed;
 
-import acats.fromanotherworld.entity.DisguisedThing;
+import acats.fromanotherworld.entity.interfaces.PossibleDisguisedThing;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.EntityModel;
@@ -136,7 +136,7 @@ public class SpiderLegsEntityModel extends EntityModel<Entity> {
     }
     @Override
     public void setAngles(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        DisguisedThing thing = (DisguisedThing) entity;
+        PossibleDisguisedThing thing = (PossibleDisguisedThing) entity;
         float p = MathHelper.clamp(10.0F * (1.0F - Math.abs((float)thing.getRevealMaximum() - (float)thing.getTimeUntilFinishedRevealing()) / (float)thing.getRevealMaximum()), 0, 1);
 
         float rotation = MathHelper.lerp(p, -(float)Math.PI / 2, 0.7854F);

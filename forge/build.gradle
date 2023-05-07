@@ -15,7 +15,6 @@ loom {
         extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
 
         mixinConfig "fromanotherworld-common.mixins.json"
-        mixinConfig "fromanotherworld.mixins.json"
     }
 }
 

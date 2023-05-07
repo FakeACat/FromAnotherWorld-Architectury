@@ -1,4 +1,4 @@
-package acats.fromanotherworld.entity;
+package acats.fromanotherworld.entity.interfaces;
 
 import net.minecraft.entity.LivingEntity;
 

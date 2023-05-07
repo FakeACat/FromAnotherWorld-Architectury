@@ -1,6 +1,6 @@
 package acats.fromanotherworld.entity.render.feature;
 
-import acats.fromanotherworld.entity.DisguisedThing;
+import acats.fromanotherworld.entity.interfaces.PossibleDisguisedThing;
 import acats.fromanotherworld.entity.model.revealed.SpiderLegsEntityModel;
 import acats.fromanotherworld.entity.texture.ThingOverlayTexture;
 import net.minecraft.client.model.ModelPart;
@@ -28,7 +28,7 @@ public class RevealedThingFeatureRenderer<T extends Entity, M extends EntityMode
     @Override
     public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
 
-        if (entity instanceof DisguisedThing e && !entity.isInvisible()){
+        if (entity instanceof PossibleDisguisedThing e && !entity.isInvisible()){
             if (e.isRevealed() && entity.getHeight() <= 1.0F){
                 VertexConsumer v = vertexConsumers.getBuffer(RenderLayer.getEntitySolid(ThingOverlayTexture.FLESH_OVERLAY_TEXTURE));
                 this.spiderLegsEntityModel.setAngles(entity, 0, 0, 0, 0, 0);
@@ -39,7 +39,7 @@ public class RevealedThingFeatureRenderer<T extends Entity, M extends EntityMode
         }
     }
 
-    public static <T extends Entity> void renderFleshOverlay(DisguisedThing e, EntityModel<T> model, Identifier texture, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch){
+    public static <T extends Entity> void renderFleshOverlay(PossibleDisguisedThing e, EntityModel<T> model, Identifier texture, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch){
         if (e.isRevealed() || e.getSupercellConcentration() >= 1.0F){
             float progress;
             if (e.isRevealed()){

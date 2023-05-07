@@ -1,7 +1,7 @@
 package acats.fromanotherworld.entity.goal;
 
 import acats.fromanotherworld.entity.AbstractThingEntity;
-import acats.fromanotherworld.entity.BurstAttackThing;
+import acats.fromanotherworld.entity.interfaces.BurstAttackThing;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
 

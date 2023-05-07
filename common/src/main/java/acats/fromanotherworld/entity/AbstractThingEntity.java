@@ -370,16 +370,18 @@ public abstract class AbstractThingEntity extends HostileEntity implements GeoEn
 
     @Override
     public boolean damage(DamageSource source, float amount) {
-        if (!world.isClient() && FromAnotherWorld.isVulnerable(this)){
+        if (!world.isClient()){
             if (source.getAttacker() instanceof LivingEntity e){
-                FromAnotherWorld.angerNearbyThings(10, this, e);
+                if (FromAnotherWorld.isVulnerable(this))
+                    FromAnotherWorld.angerNearbyThings(10, this, e);
                 this.currentThreat = e;
                 if (this.canTarget(e)){
                     this.setTarget(e);
                 }
             }
             else{
-                FromAnotherWorld.angerNearbyThings(10, this, null);
+                if (FromAnotherWorld.isVulnerable(this))
+                    FromAnotherWorld.angerNearbyThings(10, this, null);
             }
         }
         if (this.isThingFrozen() && source == this.getWorld().getDamageSources().inWall()){

@@ -1,6 +1,6 @@
 package acats.fromanotherworld.mixin.client;
 
-import acats.fromanotherworld.entity.DisguisedThing;
+import acats.fromanotherworld.entity.interfaces.PossibleDisguisedThing;
 import acats.fromanotherworld.entity.render.feature.RevealedThingFeatureRenderer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.feature.FeatureRenderer;
@@ -33,7 +33,7 @@ public abstract class HorseMarkingFeatureRendererMixin extends FeatureRenderer<H
     private void render(MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, HorseEntity horseEntity, float f, float g, float h, float j, float k, float l, CallbackInfo ci){
         if (!horseEntity.isInvisible()){
             Identifier identifier = TEXTURES.get(horseEntity.getMarking());
-            RevealedThingFeatureRenderer.renderFleshOverlay((DisguisedThing) horseEntity, this.getContextModel(), identifier, matrixStack, vertexConsumerProvider, i, horseEntity, f, g, h, j, k, l);
+            RevealedThingFeatureRenderer.renderFleshOverlay((PossibleDisguisedThing) horseEntity, this.getContextModel(), identifier, matrixStack, vertexConsumerProvider, i, horseEntity, f, g, h, j, k, l);
         }
     }
 }

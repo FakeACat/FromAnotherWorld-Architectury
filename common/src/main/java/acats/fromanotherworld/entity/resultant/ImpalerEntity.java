@@ -1,7 +1,7 @@
 package acats.fromanotherworld.entity.resultant;
 
 import acats.fromanotherworld.entity.AbstractThingEntity;
-import acats.fromanotherworld.entity.BurstAttackThing;
+import acats.fromanotherworld.entity.interfaces.BurstAttackThing;
 import acats.fromanotherworld.entity.goal.MergeGoal;
 import acats.fromanotherworld.entity.goal.ThingAttackGoal;
 import acats.fromanotherworld.entity.goal.ThingProjectileBurstGoal;

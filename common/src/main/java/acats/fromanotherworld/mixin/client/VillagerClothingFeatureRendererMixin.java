@@ -1,6 +1,6 @@
 package acats.fromanotherworld.mixin.client;
 
-import acats.fromanotherworld.entity.DisguisedThing;
+import acats.fromanotherworld.entity.interfaces.PossibleDisguisedThing;
 import acats.fromanotherworld.entity.render.feature.RevealedThingFeatureRenderer;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
@@ -42,7 +42,7 @@ public abstract class VillagerClothingFeatureRendererMixin<T extends LivingEntit
     @Inject(at = @At("TAIL"), method = "render(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;ILnet/minecraft/entity/LivingEntity;FFFFFF)V")
     private void render(MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, T livingEntity, float f, float g, float h, float j, float k, float l, CallbackInfo ci){
         if (!livingEntity.isInvisible()) {
-            DisguisedThing thing = (DisguisedThing) livingEntity;
+            PossibleDisguisedThing thing = (PossibleDisguisedThing) livingEntity;
             VillagerData villagerData = livingEntity.getVillagerData();
             VillagerType villagerType = villagerData.getType();
             VillagerProfession villagerProfession = villagerData.getProfession();

@@ -65,7 +65,7 @@ public class JulietteThingEntity extends AbstractThingEntity {
             CrawlerEntity crawlerEntity = EntityRegistry.CRAWLER.get().create(this.world);
             if (crawlerEntity != null) {
                 crawlerEntity.setPosition(this.getPos());
-                crawlerEntity.setVictimType("fromanotherworld:juliette_thing");
+                crawlerEntity.setVictimType(JULIETTE);
                 this.world.spawnEntity(crawlerEntity);
             }
         }

@@ -12,7 +12,6 @@ import acats.fromanotherworld.registry.DamageTypeRegistry;
 import acats.fromanotherworld.registry.EntityRegistry;
 import acats.fromanotherworld.registry.ParticleRegistry;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -27,8 +26,7 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-import static acats.fromanotherworld.tags.EntityTags.HUMANOIDS;
-import static acats.fromanotherworld.tags.EntityTags.QUADRUPEDS;
+import static acats.fromanotherworld.tags.EntityTags.*;
 
 public class CommonLivingEntityEvents {
     private static final int REVEAL_COOLDOWN = 12000;
@@ -212,7 +210,10 @@ public class CommonLivingEntityEvents {
             spawnCrawlers(MathHelper.ceil(vol(entity) * 4.0F), entity.getPos(), entity.world);
         }
         if (thing != null){
-            thing.setVictimType(EntityType.getId(entity.getType()).toString());
+            if (entity.getType().isIn(VILLAGERS))
+                thing.setVictimType(AbstractThingEntity.VILLAGER);
+            else if (entity.getType().isIn(ILLAGERS))
+                thing.setVictimType(AbstractThingEntity.ILLAGER);
             thing.setPosition(entity.getPos());
             entity.world.spawnEntity(thing);
         }

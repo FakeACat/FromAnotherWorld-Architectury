@@ -1,17 +1,17 @@
 package acats.fromanotherworld.entity.model.resultant;
 
 import acats.fromanotherworld.FromAnotherWorld;
+import acats.fromanotherworld.entity.AbstractThingEntity;
 import acats.fromanotherworld.entity.resultant.CrawlerEntity;
 import mod.azure.azurelib.model.GeoModel;
 import net.minecraft.util.Identifier;
-
-import java.util.Objects;
 
 public class CrawlerEntityModel extends GeoModel<CrawlerEntity> {
     @Override
     public Identifier getModelResource(CrawlerEntity object) {
         String variant = "crawler";
-        if (object.wasVillager() || object.wasIllager())
+        if (object.getVictimType() == AbstractThingEntity.VILLAGER ||
+                object.getVictimType() == AbstractThingEntity.ILLAGER)
             variant = "crawler_villager";
         return new Identifier(FromAnotherWorld.MOD_ID, "geo/entity/resultant/crawler/" + variant + ".geo.json");
     }
@@ -19,11 +19,11 @@ public class CrawlerEntityModel extends GeoModel<CrawlerEntity> {
     @Override
     public Identifier getTextureResource(CrawlerEntity object) {
         String variant = "crawler";
-        if (object.wasVillager())
+        if (object.getVictimType() == AbstractThingEntity.VILLAGER)
             variant = "crawler_villager";
-        if (object.wasIllager())
+        else if (object.getVictimType() == AbstractThingEntity.ILLAGER)
             variant = "crawler_illager";
-        if (Objects.equals(object.getVictimType(), "fromanotherworld:juliette_thing"))
+        else if (object.getVictimType() == AbstractThingEntity.JULIETTE)
             variant = "crawler_juliette_thing";
         return new Identifier(FromAnotherWorld.MOD_ID, "textures/entity/resultant/crawler/" + variant + ".png");
     }

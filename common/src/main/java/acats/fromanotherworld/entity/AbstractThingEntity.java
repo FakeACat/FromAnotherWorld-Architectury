@@ -36,13 +36,11 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
-
 public abstract class AbstractThingEntity extends HostileEntity implements GeoEntity {
     private static final TrackedData<Integer> MERGED_THINGS;
     private static final TrackedData<Integer> MERGE_TIMER;
     private static final TrackedData<Integer> MERGE_CORE_ID;
-    private static final TrackedData<String> VICTIM_TYPE;
+    private static final TrackedData<Integer> VICTIM_TYPE;
     private static final TrackedData<Boolean> HIBERNATING;
     private static final TrackedData<Float> COLD;
     private static final TrackedData<Boolean> CLIMBING;
@@ -98,10 +96,14 @@ public abstract class AbstractThingEntity extends HostileEntity implements GeoEn
         this.dataTracker.set(MERGE_CORE_ID, mergeCoreID);
     }
 
-    public String getVictimType(){
+    public static final int VILLAGER = 0;
+    public static final int ILLAGER = 1;
+    public static final int JULIETTE = 2;
+
+    public int getVictimType(){
         return this.dataTracker.get(VICTIM_TYPE);
     }
-    public void setVictimType(String victimType){
+    public void setVictimType(int victimType){
         this.dataTracker.set(VICTIM_TYPE, victimType);
     }
 
@@ -132,7 +134,7 @@ public abstract class AbstractThingEntity extends HostileEntity implements GeoEn
         this.dataTracker.startTracking(MERGED_THINGS, 0);
         this.dataTracker.startTracking(MERGE_TIMER, 0);
         this.dataTracker.startTracking(MERGE_CORE_ID, 0);
-        this.dataTracker.startTracking(VICTIM_TYPE, "");
+        this.dataTracker.startTracking(VICTIM_TYPE, -1);
         this.dataTracker.startTracking(HIBERNATING, false);
         this.dataTracker.startTracking(COLD, 0.0F);
         this.dataTracker.startTracking(CLIMBING, false);
@@ -448,30 +450,6 @@ public abstract class AbstractThingEntity extends HostileEntity implements GeoEn
         this.canShootNeedles = random.nextInt(chanceDenominator) == 0;
     }
 
-    private boolean wasVillager;
-    public boolean wasVillager(){
-        if (this.wasVillager)
-            return true;
-        Optional<EntityType<?>> quangus = EntityType.get(this.getVictimType());
-        if (quangus.isPresent() && quangus.get().isIn(EntityTags.VILLAGERS)){
-            this.wasVillager = true;
-            return true;
-        }
-        return false;
-    }
-
-    private boolean wasIllager;
-    public boolean wasIllager(){
-        if (this.wasIllager)
-            return true;
-        Optional<EntityType<?>> quangus = EntityType.get(this.getVictimType());
-        if (quangus.isPresent() && quangus.get().isIn(EntityTags.ILLAGERS)){
-            this.wasIllager = true;
-            return true;
-        }
-        return false;
-    }
-
     private void tickFreeze(){
         float random = 0.5F + this.getRandom().nextFloat();
         if (this.isOnFire()){
@@ -547,7 +525,7 @@ public abstract class AbstractThingEntity extends HostileEntity implements GeoEn
             nbt.putInt("MergeTimer", this.getMergeTimer());
         }
 
-        nbt.putString("VictimType", this.getVictimType());
+        nbt.putInt("VictimType", this.getVictimType());
 
         nbt.putBoolean("Hibernating", this.hibernating());
         nbt.putInt("TimeSinceLastSeenTarget", this.timeSinceLastSeenTarget);
@@ -576,7 +554,7 @@ public abstract class AbstractThingEntity extends HostileEntity implements GeoEn
             this.setMergeTimer(nbt.getInt("MergeTimer"));
         }
 
-        this.setVictimType(nbt.getString("VictimType"));
+        this.setVictimType(nbt.getInt("VictimType"));
 
         this.setHibernating(nbt.getBoolean("Hibernating"));
         this.timeSinceLastSeenTarget = nbt.getInt("TimeSinceLastSeenTarget");
@@ -599,7 +577,7 @@ public abstract class AbstractThingEntity extends HostileEntity implements GeoEn
         MERGED_THINGS = DataTracker.registerData(AbstractThingEntity.class, TrackedDataHandlerRegistry.INTEGER);
         MERGE_TIMER = DataTracker.registerData(AbstractThingEntity.class, TrackedDataHandlerRegistry.INTEGER);
         MERGE_CORE_ID = DataTracker.registerData(AbstractThingEntity.class, TrackedDataHandlerRegistry.INTEGER);
-        VICTIM_TYPE = DataTracker.registerData(AbstractThingEntity.class, TrackedDataHandlerRegistry.STRING);
+        VICTIM_TYPE = DataTracker.registerData(AbstractThingEntity.class, TrackedDataHandlerRegistry.INTEGER);
         HIBERNATING = DataTracker.registerData(AbstractThingEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
         COLD = DataTracker.registerData(AbstractThingEntity.class, TrackedDataHandlerRegistry.FLOAT);
         CLIMBING = DataTracker.registerData(AbstractThingEntity.class, TrackedDataHandlerRegistry.BOOLEAN);

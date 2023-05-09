@@ -8,15 +8,15 @@ import acats.fromanotherworld.entity.projectile.NeedleEntity;
 import acats.fromanotherworld.registry.BlockRegistry;
 import acats.fromanotherworld.registry.ParticleRegistry;
 import acats.fromanotherworld.registry.SoundRegistry;
+import acats.fromanotherworld.tags.BlockTags;
+import acats.fromanotherworld.tags.DamageTypeTags;
 import acats.fromanotherworld.tags.EntityTags;
 import mod.azure.azurelib.animatable.GeoEntity;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Material;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.ActiveTargetGoal;
 import net.minecraft.entity.ai.pathing.EntityNavigation;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
@@ -394,11 +394,12 @@ public abstract class AbstractThingEntity extends HostileEntity implements GeoEn
 
     @Override
     protected float modifyAppliedDamage(DamageSource source, float amount) {
-        if (this.mergeCore && this.getMergedThings() > 0){
+        boolean vul1 = FromAnotherWorld.isVulnerable(this);
+        boolean vul2 = source.isIn(DamageTypeTags.ALWAYS_HURTS_THINGS);
+        if (!vul2 && this.mergeCore && this.getMergedThings() > 0){
             amount *= Math.pow(0.8D, this.getMergedThings());
         }
-        boolean vulnerable = FromAnotherWorld.isVulnerable(this) || source.isOf(DamageTypes.EXPLOSION) || source.isOf(DamageTypes.PLAYER_EXPLOSION);
-        return vulnerable ? super.modifyAppliedDamage(source, amount) : Math.min(super.modifyAppliedDamage(source, amount), 1.0F);
+        return (vul1 || vul2) ? super.modifyAppliedDamage(source, amount) : Math.min(super.modifyAppliedDamage(source, amount), 1.0F);
     }
 
     public boolean shouldMergeOnAssimilate() {
@@ -454,13 +455,9 @@ public abstract class AbstractThingEntity extends HostileEntity implements GeoEn
         float random = 0.5F + this.getRandom().nextFloat();
         if (this.isOnFire()){
             this.setCold(this.getCold() - 0.2F * random);
-        }
-        if (this.inPowderSnow){
-            this.setCold(this.getCold() + 0.05F * random);
             return;
         }
-        Material material = this.getWorld().getBlockState(this.getBlockPos()).getMaterial();
-        if (material == Material.ICE || material == Material.DENSE_ICE || material == Material.SNOW_BLOCK){
+        if (this.getWorld().getBlockState(this.getBlockPos()).isIn(BlockTags.FREEZES_THINGS)){
             this.setCold(this.getCold() + 0.1F * random);
             return;
         }

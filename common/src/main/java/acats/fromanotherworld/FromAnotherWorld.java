@@ -5,11 +5,11 @@ import acats.fromanotherworld.entity.AbstractThingEntity;
 import acats.fromanotherworld.entity.interfaces.PossibleDisguisedThing;
 import acats.fromanotherworld.entity.resultant.PalmerThingEntity;
 import acats.fromanotherworld.registry.*;
+import acats.fromanotherworld.tags.BlockTags;
 import mod.azure.azurelib.AzureLib;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.boss.WitherEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.mob.*;
 import net.minecraft.entity.player.PlayerEntity;
@@ -147,7 +147,7 @@ public class FromAnotherWorld {
     }
 
     public static boolean canThingDestroy(BlockState block){
-        return WitherEntity.canDestroy(block) && block.getFluidState().isEmpty();
+        return !block.isAir() && !block.isIn(BlockTags.THING_IMMUNE) && block.getFluidState().isEmpty();
     }
 
     public static boolean isVulnerable(LivingEntity entity){

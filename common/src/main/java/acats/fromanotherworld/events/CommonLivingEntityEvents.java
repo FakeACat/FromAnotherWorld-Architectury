@@ -4,6 +4,7 @@ import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.config.General;
 import acats.fromanotherworld.entity.AbstractThingEntity;
 import acats.fromanotherworld.entity.interfaces.PossibleDisguisedThing;
+import acats.fromanotherworld.entity.interfaces.VariableThing;
 import acats.fromanotherworld.entity.projectile.AssimilationLiquidEntity;
 import acats.fromanotherworld.entity.resultant.BeastEntity;
 import acats.fromanotherworld.entity.resultant.BloodCrawlerEntity;
@@ -28,7 +29,7 @@ import java.util.List;
 
 import static acats.fromanotherworld.tags.EntityTags.*;
 
-public class CommonLivingEntityEvents {
+public class CommonLivingEntityEvents implements VariableThing {
     private static final int REVEAL_COOLDOWN = 12000;
     public static void serverPlayerEntityDeath(PlayerEntity playerEntity, DamageSource damageSource){
         if (damageSource.isOf(DamageTypeRegistry.ASSIMILATION)){
@@ -211,9 +212,9 @@ public class CommonLivingEntityEvents {
         }
         if (thing != null){
             if (entity.getType().isIn(VILLAGERS))
-                thing.setVictimType(AbstractThingEntity.VILLAGER);
+                thing.setVictimType(VILLAGER);
             else if (entity.getType().isIn(ILLAGERS))
-                thing.setVictimType(AbstractThingEntity.ILLAGER);
+                thing.setVictimType(ILLAGER);
             thing.setPosition(entity.getPos());
             entity.world.spawnEntity(thing);
         }

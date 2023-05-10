@@ -1,13 +1,13 @@
 package acats.fromanotherworld.entity.model.resultant;
 
 import acats.fromanotherworld.FromAnotherWorld;
-import acats.fromanotherworld.entity.AbstractThingEntity;
+import acats.fromanotherworld.entity.interfaces.VariableThing;
 import acats.fromanotherworld.entity.resultant.JulietteThingEntity;
 import mod.azure.azurelib.model.GeoModel;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.util.Identifier;
 
-public class JulietteThingEntityModel extends GeoModel<JulietteThingEntity> {
+public class JulietteThingEntityModel extends GeoModel<JulietteThingEntity> implements VariableThing {
     @Override
     public Identifier getModelResource(JulietteThingEntity object) {
         return new Identifier(FromAnotherWorld.MOD_ID, "geo/entity/resultant/juliette_thing.geo.json");
@@ -16,7 +16,7 @@ public class JulietteThingEntityModel extends GeoModel<JulietteThingEntity> {
     @Override
     public Identifier getTextureResource(JulietteThingEntity object) {
         String variant = "juliette_thing";
-        if (object.getVictimType() == AbstractThingEntity.VILLAGER)
+        if (object.getVictimType() == VILLAGER)
             variant = "juliette_thing_villagertrousers";
         return new Identifier(FromAnotherWorld.MOD_ID, "textures/entity/resultant/juliette_thing/" + variant + ".png");
     }

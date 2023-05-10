@@ -3,6 +3,7 @@ package acats.fromanotherworld.entity;
 import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.config.General;
 import acats.fromanotherworld.entity.goal.ThingTargetGoal;
+import acats.fromanotherworld.entity.interfaces.VariableThing;
 import acats.fromanotherworld.entity.navigation.ThingNavigation;
 import acats.fromanotherworld.entity.projectile.NeedleEntity;
 import acats.fromanotherworld.registry.BlockRegistry;
@@ -36,7 +37,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class AbstractThingEntity extends HostileEntity implements GeoEntity {
+public abstract class AbstractThingEntity extends HostileEntity implements GeoEntity, VariableThing {
     private static final TrackedData<Integer> MERGED_THINGS;
     private static final TrackedData<Integer> MERGE_TIMER;
     private static final TrackedData<Integer> MERGE_CORE_ID;
@@ -95,10 +96,6 @@ public abstract class AbstractThingEntity extends HostileEntity implements GeoEn
     public void setMergeCoreID(int mergeCoreID){
         this.dataTracker.set(MERGE_CORE_ID, mergeCoreID);
     }
-
-    public static final int VILLAGER = 0;
-    public static final int ILLAGER = 1;
-    public static final int JULIETTE = 2;
 
     public int getVictimType(){
         return this.dataTracker.get(VICTIM_TYPE);

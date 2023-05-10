@@ -37,6 +37,7 @@ public class BloodCrawlerEntity extends AbstractThingEntity {
     private final AnimatableInstanceCache factory = AzureLibUtil.createInstanceCache(this);
     public BloodCrawlerEntity(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world, false);
+        this.experiencePoints = SMALL_MONSTER_XP;
     }
 
     @Override

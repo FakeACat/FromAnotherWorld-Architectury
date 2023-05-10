@@ -13,6 +13,7 @@ import acats.fromanotherworld.registry.DamageTypeRegistry;
 import acats.fromanotherworld.registry.EntityRegistry;
 import acats.fromanotherworld.registry.ParticleRegistry;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -178,7 +179,8 @@ public class CommonLivingEntityEvents implements VariableThing {
             return;
         }
         AbstractThingEntity thing = null;
-        if (entity.getType().isIn(HUMANOIDS)){
+        EntityType<?> type = entity.getType();
+        if (type.isIn(HUMANOIDS)){
             switch (chooseStrength(entity.getRandom())) {
                 case 0 -> {
                     thing = EntityRegistry.CRAWLER.get().create(entity.world);
@@ -189,31 +191,29 @@ public class CommonLivingEntityEvents implements VariableThing {
                 case 2 -> thing = EntityRegistry.PALMER_THING.get().create(entity.world);
             }
         }
-        else if (entity.getType().isIn(QUADRUPEDS)){
-            if (vol(entity) > 3.375F){
-                thing = EntityRegistry.BEAST.get().create(entity.world);
-                if (thing != null){
-                    ((BeastEntity) thing).setTier(0, true);
+        else if (type.isIn(QUADRUPEDS) || type.isIn(LARGE_QUADRUPEDS)){
+            switch (chooseStrength(entity.getRandom())) {
+                case 0 -> {
+                    thing = EntityRegistry.DOGBEAST_SPITTER.get().create(entity.world);
+                    spawnCrawlers(3, entity.getPos(), entity.world);
                 }
+                case 1 -> thing = EntityRegistry.DOGBEAST.get().create(entity.world);
+                case 2 -> thing = EntityRegistry.IMPALER.get().create(entity.world);
             }
-            else{
-                switch (chooseStrength(entity.getRandom())) {
-                    case 0 -> {
-                        thing = EntityRegistry.DOGBEAST_SPITTER.get().create(entity.world);
-                        spawnCrawlers(3, entity.getPos(), entity.world);
-                    }
-                    case 1 -> thing = EntityRegistry.DOGBEAST.get().create(entity.world);
-                    case 2 -> thing = EntityRegistry.IMPALER.get().create(entity.world);
-                }
+        }
+        else if (type.isIn(VERY_LARGE_QUADRUPEDS)){
+            thing = EntityRegistry.BEAST.get().create(entity.world);
+            if (thing != null){
+                ((BeastEntity) thing).setTier(0, true);
             }
         }
         else{
             spawnCrawlers(MathHelper.ceil(vol(entity) * 4.0F), entity.getPos(), entity.world);
         }
         if (thing != null){
-            if (entity.getType().isIn(VILLAGERS))
+            if (type.isIn(VILLAGERS))
                 thing.setVictimType(VILLAGER);
-            else if (entity.getType().isIn(ILLAGERS))
+            else if (type.isIn(ILLAGERS))
                 thing.setVictimType(ILLAGER);
             thing.setPosition(entity.getPos());
             entity.world.spawnEntity(thing);

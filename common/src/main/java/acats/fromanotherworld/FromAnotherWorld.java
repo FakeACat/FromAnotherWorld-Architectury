@@ -74,6 +74,8 @@ public class FromAnotherWorld {
     public static boolean canAssimilate(Entity e){
         return !isThing(e) && (e.getType().isIn(HUMANOIDS) ||
                 e.getType().isIn(QUADRUPEDS) ||
+                e.getType().isIn(LARGE_QUADRUPEDS) ||
+                e.getType().isIn(VERY_LARGE_QUADRUPEDS) ||
                 e.getType().isIn(MISC));
     }
     public static int numThingsInList(List<LivingEntity> list){

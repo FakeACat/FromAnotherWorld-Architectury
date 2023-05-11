@@ -1,7 +1,7 @@
 package acats.fromanotherworld.entity.goal;
 
-import acats.fromanotherworld.entity.AbstractThingEntity;
-import acats.fromanotherworld.entity.resultant.AbstractMinibossThingEntity;
+import acats.fromanotherworld.entity.thing.AbstractThingEntity;
+import acats.fromanotherworld.entity.thing.resultant.AbstractMinibossThingEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.TargetPredicate;
 import net.minecraft.entity.ai.goal.Goal;

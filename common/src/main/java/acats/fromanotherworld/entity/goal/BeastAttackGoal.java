@@ -1,6 +1,6 @@
 package acats.fromanotherworld.entity.goal;
 
-import acats.fromanotherworld.entity.resultant.BeastEntity;
+import acats.fromanotherworld.entity.thing.resultant.BeastEntity;
 
 public class BeastAttackGoal extends ThingAttackGoal {
     public BeastAttackGoal(BeastEntity mob, double speed, boolean pauseWhenMobIdle) {

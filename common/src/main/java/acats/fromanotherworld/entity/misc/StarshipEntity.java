@@ -1,7 +1,7 @@
 package acats.fromanotherworld.entity.misc;
 
-import acats.fromanotherworld.entity.AbstractThingEntity;
-import acats.fromanotherworld.entity.resultant.BloodCrawlerEntity;
+import acats.fromanotherworld.entity.thing.AbstractThingEntity;
+import acats.fromanotherworld.entity.thing.resultant.BloodCrawlerEntity;
 import acats.fromanotherworld.registry.EntityRegistry;
 import acats.fromanotherworld.registry.ParticleRegistry;
 import mod.azure.azurelib.animatable.GeoEntity;

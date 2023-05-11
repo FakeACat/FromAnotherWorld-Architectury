@@ -1,7 +1,7 @@
 package acats.fromanotherworld.entity.render.feature;
 
 import acats.fromanotherworld.entity.interfaces.PossibleDisguisedThing;
-import acats.fromanotherworld.entity.model.revealed.SpiderLegsEntityModel;
+import acats.fromanotherworld.entity.model.thing.revealed.SpiderLegsEntityModel;
 import acats.fromanotherworld.entity.texture.ThingOverlayTexture;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.OverlayTexture;

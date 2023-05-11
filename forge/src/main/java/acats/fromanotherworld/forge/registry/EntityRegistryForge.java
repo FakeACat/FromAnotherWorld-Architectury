@@ -1,12 +1,12 @@
 package acats.fromanotherworld.forge.registry;
 
 import acats.fromanotherworld.FromAnotherWorld;
-import acats.fromanotherworld.entity.model.revealed.SpiderLegsEntityModel;
+import acats.fromanotherworld.entity.model.thing.revealed.SpiderLegsEntityModel;
 import acats.fromanotherworld.entity.render.misc.StarshipEntityRenderer;
 import acats.fromanotherworld.entity.render.projectile.NeedleEntityRenderer;
-import acats.fromanotherworld.entity.render.resultant.*;
-import acats.fromanotherworld.entity.render.revealed.ChestSpitterEntityRenderer;
-import acats.fromanotherworld.entity.render.special.AlienThingEntityRenderer;
+import acats.fromanotherworld.entity.render.thing.resultant.*;
+import acats.fromanotherworld.entity.render.thing.revealed.ChestSpitterEntityRenderer;
+import acats.fromanotherworld.entity.render.thing.special.AlienThingEntityRenderer;
 import acats.fromanotherworld.registry.EntityRegistry;
 import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
 import net.minecraft.client.render.entity.model.EntityModelLayer;

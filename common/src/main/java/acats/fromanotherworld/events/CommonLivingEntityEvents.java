@@ -2,13 +2,13 @@ package acats.fromanotherworld.events;
 
 import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.config.General;
-import acats.fromanotherworld.entity.AbstractThingEntity;
+import acats.fromanotherworld.entity.thing.AbstractThingEntity;
 import acats.fromanotherworld.entity.interfaces.PossibleDisguisedThing;
 import acats.fromanotherworld.entity.interfaces.VariableThing;
 import acats.fromanotherworld.entity.projectile.AssimilationLiquidEntity;
-import acats.fromanotherworld.entity.resultant.BeastEntity;
-import acats.fromanotherworld.entity.resultant.BloodCrawlerEntity;
-import acats.fromanotherworld.entity.revealed.ChestSpitterEntity;
+import acats.fromanotherworld.entity.thing.resultant.BeastEntity;
+import acats.fromanotherworld.entity.thing.resultant.BloodCrawlerEntity;
+import acats.fromanotherworld.entity.thing.revealed.ChestSpitterEntity;
 import acats.fromanotherworld.registry.DamageTypeRegistry;
 import acats.fromanotherworld.registry.EntityRegistry;
 import acats.fromanotherworld.registry.ParticleRegistry;

@@ -1,6 +1,6 @@
 package acats.fromanotherworld.entity.goal;
 
-import acats.fromanotherworld.entity.resultant.PalmerThingEntity;
+import acats.fromanotherworld.entity.thing.resultant.PalmerThingEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.Vec3d;
 

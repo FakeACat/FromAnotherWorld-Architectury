@@ -1,9 +1,9 @@
 package acats.fromanotherworld.entity.goal;
 
-import acats.fromanotherworld.entity.resultant.BlairThingEntity;
+import acats.fromanotherworld.entity.thing.resultant.BlairThingEntity;
 import net.minecraft.entity.LivingEntity;
 
-import static acats.fromanotherworld.entity.resultant.BlairThingEntity.*;
+import static acats.fromanotherworld.entity.thing.resultant.BlairThingEntity.*;
 
 public class BlairThingAttackGoal extends ThingAttackGoal{
     BlairThingEntity blairThing;

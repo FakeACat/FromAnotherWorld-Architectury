@@ -60,9 +60,9 @@ public class ThingOverlayTexture implements AutoCloseable{
         backedTexture.close();
     }
 
-    public static final Identifier FLESH_OVERLAY_TEXTURE = new Identifier(FromAnotherWorld.MOD_ID, "textures/entity/flesh_overlay.png");
+    public static final Identifier FLESH_OVERLAY_TEXTURE = new Identifier(FromAnotherWorld.MOD_ID, "textures/entity/thing/flesh_overlay.png");
     public static final Identifier SNOW_OVERLAY_TEXTURE = new Identifier("textures/block/powder_snow.png");
-    public static final Identifier INJURED_OVERLAY_TEXTURE = new Identifier(FromAnotherWorld.MOD_ID, "textures/entity/injured_overlay.png");
+    public static final Identifier INJURED_OVERLAY_TEXTURE = new Identifier(FromAnotherWorld.MOD_ID, "textures/entity/thing/injured_overlay.png");
 
     private static final HashMap<Identifier, ThingOverlayTexture> FLESH = new HashMap<>();
     private static final HashMap<Identifier, ThingOverlayTexture> SNOW = new HashMap<>();

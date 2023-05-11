@@ -1,7 +1,7 @@
 package acats.fromanotherworld.entity.goal;
 
 import acats.fromanotherworld.FromAnotherWorld;
-import acats.fromanotherworld.entity.special.AlienThingEntity;
+import acats.fromanotherworld.entity.thing.special.AlienThingEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.NoPenaltyTargeting;
 import net.minecraft.entity.ai.TargetPredicate;

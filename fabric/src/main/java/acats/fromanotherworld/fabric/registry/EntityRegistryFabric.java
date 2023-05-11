@@ -1,12 +1,12 @@
 package acats.fromanotherworld.fabric.registry;
 
 import acats.fromanotherworld.FromAnotherWorld;
-import acats.fromanotherworld.entity.model.revealed.SpiderLegsEntityModel;
+import acats.fromanotherworld.entity.model.thing.revealed.SpiderLegsEntityModel;
 import acats.fromanotherworld.entity.render.misc.StarshipEntityRenderer;
 import acats.fromanotherworld.entity.render.projectile.NeedleEntityRenderer;
-import acats.fromanotherworld.entity.render.resultant.*;
-import acats.fromanotherworld.entity.render.revealed.ChestSpitterEntityRenderer;
-import acats.fromanotherworld.entity.render.special.AlienThingEntityRenderer;
+import acats.fromanotherworld.entity.render.thing.resultant.*;
+import acats.fromanotherworld.entity.render.thing.revealed.ChestSpitterEntityRenderer;
+import acats.fromanotherworld.entity.render.thing.special.AlienThingEntityRenderer;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
@@ -23,15 +23,6 @@ import static acats.fromanotherworld.registry.EntityRegistry.*;
 
 public class EntityRegistryFabric {
     public static void register(){
-        /*for (LivingEntityToRegister<?> livingEntityToRegister:
-                CRINGE_MULTILOADER_LIVING_ENTITY_REGISTRY) {
-            Registry.register(Registries.ENTITY_TYPE, livingEntityToRegister.identifier, livingEntityToRegister.build());
-            FabricDefaultAttributeRegistry.register(livingEntityToRegister.get(), livingEntityToRegister.attributeSupplier.get());
-        }
-        for (EntityToRegister<?> entityToRegister:
-                CRINGE_MULTILOADER_PROJECTILE_REGISTRY){
-            Registry.register(Registries.ENTITY_TYPE, entityToRegister.identifier, entityToRegister.build());
-        }*/
         ENTITY_REGISTRY.forEach(EntityRegistryFabric::registerEntity);
         ATTRIBUTE_REGISTRY.forEach(EntityRegistryFabric::registerAttributes);
     }

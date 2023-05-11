@@ -1,9 +1,9 @@
 package acats.fromanotherworld;
 
 import acats.fromanotherworld.config.Classification;
-import acats.fromanotherworld.entity.AbstractThingEntity;
+import acats.fromanotherworld.entity.thing.AbstractThingEntity;
 import acats.fromanotherworld.entity.interfaces.PossibleDisguisedThing;
-import acats.fromanotherworld.entity.resultant.PalmerThingEntity;
+import acats.fromanotherworld.entity.thing.resultant.PalmerThingEntity;
 import acats.fromanotherworld.registry.*;
 import acats.fromanotherworld.tags.BlockTags;
 import mod.azure.azurelib.AzureLib;

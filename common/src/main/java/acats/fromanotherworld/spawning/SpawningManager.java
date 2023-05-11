@@ -2,7 +2,7 @@ package acats.fromanotherworld.spawning;
 
 import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.config.General;
-import acats.fromanotherworld.entity.special.AlienThingEntity;
+import acats.fromanotherworld.entity.thing.special.AlienThingEntity;
 import acats.fromanotherworld.registry.EntityRegistry;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;

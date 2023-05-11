@@ -1,6 +1,6 @@
 package acats.fromanotherworld.mixin;
 
-import acats.fromanotherworld.entity.AbstractThingEntity;
+import acats.fromanotherworld.entity.thing.AbstractThingEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.brain.sensor.VillagerHostilesSensor;
 import org.spongepowered.asm.mixin.Mixin;

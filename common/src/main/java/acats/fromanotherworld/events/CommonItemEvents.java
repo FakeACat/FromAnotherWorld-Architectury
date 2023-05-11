@@ -1,7 +1,7 @@
 package acats.fromanotherworld.events;
 
 import acats.fromanotherworld.block.ThingGore;
-import acats.fromanotherworld.entity.AbstractThingEntity;
+import acats.fromanotherworld.entity.thing.AbstractThingEntity;
 import acats.fromanotherworld.registry.ItemRegistry;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;

@@ -1,6 +1,6 @@
 package acats.fromanotherworld.entity.render.feature;
 
-import acats.fromanotherworld.entity.special.AlienThingEntity;
+import acats.fromanotherworld.entity.thing.special.AlienThingEntity;
 import acats.fromanotherworld.entity.texture.ThingOverlayTexture;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
 import mod.azure.azurelib.renderer.GeoRenderer;

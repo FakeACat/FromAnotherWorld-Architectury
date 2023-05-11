@@ -1,6 +1,6 @@
 package acats.fromanotherworld.entity.goal;
 
-import acats.fromanotherworld.entity.special.AlienThingEntity;
+import acats.fromanotherworld.entity.thing.special.AlienThingEntity;
 
 public class AlienThingSwimGoal extends ImprovedSwimGoal {
     AlienThingEntity alien;

@@ -1,14 +1,14 @@
 package acats.fromanotherworld.entity.goal;
 
 import acats.fromanotherworld.entity.projectile.AssimilationLiquidEntity;
-import acats.fromanotherworld.entity.resultant.BlairThingEntity;
-import acats.fromanotherworld.entity.resultant.BloodCrawlerEntity;
-import acats.fromanotherworld.entity.resultant.CrawlerEntity;
+import acats.fromanotherworld.entity.thing.resultant.BlairThingEntity;
+import acats.fromanotherworld.entity.thing.resultant.BloodCrawlerEntity;
+import acats.fromanotherworld.entity.thing.resultant.CrawlerEntity;
 import acats.fromanotherworld.registry.EntityRegistry;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.util.math.Vec3d;
 
-import static acats.fromanotherworld.entity.resultant.BlairThingEntity.*;
+import static acats.fromanotherworld.entity.thing.resultant.BlairThingEntity.*;
 
 public class BlairThingSpecialAttacksGoal extends Goal {
 

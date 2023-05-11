@@ -1,7 +1,7 @@
 package acats.fromanotherworld.block;
 
 
-import acats.fromanotherworld.entity.resultant.BloodCrawlerEntity;
+import acats.fromanotherworld.entity.thing.resultant.BloodCrawlerEntity;
 import acats.fromanotherworld.registry.EntityRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

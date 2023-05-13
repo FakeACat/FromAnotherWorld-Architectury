@@ -7,6 +7,8 @@ architectury {
     fabric()
 }
 
+version = "${rootProject.mod_version}-fabric"
+
 loom {
     accessWidenerPath = project(":common").loom.accessWidenerPath
 }

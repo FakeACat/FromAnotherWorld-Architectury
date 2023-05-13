@@ -7,6 +7,8 @@ architectury {
     forge()
 }
 
+version = "${rootProject.mod_version}-forge"
+
 loom {
     accessWidenerPath = project(":common").loom.accessWidenerPath
 

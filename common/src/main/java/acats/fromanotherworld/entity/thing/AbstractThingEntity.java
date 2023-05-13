@@ -48,11 +48,17 @@ public abstract class AbstractThingEntity extends HostileEntity implements GeoEn
     protected AbstractThingEntity(EntityType<? extends HostileEntity> entityType, World world, boolean canHaveSpecialAbilities) {
         super(entityType, world);
         this.experiencePoints = STRONG_MONSTER_XP;
-        if (canHaveSpecialAbilities){
-            this.setRareAbilities(General.specialBehaviourRarity);
-        }
-        if (this.canMerge()){
-            this.mergeCore = random.nextInt(10) == 0;
+        if (!this.getWorld().isClient()){
+            if (!entityType.isIn(EntityTags.THINGS)){
+                FromAnotherWorld.LOGGER.error(this.getSavedEntityId() + " extends AbstractThingEntity but is not in the things tag!");
+            }
+
+            if (canHaveSpecialAbilities){
+                this.setRareAbilities(General.specialBehaviourRarity);
+            }
+            if (this.canMerge()){
+                this.mergeCore = random.nextInt(10) == 0;
+            }
         }
     }
 

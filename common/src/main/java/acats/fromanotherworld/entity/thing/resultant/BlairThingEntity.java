@@ -128,6 +128,11 @@ public class BlairThingEntity extends AbstractMinibossThingEntity {
     }
 
     @Override
+    public boolean isInvisible() {
+        return super.isInvisible() || this.getMoveCooldown() >= MOVE_COOLDOWN_IN_TICKS - (EMERGE_TIME_IN_TICKS + TIME_UNDERGROUND_IN_TICKS) && this.getMoveCooldown() <= MOVE_COOLDOWN_IN_TICKS - EMERGE_TIME_IN_TICKS;
+    }
+
+    @Override
     public float getMovementSpeed() {
         return this.getMoveCooldown() < MOVE_COOLDOWN_IN_TICKS - (EMERGE_TIME_IN_TICKS + TIME_UNDERGROUND_IN_TICKS + RETREAT_TIME_IN_TICKS) ? 0.0F : super.getMovementSpeed();
     }

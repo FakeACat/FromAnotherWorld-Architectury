@@ -510,6 +510,12 @@ public abstract class AbstractThingEntity extends HostileEntity implements GeoEn
     }
 
     @Override
+    protected void jump() {
+        if (!this.hibernating())
+            super.jump();
+    }
+
+    @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
         super.writeCustomDataToNbt(nbt);
         nbt.putBoolean("CanSpit", this.canSpit);

@@ -29,7 +29,9 @@
     "fromanotherworld-common.mixins.json"
   ],
   "depends": {
+    "java": ">=17",
     "fabric": "*",
-    "minecraft": ">=1.19.4"
+    "minecraft": ">=1.19.4",
+    "azurelib": ">=1.0.12"
   }
 }

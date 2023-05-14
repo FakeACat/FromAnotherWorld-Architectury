@@ -26,3 +26,10 @@ mandatory = true
 versionRange = "[1.19.4,)"
 ordering = "NONE"
 side = "BOTH"
+
+[[dependencies.fromanotherworld]]
+modId = "azurelib"
+mandatory = true
+versionRange="[1.0.12,)"
+ordering = "NONE"
+side = "BOTH"

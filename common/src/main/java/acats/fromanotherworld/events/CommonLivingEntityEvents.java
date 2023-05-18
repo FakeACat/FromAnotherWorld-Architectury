@@ -18,6 +18,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
@@ -58,6 +59,8 @@ public class CommonLivingEntityEvents implements VariableThing {
             }
             else if (thing.getSupercellConcentration() >= 100){
                 thing.setAssimilated(true);
+                if (entity instanceof MobEntity mobEntity)
+                    mobEntity.setTarget(null);
                 setRareAbilities(entity, General.specialBehaviourRarity);
                 thing.setSupercellConcentration(0);
             }

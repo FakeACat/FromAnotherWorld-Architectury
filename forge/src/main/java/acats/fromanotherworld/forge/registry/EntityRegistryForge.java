@@ -46,6 +46,7 @@ public class EntityRegistryForge {
         event.registerEntityRenderer(PALMER_THING.get(), PalmerThingEntityRenderer::new);
         event.registerEntityRenderer(BLAIR_THING.get(), BlairThingEntityRenderer::new);
         event.registerEntityRenderer(ALIEN_THING.get(), AlienThingEntityRenderer::new);
+        event.registerEntityRenderer(SPLIT_FACE.get(), SplitFaceEntityRenderer::new);
     }
 
     public static void clientRegisterLayers(EntityRenderersEvent.RegisterLayerDefinitions event){

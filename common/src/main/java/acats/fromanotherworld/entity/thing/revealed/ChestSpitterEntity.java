@@ -1,16 +1,14 @@
 package acats.fromanotherworld.entity.thing.revealed;
 
-import acats.fromanotherworld.entity.thing.AbstractThingEntity;
 import acats.fromanotherworld.entity.goal.FleeOnFireGoal;
 import acats.fromanotherworld.entity.projectile.AssimilationLiquidEntity;
+import acats.fromanotherworld.entity.thing.AbstractThingEntity;
 import mod.azure.azurelib.animatable.GeoEntity;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
-import mod.azure.azurelib.util.AzureLibUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -27,8 +25,6 @@ import net.minecraft.world.World;
 import java.util.EnumSet;
 
 public class ChestSpitterEntity extends AbstractThingEntity {
-
-    private final AnimatableInstanceCache factory = AzureLibUtil.createInstanceCache(this);
     private static final int REVEAL_TIME = 100;
     private static final int ATTACK_TIME = 100;
     public Entity host;
@@ -131,11 +127,6 @@ public class ChestSpitterEntity extends AbstractThingEntity {
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "controller", 0, this::predicate));
-    }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return this.factory;
     }
 
     @Override

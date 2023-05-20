@@ -1,27 +1,24 @@
 package acats.fromanotherworld.entity.thing.resultant;
 
-import acats.fromanotherworld.entity.thing.AbstractThingEntity;
 import acats.fromanotherworld.entity.goal.FleeOnFireGoal;
 import acats.fromanotherworld.entity.goal.MergeGoal;
 import acats.fromanotherworld.entity.goal.ThingAttackGoal;
+import acats.fromanotherworld.entity.thing.AbstractThingEntity;
 import acats.fromanotherworld.registry.EntityRegistry;
 import mod.azure.azurelib.animatable.GeoEntity;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
-import mod.azure.azurelib.util.AzureLibUtil;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.ai.goal.WanderAroundFarGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.world.World;
 
 public class CrawlerEntity extends AbstractThingEntity {
-    private final AnimatableInstanceCache factory = AzureLibUtil.createInstanceCache(this);
 
     public CrawlerEntity(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
@@ -88,10 +85,5 @@ public class CrawlerEntity extends AbstractThingEntity {
     @Override
     public Strength getFormStrength() {
         return Strength.STANDARD_WEAK;
-    }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return factory;
     }
 }

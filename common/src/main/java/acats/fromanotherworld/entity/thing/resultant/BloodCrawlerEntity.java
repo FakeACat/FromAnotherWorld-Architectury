@@ -1,17 +1,15 @@
 package acats.fromanotherworld.entity.thing.resultant;
 
-import acats.fromanotherworld.entity.thing.AbstractThingEntity;
 import acats.fromanotherworld.entity.goal.ThingAttackGoal;
 import acats.fromanotherworld.entity.model.thing.resultant.BloodCrawlerEntityModel;
+import acats.fromanotherworld.entity.thing.AbstractThingEntity;
 import acats.fromanotherworld.registry.BlockRegistry;
 import mod.azure.azurelib.animatable.GeoEntity;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
-import mod.azure.azurelib.util.AzureLibUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.FleeEntityGoal;
@@ -33,8 +31,6 @@ import net.minecraft.world.World;
 public class BloodCrawlerEntity extends AbstractThingEntity {
 
     private static final TrackedData<Integer> VARIANT;
-
-    private final AnimatableInstanceCache factory = AzureLibUtil.createInstanceCache(this);
     public BloodCrawlerEntity(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world, false);
         this.experiencePoints = SMALL_MONSTER_XP;
@@ -129,11 +125,6 @@ public class BloodCrawlerEntity extends AbstractThingEntity {
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-    }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return this.factory;
     }
 
     @Override

@@ -1,18 +1,19 @@
 package acats.fromanotherworld.entity.thing.special;
 
 import acats.fromanotherworld.FromAnotherWorld;
+import acats.fromanotherworld.entity.goal.AlienThingFleeGoal;
+import acats.fromanotherworld.entity.goal.AlienThingSwimGoal;
+import acats.fromanotherworld.entity.goal.StalkGoal;
+import acats.fromanotherworld.entity.goal.ThingAttackGoal;
 import acats.fromanotherworld.entity.thing.AbstractThingEntity;
-import acats.fromanotherworld.entity.goal.*;
 import acats.fromanotherworld.registry.ParticleRegistry;
 import acats.fromanotherworld.spawning.SpawningManager;
 import mod.azure.azurelib.animatable.GeoEntity;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
-import mod.azure.azurelib.util.AzureLibUtil;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -37,7 +38,6 @@ import net.minecraft.world.World;
 import java.util.Objects;
 
 public class AlienThingEntity extends AbstractThingEntity {
-    private final AnimatableInstanceCache animatableInstanceCache = AzureLibUtil.createInstanceCache(this);
     public AlienThingEntity(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world, false);
         this.experiencePoints = 25;
@@ -368,11 +368,6 @@ public class AlienThingEntity extends AbstractThingEntity {
         controllerRegistrar.add(new AnimationController<>(this, "controller", 0, this::predicate));
         controllerRegistrar.add(new AnimationController<>(this, "controller2", 0, this::novellaPredicate));
         controllerRegistrar.add(new AnimationController<>(this, "controller3", 0, this::ttfawPredicate));
-    }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return this.animatableInstanceCache;
     }
 
     @Override

@@ -111,6 +111,11 @@ public class EntityRegistry {
                     .setDimensions(0.25F, 0.25F)
                     .trackingTickInterval(TRACK_RANGE_SHORT)
     );
+    public static final FAWEntity<SplitFaceEntity> SPLIT_FACE = registerLiving(
+            "split_face",
+            EntityType.Builder.create(SplitFaceEntity::new, SpawnGroup.CREATURE).setDimensions(0.8F, 1.8F).maxTrackingRange(TRACK_RANGE_MEDIUM),
+            SplitFaceEntity::createSplitFaceAttributes
+    );
 
     private static <T extends LivingEntity> FAWEntity<T> registerLiving(String id, EntityType.Builder<T> builder, Supplier<DefaultAttributeContainer.Builder> attributeSupplier){
         ATTRIBUTE_REGISTRY.put(id, attributeSupplier);

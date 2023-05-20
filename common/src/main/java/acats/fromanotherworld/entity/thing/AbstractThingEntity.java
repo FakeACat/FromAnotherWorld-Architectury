@@ -2,6 +2,7 @@ package acats.fromanotherworld.entity.thing;
 
 import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.config.General;
+import acats.fromanotherworld.constants.FAWAnimations;
 import acats.fromanotherworld.entity.goal.ThingTargetGoal;
 import acats.fromanotherworld.entity.interfaces.VariableThing;
 import acats.fromanotherworld.entity.navigation.ThingNavigation;
@@ -13,6 +14,12 @@ import acats.fromanotherworld.tags.BlockTags;
 import acats.fromanotherworld.tags.DamageTypeTags;
 import acats.fromanotherworld.tags.EntityTags;
 import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.util.AzureLibUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.ActiveTargetGoal;
@@ -81,6 +88,9 @@ public abstract class AbstractThingEntity extends HostileEntity implements GeoEn
     private int timeSinceLastSeenTarget = 0;
     private int alertSoundCooldown = 0;
     private int climbStamina = 300;
+
+
+    private final AnimatableInstanceCache animatableInstanceCache = AzureLibUtil.createInstanceCache(this);
 
     public int getMergedThings() {
         return this.dataTracker.get(MERGED_THINGS);
@@ -565,6 +575,41 @@ public abstract class AbstractThingEntity extends HostileEntity implements GeoEn
         this.setHibernating(nbt.getBoolean("Hibernating"));
         this.timeSinceLastSeenTarget = nbt.getInt("TimeSinceLastSeenTarget");
         this.setCold(nbt.getFloat("Cold"));
+    }
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return this.animatableInstanceCache;
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "defaultController", 5, this::defaultController));
+    }
+
+    private <E extends GeoEntity> PlayState defaultController(AnimationState<E> event){
+        if (this.isThingFrozen()){
+            if (this.getCold() == 1.0F){
+                event.getController().setAnimation(FAWAnimations.FROZEN);
+            }
+            else{
+                event.getController().setAnimation(FAWAnimations.FREEZING);
+            }
+        }
+        else{
+            if (event.isMoving() || (this.rotateWhenClimbing() && this.movingClimbing())){
+                if (this.isAttacking()){
+                    event.getController().setAnimation(FAWAnimations.CHASE);
+                }
+                else{
+                    event.getController().setAnimation(FAWAnimations.WALK);
+                }
+            }
+            else{
+                event.getController().setAnimation(FAWAnimations.IDLE);
+            }
+        }
+        return PlayState.CONTINUE;
     }
 
     public enum Strength {

@@ -7,13 +7,11 @@ import acats.fromanotherworld.entity.goal.MergeGoal;
 import acats.fromanotherworld.entity.goal.PalmerAttackGoal;
 import acats.fromanotherworld.registry.EntityRegistry;
 import mod.azure.azurelib.animatable.GeoEntity;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
-import mod.azure.azurelib.util.AzureLibUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.WanderAroundFarGoal;
@@ -30,8 +28,6 @@ import net.minecraft.world.World;
 public class PalmerThingEntity extends AbstractThingEntity {
 
     private static final TrackedData<Integer> TARGET_ID;
-
-    private final AnimatableInstanceCache animatableInstanceCache = AzureLibUtil.createInstanceCache(this);
 
     public PalmerThingEntity(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
@@ -120,11 +116,6 @@ public class PalmerThingEntity extends AbstractThingEntity {
             event.getController().setAnimation(RawAnimation.begin().thenPlay("animation.palmer_thing.head_idle"));
         }
         return PlayState.CONTINUE;
-    }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return this.animatableInstanceCache;
     }
 
     @Override

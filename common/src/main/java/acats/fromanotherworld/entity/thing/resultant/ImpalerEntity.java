@@ -8,13 +8,11 @@ import acats.fromanotherworld.entity.goal.ThingProjectileBurstGoal;
 import acats.fromanotherworld.entity.projectile.NeedleEntity;
 import acats.fromanotherworld.registry.EntityRegistry;
 import mod.azure.azurelib.animatable.GeoEntity;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
-import mod.azure.azurelib.util.AzureLibUtil;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.WanderAroundFarGoal;
@@ -35,8 +33,6 @@ public class ImpalerEntity extends AbstractThingEntity implements BurstAttackThi
     private int backNeedlesRegrow = 0;
     private static final TrackedData<Boolean> MOUTH_NEEDLES;
     private int mouthNeedlesRegrow = 0;
-
-    private final AnimatableInstanceCache factory = AzureLibUtil.createInstanceCache(this);
 
     public ImpalerEntity(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
@@ -178,11 +174,6 @@ public class ImpalerEntity extends AbstractThingEntity implements BurstAttackThi
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "controller", 20, this::predicate));
-    }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return this.factory;
     }
 
     @Override

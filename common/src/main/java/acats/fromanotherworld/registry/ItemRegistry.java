@@ -52,6 +52,7 @@ public class ItemRegistry {
         registerSpawnEgg("palmer_thing_spawn_egg", 0x8c0a19, 0xbe886c, EntityRegistry.PALMER_THING::get);
         registerSpawnEgg("blair_thing_spawn_egg", 0xbe886c, 0x640827, EntityRegistry.BLAIR_THING::get);
         registerSpawnEgg("alien_thing_spawn_egg", 0x0000FF, 0x000000, EntityRegistry.ALIEN_THING::get);
+        registerSpawnEgg("split_face_spawn_egg", 0xbe886c, 0x8c0a19, EntityRegistry.SPLIT_FACE::get);
     }
     private static void registerSpawnEgg(String id, int primaryColour, int secondaryColour, Supplier<EntityType<? extends MobEntity>> entityTypeSupplier){
         SPAWN_EGG_REGISTRY.put(id, new FAWEgg(primaryColour, secondaryColour, entityTypeSupplier));

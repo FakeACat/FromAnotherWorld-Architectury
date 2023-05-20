@@ -4,13 +4,11 @@ import acats.fromanotherworld.entity.goal.BlairThingAttackGoal;
 import acats.fromanotherworld.entity.goal.BlairThingSpecialAttacksGoal;
 import acats.fromanotherworld.registry.EntityRegistry;
 import mod.azure.azurelib.animatable.GeoEntity;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
-import mod.azure.azurelib.util.AzureLibUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -234,13 +232,6 @@ public class BlairThingEntity extends AbstractMinibossThingEntity {
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "controller", 0, this::predicate));
         controllerRegistrar.add(new AnimationController<>(this, "attackController", 0, this::predicate2));
-    }
-
-    private final AnimatableInstanceCache animatableInstanceCache = AzureLibUtil.createInstanceCache(this);
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return this.animatableInstanceCache;
     }
 
     static {

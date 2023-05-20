@@ -7,13 +7,11 @@ import acats.fromanotherworld.entity.goal.ThingProjectileAttackGoal;
 import acats.fromanotherworld.entity.projectile.AssimilationLiquidEntity;
 import acats.fromanotherworld.registry.EntityRegistry;
 import mod.azure.azurelib.animatable.GeoEntity;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
-import mod.azure.azurelib.util.AzureLibUtil;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.RangedAttackMob;
@@ -30,8 +28,6 @@ import net.minecraft.world.World;
 public class DogBeastSpitterEntity extends AbstractThingEntity implements RangedAttackMob {
 
     private static final TrackedData<Boolean> ATTACKING;
-
-    private final AnimatableInstanceCache factory = AzureLibUtil.createInstanceCache(this);
 
     public DogBeastSpitterEntity(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
@@ -112,11 +108,6 @@ public class DogBeastSpitterEntity extends AbstractThingEntity implements Ranged
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "controller", 10, this::predicate));
-    }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return this.factory;
     }
 
     static {

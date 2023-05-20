@@ -52,5 +52,6 @@ public class EntityRegistryFabric {
         EntityRendererRegistry.register(PALMER_THING.get(), PalmerThingEntityRenderer::new);
         EntityRendererRegistry.register(BLAIR_THING.get(), BlairThingEntityRenderer::new);
         EntityRendererRegistry.register(ALIEN_THING.get(), AlienThingEntityRenderer::new);
+        EntityRendererRegistry.register(SPLIT_FACE.get(), SplitFaceEntityRenderer::new);
     }
 }

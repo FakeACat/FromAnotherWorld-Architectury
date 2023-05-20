@@ -6,13 +6,11 @@ import acats.fromanotherworld.entity.goal.MergeGoal;
 import acats.fromanotherworld.entity.goal.ThingAttackGoal;
 import acats.fromanotherworld.registry.EntityRegistry;
 import mod.azure.azurelib.animatable.GeoEntity;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
-import mod.azure.azurelib.util.AzureLibUtil;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.WanderAroundFarGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
@@ -22,8 +20,6 @@ import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.world.World;
 
 public class JulietteThingEntity extends AbstractThingEntity {
-
-    private final AnimatableInstanceCache factory = AzureLibUtil.createInstanceCache(this);
 
     public JulietteThingEntity(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
@@ -80,11 +76,6 @@ public class JulietteThingEntity extends AbstractThingEntity {
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "controller", 0, this::predicate));
-    }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return this.factory;
     }
 
     @Override

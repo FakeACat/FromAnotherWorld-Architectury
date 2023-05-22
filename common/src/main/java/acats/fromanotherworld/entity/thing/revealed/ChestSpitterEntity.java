@@ -29,7 +29,7 @@ public class ChestSpitterEntity extends AbstractThingEntity {
     private static final int ATTACK_TIME = 100;
     public Entity host;
 
-    public ChestSpitterEntity(EntityType<? extends HostileEntity> entityType, World world) {
+    public ChestSpitterEntity(EntityType<? extends ChestSpitterEntity> entityType, World world) {
         super(entityType, world, false);
     }
 
@@ -95,11 +95,6 @@ public class ChestSpitterEntity extends AbstractThingEntity {
         if (this.age > 2 * REVEAL_TIME + ATTACK_TIME - 20){
             this.discard();
         }
-    }
-
-    @Override
-    public boolean canMerge() {
-        return false;
     }
 
     @Override

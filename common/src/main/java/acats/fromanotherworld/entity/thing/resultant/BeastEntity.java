@@ -1,5 +1,6 @@
 package acats.fromanotherworld.entity.thing.resultant;
 
+import acats.fromanotherworld.entity.goal.AbsorbGoal;
 import acats.fromanotherworld.entity.goal.BeastAttackGoal;
 import acats.fromanotherworld.entity.goal.ThingProjectileAttackGoal;
 import acats.fromanotherworld.entity.projectile.AssimilationLiquidEntity;
@@ -20,7 +21,6 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -29,7 +29,7 @@ public class BeastEntity extends AbstractMinibossThingEntity implements RangedAt
 
     private static final TrackedData<Boolean> MELEE;
 
-    public BeastEntity(EntityType<? extends HostileEntity> entityType, World world) {
+    public BeastEntity(EntityType<? extends BeastEntity> entityType, World world) {
         super(entityType, world);
         this.canGrief = true;
     }
@@ -38,10 +38,14 @@ public class BeastEntity extends AbstractMinibossThingEntity implements RangedAt
     protected void initGoals() {
         this.addThingTargets(false);
         this.goalSelector.add(0, new SwimGoal(this));
-        this.goalSelector.add(1, new BeastAttackGoal(this, 1.0D, false));
-        this.goalSelector.add(2, new FleeEntityGoal<>(this, LivingEntity.class, 10.0F, 1.0, 1.2, (livingEntity) -> livingEntity.equals(this.getTarget())));
-        this.goalSelector.add(3, new ThingProjectileAttackGoal(this, 1.0, 20, 20, 16.0F));
-        this.goalSelector.add(4, new WanderAroundFarGoal(this, 1.0D));
+        this.goalSelector.add(1, new AbsorbGoal(this,
+                STANDARD,
+                (livingEntity) -> minibossGrow((AbstractMinibossThingEntity) livingEntity)
+        ));
+        this.goalSelector.add(2, new BeastAttackGoal(this, 1.0D, false));
+        this.goalSelector.add(3, new FleeEntityGoal<>(this, LivingEntity.class, 10.0F, 1.0, 1.2, (livingEntity) -> livingEntity.equals(this.getTarget())));
+        this.goalSelector.add(4, new ThingProjectileAttackGoal(this, 1.0, 20, 20, 16.0F));
+        this.goalSelector.add(5, new WanderAroundFarGoal(this, 1.0D));
     }
 
     @Override

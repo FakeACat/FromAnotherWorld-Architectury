@@ -1,12 +1,10 @@
 package acats.fromanotherworld.entity.thing.resultant;
 
-import acats.fromanotherworld.entity.thing.AbstractThingEntity;
 import net.minecraft.entity.*;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
@@ -15,10 +13,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public abstract class AbstractMinibossThingEntity extends AbstractThingEntity {
+public abstract class AbstractMinibossThingEntity extends AbstractAbsorberThingEntity {
     private static final TrackedData<Integer> TIER;
 
-    public AbstractMinibossThingEntity(EntityType<? extends HostileEntity> entityType, World world) {
+    public AbstractMinibossThingEntity(EntityType<? extends AbstractAbsorberThingEntity> entityType, World world) {
         super(entityType, world, true);
         this.reinitDimensions();
     }
@@ -35,11 +33,6 @@ public abstract class AbstractMinibossThingEntity extends AbstractThingEntity {
     abstract double getScalingSpeed();
     abstract double getStartingDamage();
     abstract double getScalingDamage();
-
-    @Override
-    public boolean canMerge() {
-        return false;
-    }
 
     public void setTier(int tier, boolean heal){
         this.dataTracker.set(TIER, tier);
@@ -104,6 +97,15 @@ public abstract class AbstractMinibossThingEntity extends AbstractThingEntity {
     @Override
     public Strength getFormStrength() {
         return Strength.MINIBOSS;
+    }
+
+    public static void minibossGrow(AbstractMinibossThingEntity entity){
+        entity.setTier(entity.getTier() + 1, true);
+    }
+
+    @Override
+    public boolean cannotMerge() {
+        return this.getTier() >= 2;
     }
 
     static {

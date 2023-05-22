@@ -1,8 +1,7 @@
 package acats.fromanotherworld.entity.thing.resultant;
 
-import acats.fromanotherworld.entity.thing.AbstractThingEntity;
+import acats.fromanotherworld.entity.goal.AbsorbGoal;
 import acats.fromanotherworld.entity.interfaces.BurstAttackThing;
-import acats.fromanotherworld.entity.goal.MergeGoal;
 import acats.fromanotherworld.entity.goal.ThingAttackGoal;
 import acats.fromanotherworld.entity.goal.ThingProjectileBurstGoal;
 import acats.fromanotherworld.entity.projectile.NeedleEntity;
@@ -27,14 +26,14 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class ImpalerEntity extends AbstractThingEntity implements BurstAttackThing {
+public class ImpalerEntity extends AbstractAbsorberThingEntity implements BurstAttackThing {
 
     private static final TrackedData<Boolean> BACK_NEEDLES;
     private int backNeedlesRegrow = 0;
     private static final TrackedData<Boolean> MOUTH_NEEDLES;
     private int mouthNeedlesRegrow = 0;
 
-    public ImpalerEntity(EntityType<? extends HostileEntity> entityType, World world) {
+    public ImpalerEntity(EntityType<? extends ImpalerEntity> entityType, World world) {
         super(entityType, world);
     }
 
@@ -58,8 +57,11 @@ public class ImpalerEntity extends AbstractThingEntity implements BurstAttackThi
     protected void initGoals() {
         this.addThingTargets(false);
         this.goalSelector.add(0, new ThingProjectileBurstGoal(this, 16.0F, 30));
-        this.goalSelector.add(1, new ThingAttackGoal(this, 1.0D, false));
-        this.goalSelector.add(2, new MergeGoal(this, EntityRegistry.BEAST.get()));
+        this.goalSelector.add(1, new AbsorbGoal(this,
+                STANDARD,
+                (livingEntity) -> defaultGrow(livingEntity, EntityRegistry.BEAST.get())
+        ));
+        this.goalSelector.add(2, new ThingAttackGoal(this, 1.0D, false));
         this.goalSelector.add(3, new WanderAroundFarGoal(this, 1.0D));
     }
 
@@ -133,11 +135,6 @@ public class ImpalerEntity extends AbstractThingEntity implements BurstAttackThi
         nbt.putInt("BackNeedlesRegrow", this.backNeedlesRegrow);
         nbt.putBoolean("MouthNeedles", this.hasMouthNeedles());
         nbt.putInt("MouthNeedlesRegrow", this.mouthNeedlesRegrow);
-    }
-
-    @Override
-    public boolean canMerge() {
-        return true;
     }
 
     @Override

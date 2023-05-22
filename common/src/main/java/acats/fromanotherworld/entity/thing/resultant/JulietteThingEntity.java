@@ -1,8 +1,7 @@
 package acats.fromanotherworld.entity.thing.resultant;
 
-import acats.fromanotherworld.entity.thing.AbstractThingEntity;
+import acats.fromanotherworld.entity.goal.AbsorbGoal;
 import acats.fromanotherworld.entity.goal.FleeOnFireGoal;
-import acats.fromanotherworld.entity.goal.MergeGoal;
 import acats.fromanotherworld.entity.goal.ThingAttackGoal;
 import acats.fromanotherworld.registry.EntityRegistry;
 import mod.azure.azurelib.animatable.GeoEntity;
@@ -19,9 +18,9 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.world.World;
 
-public class JulietteThingEntity extends AbstractThingEntity {
+public class JulietteThingEntity extends AbstractAbsorberThingEntity {
 
-    public JulietteThingEntity(EntityType<? extends HostileEntity> entityType, World world) {
+    public JulietteThingEntity(EntityType<? extends JulietteThingEntity> entityType, World world) {
         super(entityType, world);
     }
 
@@ -29,8 +28,11 @@ public class JulietteThingEntity extends AbstractThingEntity {
     protected void initGoals() {
         this.addThingTargets(false);
         this.goalSelector.add(0, new FleeOnFireGoal(this, 16.0F, 1.2, 1.5));
-        this.goalSelector.add(1, new ThingAttackGoal(this, 1.0D, false));
-        this.goalSelector.add(2, new MergeGoal(this, EntityRegistry.BLAIR_THING.get()));
+        this.goalSelector.add(1, new AbsorbGoal(this,
+                STANDARD,
+                (livingEntity) -> defaultGrow(livingEntity, EntityRegistry.SPLIT_FACE.get())
+        ));
+        this.goalSelector.add(2, new ThingAttackGoal(this, 1.0D, false));
         this.goalSelector.add(3, new WanderAroundFarGoal(this, 1.0D));
     }
 
@@ -66,11 +68,6 @@ public class JulietteThingEntity extends AbstractThingEntity {
             }
         }
         super.onDeath(source);
-    }
-
-    @Override
-    public boolean canMerge() {
-        return true;
     }
 
     @Override

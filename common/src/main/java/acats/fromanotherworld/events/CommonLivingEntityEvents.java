@@ -157,10 +157,10 @@ public class CommonLivingEntityEvents implements VariableThing {
     private static void tryBecomeResultant(LivingEntity entity){
         PossibleDisguisedThing thing = ((PossibleDisguisedThing) entity);
         int entityCheckDist = 16;
-        List<LivingEntity> nearbyEntities = entity.world.getNonSpectatingEntities(LivingEntity.class, new Box(entity.getX() - entityCheckDist, entity.getY() - entityCheckDist, entity.getZ() - entityCheckDist, entity.getX() + entityCheckDist, entity.getY() + entityCheckDist, entity.getZ() + entityCheckDist));
+        List<LivingEntity> nearbyEntities = entity.getWorld().getNonSpectatingEntities(LivingEntity.class, new Box(entity.getX() - entityCheckDist, entity.getY() - entityCheckDist, entity.getZ() - entityCheckDist, entity.getX() + entityCheckDist, entity.getY() + entityCheckDist, entity.getZ() + entityCheckDist));
         int assimilables = FromAnotherWorld.numAssimilablesInList(nearbyEntities);
         int things = FromAnotherWorld.numThingsInList(nearbyEntities);
-        if (things > 5 && assimilables <= 1 && !entity.world.isClient()){
+        if (things > 4 && assimilables <= 1 && !entity.getWorld().isClient()){
             thing.setSupercellConcentration(thing.getSupercellConcentration() + 5);
         }
     }

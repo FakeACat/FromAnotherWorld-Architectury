@@ -38,7 +38,7 @@ import net.minecraft.world.World;
 import java.util.Objects;
 
 public class AlienThingEntity extends AbstractThingEntity {
-    public AlienThingEntity(EntityType<? extends HostileEntity> entityType, World world) {
+    public AlienThingEntity(EntityType<? extends AlienThingEntity> entityType, World world) {
         super(entityType, world, false);
         this.experiencePoints = 25;
     }
@@ -281,11 +281,6 @@ public class AlienThingEntity extends AbstractThingEntity {
             return this.stalkTarget;
 
         return null;
-    }
-
-    @Override
-    public boolean canMerge() {
-        return false;
     }
 
     public void escape(){

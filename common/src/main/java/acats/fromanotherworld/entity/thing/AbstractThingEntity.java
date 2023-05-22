@@ -8,7 +8,6 @@ import acats.fromanotherworld.entity.interfaces.VariableThing;
 import acats.fromanotherworld.entity.navigation.ThingNavigation;
 import acats.fromanotherworld.entity.projectile.NeedleEntity;
 import acats.fromanotherworld.registry.BlockRegistry;
-import acats.fromanotherworld.registry.ParticleRegistry;
 import acats.fromanotherworld.registry.SoundRegistry;
 import acats.fromanotherworld.tags.BlockTags;
 import acats.fromanotherworld.tags.DamageTypeTags;
@@ -45,9 +44,6 @@ import net.minecraft.world.biome.Biome;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class AbstractThingEntity extends HostileEntity implements GeoEntity, VariableThing {
-    private static final TrackedData<Integer> MERGED_THINGS;
-    private static final TrackedData<Integer> MERGE_TIMER;
-    private static final TrackedData<Integer> MERGE_CORE_ID;
     private static final TrackedData<Integer> VICTIM_TYPE;
     private static final TrackedData<Boolean> HIBERNATING;
     private static final TrackedData<Float> COLD;
@@ -62,9 +58,6 @@ public abstract class AbstractThingEntity extends HostileEntity implements GeoEn
 
             if (canHaveSpecialAbilities){
                 this.setRareAbilities(General.specialBehaviourRarity);
-            }
-            if (this.canMerge()){
-                this.mergeCore = random.nextInt(10) == 0;
             }
         }
     }
@@ -83,7 +76,6 @@ public abstract class AbstractThingEntity extends HostileEntity implements GeoEn
     public boolean canGrief;
     public boolean canShootNeedles;
     public static final int HUNTING_RANGE = 256;
-    public boolean mergeCore;
     public LivingEntity currentThreat;
     private int timeSinceLastSeenTarget = 0;
     private int alertSoundCooldown = 0;
@@ -91,27 +83,6 @@ public abstract class AbstractThingEntity extends HostileEntity implements GeoEn
 
 
     private final AnimatableInstanceCache animatableInstanceCache = AzureLibUtil.createInstanceCache(this);
-
-    public int getMergedThings() {
-        return this.dataTracker.get(MERGED_THINGS);
-    }
-    public void setMergedThings(int mergedThings){
-        this.dataTracker.set(MERGED_THINGS, mergedThings);
-    }
-
-    public int getMergeTimer() {
-        return this.dataTracker.get(MERGE_TIMER);
-    }
-    public void setMergeTimer(int mergeTimer){
-        this.dataTracker.set(MERGE_TIMER, mergeTimer);
-    }
-
-    public int getMergeCoreID() {
-        return this.dataTracker.get(MERGE_CORE_ID);
-    }
-    public void setMergeCoreID(int mergeCoreID){
-        this.dataTracker.set(MERGE_CORE_ID, mergeCoreID);
-    }
 
     public int getVictimType(){
         return this.dataTracker.get(VICTIM_TYPE);
@@ -144,9 +115,6 @@ public abstract class AbstractThingEntity extends HostileEntity implements GeoEn
     @Override
     protected void initDataTracker() {
         super.initDataTracker();
-        this.dataTracker.startTracking(MERGED_THINGS, 0);
-        this.dataTracker.startTracking(MERGE_TIMER, 0);
-        this.dataTracker.startTracking(MERGE_CORE_ID, 0);
         this.dataTracker.startTracking(VICTIM_TYPE, -1);
         this.dataTracker.startTracking(HIBERNATING, false);
         this.dataTracker.startTracking(COLD, 0.0F);
@@ -267,7 +235,7 @@ public abstract class AbstractThingEntity extends HostileEntity implements GeoEn
                     this.climbStamina = 300;
                 }
             }
-            if ((this.age % 10 == 0 || this.getMergedThings() > 0) && !FromAnotherWorld.isVulnerable(this)){
+            if (this.age % 10 == 0 && !FromAnotherWorld.isVulnerable(this)){
                 this.heal(1.0F);
             }
 
@@ -322,11 +290,6 @@ public abstract class AbstractThingEntity extends HostileEntity implements GeoEn
                     this.nextClimbRotateProgress = Math.max(this.climbRotateProgress - 0.1F, 0.0F);
                 }
             }
-            if (!this.isThingFrozen() && this.getMergedThings() > 0) {
-                for (int i = 0; i < this.getMergedThings(); i++) {
-                    this.world.addParticle(ParticleRegistry.THING_GORE, this.getParticleX(0.6D), this.getRandomBodyY(), this.getParticleZ(0.6D), 0, 0, 0);
-                }
-            }
         }
         if (this.getAlertSound() != null){
             if (alertSoundCooldown > 0){
@@ -335,23 +298,6 @@ public abstract class AbstractThingEntity extends HostileEntity implements GeoEn
             else if (this.isAttacking()){
                 alertSoundCooldown = 6000;
                 this.playSound(this.getAlertSound(), this.getSoundVolume(), this.getSoundPitch());
-            }
-        }
-        Entity mergeCoreEntity = this.world.getEntityById(this.getMergeCoreID());
-        if (this.getMergeTimer() > 0){
-            if (mergeCoreEntity != null && mergeCoreEntity.isAlive() && this.getMergeTimer() < 100){
-                this.setMergeTimer(this.getMergeTimer() + 1);
-                for(int i = 0; i < (this.getMergeTimer() == 99 ? 100 : (this.getMergeTimer() / 20)); ++i) {
-                    double random = this.random.nextDouble();
-                    Vec3d start = this.getPos().add(0, this.getHeight() / 2, 0);
-                    Vec3d finish = mergeCoreEntity.getPos().add(0, mergeCoreEntity.getHeight() / 2, 0);
-                    Vec3d pos = new Vec3d(MathHelper.lerp(random, start.x, finish.x), MathHelper.lerp(random, start.y, finish.y), MathHelper.lerp(random, start.z, finish.z));
-                    this.world.addParticle(ParticleRegistry.THING_GORE, pos.x, pos.y, pos.z, 0, 0, 0);
-                    this.world.addParticle(ParticleRegistry.THING_GORE, this.getParticleX(0.6D), this.getRandomBodyY(), this.getParticleZ(0.6D), 0, 0, 0);
-                }
-            }
-            else{
-                this.discard();
             }
         }
     }
@@ -409,9 +355,6 @@ public abstract class AbstractThingEntity extends HostileEntity implements GeoEn
     protected float modifyAppliedDamage(DamageSource source, float amount) {
         boolean vul1 = FromAnotherWorld.isVulnerable(this);
         boolean vul2 = source.isIn(DamageTypeTags.ALWAYS_HURTS_THINGS);
-        if (!vul2 && this.mergeCore && this.getMergedThings() > 0){
-            amount *= Math.pow(0.8D, this.getMergedThings());
-        }
         return (vul1 || vul2) ? super.modifyAppliedDamage(source, amount) : Math.min(super.modifyAppliedDamage(source, amount), 1.0F);
     }
 
@@ -508,6 +451,10 @@ public abstract class AbstractThingEntity extends HostileEntity implements GeoEn
         return this.getCold() > 0.8F;
     }
 
+    public boolean cannotMerge(){
+        return false;
+    }
+
     @Override
     public void playAmbientSound() {
         if (!this.isThingFrozen())
@@ -533,14 +480,6 @@ public abstract class AbstractThingEntity extends HostileEntity implements GeoEn
         nbt.putBoolean("CanGrief", this.canGrief);
         nbt.putBoolean("CanShootNeedles", this.canShootNeedles);
 
-        if (this.canMerge()){
-            nbt.putBoolean("MergeCore", this.mergeCore);
-            if (this.mergeCore){
-                nbt.putInt("MergedThings", this.getMergedThings());
-            }
-            nbt.putInt("MergeTimer", this.getMergeTimer());
-        }
-
         nbt.putInt("VictimType", this.getVictimType());
 
         nbt.putBoolean("Hibernating", this.hibernating());
@@ -552,8 +491,6 @@ public abstract class AbstractThingEntity extends HostileEntity implements GeoEn
         }
     }
 
-    public abstract boolean canMerge();
-
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
@@ -561,14 +498,6 @@ public abstract class AbstractThingEntity extends HostileEntity implements GeoEn
         this.canHunt = nbt.getBoolean("CanHunt");
         this.canGrief = nbt.getBoolean("CanGrief");
         this.canShootNeedles = nbt.getBoolean("CanShootNeedles");
-
-        if (this.canMerge()){
-            this.mergeCore = nbt.getBoolean("MergeCore");
-            if (this.mergeCore){
-                this.setMergedThings(nbt.getInt("MergedThings"));
-            }
-            this.setMergeTimer(nbt.getInt("MergeTimer"));
-        }
 
         this.setVictimType(nbt.getInt("VictimType"));
 
@@ -625,9 +554,6 @@ public abstract class AbstractThingEntity extends HostileEntity implements GeoEn
     public abstract Strength getFormStrength();
 
     static {
-        MERGED_THINGS = DataTracker.registerData(AbstractThingEntity.class, TrackedDataHandlerRegistry.INTEGER);
-        MERGE_TIMER = DataTracker.registerData(AbstractThingEntity.class, TrackedDataHandlerRegistry.INTEGER);
-        MERGE_CORE_ID = DataTracker.registerData(AbstractThingEntity.class, TrackedDataHandlerRegistry.INTEGER);
         VICTIM_TYPE = DataTracker.registerData(AbstractThingEntity.class, TrackedDataHandlerRegistry.INTEGER);
         HIBERNATING = DataTracker.registerData(AbstractThingEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
         COLD = DataTracker.registerData(AbstractThingEntity.class, TrackedDataHandlerRegistry.FLOAT);

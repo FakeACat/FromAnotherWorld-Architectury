@@ -1,9 +1,8 @@
 package acats.fromanotherworld.entity.thing.resultant;
 
+import acats.fromanotherworld.entity.goal.AbsorbGoal;
 import acats.fromanotherworld.entity.goal.FleeOnFireGoal;
-import acats.fromanotherworld.entity.goal.MergeGoal;
 import acats.fromanotherworld.entity.goal.ThingAttackGoal;
-import acats.fromanotherworld.entity.thing.AbstractThingEntity;
 import acats.fromanotherworld.registry.EntityRegistry;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animation.AnimatableManager;
@@ -16,11 +15,12 @@ import net.minecraft.entity.ai.goal.WanderAroundFarGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.HostileEntity;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.World;
 
-public class CrawlerEntity extends AbstractThingEntity {
+public class CrawlerEntity extends AbstractAbsorberThingEntity {
 
-    public CrawlerEntity(EntityType<? extends HostileEntity> entityType, World world) {
+    public CrawlerEntity(EntityType<? extends CrawlerEntity> entityType, World world) {
         super(entityType, world);
     }
 
@@ -28,8 +28,11 @@ public class CrawlerEntity extends AbstractThingEntity {
     protected void initGoals() {
         this.addThingTargets(false);
         this.goalSelector.add(0, new FleeOnFireGoal(this, 16.0F, 1.2, 1.5));
-        this.goalSelector.add(1, new ThingAttackGoal(this, 1.0D, false));
-        this.goalSelector.add(2, new MergeGoal(this, EntityRegistry.BLAIR_THING.get()));
+        this.goalSelector.add(1, new AbsorbGoal(this,
+                STANDARD,
+                (livingEntity) -> defaultGrow(livingEntity, EntityRegistry.SPLIT_FACE.get())
+        ));
+        this.goalSelector.add(2, new ThingAttackGoal(this, 1.0D, false));
         this.goalSelector.add(3, new WanderAroundFarGoal(this, 1.0D));
     }
 
@@ -68,13 +71,7 @@ public class CrawlerEntity extends AbstractThingEntity {
 
     @Override
     public void bored() {
-        if (!this.mergeCore)
-            this.setHibernating(true);
-    }
-
-    @Override
-    public boolean canMerge() {
-        return true;
+        this.setHibernating(true);
     }
 
     @Override
@@ -85,5 +82,24 @@ public class CrawlerEntity extends AbstractThingEntity {
     @Override
     public Strength getFormStrength() {
         return Strength.STANDARD_WEAK;
+    }
+
+    public boolean blairSpawned;
+
+    @Override
+    public void writeCustomDataToNbt(NbtCompound nbt) {
+        super.writeCustomDataToNbt(nbt);
+        nbt.putBoolean("BlairSpawned", this.blairSpawned);
+    }
+
+    @Override
+    public void readCustomDataFromNbt(NbtCompound nbt) {
+        super.readCustomDataFromNbt(nbt);
+        this.blairSpawned = nbt.getBoolean("BlairSpawned");
+    }
+
+    @Override
+    public boolean cannotMerge() {
+        return this.blairSpawned;
     }
 }

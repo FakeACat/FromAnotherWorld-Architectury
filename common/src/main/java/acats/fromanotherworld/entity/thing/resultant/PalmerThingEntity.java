@@ -1,9 +1,8 @@
 package acats.fromanotherworld.entity.thing.resultant;
 
 import acats.fromanotherworld.FromAnotherWorld;
-import acats.fromanotherworld.entity.thing.AbstractThingEntity;
+import acats.fromanotherworld.entity.goal.AbsorbGoal;
 import acats.fromanotherworld.entity.goal.FleeOnFireGoal;
-import acats.fromanotherworld.entity.goal.MergeGoal;
 import acats.fromanotherworld.entity.goal.PalmerAttackGoal;
 import acats.fromanotherworld.registry.EntityRegistry;
 import mod.azure.azurelib.animatable.GeoEntity;
@@ -25,11 +24,11 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.world.World;
 
-public class PalmerThingEntity extends AbstractThingEntity {
+public class PalmerThingEntity extends AbstractAbsorberThingEntity {
 
     private static final TrackedData<Integer> TARGET_ID;
 
-    public PalmerThingEntity(EntityType<? extends HostileEntity> entityType, World world) {
+    public PalmerThingEntity(EntityType<? extends PalmerThingEntity> entityType, World world) {
         super(entityType, world);
     }
 
@@ -37,14 +36,12 @@ public class PalmerThingEntity extends AbstractThingEntity {
     protected void initGoals() {
         this.addThingTargets(false);
         this.goalSelector.add(0, new FleeOnFireGoal(this, 16.0F, 1.2, 1.5));
-        this.goalSelector.add(1, new PalmerAttackGoal(this, 1.0D, false));
-        this.goalSelector.add(2, new MergeGoal(this, EntityRegistry.BLAIR_THING.get()));
+        this.goalSelector.add(1, new AbsorbGoal(this,
+                STANDARD,
+                (livingEntity) -> defaultGrow(livingEntity, EntityRegistry.SPLIT_FACE.get())
+        ));
+        this.goalSelector.add(2, new PalmerAttackGoal(this, 1.0D, false));
         this.goalSelector.add(3, new WanderAroundFarGoal(this, 1.0D));
-    }
-
-    @Override
-    public boolean canMerge() {
-        return true;
     }
 
     @Override

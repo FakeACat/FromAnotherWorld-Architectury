@@ -1,9 +1,8 @@
 package acats.fromanotherworld.entity.thing.resultant;
 
+import acats.fromanotherworld.entity.goal.AbsorbGoal;
 import acats.fromanotherworld.entity.goal.FleeOnFireGoal;
-import acats.fromanotherworld.entity.goal.MergeGoal;
 import acats.fromanotherworld.entity.goal.ThingAttackGoal;
-import acats.fromanotherworld.entity.thing.AbstractThingEntity;
 import acats.fromanotherworld.registry.EntityRegistry;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animation.AnimatableManager;
@@ -19,9 +18,9 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.world.World;
 
-public class DogBeastEntity extends AbstractThingEntity {
+public class DogBeastEntity extends AbstractAbsorberThingEntity {
 
-    public DogBeastEntity(EntityType<? extends HostileEntity> entityType, World world) {
+    public DogBeastEntity(EntityType<? extends DogBeastEntity> entityType, World world) {
         super(entityType, world);
     }
 
@@ -29,8 +28,11 @@ public class DogBeastEntity extends AbstractThingEntity {
     protected void initGoals() {
         this.addThingTargets(false);
         this.goalSelector.add(0, new FleeOnFireGoal(this, 16.0F, 1.0, 1.2));
-        this.goalSelector.add(1, new ThingAttackGoal(this, 1.0D, false));
-        this.goalSelector.add(2, new MergeGoal(this, EntityRegistry.BEAST.get()));
+        this.goalSelector.add(1, new AbsorbGoal(this,
+                STANDARD,
+                (livingEntity) -> defaultGrow(livingEntity, EntityRegistry.BEAST.get())
+        ));
+        this.goalSelector.add(2, new ThingAttackGoal(this, 1.0D, false));
         this.goalSelector.add(3, new WanderAroundFarGoal(this, 1.0D));
     }
 
@@ -62,11 +64,6 @@ public class DogBeastEntity extends AbstractThingEntity {
             }
         }
         super.onDeath(source);
-    }
-
-    @Override
-    public boolean canMerge() {
-        return true;
     }
 
     @Override

@@ -1,8 +1,7 @@
 package acats.fromanotherworld.entity.thing.resultant;
 
-import acats.fromanotherworld.entity.thing.AbstractThingEntity;
+import acats.fromanotherworld.entity.goal.AbsorbGoal;
 import acats.fromanotherworld.entity.goal.FleeOnFireGoal;
-import acats.fromanotherworld.entity.goal.MergeGoal;
 import acats.fromanotherworld.entity.goal.ThingProjectileAttackGoal;
 import acats.fromanotherworld.entity.projectile.AssimilationLiquidEntity;
 import acats.fromanotherworld.registry.EntityRegistry;
@@ -25,17 +24,12 @@ import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class DogBeastSpitterEntity extends AbstractThingEntity implements RangedAttackMob {
+public class DogBeastSpitterEntity extends AbstractAbsorberThingEntity implements RangedAttackMob {
 
     private static final TrackedData<Boolean> ATTACKING;
 
-    public DogBeastSpitterEntity(EntityType<? extends HostileEntity> entityType, World world) {
+    public DogBeastSpitterEntity(EntityType<? extends DogBeastSpitterEntity> entityType, World world) {
         super(entityType, world);
-    }
-
-    @Override
-    public boolean canMerge() {
-        return true;
     }
 
     @Override
@@ -62,8 +56,11 @@ public class DogBeastSpitterEntity extends AbstractThingEntity implements Ranged
     protected void initGoals() {
         this.addThingTargets(false);
         this.goalSelector.add(0, new FleeOnFireGoal(this, 16.0F, 1.2, 1.5));
-        this.goalSelector.add(1, new ThingProjectileAttackGoal(this, 1.0, 40, 80, 10.0F));
-        this.goalSelector.add(2, new MergeGoal(this, EntityRegistry.BEAST.get()));
+        this.goalSelector.add(1, new AbsorbGoal(this,
+                STANDARD,
+                (livingEntity) -> defaultGrow(livingEntity, EntityRegistry.BEAST.get())
+        ));
+        this.goalSelector.add(2, new ThingProjectileAttackGoal(this, 1.0, 40, 80, 10.0F));
         this.goalSelector.add(3, new WanderAroundFarGoal(this, 1.0D));
     }
 

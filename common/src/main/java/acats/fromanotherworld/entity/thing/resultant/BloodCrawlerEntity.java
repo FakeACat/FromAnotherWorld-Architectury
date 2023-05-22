@@ -31,7 +31,7 @@ import net.minecraft.world.World;
 public class BloodCrawlerEntity extends AbstractThingEntity {
 
     private static final TrackedData<Integer> VARIANT;
-    public BloodCrawlerEntity(EntityType<? extends HostileEntity> entityType, World world) {
+    public BloodCrawlerEntity(EntityType<? extends BloodCrawlerEntity> entityType, World world) {
         super(entityType, world, false);
         this.experiencePoints = SMALL_MONSTER_XP;
     }
@@ -92,11 +92,6 @@ public class BloodCrawlerEntity extends AbstractThingEntity {
     public void writeCustomDataToNbt(NbtCompound nbt) {
         super.writeCustomDataToNbt(nbt);
         nbt.putInt("Variant", this.getVariant());
-    }
-
-    @Override
-    public boolean canMerge() {
-        return false;
     }
 
     @Override

@@ -59,8 +59,8 @@ public class BlairThingSpecialAttacksGoal extends Goal {
         if (this.mob.getRandom().nextInt(120) == 0){
             CrawlerEntity crawlerEntity = EntityRegistry.CRAWLER.get().create(this.mob.world);
             if (crawlerEntity != null) {
+                crawlerEntity.blairSpawned = true;
                 crawlerEntity.setVictimType(JULIETTE);
-                crawlerEntity.mergeCore = false;
                 crawlerEntity.setPosition(this.mob.getPos());
                 crawlerEntity.setVelocity(this.mob.getTarget().getPos().add(0, this.mob.getTarget().getHeight() / 2, 0).subtract(crawlerEntity.getPos()).normalize().multiply(1.5D).add(new Vec3d(this.mob.getRandom().nextInt(40) - 20, this.mob.getRandom().nextInt(40) - 20, this.mob.getRandom().nextInt(40) - 20).multiply(0.01f)));
                 this.mob.world.spawnEntity(crawlerEntity);

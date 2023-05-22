@@ -1,5 +1,6 @@
 package acats.fromanotherworld.entity.thing.resultant;
 
+import acats.fromanotherworld.entity.goal.AbsorbGoal;
 import acats.fromanotherworld.entity.goal.BlairThingAttackGoal;
 import acats.fromanotherworld.entity.goal.BlairThingSpecialAttacksGoal;
 import acats.fromanotherworld.registry.EntityRegistry;
@@ -18,14 +19,13 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 
 public class BlairThingEntity extends AbstractMinibossThingEntity {
 
-    public BlairThingEntity(EntityType<? extends HostileEntity> entityType, World world) {
+    public BlairThingEntity(EntityType<? extends BlairThingEntity> entityType, World world) {
         super(entityType, world);
     }
 
@@ -40,6 +40,10 @@ public class BlairThingEntity extends AbstractMinibossThingEntity {
     @Override
     protected void initGoals() {
         this.addThingTargets(false);
+        this.goalSelector.add(0, new AbsorbGoal(this,
+                STANDARD,
+                (livingEntity) -> minibossGrow((AbstractMinibossThingEntity) livingEntity)
+        ));
         this.goalSelector.add(1, new BlairThingSpecialAttacksGoal(this));
         this.goalSelector.add(2, new BlairThingAttackGoal(this, 1.0D, false));
     }
@@ -125,6 +129,10 @@ public class BlairThingEntity extends AbstractMinibossThingEntity {
         this.getNavigation().stop();
     }
 
+    private boolean underground(){
+        return this.getMoveCooldown() > MOVE_COOLDOWN_IN_TICKS - (EMERGE_TIME_IN_TICKS + TIME_UNDERGROUND_IN_TICKS + RETREAT_TIME_IN_TICKS);
+    }
+
     @Override
     public boolean isInvisible() {
         return super.isInvisible() || this.getMoveCooldown() >= MOVE_COOLDOWN_IN_TICKS - (EMERGE_TIME_IN_TICKS + TIME_UNDERGROUND_IN_TICKS) && this.getMoveCooldown() <= MOVE_COOLDOWN_IN_TICKS - EMERGE_TIME_IN_TICKS;
@@ -161,6 +169,11 @@ public class BlairThingEntity extends AbstractMinibossThingEntity {
     protected void pushAway(Entity entity) {
     }
 
+    @Override
+    public boolean cannotMerge() {
+        return this.underground() || super.cannotMerge();
+    }
+
     public void setMoveCooldown(int moveCooldown){
         this.dataTracker.set(MOVE_COOLDOWN, moveCooldown);
     }
@@ -194,7 +207,6 @@ public class BlairThingEntity extends AbstractMinibossThingEntity {
         if (dogSpitterEntity != null) {
             dogSpitterEntity.canSpit = true;
             dogSpitterEntity.canGrief = true;
-            dogSpitterEntity.mergeCore = true;
             dogSpitterEntity.setPosition(this.getPos());
             this.world.spawnEntity(dogSpitterEntity);
         }

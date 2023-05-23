@@ -5,6 +5,7 @@ import acats.fromanotherworld.entity.goal.AlienThingFleeGoal;
 import acats.fromanotherworld.entity.goal.AlienThingSwimGoal;
 import acats.fromanotherworld.entity.goal.StalkGoal;
 import acats.fromanotherworld.entity.goal.ThingAttackGoal;
+import acats.fromanotherworld.entity.interfaces.StalkerThing;
 import acats.fromanotherworld.entity.thing.AbstractThingEntity;
 import acats.fromanotherworld.registry.ParticleRegistry;
 import acats.fromanotherworld.spawning.SpawningManager;
@@ -37,7 +38,7 @@ import net.minecraft.world.World;
 
 import java.util.Objects;
 
-public class AlienThingEntity extends AbstractThingEntity {
+public class AlienThingEntity extends AbstractThingEntity implements StalkerThing {
     public AlienThingEntity(EntityType<? extends AlienThingEntity> entityType, World world) {
         super(entityType, world, false);
         this.experiencePoints = 25;
@@ -118,15 +119,19 @@ public class AlienThingEntity extends AbstractThingEntity {
     private void tickBurrowing(){
         int burrowing = this.dataTracker.get(BURROWING);
         if (burrowing > EMERGE_TIME_TICKS) {
-            if (!this.getWorld().isClient()){
-                SpawningManager spawningManager = SpawningManager.getSpawningManager((ServerWorld) this.getWorld());
-                spawningManager.alienThingsToSpawn++;
-                spawningManager.markDirty();
-                this.discard();
-            }
+            this.leave();
             return;
         }
         this.dataTracker.set(BURROWING, burrowing + 1);
+    }
+
+    private void leave(){
+        if (!this.getWorld().isClient()){
+            SpawningManager spawningManager = SpawningManager.getSpawningManager((ServerWorld) this.getWorld());
+            spawningManager.alienThingsToSpawn++;
+            spawningManager.markDirty();
+            this.discard();
+        }
     }
 
     private boolean burrowingOrEmerging(){
@@ -157,6 +162,11 @@ public class AlienThingEntity extends AbstractThingEntity {
     protected void mobTick() {
         if (!this.world.isClient()){
             if (!this.isThingFrozen()){
+                PlayerEntity player = this.getWorld().getClosestPlayer(this, -1.0F);
+                if (player == null || player.squaredDistanceTo(this) > 16384){
+                    this.leave();
+                    return;
+                }
                 switchTimer++;
                 if (switchTimer > 1800){
                     this.switchTimer = 0;
@@ -164,7 +174,7 @@ public class AlienThingEntity extends AbstractThingEntity {
                         this.initiateSwitch();
                 }
                 if (this.age % 20 == 0){
-                    if (this.fleeing)
+                    if (this.fleeing || this.bored)
                         this.escape();
                     if (this.age % 60 == 0 &&
                             this.getTarget() != null &&
@@ -269,6 +279,7 @@ public class AlienThingEntity extends AbstractThingEntity {
     }
 
     private PlayerEntity stalkTarget = null;
+    @Override
     public PlayerEntity getStalkTarget(){
         float d2 = AbstractThingEntity.HUNTING_RANGE * AbstractThingEntity.HUNTING_RANGE;
 

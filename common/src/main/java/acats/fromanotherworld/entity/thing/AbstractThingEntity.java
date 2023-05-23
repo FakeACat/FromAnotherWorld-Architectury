@@ -75,7 +75,7 @@ public abstract class AbstractThingEntity extends HostileEntity implements GeoEn
     public boolean canHunt;
     public boolean canGrief;
     public boolean canShootNeedles;
-    public static final int HUNTING_RANGE = 256;
+    public static final int HUNTING_RANGE = 128;
     public LivingEntity currentThreat;
     private int timeSinceLastSeenTarget = 0;
     private int alertSoundCooldown = 0;

@@ -94,7 +94,7 @@ public class EntityRegistry {
     );
     public static final FAWEntity<AlienThingEntity> ALIEN_THING = registerLiving(
             "alien_thing",
-            EntityType.Builder.create(AlienThingEntity::new, SpawnGroup.CREATURE).setDimensions(0.8F, 1.8F).maxTrackingRange(TRACK_RANGE_LONG),
+            EntityType.Builder.create(AlienThingEntity::new, SpawnGroup.CREATURE).setDimensions(0.8F, 1.8F).maxTrackingRange(TRACK_RANGE_MEDIUM),
             AlienThingEntity::createAlienThingAttributes
     );
     public static final FAWEntity<AssimilationLiquidEntity> ASSIMILATION_LIQUID = register(

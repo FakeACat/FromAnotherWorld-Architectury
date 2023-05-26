@@ -1,13 +1,14 @@
 package acats.fromanotherworld.entity.model.thing.resultant;
 
 import acats.fromanotherworld.FromAnotherWorld;
-import acats.fromanotherworld.entity.interfaces.VariableThing;
 import acats.fromanotherworld.entity.thing.resultant.JulietteThingEntity;
 import mod.azure.azurelib.model.GeoModel;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.util.Identifier;
 
-public class JulietteThingEntityModel extends GeoModel<JulietteThingEntity> implements VariableThing {
+import static acats.fromanotherworld.constants.Variants.VILLAGER;
+
+public class JulietteThingEntityModel extends GeoModel<JulietteThingEntity> {
     @Override
     public Identifier getModelResource(JulietteThingEntity object) {
         return new Identifier(FromAnotherWorld.MOD_ID, "geo/entity/thing/resultant/juliette_thing.geo.json");

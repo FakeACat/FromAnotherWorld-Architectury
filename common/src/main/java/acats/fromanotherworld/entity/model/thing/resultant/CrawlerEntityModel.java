@@ -1,12 +1,13 @@
 package acats.fromanotherworld.entity.model.thing.resultant;
 
 import acats.fromanotherworld.FromAnotherWorld;
-import acats.fromanotherworld.entity.interfaces.VariableThing;
 import acats.fromanotherworld.entity.thing.resultant.CrawlerEntity;
 import mod.azure.azurelib.model.GeoModel;
 import net.minecraft.util.Identifier;
 
-public class CrawlerEntityModel extends GeoModel<CrawlerEntity> implements VariableThing {
+import static acats.fromanotherworld.constants.Variants.*;
+
+public class CrawlerEntityModel extends GeoModel<CrawlerEntity> {
     @Override
     public Identifier getModelResource(CrawlerEntity object) {
         String variant = "crawler";

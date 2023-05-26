@@ -18,6 +18,8 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.world.World;
 
+import static acats.fromanotherworld.constants.Variants.JULIETTE;
+
 public class JulietteThingEntity extends AbstractAbsorberThingEntity {
 
     public JulietteThingEntity(EntityType<? extends JulietteThingEntity> entityType, World world) {

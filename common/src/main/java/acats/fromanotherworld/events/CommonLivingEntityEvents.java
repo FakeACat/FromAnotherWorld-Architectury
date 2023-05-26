@@ -2,9 +2,9 @@ package acats.fromanotherworld.events;
 
 import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.config.General;
+import acats.fromanotherworld.constants.Variants;
 import acats.fromanotherworld.entity.thing.AbstractThingEntity;
 import acats.fromanotherworld.entity.interfaces.PossibleDisguisedThing;
-import acats.fromanotherworld.entity.interfaces.VariableThing;
 import acats.fromanotherworld.entity.projectile.AssimilationLiquidEntity;
 import acats.fromanotherworld.entity.thing.resultant.BeastEntity;
 import acats.fromanotherworld.entity.thing.resultant.BloodCrawlerEntity;
@@ -12,6 +12,7 @@ import acats.fromanotherworld.entity.thing.revealed.ChestSpitterEntity;
 import acats.fromanotherworld.registry.DamageTypeRegistry;
 import acats.fromanotherworld.registry.EntityRegistry;
 import acats.fromanotherworld.registry.ParticleRegistry;
+import acats.fromanotherworld.tags.EntityTags;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -29,9 +30,10 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
+import static acats.fromanotherworld.constants.Variants.*;
 import static acats.fromanotherworld.tags.EntityTags.*;
 
-public class CommonLivingEntityEvents implements VariableThing {
+public class CommonLivingEntityEvents {
     private static final int REVEAL_COOLDOWN = 12000;
     public static void serverPlayerEntityDeath(PlayerEntity playerEntity, DamageSource damageSource){
         if (damageSource.isOf(DamageTypeRegistry.ASSIMILATION)){
@@ -193,6 +195,12 @@ public class CommonLivingEntityEvents implements VariableThing {
                 case 1 -> thing = EntityRegistry.JULIETTE_THING.get().create(entity.world);
                 case 2 -> thing = EntityRegistry.PALMER_THING.get().create(entity.world);
             }
+            if (thing != null){
+                if (type.isIn(VILLAGERS))
+                    thing.setVictimType(VILLAGER);
+                else if (type.isIn(ILLAGERS))
+                    thing.setVictimType(ILLAGER);
+            }
         }
         else if (type.isIn(QUADRUPEDS) || type.isIn(LARGE_QUADRUPEDS)){
             switch (chooseStrength(entity.getRandom())) {
@@ -202,6 +210,18 @@ public class CommonLivingEntityEvents implements VariableThing {
                 }
                 case 1 -> thing = EntityRegistry.DOGBEAST.get().create(entity.world);
                 case 2 -> thing = EntityRegistry.IMPALER.get().create(entity.world);
+            }
+            if (thing != null){
+                if (type.isIn(COWS))
+                    thing.setVictimType(COW);
+                else if (type.isIn(EntityTags.SHEEP))
+                    thing.setVictimType(Variants.SHEEP);
+                else if (type.isIn(PIGS))
+                    thing.setVictimType(PIG);
+                else if (type.isIn(HORSES))
+                    thing.setVictimType(HORSE);
+                else if (type.isIn(LLAMAS))
+                    thing.setVictimType(LLAMA);
             }
         }
         else if (type.isIn(VERY_LARGE_QUADRUPEDS)){
@@ -214,10 +234,6 @@ public class CommonLivingEntityEvents implements VariableThing {
             spawnCrawlers(MathHelper.ceil(vol(entity) * 4.0F), entity.getPos(), entity.world);
         }
         if (thing != null){
-            if (type.isIn(VILLAGERS))
-                thing.setVictimType(VILLAGER);
-            else if (type.isIn(ILLAGERS))
-                thing.setVictimType(ILLAGER);
             thing.setPosition(entity.getPos());
             entity.world.spawnEntity(thing);
         }

@@ -16,6 +16,11 @@ public class EntityTags {
     public static final TagKey<EntityType<?>> VILLAGERS = entityTag("villagers");
     public static final TagKey<EntityType<?>> ILLAGERS = entityTag("illagers");
     public static final TagKey<EntityType<?>> THINGS = entityTag("things");
+    public static final TagKey<EntityType<?>> COWS = entityTag("cows");
+    public static final TagKey<EntityType<?>> SHEEP = entityTag("sheep");
+    public static final TagKey<EntityType<?>> PIGS = entityTag("pigs");
+    public static final TagKey<EntityType<?>> HORSES = entityTag("horses");
+    public static final TagKey<EntityType<?>> LLAMAS = entityTag("llamas");
 
     private static TagKey<EntityType<?>> entityTag(String id){
         return TagKey.of(RegistryKeys.ENTITY_TYPE, new Identifier(FromAnotherWorld.MOD_ID, id));

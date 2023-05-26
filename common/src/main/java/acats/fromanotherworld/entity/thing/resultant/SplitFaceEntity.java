@@ -1,9 +1,11 @@
 package acats.fromanotherworld.entity.thing.resultant;
 
+import acats.fromanotherworld.constants.FAWAnimations;
 import acats.fromanotherworld.entity.goal.AbsorbGoal;
 import acats.fromanotherworld.entity.goal.FleeOnFireGoal;
 import acats.fromanotherworld.entity.goal.ThingAttackGoal;
 import acats.fromanotherworld.registry.EntityRegistry;
+import mod.azure.azurelib.core.animation.AnimatableManager;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.WanderAroundFarGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
@@ -49,5 +51,10 @@ public class SplitFaceEntity extends AbstractAbsorberThingEntity {
     @Override
     public Strength getFormStrength() {
         return Strength.STRONG;
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(FAWAnimations.defaultThing(this));
     }
 }

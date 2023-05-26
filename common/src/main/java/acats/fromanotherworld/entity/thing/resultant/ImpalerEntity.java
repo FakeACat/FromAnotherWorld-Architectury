@@ -1,17 +1,13 @@
 package acats.fromanotherworld.entity.thing.resultant;
 
+import acats.fromanotherworld.constants.FAWAnimations;
 import acats.fromanotherworld.entity.goal.AbsorbGoal;
 import acats.fromanotherworld.entity.interfaces.BurstAttackThing;
 import acats.fromanotherworld.entity.goal.ThingAttackGoal;
 import acats.fromanotherworld.entity.goal.ThingProjectileBurstGoal;
 import acats.fromanotherworld.entity.projectile.NeedleEntity;
 import acats.fromanotherworld.registry.EntityRegistry;
-import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animation.AnimatableManager;
-import mod.azure.azurelib.core.animation.AnimationController;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
-import mod.azure.azurelib.core.object.PlayState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.WanderAroundFarGoal;
@@ -63,16 +59,6 @@ public class ImpalerEntity extends AbstractAbsorberThingEntity implements BurstA
         ));
         this.goalSelector.add(2, new ThingAttackGoal(this, 1.0D, false));
         this.goalSelector.add(3, new WanderAroundFarGoal(this, 1.0D));
-    }
-
-    private <E extends GeoEntity> PlayState predicate(AnimationState<E> event) {
-        if ((event.isMoving() || this.movingClimbing()) && !this.isThingFrozen()) {
-            event.getController().setAnimation(RawAnimation.begin().thenLoop("animation.impaler.walk"));
-        }
-        else{
-            return PlayState.STOP;
-        }
-        return PlayState.CONTINUE;
     }
 
     @Override
@@ -170,7 +156,7 @@ public class ImpalerEntity extends AbstractAbsorberThingEntity implements BurstA
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
-        controllerRegistrar.add(new AnimationController<>(this, "controller", 20, this::predicate));
+        controllerRegistrar.add(FAWAnimations.defaultThingNoChase(this));
     }
 
     @Override

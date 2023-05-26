@@ -8,6 +8,7 @@ import acats.fromanotherworld.registry.EntityRegistry;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.util.math.Vec3d;
 
+import static acats.fromanotherworld.constants.Variants.JULIETTE;
 import static acats.fromanotherworld.entity.thing.resultant.BlairThingEntity.*;
 
 public class BlairThingSpecialAttacksGoal extends Goal {

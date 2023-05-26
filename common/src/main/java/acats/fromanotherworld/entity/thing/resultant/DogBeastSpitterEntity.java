@@ -24,7 +24,7 @@ import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class DogBeastSpitterEntity extends AbstractAbsorberThingEntity implements RangedAttackMob {
+public class DogBeastSpitterEntity extends AbsorberThingEntity implements RangedAttackMob {
 
     private static final TrackedData<Boolean> ATTACKING;
 

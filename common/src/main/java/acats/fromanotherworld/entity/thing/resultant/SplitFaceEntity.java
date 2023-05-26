@@ -13,7 +13,7 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.world.World;
 
-public class SplitFaceEntity extends AbstractAbsorberThingEntity {
+public class SplitFaceEntity extends AbsorberThingEntity {
     public SplitFaceEntity(EntityType<? extends SplitFaceEntity> entityType, World world) {
         super(entityType, world, true);
         this.canGrief = true;

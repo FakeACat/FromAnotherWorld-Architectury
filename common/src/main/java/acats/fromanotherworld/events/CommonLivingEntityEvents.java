@@ -3,7 +3,7 @@ package acats.fromanotherworld.events;
 import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.config.General;
 import acats.fromanotherworld.constants.Variants;
-import acats.fromanotherworld.entity.thing.AbstractThingEntity;
+import acats.fromanotherworld.entity.thing.ThingEntity;
 import acats.fromanotherworld.entity.interfaces.PossibleDisguisedThing;
 import acats.fromanotherworld.entity.projectile.AssimilationLiquidEntity;
 import acats.fromanotherworld.entity.thing.resultant.BeastEntity;
@@ -183,7 +183,7 @@ public class CommonLivingEntityEvents {
         if (entity.world.isClient()) {
             return;
         }
-        AbstractThingEntity thing = null;
+        ThingEntity thing = null;
         EntityType<?> type = entity.getType();
         if (type.isIn(HUMANOIDS)){
             switch (chooseStrength(entity.getRandom())) {

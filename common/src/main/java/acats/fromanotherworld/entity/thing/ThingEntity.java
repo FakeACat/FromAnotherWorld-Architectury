@@ -37,17 +37,17 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class AbstractThingEntity extends HostileEntity implements GeoEntity {
+public abstract class ThingEntity extends HostileEntity implements GeoEntity {
     private static final TrackedData<Integer> VICTIM_TYPE;
     private static final TrackedData<Boolean> HIBERNATING;
     private static final TrackedData<Float> COLD;
     private static final TrackedData<Boolean> CLIMBING;
-    protected AbstractThingEntity(EntityType<? extends HostileEntity> entityType, World world, boolean canHaveSpecialAbilities) {
+    protected ThingEntity(EntityType<? extends HostileEntity> entityType, World world, boolean canHaveSpecialAbilities) {
         super(entityType, world);
         this.experiencePoints = STRONG_MONSTER_XP;
         if (!this.getWorld().isClient()){
             if (!entityType.isIn(EntityTags.THINGS)){
-                FromAnotherWorld.LOGGER.error(this.getSavedEntityId() + " extends AbstractThingEntity but is not in the things tag!");
+                FromAnotherWorld.LOGGER.error(this.getSavedEntityId() + " extends ThingEntity but is not in the things tag!");
             }
 
             if (canHaveSpecialAbilities){
@@ -61,7 +61,7 @@ public abstract class AbstractThingEntity extends HostileEntity implements GeoEn
         return new ThingNavigation(this, world);
     }
 
-    protected AbstractThingEntity(EntityType<? extends HostileEntity> entityType, World world){
+    protected ThingEntity(EntityType<? extends HostileEntity> entityType, World world){
         this(entityType, world, true);
     }
 
@@ -518,9 +518,9 @@ public abstract class AbstractThingEntity extends HostileEntity implements GeoEn
     public abstract Strength getFormStrength();
 
     static {
-        VICTIM_TYPE = DataTracker.registerData(AbstractThingEntity.class, TrackedDataHandlerRegistry.INTEGER);
-        HIBERNATING = DataTracker.registerData(AbstractThingEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-        COLD = DataTracker.registerData(AbstractThingEntity.class, TrackedDataHandlerRegistry.FLOAT);
-        CLIMBING = DataTracker.registerData(AbstractThingEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+        VICTIM_TYPE = DataTracker.registerData(ThingEntity.class, TrackedDataHandlerRegistry.INTEGER);
+        HIBERNATING = DataTracker.registerData(ThingEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+        COLD = DataTracker.registerData(ThingEntity.class, TrackedDataHandlerRegistry.FLOAT);
+        CLIMBING = DataTracker.registerData(ThingEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     }
 }

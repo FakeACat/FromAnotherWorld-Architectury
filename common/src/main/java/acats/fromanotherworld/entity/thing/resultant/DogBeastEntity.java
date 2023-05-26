@@ -18,7 +18,7 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.world.World;
 
-public class DogBeastEntity extends AbstractAbsorberThingEntity {
+public class DogBeastEntity extends AbsorberThingEntity {
 
     public DogBeastEntity(EntityType<? extends DogBeastEntity> entityType, World world) {
         super(entityType, world);

@@ -23,7 +23,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 
-public class BlairThingEntity extends AbstractMinibossThingEntity {
+public class BlairThingEntity extends MinibossThingEntity {
 
     public BlairThingEntity(EntityType<? extends BlairThingEntity> entityType, World world) {
         super(entityType, world);
@@ -42,7 +42,7 @@ public class BlairThingEntity extends AbstractMinibossThingEntity {
         this.addThingTargets(false);
         this.goalSelector.add(0, new AbsorbGoal(this,
                 STANDARD,
-                (livingEntity) -> minibossGrow((AbstractMinibossThingEntity) livingEntity)
+                (livingEntity) -> minibossGrow((MinibossThingEntity) livingEntity)
         ));
         this.goalSelector.add(1, new BlairThingSpecialAttacksGoal(this));
         this.goalSelector.add(2, new BlairThingAttackGoal(this, 1.0D, false));

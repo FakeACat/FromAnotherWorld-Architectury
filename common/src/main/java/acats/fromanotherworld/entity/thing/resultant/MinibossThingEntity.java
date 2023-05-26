@@ -13,10 +13,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public abstract class AbstractMinibossThingEntity extends AbstractAbsorberThingEntity {
+public abstract class MinibossThingEntity extends AbsorberThingEntity {
     private static final TrackedData<Integer> TIER;
 
-    public AbstractMinibossThingEntity(EntityType<? extends AbstractAbsorberThingEntity> entityType, World world) {
+    public MinibossThingEntity(EntityType<? extends AbsorberThingEntity> entityType, World world) {
         super(entityType, world, true);
         this.reinitDimensions();
     }
@@ -99,7 +99,7 @@ public abstract class AbstractMinibossThingEntity extends AbstractAbsorberThingE
         return Strength.MINIBOSS;
     }
 
-    public static void minibossGrow(AbstractMinibossThingEntity entity){
+    public static void minibossGrow(MinibossThingEntity entity){
         entity.setTier(entity.getTier() + 1, true);
     }
 
@@ -109,6 +109,6 @@ public abstract class AbstractMinibossThingEntity extends AbstractAbsorberThingE
     }
 
     static {
-        TIER = DataTracker.registerData(AbstractMinibossThingEntity.class, TrackedDataHandlerRegistry.INTEGER);
+        TIER = DataTracker.registerData(MinibossThingEntity.class, TrackedDataHandlerRegistry.INTEGER);
     }
 }

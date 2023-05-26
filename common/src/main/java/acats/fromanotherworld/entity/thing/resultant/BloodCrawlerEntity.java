@@ -2,7 +2,7 @@ package acats.fromanotherworld.entity.thing.resultant;
 
 import acats.fromanotherworld.entity.goal.ThingAttackGoal;
 import acats.fromanotherworld.entity.model.thing.resultant.BloodCrawlerEntityModel;
-import acats.fromanotherworld.entity.thing.AbstractThingEntity;
+import acats.fromanotherworld.entity.thing.ThingEntity;
 import acats.fromanotherworld.registry.BlockRegistry;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animation.AnimatableManager;
@@ -28,7 +28,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 
-public class BloodCrawlerEntity extends AbstractThingEntity {
+public class BloodCrawlerEntity extends ThingEntity {
 
     private static final TrackedData<Integer> VARIANT;
     public BloodCrawlerEntity(EntityType<? extends BloodCrawlerEntity> entityType, World world) {

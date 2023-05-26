@@ -1,7 +1,7 @@
 package acats.fromanotherworld;
 
 import acats.fromanotherworld.config.Classification;
-import acats.fromanotherworld.entity.thing.AbstractThingEntity;
+import acats.fromanotherworld.entity.thing.ThingEntity;
 import acats.fromanotherworld.entity.interfaces.PossibleDisguisedThing;
 import acats.fromanotherworld.entity.thing.resultant.PalmerThingEntity;
 import acats.fromanotherworld.registry.*;
@@ -41,7 +41,7 @@ public class FromAnotherWorld {
     }
 
     public static boolean isThing(Entity e){
-        return e instanceof LivingEntity && (e instanceof AbstractThingEntity || ((PossibleDisguisedThing) e).isAssimilated());
+        return e instanceof LivingEntity && (e instanceof ThingEntity || ((PossibleDisguisedThing) e).isAssimilated());
     }
     public static boolean assimilate(Entity e){
         return assimilate(e, 1.0F);
@@ -82,7 +82,7 @@ public class FromAnotherWorld {
         int t = 0;
         for (LivingEntity e:
                 list) {
-            if (isThing(e) && !(e instanceof AbstractThingEntity e2 && !e2.shouldBeCounted())){
+            if (isThing(e) && !(e instanceof ThingEntity e2 && !e2.shouldBeCounted())){
                 t++;
             }
         }
@@ -131,7 +131,7 @@ public class FromAnotherWorld {
         for (LivingEntity potentialThing:
                 potentialThings) {
             if (entity.getRandom().nextInt(chance) == 0){
-                if (potentialThing instanceof AbstractThingEntity entity1 && threat != null){
+                if (potentialThing instanceof ThingEntity entity1 && threat != null){
                     entity1.currentThreat = threat;
                     if (entity1.canTarget(threat))
                         entity1.setTarget(threat);

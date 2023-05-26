@@ -25,7 +25,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class BeastEntity extends AbstractMinibossThingEntity implements RangedAttackMob {
+public class BeastEntity extends MinibossThingEntity implements RangedAttackMob {
 
     private static final TrackedData<Boolean> MELEE;
 
@@ -40,7 +40,7 @@ public class BeastEntity extends AbstractMinibossThingEntity implements RangedAt
         this.goalSelector.add(0, new SwimGoal(this));
         this.goalSelector.add(1, new AbsorbGoal(this,
                 STANDARD,
-                (livingEntity) -> minibossGrow((AbstractMinibossThingEntity) livingEntity)
+                (livingEntity) -> minibossGrow((MinibossThingEntity) livingEntity)
         ));
         this.goalSelector.add(2, new BeastAttackGoal(this, 1.0D, false));
         this.goalSelector.add(3, new FleeEntityGoal<>(this, LivingEntity.class, 10.0F, 1.0, 1.2, (livingEntity) -> livingEntity.equals(this.getTarget())));

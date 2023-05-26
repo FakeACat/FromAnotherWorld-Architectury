@@ -18,7 +18,7 @@ import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.World;
 
-public class CrawlerEntity extends AbstractAbsorberThingEntity {
+public class CrawlerEntity extends AbsorberThingEntity {
 
     public CrawlerEntity(EntityType<? extends CrawlerEntity> entityType, World world) {
         super(entityType, world);

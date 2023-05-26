@@ -24,7 +24,7 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.world.World;
 
-public class PalmerThingEntity extends AbstractAbsorberThingEntity {
+public class PalmerThingEntity extends AbsorberThingEntity {
 
     private static final TrackedData<Integer> TARGET_ID;
 

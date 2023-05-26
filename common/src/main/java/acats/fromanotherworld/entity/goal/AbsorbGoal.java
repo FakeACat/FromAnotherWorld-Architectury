@@ -1,7 +1,7 @@
 package acats.fromanotherworld.entity.goal;
 
 import acats.fromanotherworld.entity.interfaces.PossibleDisguisedThing;
-import acats.fromanotherworld.entity.thing.resultant.AbstractAbsorberThingEntity;
+import acats.fromanotherworld.entity.thing.resultant.AbsorberThingEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.TargetPredicate;
 import net.minecraft.entity.ai.goal.Goal;
@@ -15,15 +15,15 @@ import java.util.function.Predicate;
 public class AbsorbGoal extends Goal {
     private static final int RANGE = 16;
     private final TargetPredicate absorbPredicate;
-    private final AbstractAbsorberThingEntity absorber;
+    private final AbsorberThingEntity absorber;
     private final World world;
     private final int chance;
     private final Consumer<LivingEntity> grow;
     private int timer = 0;
-    public AbsorbGoal(AbstractAbsorberThingEntity absorber, Predicate<LivingEntity> absorbable, Consumer<LivingEntity> grow){
+    public AbsorbGoal(AbsorberThingEntity absorber, Predicate<LivingEntity> absorbable, Consumer<LivingEntity> grow){
         this(absorber, absorbable, grow, 300);
     }
-    public AbsorbGoal(AbstractAbsorberThingEntity absorber, Predicate<LivingEntity> absorbable, Consumer<LivingEntity> grow, int chance){
+    public AbsorbGoal(AbsorberThingEntity absorber, Predicate<LivingEntity> absorbable, Consumer<LivingEntity> grow, int chance){
         this.absorber = absorber;
         this.world = absorber.getWorld();
         this.grow = grow;
@@ -77,7 +77,7 @@ public class AbsorbGoal extends Goal {
                 if (!target1.isAssimilated()){
                     target1.setSupercellConcentration(target1.getSupercellConcentration() + 0.1F);
                 }
-                if (this.absorber.getAbsorbProgress() > AbstractAbsorberThingEntity.ABSORB_TIME) {
+                if (this.absorber.getAbsorbProgress() > AbsorberThingEntity.ABSORB_TIME) {
                     grow.accept(this.absorber);
                     target.discard();
                     this.stop();

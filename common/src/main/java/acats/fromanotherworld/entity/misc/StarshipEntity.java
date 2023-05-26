@@ -1,6 +1,6 @@
 package acats.fromanotherworld.entity.misc;
 
-import acats.fromanotherworld.entity.thing.AbstractThingEntity;
+import acats.fromanotherworld.entity.thing.ThingEntity;
 import acats.fromanotherworld.entity.thing.resultant.BloodCrawlerEntity;
 import acats.fromanotherworld.registry.EntityRegistry;
 import acats.fromanotherworld.registry.ParticleRegistry;
@@ -62,7 +62,7 @@ public class StarshipEntity extends MobEntity implements GeoEntity {
         if (this.isOnGround()){
             if (!this.world.isClient()){
                 this.world.createExplosion(null, this.getX(), this.getY() + 3.0D, this.getZ(), 9, World.ExplosionSourceType.TNT);
-                AbstractThingEntity thing = EntityRegistry.ALIEN_THING.get().create(this.world);
+                ThingEntity thing = EntityRegistry.ALIEN_THING.get().create(this.world);
                 if (thing != null) {
                     thing.setPosition(this.getPos());
                     this.world.spawnEntity(thing);

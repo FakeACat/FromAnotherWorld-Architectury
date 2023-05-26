@@ -1,6 +1,6 @@
 package acats.fromanotherworld.entity.render.thing;
 
-import acats.fromanotherworld.entity.thing.AbstractThingEntity;
+import acats.fromanotherworld.entity.thing.ThingEntity;
 import acats.fromanotherworld.entity.render.feature.ThingDamagedFeatureRenderer;
 import acats.fromanotherworld.entity.render.feature.ThingSnowFeatureRenderer;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
@@ -12,7 +12,7 @@ import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.*;
 
-public class AbstractThingEntityRenderer<T extends AbstractThingEntity> extends GeoEntityRenderer<T> {
+public class AbstractThingEntityRenderer<T extends ThingEntity> extends GeoEntityRenderer<T> {
     public AbstractThingEntityRenderer(EntityRendererFactory.Context renderManager, GeoModel<T> model) {
         super(renderManager, model);
         this.addRenderLayer(new ThingDamagedFeatureRenderer<>(this));

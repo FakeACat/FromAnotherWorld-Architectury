@@ -1,6 +1,6 @@
 package acats.fromanotherworld.entity.goal;
 
-import acats.fromanotherworld.entity.thing.AbstractThingEntity;
+import acats.fromanotherworld.entity.thing.ThingEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.TargetPredicate;
 import net.minecraft.entity.ai.goal.ActiveTargetGoal;
@@ -10,8 +10,8 @@ import net.minecraft.util.math.Box;
 import org.jetbrains.annotations.Nullable;
 
 public class ThingTargetGoal<T extends LivingEntity> extends ActiveTargetGoal<T> {
-    protected final AbstractThingEntity mob;
-    public ThingTargetGoal(AbstractThingEntity mob, Class<T> targetClass, boolean checkVisibility) {
+    protected final ThingEntity mob;
+    public ThingTargetGoal(ThingEntity mob, Class<T> targetClass, boolean checkVisibility) {
         super(mob, targetClass, checkVisibility);
         this.mob = mob;
     }
@@ -21,7 +21,7 @@ public class ThingTargetGoal<T extends LivingEntity> extends ActiveTargetGoal<T>
         if (mob == null){
             return super.getFollowRange();
         }
-        return mob.canHunt ? AbstractThingEntity.HUNTING_RANGE : super.getFollowRange();
+        return mob.canHunt ? ThingEntity.HUNTING_RANGE : super.getFollowRange();
     }
 
     @Override
@@ -42,7 +42,7 @@ public class ThingTargetGoal<T extends LivingEntity> extends ActiveTargetGoal<T>
 
     protected void findClosestTarget() {
         if (mob.canHunt){
-            LivingEntity livingEntity = this.mob.world.getClosestPlayer(this.mob, AbstractThingEntity.HUNTING_RANGE);
+            LivingEntity livingEntity = this.mob.world.getClosestPlayer(this.mob, ThingEntity.HUNTING_RANGE);
             if (livingEntity != null && mob.canTarget(livingEntity)){
                 this.targetEntity = livingEntity;
             }

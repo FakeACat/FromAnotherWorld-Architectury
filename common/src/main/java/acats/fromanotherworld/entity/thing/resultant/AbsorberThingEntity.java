@@ -1,7 +1,7 @@
 package acats.fromanotherworld.entity.thing.resultant;
 
 import acats.fromanotherworld.entity.interfaces.PossibleDisguisedThing;
-import acats.fromanotherworld.entity.thing.AbstractThingEntity;
+import acats.fromanotherworld.entity.thing.ThingEntity;
 import acats.fromanotherworld.registry.ParticleRegistry;
 import acats.fromanotherworld.tags.EntityTags;
 import net.minecraft.entity.EntityType;
@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Predicate;
 
-public abstract class AbstractAbsorberThingEntity extends AbstractThingEntity {
+public abstract class AbsorberThingEntity extends ThingEntity {
     public static final int ABSORB_TIME = 120;
 
     public static final Predicate<LivingEntity> STANDARD = (livingEntity) ->
@@ -27,10 +27,10 @@ public abstract class AbstractAbsorberThingEntity extends AbstractThingEntity {
 
     private static final TrackedData<Integer> ABSORB_PROGRESS;
     private static final TrackedData<Integer> ABSORB_TARGET_ID;
-    protected AbstractAbsorberThingEntity(EntityType<? extends AbstractAbsorberThingEntity> entityType, World world, boolean canHaveSpecialAbilities) {
+    protected AbsorberThingEntity(EntityType<? extends AbsorberThingEntity> entityType, World world, boolean canHaveSpecialAbilities) {
         super(entityType, world, canHaveSpecialAbilities);
     }
-    protected AbstractAbsorberThingEntity(EntityType<? extends AbstractAbsorberThingEntity> entityType, World world){
+    protected AbsorberThingEntity(EntityType<? extends AbsorberThingEntity> entityType, World world){
         this(entityType, world, true);
     }
 
@@ -107,12 +107,12 @@ public abstract class AbstractAbsorberThingEntity extends AbstractThingEntity {
         return super.canTarget(target);
     }
 
-    public static void defaultGrow(LivingEntity entity, EntityType<? extends AbstractThingEntity> next){
+    public static void defaultGrow(LivingEntity entity, EntityType<? extends ThingEntity> next){
         if (next != null){
-            AbstractThingEntity nextThing = next.create(entity.getWorld());
+            ThingEntity nextThing = next.create(entity.getWorld());
             if (nextThing != null){
                 nextThing.setPosition(entity.getPos());
-                if (nextThing instanceof AbstractMinibossThingEntity miniboss)
+                if (nextThing instanceof MinibossThingEntity miniboss)
                     miniboss.setTier(0, true);
                 entity.getWorld().spawnEntity(nextThing);
                 if (entity.getWorld().getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING))
@@ -123,7 +123,7 @@ public abstract class AbstractAbsorberThingEntity extends AbstractThingEntity {
     }
 
     static {
-        ABSORB_PROGRESS = DataTracker.registerData(AbstractAbsorberThingEntity.class, TrackedDataHandlerRegistry.INTEGER);
-        ABSORB_TARGET_ID = DataTracker.registerData(AbstractAbsorberThingEntity.class, TrackedDataHandlerRegistry.INTEGER);
+        ABSORB_PROGRESS = DataTracker.registerData(AbsorberThingEntity.class, TrackedDataHandlerRegistry.INTEGER);
+        ABSORB_TARGET_ID = DataTracker.registerData(AbsorberThingEntity.class, TrackedDataHandlerRegistry.INTEGER);
     }
 }

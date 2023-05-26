@@ -1,6 +1,6 @@
 package acats.fromanotherworld.entity.render.feature;
 
-import acats.fromanotherworld.entity.thing.AbstractThingEntity;
+import acats.fromanotherworld.entity.thing.ThingEntity;
 import acats.fromanotherworld.entity.texture.ThingOverlayTexture;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
 import mod.azure.azurelib.renderer.GeoRenderer;
@@ -10,7 +10,7 @@ import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 
-public class ThingDamagedFeatureRenderer<T extends AbstractThingEntity> extends GeoRenderLayer<T> {
+public class ThingDamagedFeatureRenderer<T extends ThingEntity> extends GeoRenderLayer<T> {
     public ThingDamagedFeatureRenderer(GeoRenderer<T> entityRendererIn) {
         super(entityRendererIn);
     }

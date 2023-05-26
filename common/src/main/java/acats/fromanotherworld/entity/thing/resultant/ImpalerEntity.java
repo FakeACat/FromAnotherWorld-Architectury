@@ -22,7 +22,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class ImpalerEntity extends AbstractAbsorberThingEntity implements BurstAttackThing {
+public class ImpalerEntity extends AbsorberThingEntity implements BurstAttackThing {
 
     private static final TrackedData<Boolean> BACK_NEEDLES;
     private int backNeedlesRegrow = 0;

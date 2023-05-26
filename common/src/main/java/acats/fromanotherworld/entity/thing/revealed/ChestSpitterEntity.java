@@ -2,7 +2,7 @@ package acats.fromanotherworld.entity.thing.revealed;
 
 import acats.fromanotherworld.entity.goal.FleeOnFireGoal;
 import acats.fromanotherworld.entity.projectile.AssimilationLiquidEntity;
-import acats.fromanotherworld.entity.thing.AbstractThingEntity;
+import acats.fromanotherworld.entity.thing.ThingEntity;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.core.animation.AnimationController;
@@ -24,7 +24,7 @@ import net.minecraft.world.World;
 
 import java.util.EnumSet;
 
-public class ChestSpitterEntity extends AbstractThingEntity {
+public class ChestSpitterEntity extends ThingEntity {
     private static final int REVEAL_TIME = 100;
     private static final int ATTACK_TIME = 100;
     public Entity host;

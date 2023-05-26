@@ -1,18 +1,18 @@
 package acats.fromanotherworld.entity.goal;
 
 import acats.fromanotherworld.entity.interfaces.StalkerThing;
-import acats.fromanotherworld.entity.thing.AbstractThingEntity;
+import acats.fromanotherworld.entity.thing.ThingEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.player.PlayerEntity;
 
 import java.util.EnumSet;
 
 public class StalkGoal extends Goal {
-    protected final AbstractThingEntity mob;
+    protected final ThingEntity mob;
     protected final StalkerThing stalker;
     public StalkGoal(StalkerThing stalker){
         this.stalker = stalker;
-        this.mob = (AbstractThingEntity) stalker;
+        this.mob = (ThingEntity) stalker;
         this.setControls(EnumSet.of(Control.MOVE));
     }
     @Override

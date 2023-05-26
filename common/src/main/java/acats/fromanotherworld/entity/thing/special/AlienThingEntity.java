@@ -6,7 +6,7 @@ import acats.fromanotherworld.entity.goal.AlienThingSwimGoal;
 import acats.fromanotherworld.entity.goal.StalkGoal;
 import acats.fromanotherworld.entity.goal.ThingAttackGoal;
 import acats.fromanotherworld.entity.interfaces.StalkerThing;
-import acats.fromanotherworld.entity.thing.AbstractThingEntity;
+import acats.fromanotherworld.entity.thing.ThingEntity;
 import acats.fromanotherworld.registry.ParticleRegistry;
 import acats.fromanotherworld.spawning.SpawningManager;
 import mod.azure.azurelib.animatable.GeoEntity;
@@ -38,7 +38,7 @@ import net.minecraft.world.World;
 
 import java.util.Objects;
 
-public class AlienThingEntity extends AbstractThingEntity implements StalkerThing {
+public class AlienThingEntity extends ThingEntity implements StalkerThing {
     public AlienThingEntity(EntityType<? extends AlienThingEntity> entityType, World world) {
         super(entityType, world, false);
         this.experiencePoints = 25;
@@ -281,12 +281,12 @@ public class AlienThingEntity extends AbstractThingEntity implements StalkerThin
     private PlayerEntity stalkTarget = null;
     @Override
     public PlayerEntity getStalkTarget(){
-        float d2 = AbstractThingEntity.HUNTING_RANGE * AbstractThingEntity.HUNTING_RANGE;
+        float d2 = ThingEntity.HUNTING_RANGE * ThingEntity.HUNTING_RANGE;
 
         if (this.stalkTarget != null && !this.stalkTarget.isCreative() && !this.stalkTarget.isSpectator() && this.stalkTarget.squaredDistanceTo(this) < d2)
             return this.stalkTarget;
 
-        this.stalkTarget = this.world.getClosestPlayer(this, AbstractThingEntity.HUNTING_RANGE);
+        this.stalkTarget = this.world.getClosestPlayer(this, ThingEntity.HUNTING_RANGE);
 
         if (this.stalkTarget != null && !this.stalkTarget.isCreative() && !this.stalkTarget.isSpectator() && this.stalkTarget.squaredDistanceTo(this) < d2)
             return this.stalkTarget;

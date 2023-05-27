@@ -1,7 +1,7 @@
 package acats.fromanotherworld.entity.render.thing.resultant;
 
 import acats.fromanotherworld.entity.model.thing.resultant.JulietteThingEntityModel;
-import acats.fromanotherworld.entity.render.thing.AbstractThingEntityRenderer;
+import acats.fromanotherworld.entity.render.thing.ThingEntityRenderer;
 import acats.fromanotherworld.entity.thing.resultant.JulietteThingEntity;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
 import net.minecraft.client.render.VertexConsumer;
@@ -9,7 +9,7 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 
-public class JulietteThingEntityRenderer extends AbstractThingEntityRenderer<JulietteThingEntity> {
+public class JulietteThingEntityRenderer extends ThingEntityRenderer<JulietteThingEntity> {
     public JulietteThingEntityRenderer(EntityRendererFactory.Context ctx) {
         super(ctx, new JulietteThingEntityModel());
         this.shadowRadius = 0.4F;

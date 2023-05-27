@@ -38,6 +38,11 @@ public class DogBeastSpitterEntity extends AbsorberThingEntity implements Ranged
         this.dataTracker.startTracking(ATTACKING, false);
     }
 
+    @Override
+    public void grow(LivingEntity otherParent) {
+        this.growInto(EntityRegistry.BEAST.get());
+    }
+
     public void setHasTarget(boolean bl){
         this.dataTracker.set(ATTACKING, bl);
     }
@@ -56,10 +61,7 @@ public class DogBeastSpitterEntity extends AbsorberThingEntity implements Ranged
     protected void initGoals() {
         this.addThingTargets(false);
         this.goalSelector.add(0, new FleeOnFireGoal(this, 16.0F, 1.2, 1.5));
-        this.goalSelector.add(1, new AbsorbGoal(this,
-                STANDARD,
-                (livingEntity) -> defaultGrow(livingEntity, EntityRegistry.BEAST.get())
-        ));
+        this.goalSelector.add(1, new AbsorbGoal(this, STANDARD));
         this.goalSelector.add(2, new ThingProjectileAttackGoal(this, 1.0, 40, 80, 10.0F));
         this.goalSelector.add(3, new WanderAroundFarGoal(this, 1.0D));
     }

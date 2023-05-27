@@ -2,7 +2,7 @@ package acats.fromanotherworld.entity.render.thing.resultant;
 
 import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.entity.model.thing.resultant.PalmerThingEntityModel;
-import acats.fromanotherworld.entity.render.thing.AbstractThingEntityRenderer;
+import acats.fromanotherworld.entity.render.thing.ThingEntityRenderer;
 import acats.fromanotherworld.entity.thing.resultant.PalmerThingEntity;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
 import net.minecraft.client.render.*;
@@ -17,7 +17,7 @@ import net.minecraft.util.math.Vec3d;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
-public class PalmerThingEntityRenderer extends AbstractThingEntityRenderer<PalmerThingEntity> {
+public class PalmerThingEntityRenderer extends ThingEntityRenderer<PalmerThingEntity> {
 
     private static final Identifier TEXTURE = new Identifier(FromAnotherWorld.MOD_ID, "textures/entity/thing/resultant/palmer_thing/palmer_thing_tongue.png");
 

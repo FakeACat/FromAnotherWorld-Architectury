@@ -40,10 +40,7 @@ public class BlairThingEntity extends MinibossThingEntity {
     @Override
     protected void initGoals() {
         this.addThingTargets(false);
-        this.goalSelector.add(0, new AbsorbGoal(this,
-                STANDARD,
-                (livingEntity) -> minibossGrow((MinibossThingEntity) livingEntity)
-        ));
+        this.goalSelector.add(0, new AbsorbGoal(this, STANDARD));
         this.goalSelector.add(1, new BlairThingSpecialAttacksGoal(this));
         this.goalSelector.add(2, new BlairThingAttackGoal(this, 1.0D, false));
     }
@@ -145,8 +142,6 @@ public class BlairThingEntity extends MinibossThingEntity {
 
     @Override
     protected void jump() {
-        if (this.getMoveCooldown() < MOVE_COOLDOWN_IN_TICKS - (EMERGE_TIME_IN_TICKS + TIME_UNDERGROUND_IN_TICKS + RETREAT_TIME_IN_TICKS))
-            super.jump();
     }
 
     @Override
@@ -205,9 +200,10 @@ public class BlairThingEntity extends MinibossThingEntity {
     public void onDeath(DamageSource source) {
         DogBeastSpitterEntity dogSpitterEntity = EntityRegistry.DOGBEAST_SPITTER.get().create(this.world);
         if (dogSpitterEntity != null) {
+            dogSpitterEntity.setPosition(this.getPos());
+            dogSpitterEntity.initializeFrom(this);
             dogSpitterEntity.canSpit = true;
             dogSpitterEntity.canGrief = true;
-            dogSpitterEntity.setPosition(this.getPos());
             this.world.spawnEntity(dogSpitterEntity);
         }
         super.onDeath(source);

@@ -26,14 +26,13 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.Heightmap;
-import net.minecraft.world.World;
+import net.minecraft.world.*;
 import net.minecraft.world.biome.Biome;
 import org.jetbrains.annotations.Nullable;
 
@@ -53,6 +52,12 @@ public abstract class ThingEntity extends HostileEntity implements GeoEntity {
             if (canHaveSpecialAbilities){
                 this.setRareAbilities(General.specialBehaviourRarity);
             }
+        }
+    }
+
+    public void initializeFrom(Entity parent){
+        if (parent.getWorld() instanceof ServerWorld serverWorld){
+            this.initialize(serverWorld, serverWorld.getLocalDifficulty(parent.getBlockPos()), SpawnReason.CONVERSION, null, null);
         }
     }
 

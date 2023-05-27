@@ -12,8 +12,8 @@ import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.*;
 
-public class AbstractThingEntityRenderer<T extends ThingEntity> extends GeoEntityRenderer<T> {
-    public AbstractThingEntityRenderer(EntityRendererFactory.Context renderManager, GeoModel<T> model) {
+public class ThingEntityRenderer<T extends ThingEntity> extends GeoEntityRenderer<T> {
+    public ThingEntityRenderer(EntityRendererFactory.Context renderManager, GeoModel<T> model) {
         super(renderManager, model);
         this.addRenderLayer(new ThingDamagedFeatureRenderer<>(this));
         this.addRenderLayer(new ThingSnowFeatureRenderer<>(this));

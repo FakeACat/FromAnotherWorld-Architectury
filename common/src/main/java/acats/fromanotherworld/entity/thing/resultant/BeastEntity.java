@@ -38,10 +38,7 @@ public class BeastEntity extends MinibossThingEntity implements RangedAttackMob 
     protected void initGoals() {
         this.addThingTargets(false);
         this.goalSelector.add(0, new SwimGoal(this));
-        this.goalSelector.add(1, new AbsorbGoal(this,
-                STANDARD,
-                (livingEntity) -> minibossGrow((MinibossThingEntity) livingEntity)
-        ));
+        this.goalSelector.add(1, new AbsorbGoal(this, STANDARD));
         this.goalSelector.add(2, new BeastAttackGoal(this, 1.0D, false));
         this.goalSelector.add(3, new FleeEntityGoal<>(this, LivingEntity.class, 10.0F, 1.0, 1.2, (livingEntity) -> livingEntity.equals(this.getTarget())));
         this.goalSelector.add(4, new ThingProjectileAttackGoal(this, 1.0, 20, 20, 16.0F));

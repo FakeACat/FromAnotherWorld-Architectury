@@ -189,7 +189,7 @@ public class CommonLivingEntityEvents {
             switch (chooseStrength(entity.getRandom())) {
                 case 0 -> {
                     thing = EntityRegistry.CRAWLER.get().create(entity.world);
-                    spawnCrawlers(4, entity.getPos(), entity.world);
+                    spawnCrawlers(4, entity, entity.world);
 
                 }
                 case 1 -> thing = EntityRegistry.JULIETTE_THING.get().create(entity.world);
@@ -206,7 +206,7 @@ public class CommonLivingEntityEvents {
             switch (chooseStrength(entity.getRandom())) {
                 case 0 -> {
                     thing = EntityRegistry.DOGBEAST_SPITTER.get().create(entity.world);
-                    spawnCrawlers(3, entity.getPos(), entity.world);
+                    spawnCrawlers(3, entity, entity.world);
                 }
                 case 1 -> thing = EntityRegistry.DOGBEAST.get().create(entity.world);
                 case 2 -> thing = EntityRegistry.IMPALER.get().create(entity.world);
@@ -231,10 +231,11 @@ public class CommonLivingEntityEvents {
             }
         }
         else{
-            spawnCrawlers(MathHelper.ceil(vol(entity) * 4.0F), entity.getPos(), entity.world);
+            spawnCrawlers(MathHelper.ceil(vol(entity) * 4.0F), entity, entity.world);
         }
         if (thing != null){
-            thing.setPosition(entity.getPos());
+            thing.refreshPositionAndAngles(entity.getX(), entity.getY(), entity.getZ(), entity.getYaw(), entity.getPitch());
+            thing.initializeFrom(entity);
             entity.world.spawnEntity(thing);
         }
         entity.discard();
@@ -244,11 +245,12 @@ public class CommonLivingEntityEvents {
         return entity.getWidth() * entity.getWidth() * entity.getHeight();
     }
 
-    private static void spawnCrawlers(int crawlers, Vec3d pos, World world){
+    private static void spawnCrawlers(int crawlers, LivingEntity entity, World world){
         for (int i = 0; i < crawlers; i++){
             BloodCrawlerEntity bloodCrawlerEntity = EntityRegistry.BLOOD_CRAWLER.get().create(world);
             if (bloodCrawlerEntity != null) {
-                bloodCrawlerEntity.setPosition(pos);
+                bloodCrawlerEntity.refreshPositionAndAngles(entity.getX(), entity.getY(), entity.getZ(), entity.getYaw(), entity.getPitch());
+                bloodCrawlerEntity.initializeFrom(entity);
                 world.spawnEntity(bloodCrawlerEntity);
             }
         }

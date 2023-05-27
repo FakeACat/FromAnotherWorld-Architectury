@@ -11,6 +11,7 @@ import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.WanderAroundFarGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -30,10 +31,7 @@ public class JulietteThingEntity extends AbsorberThingEntity {
     protected void initGoals() {
         this.addThingTargets(false);
         this.goalSelector.add(0, new FleeOnFireGoal(this, 16.0F, 1.2, 1.5));
-        this.goalSelector.add(1, new AbsorbGoal(this,
-                STANDARD,
-                (livingEntity) -> defaultGrow(livingEntity, EntityRegistry.SPLIT_FACE.get())
-        ));
+        this.goalSelector.add(1, new AbsorbGoal(this, STANDARD));
         this.goalSelector.add(2, new ThingAttackGoal(this, 1.0D, false));
         this.goalSelector.add(3, new WanderAroundFarGoal(this, 1.0D));
     }
@@ -65,6 +63,7 @@ public class JulietteThingEntity extends AbsorberThingEntity {
             CrawlerEntity crawlerEntity = EntityRegistry.CRAWLER.get().create(this.world);
             if (crawlerEntity != null) {
                 crawlerEntity.setPosition(this.getPos());
+                crawlerEntity.initializeFrom(this);
                 crawlerEntity.setVictimType(JULIETTE);
                 this.world.spawnEntity(crawlerEntity);
             }
@@ -80,5 +79,10 @@ public class JulietteThingEntity extends AbsorberThingEntity {
     @Override
     public Strength getFormStrength() {
         return Strength.STANDARD;
+    }
+
+    @Override
+    public void grow(LivingEntity otherParent) {
+        this.growInto(EntityRegistry.SPLIT_FACE.get());
     }
 }

@@ -9,7 +9,6 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class AbsorbGoal extends Goal {
@@ -18,15 +17,13 @@ public class AbsorbGoal extends Goal {
     private final AbsorberThingEntity absorber;
     private final World world;
     private final int chance;
-    private final Consumer<LivingEntity> grow;
     private int timer = 0;
-    public AbsorbGoal(AbsorberThingEntity absorber, Predicate<LivingEntity> absorbable, Consumer<LivingEntity> grow){
-        this(absorber, absorbable, grow, 300);
+    public AbsorbGoal(AbsorberThingEntity absorber, Predicate<LivingEntity> absorbable){
+        this(absorber, absorbable, 300);
     }
-    public AbsorbGoal(AbsorberThingEntity absorber, Predicate<LivingEntity> absorbable, Consumer<LivingEntity> grow, int chance){
+    public AbsorbGoal(AbsorberThingEntity absorber, Predicate<LivingEntity> absorbable, int chance){
         this.absorber = absorber;
         this.world = absorber.getWorld();
-        this.grow = grow;
         this.chance = chance;
         absorbPredicate = TargetPredicate
                 .createNonAttackable()
@@ -78,7 +75,7 @@ public class AbsorbGoal extends Goal {
                     target1.setSupercellConcentration(target1.getSupercellConcentration() + 0.1F);
                 }
                 if (this.absorber.getAbsorbProgress() > AbsorberThingEntity.ABSORB_TIME) {
-                    grow.accept(this.absorber);
+                    this.absorber.grow(target);
                     target.discard();
                     this.stop();
                 }

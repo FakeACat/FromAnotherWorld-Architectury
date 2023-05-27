@@ -1,7 +1,7 @@
 package acats.fromanotherworld.entity.render.thing.resultant;
 
 import acats.fromanotherworld.entity.model.thing.resultant.CrawlerEntityModel;
-import acats.fromanotherworld.entity.render.thing.AbstractThingEntityRenderer;
+import acats.fromanotherworld.entity.render.thing.ThingEntityRenderer;
 import acats.fromanotherworld.entity.thing.resultant.CrawlerEntity;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
 import net.minecraft.client.render.VertexConsumer;
@@ -9,7 +9,7 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 
-public class CrawlerEntityRenderer extends AbstractThingEntityRenderer<CrawlerEntity> {
+public class CrawlerEntityRenderer extends ThingEntityRenderer<CrawlerEntity> {
 
     public CrawlerEntityRenderer(EntityRendererFactory.Context ctx) {
         super(ctx, new CrawlerEntityModel());

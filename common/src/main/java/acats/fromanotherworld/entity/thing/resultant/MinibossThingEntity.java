@@ -99,8 +99,9 @@ public abstract class MinibossThingEntity extends AbsorberThingEntity {
         return Strength.MINIBOSS;
     }
 
-    public static void minibossGrow(MinibossThingEntity entity){
-        entity.setTier(entity.getTier() + 1, true);
+    @Override
+    public void grow(LivingEntity otherParent) {
+        this.setTier(this.getTier() + 1, true);
     }
 
     @Override

@@ -53,7 +53,8 @@ public class BlairThingSpecialAttacksGoal extends Goal {
         if (this.mob.getRandom().nextInt(30) == 0){
             BloodCrawlerEntity bloodCrawlerEntity = EntityRegistry.BLOOD_CRAWLER.get().create(this.mob.world);
             if (bloodCrawlerEntity != null) {
-                bloodCrawlerEntity.setPosition(this.mob.getPos());
+                bloodCrawlerEntity.refreshPositionAndAngles(this.mob.getX(), this.mob.getY(), this.mob.getZ(), this.mob.getYaw(), this.mob.getPitch());
+                bloodCrawlerEntity.initializeFrom(this.mob);
                 this.mob.world.spawnEntity(bloodCrawlerEntity);
             }
         }
@@ -62,7 +63,8 @@ public class BlairThingSpecialAttacksGoal extends Goal {
             if (crawlerEntity != null) {
                 crawlerEntity.blairSpawned = true;
                 crawlerEntity.setVictimType(JULIETTE);
-                crawlerEntity.setPosition(this.mob.getPos());
+                crawlerEntity.refreshPositionAndAngles(this.mob.getX(), this.mob.getY(), this.mob.getZ(), this.mob.getYaw(), this.mob.getPitch());
+                crawlerEntity.initializeFrom(this.mob);
                 crawlerEntity.setVelocity(this.mob.getTarget().getPos().add(0, this.mob.getTarget().getHeight() / 2, 0).subtract(crawlerEntity.getPos()).normalize().multiply(1.5D).add(new Vec3d(this.mob.getRandom().nextInt(40) - 20, this.mob.getRandom().nextInt(40) - 20, this.mob.getRandom().nextInt(40) - 20).multiply(0.01f)));
                 this.mob.world.spawnEntity(crawlerEntity);
             }

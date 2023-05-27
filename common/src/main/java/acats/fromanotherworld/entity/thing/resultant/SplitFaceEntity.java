@@ -7,6 +7,7 @@ import acats.fromanotherworld.entity.goal.ThingAttackGoal;
 import acats.fromanotherworld.registry.EntityRegistry;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.WanderAroundFarGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -23,10 +24,7 @@ public class SplitFaceEntity extends AbsorberThingEntity {
     protected void initGoals() {
         this.addThingTargets(false);
         this.goalSelector.add(0, new FleeOnFireGoal(this, 16.0F, 1.2, 1.5));
-        this.goalSelector.add(1, new AbsorbGoal(this,
-                STANDARD,
-                (livingEntity) -> defaultGrow(livingEntity, EntityRegistry.BLAIR_THING.get())
-        ));
+        this.goalSelector.add(1, new AbsorbGoal(this, STANDARD));
         this.goalSelector.add(2, new ThingAttackGoal(this, 1.25D, false));
         this.goalSelector.add(3, new WanderAroundFarGoal(this, 0.75D));
     }
@@ -56,5 +54,10 @@ public class SplitFaceEntity extends AbsorberThingEntity {
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(FAWAnimations.defaultThing(this));
+    }
+
+    @Override
+    public void grow(LivingEntity otherParent) {
+        this.growInto(EntityRegistry.BLAIR_THING.get());
     }
 }

@@ -53,10 +53,7 @@ public class ImpalerEntity extends AbsorberThingEntity implements BurstAttackThi
     protected void initGoals() {
         this.addThingTargets(false);
         this.goalSelector.add(0, new ThingProjectileBurstGoal(this, 16.0F, 30));
-        this.goalSelector.add(1, new AbsorbGoal(this,
-                STANDARD,
-                (livingEntity) -> defaultGrow(livingEntity, EntityRegistry.BEAST.get())
-        ));
+        this.goalSelector.add(1, new AbsorbGoal(this, STANDARD));
         this.goalSelector.add(2, new ThingAttackGoal(this, 1.0D, false));
         this.goalSelector.add(3, new WanderAroundFarGoal(this, 1.0D));
     }
@@ -105,6 +102,11 @@ public class ImpalerEntity extends AbsorberThingEntity implements BurstAttackThi
                 this.mouthNeedlesRegrow = 0;
             }
         }
+    }
+
+    @Override
+    public void grow(LivingEntity otherParent) {
+        this.growInto(EntityRegistry.BEAST.get());
     }
 
     @Override

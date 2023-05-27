@@ -107,19 +107,20 @@ public abstract class AbsorberThingEntity extends ThingEntity {
         return super.canTarget(target);
     }
 
-    public static void defaultGrow(LivingEntity entity, EntityType<? extends ThingEntity> next){
+    public abstract void grow(LivingEntity otherParent);
+
+    public void growInto(EntityType<? extends ThingEntity> next){
         if (next != null){
-            ThingEntity nextThing = next.create(entity.getWorld());
+            ThingEntity nextThing = next.create(this.getWorld());
             if (nextThing != null){
-                nextThing.setPosition(entity.getPos());
-                if (nextThing instanceof MinibossThingEntity miniboss)
-                    miniboss.setTier(0, true);
-                entity.getWorld().spawnEntity(nextThing);
-                if (entity.getWorld().getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING))
+                nextThing.setPosition(this.getPos());
+                nextThing.initializeFrom(this);
+                this.getWorld().spawnEntity(nextThing);
+                if (this.getWorld().getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING))
                     nextThing.grief(0, 1);
             }
         }
-        entity.discard();
+        this.discard();
     }
 
     static {

@@ -1,24 +1,26 @@
 package acats.fromanotherworld.entity.thing.resultant;
 
 import acats.fromanotherworld.entity.interfaces.PossibleDisguisedThing;
+import acats.fromanotherworld.entity.interfaces.TentacleThing;
+import acats.fromanotherworld.entity.render.thing.Tentacle;
 import acats.fromanotherworld.entity.thing.ThingEntity;
-import acats.fromanotherworld.registry.ParticleRegistry;
 import acats.fromanotherworld.tags.EntityTags;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Predicate;
 
-public abstract class AbsorberThingEntity extends ThingEntity {
+public abstract class AbsorberThingEntity extends ThingEntity implements TentacleThing {
     public static final int ABSORB_TIME = 120;
 
     public static final Predicate<LivingEntity> STANDARD = (livingEntity) ->
@@ -27,8 +29,21 @@ public abstract class AbsorberThingEntity extends ThingEntity {
 
     private static final TrackedData<Integer> ABSORB_PROGRESS;
     private static final TrackedData<Integer> ABSORB_TARGET_ID;
+    public final List<Tentacle> absorbTentacles;
+
+    @Override
+    public float tentacleOriginOffset() {
+        return this.getHeight() * 0.5F;
+    }
+
     protected AbsorberThingEntity(EntityType<? extends AbsorberThingEntity> entityType, World world, boolean canHaveSpecialAbilities) {
         super(entityType, world, canHaveSpecialAbilities);
+        absorbTentacles = new ArrayList<>();
+        for (int i = 0; i < 25; i++){
+            absorbTentacles.add(new Tentacle(this,
+                    30,
+                    new Vec3d(this.getRandom().nextDouble() - 0.5D, this.getRandom().nextDouble(), this.getRandom().nextDouble() - 0.5D)));
+        }
     }
     protected AbsorberThingEntity(EntityType<? extends AbsorberThingEntity> entityType, World world){
         this(entityType, world, true);
@@ -48,18 +63,19 @@ public abstract class AbsorberThingEntity extends ThingEntity {
         if (absorbTarget != null && this.getAbsorbProgress() > 0 && absorbTarget.isAlive()){
             this.tickAbsorb(absorbTarget);
         }
+        else if (this.getWorld().isClient()){
+            for (Tentacle tentacle:
+                    absorbTentacles) {
+                tentacle.tick(null);
+            }
+        }
     }
 
     public void tickAbsorb(@NotNull LivingEntity victim){
         if (this.getWorld().isClient()){
-            for(int i = 0; i < this.getAbsorbProgress() / 10; ++i) {
-                double random = this.getRandom().nextDouble();
-                Vec3d start = this.getPos().add(0, this.getHeight() / 2, 0);
-                Vec3d finish = victim.getPos().add(0, victim.getHeight() / 2, 0);
-                Vec3d pos = new Vec3d(MathHelper.lerp(random, start.x, finish.x), MathHelper.lerp(random, start.y, finish.y), MathHelper.lerp(random, start.z, finish.z));
-                Vec3d vel = start.subtract(finish).normalize().multiply(0.5F);
-                this.getWorld().addParticle(ParticleRegistry.THING_GORE, pos.x, pos.y, pos.z, vel.x, vel.y, vel.z);
-                this.getWorld().addParticle(ParticleRegistry.THING_GORE, victim.getParticleX(0.6D), victim.getRandomBodyY(), victim.getParticleZ(0.6D), vel.x, vel.y, vel.z);
+            for (Tentacle tentacle:
+                    absorbTentacles) {
+                tentacle.tick(victim);
             }
         }
         else{

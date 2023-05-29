@@ -1,7 +1,6 @@
 package acats.fromanotherworld.entity.render.thing.resultant;
 
 import acats.fromanotherworld.entity.model.thing.resultant.BeastEntityModel;
-import acats.fromanotherworld.entity.render.thing.ThingEntityRenderer;
 import acats.fromanotherworld.entity.thing.resultant.BeastEntity;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
 import net.minecraft.client.render.VertexConsumer;
@@ -9,7 +8,7 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 
-public class BeastEntityRenderer extends ThingEntityRenderer<BeastEntity> {
+public class BeastEntityRenderer extends AbsorberThingEntityRenderer<BeastEntity> {
     public BeastEntityRenderer(EntityRendererFactory.Context renderManager) {
         super(renderManager, new BeastEntityModel());
         this.shadowRadius = 1.0F;

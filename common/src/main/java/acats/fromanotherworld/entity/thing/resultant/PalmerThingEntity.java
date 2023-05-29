@@ -4,6 +4,7 @@ import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.entity.goal.AbsorbGoal;
 import acats.fromanotherworld.entity.goal.FleeOnFireGoal;
 import acats.fromanotherworld.entity.goal.PalmerAttackGoal;
+import acats.fromanotherworld.entity.render.thing.Tentacle;
 import acats.fromanotherworld.registry.EntityRegistry;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animation.AnimatableManager;
@@ -28,9 +29,19 @@ import net.minecraft.world.World;
 public class PalmerThingEntity extends AbsorberThingEntity {
 
     private static final TrackedData<Integer> TARGET_ID;
+    private final Tentacle tongue = new Tentacle(this, 1);
 
     public PalmerThingEntity(EntityType<? extends PalmerThingEntity> entityType, World world) {
         super(entityType, world);
+    }
+
+    public Tentacle getTongue(){
+        return this.tongue;
+    }
+
+    @Override
+    public float tentacleOriginOffset() {
+        return this.getStandingEyeHeight();
     }
 
     @Override
@@ -73,6 +84,14 @@ public class PalmerThingEntity extends AbsorberThingEntity {
             }
         }
         return false;
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if (this.getWorld().isClient()){
+            this.getTongue().tick(this.targetGrabbed() ? (LivingEntity) this.getWorld().getEntityById(this.getTargetId()) : null);
+        }
     }
 
     @Override

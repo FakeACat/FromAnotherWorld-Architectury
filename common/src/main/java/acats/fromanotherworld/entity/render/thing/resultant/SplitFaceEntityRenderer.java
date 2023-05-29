@@ -1,7 +1,6 @@
 package acats.fromanotherworld.entity.render.thing.resultant;
 
 import acats.fromanotherworld.entity.model.thing.resultant.SplitFaceEntityModel;
-import acats.fromanotherworld.entity.render.thing.ThingEntityRenderer;
 import acats.fromanotherworld.entity.thing.resultant.SplitFaceEntity;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
 import net.minecraft.client.render.VertexConsumer;
@@ -9,7 +8,7 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 
-public class SplitFaceEntityRenderer extends ThingEntityRenderer<SplitFaceEntity> {
+public class SplitFaceEntityRenderer extends AbsorberThingEntityRenderer<SplitFaceEntity> {
     public SplitFaceEntityRenderer(EntityRendererFactory.Context renderManager) {
         super(renderManager, new SplitFaceEntityModel());
         this.shadowRadius = 0.6F;

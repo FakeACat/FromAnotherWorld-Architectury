@@ -43,7 +43,7 @@ public class Tentacle {
     private static final Identifier TEXTURE = new Identifier(FromAnotherWorld.MOD_ID, "textures/entity/thing/resultant/palmer_thing/palmer_thing_tongue.png");
 
     private Vec3d tentaclerOrigin(){
-        return this.tentacler.getPos().add(0.0D, this.tentacleThing.tentacleOriginOffset(), 0.0D);
+        return this.tentacler.getPos();
     }
 
     public void tick(@Nullable LivingEntity victim){
@@ -51,7 +51,7 @@ public class Tentacle {
             if (victim.getRandom().nextInt(activationProbability) == 0)
                 this.active = true;
             if (this.active){
-                this.extension = Math.min(this.extension + 0.05F, 1.0F);
+                this.extension = Math.min(this.extension + 0.2F, 1.0F);
                 this.victimWidth = victim.getWidth();
                 this.victimHeight = victim.getHeight();
                 this.previousTargetPos = this.targetPos;
@@ -60,7 +60,7 @@ public class Tentacle {
                 return;
             }
         }
-        this.extension = Math.max(this.extension - 0.1F, 0.0F);
+        this.extension = Math.max(this.extension - 0.2F, 0.0F);
         this.previousTargetPos = this.targetPos;
         if (this.extension == 0){
             this.active = false;

@@ -25,15 +25,16 @@ public class SplitFaceEntity extends AbsorberThingEntity {
         this.addThingTargets(false);
         this.goalSelector.add(0, new FleeOnFireGoal(this, 16.0F, 1.2, 1.5));
         this.goalSelector.add(1, new AbsorbGoal(this, STANDARD));
-        this.goalSelector.add(2, new ThingAttackGoal(this, 1.25D, false));
-        this.goalSelector.add(3, new WanderAroundFarGoal(this, 0.75D));
+        this.goalSelector.add(2, new ThingAttackGoal(this, 2.0D, false));
+        this.goalSelector.add(3, new WanderAroundFarGoal(this, 1.0D));
     }
 
     public static DefaultAttributeContainer.Builder createSplitFaceAttributes(){
-        return HostileEntity.createHostileAttributes().add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.35D)
+        return HostileEntity.createHostileAttributes().add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.15D)
                 .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 15.0D)
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 80.0D)
-                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 32);
+                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 32.0D)
+                .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 1.0D);
     }
 
     @Override

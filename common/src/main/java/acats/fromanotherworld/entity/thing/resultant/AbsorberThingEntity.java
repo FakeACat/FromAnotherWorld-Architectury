@@ -4,6 +4,7 @@ import acats.fromanotherworld.entity.interfaces.PossibleDisguisedThing;
 import acats.fromanotherworld.entity.interfaces.TentacleThing;
 import acats.fromanotherworld.entity.render.thing.Tentacle;
 import acats.fromanotherworld.entity.thing.ThingEntity;
+import acats.fromanotherworld.registry.ParticleRegistry;
 import acats.fromanotherworld.tags.EntityTags;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -41,7 +42,7 @@ public abstract class AbsorberThingEntity extends ThingEntity implements Tentacl
         absorbTentacles = new ArrayList<>();
         for (int i = 0; i < 25; i++){
             absorbTentacles.add(new Tentacle(this,
-                    30,
+                    60,
                     new Vec3d(this.getRandom().nextDouble() - 0.5D, this.getRandom().nextDouble(), this.getRandom().nextDouble() - 0.5D)));
         }
     }
@@ -73,6 +74,9 @@ public abstract class AbsorberThingEntity extends ThingEntity implements Tentacl
 
     public void tickAbsorb(@NotNull LivingEntity victim){
         if (this.getWorld().isClient()){
+            for(int i = 0; i < this.getAbsorbProgress() / 10; ++i) {
+                this.getWorld().addParticle(ParticleRegistry.THING_GORE, victim.getParticleX(0.6D), victim.getRandomBodyY(), victim.getParticleZ(0.6D), 0.0D, 0.0D, 0.0D);
+            }
             for (Tentacle tentacle:
                     absorbTentacles) {
                 tentacle.tick(victim);
@@ -89,7 +93,7 @@ public abstract class AbsorberThingEntity extends ThingEntity implements Tentacl
             double d = (this.getX() - victim.getX()) / (double)f;
             double e = (this.getY() - victim.getY()) / (double)f;
             double g = (this.getZ() - victim.getZ()) / (double)f;
-            victim.setVelocity(victim.getVelocity().add(Math.copySign(d * d * 0.4, d), Math.copySign(e * e * 0.4, e), Math.copySign(g * g * 0.4, g)));
+            victim.setVelocity(victim.getVelocity().add(Math.copySign(d * d * 0.1, d), Math.copySign(e * e * 0.1, e), Math.copySign(g * g * 0.1, g)));
         }
     }
 

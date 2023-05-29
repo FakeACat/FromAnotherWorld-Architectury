@@ -162,7 +162,7 @@ public class CommonLivingEntityEvents {
         List<LivingEntity> nearbyEntities = entity.getWorld().getNonSpectatingEntities(LivingEntity.class, new Box(entity.getX() - entityCheckDist, entity.getY() - entityCheckDist, entity.getZ() - entityCheckDist, entity.getX() + entityCheckDist, entity.getY() + entityCheckDist, entity.getZ() + entityCheckDist));
         int assimilables = FromAnotherWorld.numAssimilablesInList(nearbyEntities);
         int things = FromAnotherWorld.numThingsInList(nearbyEntities);
-        if (things > 4 && assimilables <= 1 && !entity.getWorld().isClient()){
+        if ((entity.getRandom().nextInt(50) == 0 || (things > 4 && assimilables <= 1)) && !entity.getWorld().isClient()){
             thing.setSupercellConcentration(thing.getSupercellConcentration() + 5);
         }
     }

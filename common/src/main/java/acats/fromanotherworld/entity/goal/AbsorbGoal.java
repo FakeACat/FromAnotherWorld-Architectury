@@ -68,7 +68,8 @@ public class AbsorbGoal extends Goal {
         LivingEntity target = this.absorber.getAbsorbTarget();
         if (target != null){
             this.absorber.getNavigation().startMovingTo(target, 1.0D);
-            if (this.absorber.squaredDistanceTo(target) < 16.0) {
+            if (this.absorber.squaredDistanceTo(target) < 64.0) {
+                this.timer = 0;
                 this.absorber.setAbsorbProgress(this.absorber.getAbsorbProgress() + 1);
                 PossibleDisguisedThing target1 = (PossibleDisguisedThing) target;
                 if (!target1.isAssimilated()){

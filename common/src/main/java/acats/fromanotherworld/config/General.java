@@ -9,7 +9,7 @@ import java.io.*;
 
 public class General {
 
-    private static final int CURRENT_VERSION = 2;
+    private static final int CURRENT_VERSION = 3;
 
     private static final int DEFAULT_SPECIAL_BEHAVIOUR_RARITY = 25;
     public static int specialBehaviourRarity = DEFAULT_SPECIAL_BEHAVIOUR_RARITY;
@@ -28,6 +28,9 @@ public class General {
 
     private static final boolean AUTO_REGEN_OUTDATED_CONFIGS_DEFAULT = true;
     public static boolean autoRegenOutdatedConfigs = AUTO_REGEN_OUTDATED_CONFIGS_DEFAULT;
+
+    private static final int DEFAULT_MAX_MINIBOSS_TIER = 3;
+    public static int maxMinibossTier = DEFAULT_MAX_MINIBOSS_TIER;
 
     private static File getFile(){
         return new File(Config.getFolder(), "general.json");
@@ -57,6 +60,7 @@ public class General {
         cfg.addProperty("minDaysBetweenEvents", DEFAULT_MIN_DAYS_BETWEEN_EVENTS);
         cfg.addProperty("maxDaysBetweenEvents", DEFAULT_MAX_DAYS_BETWEEN_EVENTS);
         cfg.addProperty("autoRegenOutdatedConfigs", AUTO_REGEN_OUTDATED_CONFIGS_DEFAULT);
+        cfg.addProperty("maxMinibossTier", DEFAULT_MAX_MINIBOSS_TIER);
     }
     private static void setValues(){
         specialBehaviourRarity = setInt("specialBehaviourRarity", DEFAULT_SPECIAL_BEHAVIOUR_RARITY);
@@ -64,6 +68,7 @@ public class General {
         firstEventDay = setInt("firstEventDay", DEFAULT_FIRST_EVENT_DAY);
         minDaysBetweenEvents = setInt("minDaysBetweenEvents", DEFAULT_MIN_DAYS_BETWEEN_EVENTS);
         maxDaysBetweenEvents = setInt("maxDaysBetweenEvents", DEFAULT_MAX_DAYS_BETWEEN_EVENTS);
+        maxMinibossTier = setInt("maxMinibossTier", DEFAULT_MAX_MINIBOSS_TIER);
     }
 
     private static int setInt(String property, int defaultValue){

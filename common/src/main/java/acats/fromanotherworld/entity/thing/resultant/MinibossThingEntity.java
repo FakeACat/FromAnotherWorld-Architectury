@@ -1,5 +1,6 @@
 package acats.fromanotherworld.entity.thing.resultant;
 
+import acats.fromanotherworld.config.General;
 import net.minecraft.entity.*;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.data.DataTracker;
@@ -106,7 +107,7 @@ public abstract class MinibossThingEntity extends AbsorberThingEntity {
 
     @Override
     public boolean cannotMerge() {
-        return this.getTier() >= 2;
+        return this.getTier() >= General.maxMinibossTier;
     }
 
     static {

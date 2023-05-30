@@ -37,7 +37,10 @@ public class AssimilationLiquidEntity extends ThrownItemEntity {
         super.onEntityHit(entityHitResult);
         if (!this.world.isClient()){
             Entity e = entityHitResult.getEntity();
-            if (!FromAnotherWorld.assimilate(e) && !FromAnotherWorld.isThing(e) && this.getOwner() != null){
+            if (FromAnotherWorld.assimilate(e)){
+                this.discard();
+            }
+            else if (!FromAnotherWorld.isThing(e) && this.getOwner() != null){
                 e.damage(this.world.getDamageSources().mobProjectile(this, (LivingEntity) this.getOwner()), 3.0F);
                 this.discard();
             }

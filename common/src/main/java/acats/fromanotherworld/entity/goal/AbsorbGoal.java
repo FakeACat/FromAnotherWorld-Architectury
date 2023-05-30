@@ -1,5 +1,6 @@
 package acats.fromanotherworld.entity.goal;
 
+import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.entity.interfaces.PossibleDisguisedThing;
 import acats.fromanotherworld.entity.thing.resultant.AbsorberThingEntity;
 import net.minecraft.entity.LivingEntity;
@@ -12,7 +13,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class AbsorbGoal extends Goal {
-    private static final int RANGE = 16;
+    private static final int RANGE = 10;
     private final TargetPredicate absorbPredicate;
     private final AbsorberThingEntity absorber;
     private final World world;
@@ -67,19 +68,16 @@ public class AbsorbGoal extends Goal {
         timer++;
         LivingEntity target = this.absorber.getAbsorbTarget();
         if (target != null){
-            this.absorber.getNavigation().startMovingTo(target, 1.0D);
-            if (this.absorber.squaredDistanceTo(target) < 64.0) {
-                this.timer = 0;
-                this.absorber.setAbsorbProgress(this.absorber.getAbsorbProgress() + 1);
-                PossibleDisguisedThing target1 = (PossibleDisguisedThing) target;
-                if (!target1.isAssimilated()){
-                    target1.setSupercellConcentration(target1.getSupercellConcentration() + 0.1F);
-                }
-                if (this.absorber.getAbsorbProgress() > AbsorberThingEntity.ABSORB_TIME) {
-                    this.absorber.grow(target);
-                    target.discard();
-                    this.stop();
-                }
+            this.timer = 0;
+            this.absorber.setAbsorbProgress(this.absorber.getAbsorbProgress() + 1);
+            PossibleDisguisedThing target1 = (PossibleDisguisedThing) target;
+            if (!target1.isAssimilated()){
+                target1.setSupercellConcentration(target1.getSupercellConcentration() + 0.1F);
+            }
+            if (this.absorber.getAbsorbProgress() > AbsorberThingEntity.ABSORB_TIME) {
+                this.absorber.grow(target);
+                target.discard();
+                this.stop();
             }
         }
     }
@@ -91,7 +89,7 @@ public class AbsorbGoal extends Goal {
         LivingEntity entity = null;
 
         for (LivingEntity entity1 : list) {
-            if (this.absorber.squaredDistanceTo(entity1) < d) {
+            if (this.absorber.squaredDistanceTo(entity1) < d && FromAnotherWorld.canSee(this.absorber, entity1)) {
                 entity = entity1;
                 d = this.absorber.squaredDistanceTo(entity1);
             }

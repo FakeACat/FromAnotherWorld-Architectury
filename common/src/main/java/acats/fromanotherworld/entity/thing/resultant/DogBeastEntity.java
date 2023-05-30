@@ -34,6 +34,11 @@ public class DogBeastEntity extends AbsorberThingEntity {
         this.goalSelector.add(3, new WanderAroundFarGoal(this, 1.0D));
     }
 
+    @Override
+    public float tentacleOriginOffset() {
+        return this.getStandingEyeHeight();
+    }
+
     public static DefaultAttributeContainer.Builder createDogBeastAttributes(){
         return HostileEntity.createHostileAttributes().add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.35D).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 8.0D).add(EntityAttributes.GENERIC_MAX_HEALTH, 30.0D);
     }

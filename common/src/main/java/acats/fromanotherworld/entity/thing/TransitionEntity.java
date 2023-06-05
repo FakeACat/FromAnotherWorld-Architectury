@@ -1,16 +1,16 @@
 package acats.fromanotherworld.entity.thing;
 
 import acats.fromanotherworld.constants.Variants;
+import acats.fromanotherworld.entity.interfaces.MaybeThing;
 import acats.fromanotherworld.entity.thing.resultant.BeastEntity;
 import acats.fromanotherworld.entity.thing.resultant.BloodCrawlerEntity;
 import acats.fromanotherworld.registry.EntityRegistry;
+import acats.fromanotherworld.registry.ParticleRegistry;
 import acats.fromanotherworld.registry.SoundRegistry;
 import acats.fromanotherworld.tags.DamageTypeTags;
 import acats.fromanotherworld.tags.EntityTags;
 import acats.fromanotherworld.utilities.EntityUtilities;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
@@ -32,10 +32,13 @@ import org.jetbrains.annotations.NotNull;
 import static acats.fromanotherworld.constants.Variants.*;
 import static acats.fromanotherworld.tags.EntityTags.*;
 
-public class TransitionEntity extends LivingEntity {
+public class TransitionEntity extends LivingEntity implements MaybeThing {
     private static final TrackedData<NbtCompound> FAKE_ENTITY_NBT;
+    private static final TrackedData<Float> WIDTH;
+    private static final TrackedData<Float> HEIGHT;
     public TransitionEntity(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);
+        this.reinitDimensions();
         this.fakeEntity = null;
     }
 
@@ -50,6 +53,22 @@ public class TransitionEntity extends LivingEntity {
     protected void initDataTracker() {
         super.initDataTracker();
         this.dataTracker.startTracking(FAKE_ENTITY_NBT, new NbtCompound());
+        this.dataTracker.startTracking(WIDTH, 1.0F);
+        this.dataTracker.startTracking(HEIGHT, 1.0F);
+    }
+
+    @Override
+    public void onTrackedDataSet(TrackedData<?> data) {
+        if (WIDTH.equals(data) || HEIGHT.equals(data)) {
+            this.calculateDimensions();
+        }
+
+        super.onTrackedDataSet(data);
+    }
+
+    @Override
+    public EntityDimensions getDimensions(EntityPose pose) {
+        return super.getDimensions(pose).scaled(this.dataTracker.get(WIDTH), this.dataTracker.get(HEIGHT));
     }
 
     public static void createFrom(LivingEntity entity){
@@ -64,8 +83,25 @@ public class TransitionEntity extends LivingEntity {
             fakeEntityNbt.putShort("DeathTime", (short) 0);
             transitionEntity.setFakeEntityNbt(fakeEntityNbt);
             transitionEntity.updatePositionAndAngles(entity.getX(), entity.getY(), entity.getZ(), entity.getYaw(), entity.getPitch());
+            transitionEntity.setSize(entity.getWidth(), entity.getHeight());
             entity.getWorld().spawnEntity(transitionEntity);
         }
+    }
+
+    private void setSize(float width, float height){
+        this.dataTracker.set(WIDTH, width);
+        this.dataTracker.set(HEIGHT, height);
+        this.refreshPosition();
+        this.calculateDimensions();
+    }
+
+    @Override
+    public void calculateDimensions() {
+        double d = this.getX();
+        double e = this.getY();
+        double f = this.getZ();
+        super.calculateDimensions();
+        this.setPosition(d, e, f);
     }
 
     @Override
@@ -110,21 +146,32 @@ public class TransitionEntity extends LivingEntity {
             this.fakeEntity.prevHeadYaw = this.fakeEntity.getHeadYaw();
             this.fakeEntity.prevBodyYaw = this.fakeEntity.getBodyYaw();
             this.fakeEntity.prevPitch = this.fakeEntity.getPitch();
-            this.fakeEntity.setYaw(this.getYaw());
-            this.fakeEntity.setPitch(this.getPitch());
-            this.fakeEntity.setHeadYaw(this.getHeadYaw());
-            this.fakeEntity.setBodyYaw(this.getBodyYaw());
+            this.fakeEntity.setYaw(this.fakeEntity.getYaw() + this.smallRandom());
+            this.fakeEntity.setPitch(this.fakeEntity.getPitch() + this.smallRandom());
+            this.fakeEntity.setHeadYaw(this.fakeEntity.getHeadYaw() + this.smallRandom());
+            this.fakeEntity.setBodyYaw(this.fakeEntity.getBodyYaw() + this.smallRandom());
         }
         if (this.getWorld().isClient()) {
+            this.clientTick();
             return;
         }
         if (this.getWorld().getDifficulty() == Difficulty.PEACEFUL){
             this.discard();
             return;
         }
-        if (this.age > 60){
+        if (this.age > 100){
             this.becomeResultant();
         }
+    }
+
+    private void clientTick(){
+        for (int i = 0; i < (this.age * this.age) / 100; i++){
+            this.getWorld().addParticle(ParticleRegistry.THING_GORE, this.getParticleX(1.0D), this.getRandomBodyY(), this.getParticleZ(1.0D), 0, 0, 0);
+        }
+    }
+
+    private float smallRandom(){
+        return (this.getRandom().nextFloat() - 0.5F) * 12.0F;
     }
 
     private void becomeResultant(){
@@ -247,5 +294,12 @@ public class TransitionEntity extends LivingEntity {
 
     static {
         FAKE_ENTITY_NBT = DataTracker.registerData(TransitionEntity.class, TrackedDataHandlerRegistry.NBT_COMPOUND);
+        WIDTH = DataTracker.registerData(TransitionEntity.class, TrackedDataHandlerRegistry.FLOAT);
+        HEIGHT = DataTracker.registerData(TransitionEntity.class, TrackedDataHandlerRegistry.FLOAT);
+    }
+
+    @Override
+    public boolean isThing() {
+        return true;
     }
 }

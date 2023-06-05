@@ -4,6 +4,7 @@ import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.entity.model.thing.revealed.SpiderLegsEntityModel;
 import acats.fromanotherworld.entity.render.misc.StarshipEntityRenderer;
 import acats.fromanotherworld.entity.render.projectile.NeedleEntityRenderer;
+import acats.fromanotherworld.entity.render.thing.TransitionEntityRenderer;
 import acats.fromanotherworld.entity.render.thing.resultant.*;
 import acats.fromanotherworld.entity.render.thing.revealed.ChestSpitterEntityRenderer;
 import acats.fromanotherworld.entity.render.thing.special.AlienThingEntityRenderer;
@@ -53,5 +54,6 @@ public class EntityRegistryFabric {
         EntityRendererRegistry.register(BLAIR_THING.get(), BlairThingEntityRenderer::new);
         EntityRendererRegistry.register(ALIEN_THING.get(), AlienThingEntityRenderer::new);
         EntityRendererRegistry.register(SPLIT_FACE.get(), SplitFaceEntityRenderer::new);
+        EntityRendererRegistry.register(TRANSITION.get(), TransitionEntityRenderer::new);
     }
 }

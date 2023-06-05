@@ -4,6 +4,7 @@ import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.entity.model.thing.revealed.SpiderLegsEntityModel;
 import acats.fromanotherworld.entity.render.misc.StarshipEntityRenderer;
 import acats.fromanotherworld.entity.render.projectile.NeedleEntityRenderer;
+import acats.fromanotherworld.entity.render.thing.TransitionEntityRenderer;
 import acats.fromanotherworld.entity.render.thing.resultant.*;
 import acats.fromanotherworld.entity.render.thing.revealed.ChestSpitterEntityRenderer;
 import acats.fromanotherworld.entity.render.thing.special.AlienThingEntityRenderer;
@@ -47,6 +48,7 @@ public class EntityRegistryForge {
         event.registerEntityRenderer(BLAIR_THING.get(), BlairThingEntityRenderer::new);
         event.registerEntityRenderer(ALIEN_THING.get(), AlienThingEntityRenderer::new);
         event.registerEntityRenderer(SPLIT_FACE.get(), SplitFaceEntityRenderer::new);
+        event.registerEntityRenderer(TRANSITION.get(), TransitionEntityRenderer::new);
     }
 
     public static void clientRegisterLayers(EntityRenderersEvent.RegisterLayerDefinitions event){

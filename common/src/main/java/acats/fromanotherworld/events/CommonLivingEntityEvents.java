@@ -2,19 +2,14 @@ package acats.fromanotherworld.events;
 
 import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.config.General;
-import acats.fromanotherworld.constants.Variants;
-import acats.fromanotherworld.entity.thing.ThingEntity;
 import acats.fromanotherworld.entity.interfaces.PossibleDisguisedThing;
 import acats.fromanotherworld.entity.projectile.AssimilationLiquidEntity;
-import acats.fromanotherworld.entity.thing.resultant.BeastEntity;
-import acats.fromanotherworld.entity.thing.resultant.BloodCrawlerEntity;
+import acats.fromanotherworld.entity.thing.TransitionEntity;
 import acats.fromanotherworld.entity.thing.revealed.ChestSpitterEntity;
 import acats.fromanotherworld.registry.DamageTypeRegistry;
 import acats.fromanotherworld.registry.EntityRegistry;
 import acats.fromanotherworld.registry.ParticleRegistry;
-import acats.fromanotherworld.tags.EntityTags;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -22,16 +17,10 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Box;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.random.Random;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.World;
 
 import java.util.List;
-
-import static acats.fromanotherworld.constants.Variants.*;
-import static acats.fromanotherworld.tags.EntityTags.*;
 
 public class CommonLivingEntityEvents {
     private static final int REVEAL_COOLDOWN = 12000;
@@ -50,30 +39,7 @@ public class CommonLivingEntityEvents {
 
     public static void tick(LivingEntity entity){
         PossibleDisguisedThing thing = ((PossibleDisguisedThing) entity);
-        if (thing.getSupercellConcentration() > 0){
-            if (entity.world.getDifficulty() == Difficulty.PEACEFUL){
-                entity.discard();
-                return;
-            }
-            thing.setSupercellConcentration(thing.getSupercellConcentration() * 1.005F);
-            if ((thing.isAssimilated() || tooSmallToDisguise(entity)) && thing.getSupercellConcentration() >= 50){
-                becomeResultant(entity);
-            }
-            else if (thing.getSupercellConcentration() >= 100){
-                thing.setAssimilated(true);
-                if (entity instanceof MobEntity mobEntity)
-                    mobEntity.setTarget(null);
-                setRareAbilities(entity, General.specialBehaviourRarity);
-                thing.setSupercellConcentration(0);
-            }
-            if (thing.getSupercellConcentration() >= 1.0F){
-                if (!entity.world.isClient() && !FromAnotherWorld.isVulnerable(entity)){
-                    entity.heal(1.0F);
-                }
-                entity.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 20, 6, false, false));
-            }
-        }
-        else if (thing.isAssimilated()){
+        if (thing.isAssimilated()){
             if (entity.world.getDifficulty() == Difficulty.PEACEFUL){
                 entity.discard();
                 return;
@@ -89,6 +55,28 @@ public class CommonLivingEntityEvents {
                     tryBecomeResultant(entity);
                 }
                 thing.setRevealed(Math.max(thing.getRevealed() - 1, 0));
+            }
+        }
+        else{
+            if (thing.getSupercellConcentration() > 0){
+                if (entity.world.getDifficulty() == Difficulty.PEACEFUL){
+                    entity.discard();
+                    return;
+                }
+                thing.setSupercellConcentration(thing.getSupercellConcentration() * 1.005F);
+                if (thing.getSupercellConcentration() >= 100){
+                    thing.setAssimilated(true);
+                    if (entity instanceof MobEntity mobEntity)
+                        mobEntity.setTarget(null);
+                    setRareAbilities(entity, General.specialBehaviourRarity);
+                    thing.setSupercellConcentration(0);
+                }
+                if (thing.getSupercellConcentration() >= 1.0F){
+                    if (!entity.world.isClient() && !FromAnotherWorld.isVulnerable(entity)){
+                        entity.heal(1.0F);
+                    }
+                    entity.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 20, 6, false, false));
+                }
             }
         }
     }
@@ -157,13 +145,12 @@ public class CommonLivingEntityEvents {
     }
 
     private static void tryBecomeResultant(LivingEntity entity){
-        PossibleDisguisedThing thing = ((PossibleDisguisedThing) entity);
         int entityCheckDist = 16;
         List<LivingEntity> nearbyEntities = entity.getWorld().getNonSpectatingEntities(LivingEntity.class, new Box(entity.getX() - entityCheckDist, entity.getY() - entityCheckDist, entity.getZ() - entityCheckDist, entity.getX() + entityCheckDist, entity.getY() + entityCheckDist, entity.getZ() + entityCheckDist));
         int assimilables = FromAnotherWorld.numAssimilablesInList(nearbyEntities);
         int things = FromAnotherWorld.numThingsInList(nearbyEntities);
-        if ((entity.getRandom().nextInt(50) == 0 || (things > 4 && assimilables <= 1)) && !entity.getWorld().isClient()){
-            thing.setSupercellConcentration(thing.getSupercellConcentration() + 5);
+        if (!entity.getWorld().isClient() && (entity.getRandom().nextInt(50) == 0 || (things > 4 && assimilables <= 1))){
+            becomeResultant(entity);
         }
     }
 
@@ -179,90 +166,11 @@ public class CommonLivingEntityEvents {
         }
     }
 
-    private static void becomeResultant(LivingEntity entity){
+    public static void becomeResultant(LivingEntity entity){
         if (entity.world.isClient()) {
             return;
         }
-        ThingEntity thing = null;
-        EntityType<?> type = entity.getType();
-        if (type.isIn(HUMANOIDS)){
-            switch (chooseStrength(entity.getRandom())) {
-                case 0 -> {
-                    thing = EntityRegistry.CRAWLER.get().create(entity.world);
-                    spawnCrawlers(4, entity, entity.world);
-
-                }
-                case 1 -> thing = EntityRegistry.JULIETTE_THING.get().create(entity.world);
-                case 2 -> thing = EntityRegistry.PALMER_THING.get().create(entity.world);
-            }
-            if (thing != null){
-                if (type.isIn(VILLAGERS))
-                    thing.setVictimType(VILLAGER);
-                else if (type.isIn(ILLAGERS))
-                    thing.setVictimType(ILLAGER);
-            }
-        }
-        else if (type.isIn(QUADRUPEDS) || type.isIn(LARGE_QUADRUPEDS)){
-            switch (chooseStrength(entity.getRandom())) {
-                case 0 -> {
-                    thing = EntityRegistry.DOGBEAST_SPITTER.get().create(entity.world);
-                    spawnCrawlers(3, entity, entity.world);
-                }
-                case 1 -> thing = EntityRegistry.DOGBEAST.get().create(entity.world);
-                case 2 -> thing = EntityRegistry.IMPALER.get().create(entity.world);
-            }
-            if (thing != null){
-                if (type.isIn(COWS))
-                    thing.setVictimType(COW);
-                else if (type.isIn(EntityTags.SHEEP))
-                    thing.setVictimType(Variants.SHEEP);
-                else if (type.isIn(PIGS))
-                    thing.setVictimType(PIG);
-                else if (type.isIn(HORSES))
-                    thing.setVictimType(HORSE);
-                else if (type.isIn(LLAMAS))
-                    thing.setVictimType(LLAMA);
-            }
-        }
-        else if (type.isIn(VERY_LARGE_QUADRUPEDS)){
-            thing = EntityRegistry.BEAST.get().create(entity.world);
-            if (thing != null){
-                ((BeastEntity) thing).setTier(0, true);
-            }
-        }
-        else{
-            spawnCrawlers(MathHelper.ceil(vol(entity) * 4.0F), entity, entity.world);
-        }
-        if (thing != null){
-            thing.refreshPositionAndAngles(entity.getX(), entity.getY(), entity.getZ(), entity.getYaw(), entity.getPitch());
-            thing.initializeFrom(entity);
-            entity.world.spawnEntity(thing);
-        }
+        TransitionEntity.createFrom(entity);
         entity.discard();
-    }
-
-    private static float vol(LivingEntity entity){
-        return entity.getWidth() * entity.getWidth() * entity.getHeight();
-    }
-
-    private static void spawnCrawlers(int crawlers, LivingEntity entity, World world){
-        for (int i = 0; i < crawlers; i++){
-            BloodCrawlerEntity bloodCrawlerEntity = EntityRegistry.BLOOD_CRAWLER.get().create(world);
-            if (bloodCrawlerEntity != null) {
-                bloodCrawlerEntity.refreshPositionAndAngles(entity.getX(), entity.getY(), entity.getZ(), entity.getYaw(), entity.getPitch());
-                bloodCrawlerEntity.initializeFrom(entity);
-                world.spawnEntity(bloodCrawlerEntity);
-            }
-        }
-    }
-
-    private static int chooseStrength(Random random){
-        if (random.nextInt(10) == 0)
-            return 2;
-        return random.nextInt(2);
-    }
-
-    private static boolean tooSmallToDisguise(LivingEntity entity){
-        return vol(entity) < 0.125F;
     }
 }

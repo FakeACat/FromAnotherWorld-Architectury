@@ -3,6 +3,7 @@ package acats.fromanotherworld.registry;
 import acats.fromanotherworld.entity.misc.StarshipEntity;
 import acats.fromanotherworld.entity.projectile.AssimilationLiquidEntity;
 import acats.fromanotherworld.entity.projectile.NeedleEntity;
+import acats.fromanotherworld.entity.thing.TransitionEntity;
 import acats.fromanotherworld.entity.thing.revealed.ChestSpitterEntity;
 import acats.fromanotherworld.entity.thing.resultant.*;
 import acats.fromanotherworld.entity.thing.special.AlienThingEntity;
@@ -115,6 +116,12 @@ public class EntityRegistry {
             "split_face",
             EntityType.Builder.create(SplitFaceEntity::new, SpawnGroup.CREATURE).setDimensions(0.8F, 1.8F).maxTrackingRange(TRACK_RANGE_MEDIUM),
             SplitFaceEntity::createSplitFaceAttributes
+    );
+
+    public static final FAWEntity<TransitionEntity> TRANSITION = registerLiving(
+            "transition",
+            EntityType.Builder.create(TransitionEntity::new, SpawnGroup.CREATURE).setDimensions(1.0F, 1.0F).maxTrackingRange(TRACK_RANGE_MEDIUM),
+            TransitionEntity::createTransitionAttributes
     );
 
     private static <T extends LivingEntity> FAWEntity<T> registerLiving(String id, EntityType.Builder<T> builder, Supplier<DefaultAttributeContainer.Builder> attributeSupplier){

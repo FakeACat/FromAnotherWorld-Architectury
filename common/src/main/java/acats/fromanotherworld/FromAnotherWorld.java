@@ -4,6 +4,7 @@ import acats.fromanotherworld.config.Classification;
 import acats.fromanotherworld.entity.thing.ThingEntity;
 import acats.fromanotherworld.entity.interfaces.PossibleDisguisedThing;
 import acats.fromanotherworld.entity.thing.resultant.PalmerThingEntity;
+import acats.fromanotherworld.events.CommonLivingEntityEvents;
 import acats.fromanotherworld.registry.*;
 import acats.fromanotherworld.tags.BlockTags;
 import mod.azure.azurelib.AzureLib;
@@ -124,7 +125,6 @@ public class FromAnotherWorld {
     }
 
     public static void angerNearbyThings(int chance, LivingEntity entity, LivingEntity threat){
-        boolean jumpscare = entity.getRandom().nextInt(20) == 0;
         double d = 16.0D;
         Box box = Box.from(entity.getPos()).expand(d, 10, d);
         List<LivingEntity> potentialThings = entity.world.getEntitiesByClass(LivingEntity.class, box, EntityPredicates.EXCEPT_SPECTATOR);
@@ -136,13 +136,8 @@ public class FromAnotherWorld {
                     if (entity1.canTarget(threat))
                         entity1.setTarget(threat);
                 }
-                else if (potentialThing instanceof PossibleDisguisedThing possibleDisguisedThing && possibleDisguisedThing.isAssimilated() && !possibleDisguisedThing.isRevealed()){
-                    if (jumpscare){
-                        possibleDisguisedThing.setSupercellConcentration(100);
-                    }
-                    else{
-                        possibleDisguisedThing.setSupercellConcentration(possibleDisguisedThing.getSupercellConcentration() + 5);
-                    }
+                else if (!potentialThing.equals(entity) && potentialThing instanceof PossibleDisguisedThing possibleDisguisedThing && possibleDisguisedThing.isAssimilated() && !possibleDisguisedThing.isRevealed()){
+                    CommonLivingEntityEvents.becomeResultant(potentialThing);
                 }
             }
         }

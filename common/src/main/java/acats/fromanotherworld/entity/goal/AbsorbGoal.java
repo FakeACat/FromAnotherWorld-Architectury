@@ -1,8 +1,8 @@
 package acats.fromanotherworld.entity.goal;
 
-import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.entity.interfaces.PossibleDisguisedThing;
 import acats.fromanotherworld.entity.thing.resultant.AbsorberThingEntity;
+import acats.fromanotherworld.utilities.EntityUtilities;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.TargetPredicate;
 import net.minecraft.entity.ai.goal.Goal;
@@ -89,7 +89,7 @@ public class AbsorbGoal extends Goal {
         LivingEntity entity = null;
 
         for (LivingEntity entity1 : list) {
-            if (this.absorber.squaredDistanceTo(entity1) < d && FromAnotherWorld.canSee(this.absorber, entity1)) {
+            if (this.absorber.squaredDistanceTo(entity1) < d && EntityUtilities.canSee(this.absorber, entity1)) {
                 entity = entity1;
                 d = this.absorber.squaredDistanceTo(entity1);
             }

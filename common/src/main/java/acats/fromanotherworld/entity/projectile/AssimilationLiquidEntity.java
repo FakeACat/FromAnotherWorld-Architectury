@@ -1,9 +1,9 @@
 package acats.fromanotherworld.entity.projectile;
 
-import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.registry.EntityRegistry;
 import acats.fromanotherworld.registry.ItemRegistry;
 import acats.fromanotherworld.registry.ParticleRegistry;
+import acats.fromanotherworld.utilities.EntityUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -37,10 +37,10 @@ public class AssimilationLiquidEntity extends ThrownItemEntity {
         super.onEntityHit(entityHitResult);
         if (!this.world.isClient()){
             Entity e = entityHitResult.getEntity();
-            if (FromAnotherWorld.assimilate(e)){
+            if (EntityUtilities.assimilate(e)){
                 this.discard();
             }
-            else if (!FromAnotherWorld.isThing(e) && this.getOwner() != null){
+            else if (!EntityUtilities.isThing(e) && this.getOwner() != null){
                 e.damage(this.world.getDamageSources().mobProjectile(this, (LivingEntity) this.getOwner()), 3.0F);
                 this.discard();
             }

@@ -1,6 +1,5 @@
 package acats.fromanotherworld.events;
 
-import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.config.General;
 import acats.fromanotherworld.entity.interfaces.PossibleDisguisedThing;
 import acats.fromanotherworld.entity.projectile.AssimilationLiquidEntity;
@@ -9,6 +8,7 @@ import acats.fromanotherworld.entity.thing.revealed.ChestSpitterEntity;
 import acats.fromanotherworld.registry.DamageTypeRegistry;
 import acats.fromanotherworld.registry.EntityRegistry;
 import acats.fromanotherworld.registry.ParticleRegistry;
+import acats.fromanotherworld.utilities.EntityUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
@@ -26,13 +26,13 @@ public class CommonLivingEntityEvents {
     private static final int REVEAL_COOLDOWN = 12000;
     public static void serverPlayerEntityDeath(PlayerEntity playerEntity, DamageSource damageSource){
         if (damageSource.isOf(DamageTypeRegistry.ASSIMILATION)){
-            FromAnotherWorld.spawnAssimilatedPlayer(playerEntity);
+            EntityUtilities.spawnAssimilatedPlayer(playerEntity);
         }
     }
     public static void serverEntityDeath(LivingEntity entity, DamageSource damageSource){
         PossibleDisguisedThing thing = ((PossibleDisguisedThing) entity);
         if (thing.isAssimilated()){
-            FromAnotherWorld.angerNearbyThings(2, entity, damageSource.getAttacker() instanceof LivingEntity e ? e : null);
+            EntityUtilities.angerNearbyThings(2, entity, damageSource.getAttacker() instanceof LivingEntity e ? e : null);
             becomeResultant(entity);
         }
     }
@@ -72,7 +72,7 @@ public class CommonLivingEntityEvents {
                     thing.setSupercellConcentration(0);
                 }
                 if (thing.getSupercellConcentration() >= 1.0F){
-                    if (!entity.world.isClient() && !FromAnotherWorld.isVulnerable(entity)){
+                    if (!entity.world.isClient() && !EntityUtilities.isVulnerable(entity)){
                         entity.heal(1.0F);
                     }
                     entity.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 20, 6, false, false));
@@ -94,20 +94,20 @@ public class CommonLivingEntityEvents {
         PossibleDisguisedThing thing = ((PossibleDisguisedThing) entity);
         if (!thing.isAssimilated())
             return true;
-        return !FromAnotherWorld.isThing(target);
+        return !EntityUtilities.isThing(target);
     }
 
     public static void pushAway(LivingEntity entity, Entity other){
         PossibleDisguisedThing thing = ((PossibleDisguisedThing) entity);
         if (thing.isAssimilated() && entity.getRandom().nextInt(6000) == 0){
-            FromAnotherWorld.assimilate(other, 0.01F);
+            EntityUtilities.assimilate(other, 0.01F);
         }
     }
 
     public static void damage(LivingEntity entity, DamageSource damageSource){
         PossibleDisguisedThing thing = ((PossibleDisguisedThing) entity);
         if (thing.isSleeper() && damageSource.getAttacker() instanceof PlayerEntity player && !entity.world.isClient()){
-            FromAnotherWorld.angerNearbyThings(1, entity, player);
+            EntityUtilities.angerNearbyThings(1, entity, player);
             for (int i = 0; i < 20; i++){
                 AssimilationLiquidEntity assimilationLiquid = new AssimilationLiquidEntity(entity.world, entity.getX(), entity.getY(), entity.getZ());
                 assimilationLiquid.setVelocity(new Vec3d(entity.getRandom().nextDouble() - 0.5f, entity.getRandom().nextDouble(), entity.getRandom().nextDouble() - 0.5f));
@@ -134,9 +134,9 @@ public class CommonLivingEntityEvents {
         if ((p == null || p.isSpectator() || p.isCreative()) && !entity.world.isClient()){
             List<LivingEntity> nearbyEntities = entity.world.getEntitiesByClass(LivingEntity.class,
                     new Box(entity.getX() - entityCheckDistH, entity.getY() - entityCheckDistV, entity.getZ() - entityCheckDistH, entity.getX() + entityCheckDistH, entity.getY() + entityCheckDistV, entity.getZ() + entityCheckDistH),
-                    (entity2) -> FromAnotherWorld.canSee(entity2, entity));
-            int assimilables = FromAnotherWorld.numAssimilablesInList(nearbyEntities);
-            int things = FromAnotherWorld.numThingsInList(nearbyEntities);
+                    (entity2) -> EntityUtilities.canSee(entity2, entity));
+            int assimilables = EntityUtilities.numAssimilablesInList(nearbyEntities);
+            int things = EntityUtilities.numThingsInList(nearbyEntities);
             if (assimilables > 0 && assimilables < (2 + things * 3)){
                 reveal(entity);
                 thing.setRevealTimer(0);
@@ -147,8 +147,8 @@ public class CommonLivingEntityEvents {
     private static void tryBecomeResultant(LivingEntity entity){
         int entityCheckDist = 16;
         List<LivingEntity> nearbyEntities = entity.getWorld().getNonSpectatingEntities(LivingEntity.class, new Box(entity.getX() - entityCheckDist, entity.getY() - entityCheckDist, entity.getZ() - entityCheckDist, entity.getX() + entityCheckDist, entity.getY() + entityCheckDist, entity.getZ() + entityCheckDist));
-        int assimilables = FromAnotherWorld.numAssimilablesInList(nearbyEntities);
-        int things = FromAnotherWorld.numThingsInList(nearbyEntities);
+        int assimilables = EntityUtilities.numAssimilablesInList(nearbyEntities);
+        int things = EntityUtilities.numThingsInList(nearbyEntities);
         if (!entity.getWorld().isClient() && (entity.getRandom().nextInt(50) == 0 || (things > 4 && assimilables <= 1))){
             becomeResultant(entity);
         }

@@ -1,7 +1,7 @@
 package acats.fromanotherworld.mixin;
 
-import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.item.AssimilationLiquidItem;
+import acats.fromanotherworld.utilities.EntityUtilities;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -31,7 +31,7 @@ public abstract class FoxEntityMixin extends LivingEntity {
             if (itemStack.getItem() instanceof AssimilationLiquidItem) {
                 if (this.eatingTime > 600) {
                     itemStack.decrement(1);
-                    FromAnotherWorld.assimilate(this);
+                    EntityUtilities.assimilate(this);
                     this.eatingTime = 0;
                 } else if (this.eatingTime > 560 && this.random.nextFloat() < 0.1F) {
                     this.playSound(this.getEatSound(itemStack), 1.0F, 1.0F);

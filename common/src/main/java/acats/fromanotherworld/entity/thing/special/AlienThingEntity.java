@@ -1,6 +1,5 @@
 package acats.fromanotherworld.entity.thing.special;
 
-import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.entity.goal.AlienThingFleeGoal;
 import acats.fromanotherworld.entity.goal.AlienThingSwimGoal;
 import acats.fromanotherworld.entity.goal.StalkGoal;
@@ -9,6 +8,7 @@ import acats.fromanotherworld.entity.interfaces.StalkerThing;
 import acats.fromanotherworld.entity.thing.ThingEntity;
 import acats.fromanotherworld.registry.ParticleRegistry;
 import acats.fromanotherworld.spawning.SpawningManager;
+import acats.fromanotherworld.utilities.EntityUtilities;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.core.animation.AnimationController;
@@ -217,7 +217,7 @@ public class AlienThingEntity extends ThingEntity implements StalkerThing {
     }
 
     private boolean breakOrPlaceable(BlockPos pos){
-        return FromAnotherWorld.canThingDestroy(world.getBlockState(pos)) || world.getBlockState(pos).isAir();
+        return EntityUtilities.canThingDestroy(world.getBlockState(pos)) || world.getBlockState(pos).isAir();
     }
 
     @Override

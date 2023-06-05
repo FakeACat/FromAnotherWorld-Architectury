@@ -1,8 +1,8 @@
 package acats.fromanotherworld.entity.projectile;
 
-import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.registry.EntityRegistry;
 import acats.fromanotherworld.registry.ItemRegistry;
+import acats.fromanotherworld.utilities.EntityUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -30,7 +30,7 @@ public class NeedleEntity extends PersistentProjectileEntity {
     protected void onEntityHit(EntityHitResult entityHitResult) {
         if (!this.world.isClient()){
             Entity e = entityHitResult.getEntity();
-            if (!FromAnotherWorld.assimilate(e) && !FromAnotherWorld.isThing(e)){
+            if (!EntityUtilities.assimilate(e) && !EntityUtilities.isThing(e)){
                 e.damage(this.world.getDamageSources().mobProjectile(this, (LivingEntity) this.getOwner()), 12.0F);
                 this.discard();
             }

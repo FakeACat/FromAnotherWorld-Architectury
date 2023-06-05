@@ -1,7 +1,7 @@
 package acats.fromanotherworld.entity.goal;
 
-import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.entity.thing.special.AlienThingEntity;
+import acats.fromanotherworld.utilities.EntityUtilities;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.NoPenaltyTargeting;
 import net.minecraft.entity.ai.TargetPredicate;
@@ -19,7 +19,7 @@ public class AlienThingFleeGoal extends FleeEntityGoal<LivingEntity> {
 
     @Override
     public boolean canStart() {
-        if (FromAnotherWorld.isVulnerable(mob) || mob.getHealth() < mob.getMaxHealth() * 0.6F)
+        if (EntityUtilities.isVulnerable(mob) || mob.getHealth() < mob.getMaxHealth() * 0.6F)
             this.mob.fleeing = true;
         return this.mob.fleeing && this.canStart2();
     }

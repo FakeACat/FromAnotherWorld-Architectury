@@ -1,7 +1,7 @@
 package acats.fromanotherworld.item;
 
-import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.spawning.SpawningManager;
+import acats.fromanotherworld.utilities.EntityUtilities;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
@@ -30,14 +30,8 @@ public class ImpostorDetectorItem extends Item {
 
         if (count){
             if (!world.isClient()){
-                int things = 0;
                 List<? extends LivingEntity> allEntities = ((ServerWorld) world).getEntitiesByType(TypeFilter.instanceOf(LivingEntity.class), EntityPredicates.EXCEPT_SPECTATOR);
-                for (LivingEntity e:
-                     allEntities) {
-                    if (FromAnotherWorld.isThing(e)){
-                        things++;
-                    }
-                }
+                int things = EntityUtilities.numThingsInList(allEntities);
                 SpawningManager spawningManager = SpawningManager.getSpawningManager((ServerWorld) world);
                 user.sendMessage(Text.literal(things + " Things"));
                 user.sendMessage(Text.literal(spawningManager.alienThingsToSpawn + " Alien Things waiting to spawn"));
@@ -48,7 +42,7 @@ public class ImpostorDetectorItem extends Item {
             List<LivingEntity> nearbyEntities = world.getNonSpectatingEntities(LivingEntity.class, new Box(user.getX() - entityCheckDist, user.getY() - entityCheckDist, user.getZ() - entityCheckDist, user.getX() + entityCheckDist, user.getY() + entityCheckDist, user.getZ() + entityCheckDist));
             for (LivingEntity e:
                     nearbyEntities) {
-                if (FromAnotherWorld.isThing(e)){
+                if (EntityUtilities.isThing(e)){
                     e.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 20, 0, false, false));
                 }
             }

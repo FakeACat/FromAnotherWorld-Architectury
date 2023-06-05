@@ -1,6 +1,5 @@
 package acats.fromanotherworld.entity.thing;
 
-import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.constants.Variants;
 import acats.fromanotherworld.entity.thing.resultant.BeastEntity;
 import acats.fromanotherworld.entity.thing.resultant.BloodCrawlerEntity;
@@ -8,6 +7,7 @@ import acats.fromanotherworld.registry.EntityRegistry;
 import acats.fromanotherworld.registry.SoundRegistry;
 import acats.fromanotherworld.tags.DamageTypeTags;
 import acats.fromanotherworld.tags.EntityTags;
+import acats.fromanotherworld.utilities.EntityUtilities;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -70,7 +70,7 @@ public class TransitionEntity extends LivingEntity {
 
     @Override
     protected float modifyAppliedDamage(DamageSource source, float amount) {
-        boolean vul1 = FromAnotherWorld.isVulnerable(this);
+        boolean vul1 = EntityUtilities.isVulnerable(this);
         boolean vul2 = source.isIn(DamageTypeTags.ALWAYS_HURTS_THINGS);
         return (vul1 || vul2) ? super.modifyAppliedDamage(source, amount) : Math.min(super.modifyAppliedDamage(source, amount), 1.0F);
     }

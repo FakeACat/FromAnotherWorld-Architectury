@@ -1,11 +1,11 @@
 package acats.fromanotherworld.entity.thing.resultant;
 
-import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.entity.goal.AbsorbGoal;
 import acats.fromanotherworld.entity.goal.FleeOnFireGoal;
 import acats.fromanotherworld.entity.goal.PalmerAttackGoal;
 import acats.fromanotherworld.entity.render.thing.Tentacle;
 import acats.fromanotherworld.registry.EntityRegistry;
+import acats.fromanotherworld.utilities.EntityUtilities;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.core.animation.AnimationController;
@@ -76,7 +76,7 @@ public class PalmerThingEntity extends AbsorberThingEntity {
         if (this.getTargetId() != 0){
             Entity target = this.world.getEntityById(this.getTargetId());
             if (target != null){
-                if (FromAnotherWorld.isThing(target)){
+                if (EntityUtilities.isThing(target)){
                     this.setTargetId(0);
                     return false;
                 }

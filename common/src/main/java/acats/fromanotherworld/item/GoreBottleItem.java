@@ -1,7 +1,7 @@
 package acats.fromanotherworld.item;
 
-import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.registry.DamageTypeRegistry;
+import acats.fromanotherworld.utilities.EntityUtilities;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -42,7 +42,7 @@ public class GoreBottleItem extends Item {
             playerEntity.getInventory().insertStack(new ItemStack(Items.GLASS_BOTTLE));
 
             if (!world.isClient() && playerEntity.canTakeDamage()){
-                FromAnotherWorld.spawnAssimilatedPlayer(playerEntity);
+                EntityUtilities.spawnAssimilatedPlayer(playerEntity);
                 playerEntity.damage(DamageTypeRegistry.amongUsPotion(world), Float.MAX_VALUE);
             }
         }

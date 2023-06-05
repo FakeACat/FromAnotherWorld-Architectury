@@ -1,5 +1,6 @@
 package acats.fromanotherworld.mixin;
 
+import acats.fromanotherworld.entity.interfaces.MaybeThing;
 import acats.fromanotherworld.entity.interfaces.PossibleDisguisedThing;
 import acats.fromanotherworld.events.CommonLivingEntityEvents;
 import net.minecraft.entity.Entity;
@@ -14,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin implements PossibleDisguisedThing {
+public abstract class LivingEntityMixin implements PossibleDisguisedThing, MaybeThing {
     private DataTracker dataTracker(){
         return ((LivingEntity) (Object) this).getDataTracker();
     }
@@ -135,6 +136,11 @@ public abstract class LivingEntityMixin implements PossibleDisguisedThing {
     @Override
     public void setRevealedMax(int t){
         this.dataTracker().set(REVEALED_MAX, t);
+    }
+
+    @Override
+    public boolean isThing() {
+        return this.isAssimilated();
     }
 
     static{

@@ -1,6 +1,6 @@
 package acats.fromanotherworld.spawning;
 
-import acats.fromanotherworld.FromAnotherWorld;
+import acats.fromanotherworld.utilities.EntityUtilities;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -32,7 +32,7 @@ public abstract class AbstractThingMobEvent extends AbstractThingEvent {
             for (LivingEntity e:
                     mobs) {
                 if (e != null) {
-                    FromAnotherWorld.spawnOnEntity(e, world, player, range());
+                    EntityUtilities.spawnOnEntity(e, world, player, range());
                 }
             }
         }

@@ -115,7 +115,7 @@ public class ChestSpitterEntity extends ThingEntity {
     }
 
     @Override
-    public boolean shouldBeCounted() {
+    public boolean isDistinctThing() {
         return false;
     }
 

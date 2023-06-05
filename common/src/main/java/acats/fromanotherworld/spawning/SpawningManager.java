@@ -4,6 +4,7 @@ import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.config.General;
 import acats.fromanotherworld.entity.thing.special.AlienThingEntity;
 import acats.fromanotherworld.registry.EntityRegistry;
+import acats.fromanotherworld.utilities.EntityUtilities;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -44,7 +45,7 @@ public class SpawningManager extends PersistentState {
             if (alien != null){
                 alien.changeForm(world.getRandom().nextInt(3));
                 alien.tickEmerging();
-                if (FromAnotherWorld.spawnOnEntityImproved(alien, world, player, 10, 20, 10, 20)){
+                if (EntityUtilities.spawnOnEntityImproved(alien, world, player, 10, 20, 10, 20)){
                     this.alienThingsToSpawn--;
                     this.markDirty();
                 }

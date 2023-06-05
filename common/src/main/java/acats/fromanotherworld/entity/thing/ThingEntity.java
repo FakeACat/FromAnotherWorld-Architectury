@@ -3,6 +3,7 @@ package acats.fromanotherworld.entity.thing;
 import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.config.General;
 import acats.fromanotherworld.entity.goal.ThingTargetGoal;
+import acats.fromanotherworld.entity.interfaces.MaybeThing;
 import acats.fromanotherworld.entity.navigation.ThingNavigation;
 import acats.fromanotherworld.entity.projectile.NeedleEntity;
 import acats.fromanotherworld.registry.BlockRegistry;
@@ -10,6 +11,7 @@ import acats.fromanotherworld.registry.SoundRegistry;
 import acats.fromanotherworld.tags.BlockTags;
 import acats.fromanotherworld.tags.DamageTypeTags;
 import acats.fromanotherworld.tags.EntityTags;
+import acats.fromanotherworld.utilities.EntityUtilities;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.util.AzureLibUtil;
@@ -36,7 +38,7 @@ import net.minecraft.world.*;
 import net.minecraft.world.biome.Biome;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class ThingEntity extends HostileEntity implements GeoEntity {
+public abstract class ThingEntity extends HostileEntity implements GeoEntity, MaybeThing {
     private static final TrackedData<Integer> VICTIM_TYPE;
     private static final TrackedData<Boolean> HIBERNATING;
     private static final TrackedData<Float> COLD;
@@ -127,9 +129,9 @@ public abstract class ThingEntity extends HostileEntity implements GeoEntity {
 
     @Override
     public boolean canTarget(LivingEntity target) {
-        if (!FromAnotherWorld.isThing(target) &&
+        if (!EntityUtilities.isThing(target) &&
                 (target == this.currentThreat ||
-                        FromAnotherWorld.canAssimilate(target) ||
+                        EntityUtilities.canAssimilate(target) ||
                         target.getType().isIn(EntityTags.ATTACKABLE_BUT_NOT_ASSIMILABLE))){
             return super.canTarget(target);
         }
@@ -143,10 +145,6 @@ public abstract class ThingEntity extends HostileEntity implements GeoEntity {
 
     @Override
     public boolean cannotDespawn() {
-        return true;
-    }
-
-    public boolean shouldBeCounted(){
         return true;
     }
 
@@ -234,7 +232,7 @@ public abstract class ThingEntity extends HostileEntity implements GeoEntity {
                     this.climbStamina = 300;
                 }
             }
-            if (this.age % 10 == 0 && !FromAnotherWorld.isVulnerable(this)){
+            if (this.age % 10 == 0 && !EntityUtilities.isVulnerable(this)){
                 this.heal(1.0F);
             }
 
@@ -316,7 +314,7 @@ public abstract class ThingEntity extends HostileEntity implements GeoEntity {
                     int t = n + p;
                     BlockPos blockPos = new BlockPos(r, s, t);
                     BlockState blockState = this.world.getBlockState(blockPos);
-                    if (FromAnotherWorld.canThingDestroy(blockState) && random.nextInt(chanceDenominator) == 0) {
+                    if (EntityUtilities.canThingDestroy(blockState) && random.nextInt(chanceDenominator) == 0) {
                         this.world.breakBlock(blockPos, true, this);
                     }
                 }
@@ -332,16 +330,16 @@ public abstract class ThingEntity extends HostileEntity implements GeoEntity {
     public boolean damage(DamageSource source, float amount) {
         if (!world.isClient()){
             if (source.getAttacker() instanceof LivingEntity e){
-                if (FromAnotherWorld.isVulnerable(this))
-                    FromAnotherWorld.angerNearbyThings(10, this, e);
+                if (EntityUtilities.isVulnerable(this))
+                    EntityUtilities.angerNearbyThings(10, this, e);
                 this.currentThreat = e;
                 if (this.canTarget(e)){
                     this.setTarget(e);
                 }
             }
             else{
-                if (FromAnotherWorld.isVulnerable(this))
-                    FromAnotherWorld.angerNearbyThings(10, this, null);
+                if (EntityUtilities.isVulnerable(this))
+                    EntityUtilities.angerNearbyThings(10, this, null);
             }
         }
         if (this.isThingFrozen() && source == this.getWorld().getDamageSources().inWall()){
@@ -352,7 +350,7 @@ public abstract class ThingEntity extends HostileEntity implements GeoEntity {
 
     @Override
     protected float modifyAppliedDamage(DamageSource source, float amount) {
-        boolean vul1 = FromAnotherWorld.isVulnerable(this);
+        boolean vul1 = EntityUtilities.isVulnerable(this);
         boolean vul2 = source.isIn(DamageTypeTags.ALWAYS_HURTS_THINGS);
         return (vul1 || vul2) ? super.modifyAppliedDamage(source, amount) : Math.min(super.modifyAppliedDamage(source, amount), 1.0F);
     }
@@ -363,7 +361,7 @@ public abstract class ThingEntity extends HostileEntity implements GeoEntity {
 
     @Override
     public boolean tryAttack(Entity target) {
-        if (FromAnotherWorld.assimilate(target, this.shouldMergeOnAssimilate() ? 10 : 1)){
+        if (EntityUtilities.assimilate(target, this.shouldMergeOnAssimilate() ? 10 : 1)){
             target.damage(this.world.getDamageSources().mobAttack(this), 0.0F);
             if (this.shouldMergeOnAssimilate()){
                 this.discard();
@@ -508,6 +506,11 @@ public abstract class ThingEntity extends HostileEntity implements GeoEntity {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.animatableInstanceCache;
+    }
+
+    @Override
+    public boolean isThing() {
+        return true;
     }
 
     public enum Strength {

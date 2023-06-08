@@ -63,7 +63,7 @@ public class ThingEntityRenderer<T extends ThingEntity> extends GeoEntityRendere
 
     private boolean collision(T animatable, Direction direction){
         int dist = MathHelper.floor(animatable.getWidth() / 2 + 1);
-        return animatable.collidesWithStateAtPos(animatable.getBlockPos(), animatable.world.getBlockState(animatable.getBlockPos().add(direction.getVector().multiply(dist))));
+        return animatable.collidesWithStateAtPos(animatable.getBlockPos(), animatable.getWorld().getBlockState(animatable.getBlockPos().add(direction.getVector().multiply(dist))));
         /*if (direction == Direction.NORTH || direction == Direction.WEST)
             dist *= -1;
         Box box = animatable.getBoundingBox();

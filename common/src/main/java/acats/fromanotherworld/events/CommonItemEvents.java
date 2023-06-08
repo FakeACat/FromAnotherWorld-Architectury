@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 public class CommonItemEvents {
     @Nullable
     public static ActionResult useOnEntity(ItemStack stack, PlayerEntity user, LivingEntity entity, Hand hand){
-        if (!user.world.isClient() && stack.getItem() == Items.FLINT_AND_STEEL && entity instanceof ThingEntity){
+        if (!user.getWorld().isClient() && stack.getItem() == Items.FLINT_AND_STEEL && entity instanceof ThingEntity){
             entity.setOnFireFor(12);
             if (user instanceof ServerPlayerEntity) {
                 stack.damage(1, user, (p) -> p.sendToolBreakStatus(hand));

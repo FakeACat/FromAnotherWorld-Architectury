@@ -6,15 +6,14 @@ import acats.fromanotherworld.item.ImpostorDetectorItem;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
 
 import java.util.HashMap;
 import java.util.function.Supplier;
 
 public class ItemRegistry {
-    public static ItemGroup modItemGroup;
     public static final HashMap<String, FAWItem> ITEM_REGISTRY = new HashMap<>();
     public static final HashMap<String, FAWEgg> SPAWN_EGG_REGISTRY = new HashMap<>();
+    public static final String TAB_ID = "from_another_world_group";
     public static class FAWEgg{
         public FAWEgg(int primaryColour, int secondaryColour, Supplier<EntityType<? extends MobEntity>> entityTypeSupplier){
             this.primaryColour = primaryColour;

@@ -42,31 +42,31 @@ public class BlairThingSpecialAttacksGoal extends Goal {
 
     private void spit(){
         if (this.mob.getRandom().nextInt(2) == 0){
-            AssimilationLiquidEntity assimilationLiquid = new AssimilationLiquidEntity(this.mob.world, this.mob.getX(), this.mob.getBodyY(0.55D), this.mob.getZ());
+            AssimilationLiquidEntity assimilationLiquid = new AssimilationLiquidEntity(this.mob.getWorld(), this.mob.getX(), this.mob.getBodyY(0.55D), this.mob.getZ());
             assimilationLiquid.setOwner(this.mob);
             assimilationLiquid.setVelocity(this.mob.getTarget().getPos().add(0, this.mob.getTarget().getHeight() / 2, 0).subtract(assimilationLiquid.getPos()).normalize().multiply(2.0D).add(new Vec3d(this.mob.getRandom().nextInt(40) - 20, this.mob.getRandom().nextInt(40) - 20, this.mob.getRandom().nextInt(40) - 20).multiply(0.01f)));
-            this.mob.world.spawnEntity(assimilationLiquid);
+            this.mob.getWorld().spawnEntity(assimilationLiquid);
         }
     }
 
     private void littleRats(){
         if (this.mob.getRandom().nextInt(30) == 0){
-            BloodCrawlerEntity bloodCrawlerEntity = EntityRegistry.BLOOD_CRAWLER.get().create(this.mob.world);
+            BloodCrawlerEntity bloodCrawlerEntity = EntityRegistry.BLOOD_CRAWLER.get().create(this.mob.getWorld());
             if (bloodCrawlerEntity != null) {
                 bloodCrawlerEntity.refreshPositionAndAngles(this.mob.getX(), this.mob.getY(), this.mob.getZ(), this.mob.getYaw(), this.mob.getPitch());
                 bloodCrawlerEntity.initializeFrom(this.mob);
-                this.mob.world.spawnEntity(bloodCrawlerEntity);
+                this.mob.getWorld().spawnEntity(bloodCrawlerEntity);
             }
         }
         if (this.mob.getRandom().nextInt(120) == 0){
-            CrawlerEntity crawlerEntity = EntityRegistry.CRAWLER.get().create(this.mob.world);
+            CrawlerEntity crawlerEntity = EntityRegistry.CRAWLER.get().create(this.mob.getWorld());
             if (crawlerEntity != null) {
                 crawlerEntity.blairSpawned = true;
                 crawlerEntity.setVictimType(JULIETTE);
                 crawlerEntity.refreshPositionAndAngles(this.mob.getX(), this.mob.getY(), this.mob.getZ(), this.mob.getYaw(), this.mob.getPitch());
                 crawlerEntity.initializeFrom(this.mob);
                 crawlerEntity.setVelocity(this.mob.getTarget().getPos().add(0, this.mob.getTarget().getHeight() / 2, 0).subtract(crawlerEntity.getPos()).normalize().multiply(1.5D).add(new Vec3d(this.mob.getRandom().nextInt(40) - 20, this.mob.getRandom().nextInt(40) - 20, this.mob.getRandom().nextInt(40) - 20).multiply(0.01f)));
-                this.mob.world.spawnEntity(crawlerEntity);
+                this.mob.getWorld().spawnEntity(crawlerEntity);
             }
         }
     }

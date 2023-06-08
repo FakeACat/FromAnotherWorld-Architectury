@@ -168,10 +168,10 @@ public class BeastEntity extends MinibossThingEntity implements RangedAttackMob 
     @Override
     public void attack(LivingEntity target, float pullProgress) {
         for (int i = 0; i < 4; i++){
-            AssimilationLiquidEntity assimilationLiquid = new AssimilationLiquidEntity(world, this);
+            AssimilationLiquidEntity assimilationLiquid = new AssimilationLiquidEntity(this.getWorld(), this);
             assimilationLiquid.setPos(this.getX(), this.getBodyY(0.5D), this.getZ());
             assimilationLiquid.setVelocity(target.getPos().add(0, target.getHeight() / 2, 0).subtract(assimilationLiquid.getPos()).normalize().multiply(1.75D).add(new Vec3d(random.nextInt(40) - 20, random.nextInt(40) - 20, random.nextInt(40) - 20).multiply(0.01)));
-            world.spawnEntity(assimilationLiquid);
+            this.getWorld().spawnEntity(assimilationLiquid);
         }
     }
 }

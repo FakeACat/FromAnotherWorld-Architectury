@@ -3,7 +3,6 @@ package acats.fromanotherworld.registry;
 import acats.fromanotherworld.block.ThingGore;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
-import net.minecraft.block.Material;
 
 import java.util.HashMap;
 import java.util.function.Supplier;
@@ -24,7 +23,7 @@ public class BlockRegistry {
             return this.block;
         }
     }
-    public static final FAWBlock THING_GORE = registerBlock("thing_gore", () -> new ThingGore(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).noCollision().nonOpaque().ticksRandomly()));
+    public static final FAWBlock THING_GORE = registerBlock("thing_gore", () -> new ThingGore(AbstractBlock.Settings.create().noCollision().nonOpaque().ticksRandomly()));
 
     private static FAWBlock registerBlock(String id, Supplier<Block> blockSupplier){
         FAWBlock fawBlock = new FAWBlock(blockSupplier);

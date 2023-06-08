@@ -26,7 +26,7 @@ public abstract class FoxEntityMixin extends LivingEntity {
 
     @Inject(at = @At("HEAD"), method = "tickMovement")
     private void tickMovementMixin(CallbackInfo ci){
-        if (!this.world.isClient && this.isAlive() && this.canMoveVoluntarily()) {
+        if (!this.getWorld().isClient && this.isAlive() && this.canMoveVoluntarily()) {
             ItemStack itemStack = this.getEquippedStack(EquipmentSlot.MAINHAND);
             if (itemStack.getItem() instanceof AssimilationLiquidItem) {
                 if (this.eatingTime > 600) {
@@ -35,7 +35,7 @@ public abstract class FoxEntityMixin extends LivingEntity {
                     this.eatingTime = 0;
                 } else if (this.eatingTime > 560 && this.random.nextFloat() < 0.1F) {
                     this.playSound(this.getEatSound(itemStack), 1.0F, 1.0F);
-                    this.world.sendEntityStatus(this, (byte)45);
+                    this.getWorld().sendEntityStatus(this, (byte)45);
                 }
             }
         }

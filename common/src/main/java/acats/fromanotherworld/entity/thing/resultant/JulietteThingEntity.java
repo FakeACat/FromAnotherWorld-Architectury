@@ -60,12 +60,12 @@ public class JulietteThingEntity extends AbsorberThingEntity {
     @Override
     public void onDeath(DamageSource source) {
         if (random.nextInt(3) == 0){
-            CrawlerEntity crawlerEntity = EntityRegistry.CRAWLER.get().create(this.world);
+            CrawlerEntity crawlerEntity = EntityRegistry.CRAWLER.get().create(this.getWorld());
             if (crawlerEntity != null) {
                 crawlerEntity.setPosition(this.getPos());
                 crawlerEntity.initializeFrom(this);
                 crawlerEntity.setVictimType(JULIETTE);
-                this.world.spawnEntity(crawlerEntity);
+                this.getWorld().spawnEntity(crawlerEntity);
             }
         }
         super.onDeath(source);

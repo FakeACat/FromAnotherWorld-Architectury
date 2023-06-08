@@ -84,12 +84,12 @@ public class ChestSpitterEntity extends ThingEntity {
     public void tick() {
         super.tick();
 
-        if (this.age > REVEAL_TIME + 10 && this.age < REVEAL_TIME + ATTACK_TIME && !this.world.isClient() && this.getTarget() != null){
-            AssimilationLiquidEntity assimilationLiquid = new AssimilationLiquidEntity(world, this);
+        if (this.age > REVEAL_TIME + 10 && this.age < REVEAL_TIME + ATTACK_TIME && !this.getWorld().isClient() && this.getTarget() != null){
+            AssimilationLiquidEntity assimilationLiquid = new AssimilationLiquidEntity(this.getWorld(), this);
             assimilationLiquid.setVelocity(this, this.getPitch(), this.getYaw(), 0.0F, 2.5F, 10.0F);
             double d = 0.5D;
             assimilationLiquid.setPos(assimilationLiquid.getX() + assimilationLiquid.getVelocity().x * d, assimilationLiquid.getY() + assimilationLiquid.getVelocity().y * d, assimilationLiquid.getZ() + assimilationLiquid.getVelocity().z * d);
-            world.spawnEntity(assimilationLiquid);
+            this.getWorld().spawnEntity(assimilationLiquid);
         }
 
         if (this.age > 2 * REVEAL_TIME + ATTACK_TIME - 20){
@@ -111,7 +111,7 @@ public class ChestSpitterEntity extends ThingEntity {
 
     @Override
     public boolean damage(DamageSource source, float amount) {
-        return source != this.world.getDamageSources().inWall() && super.damage(source, amount);
+        return source != this.getWorld().getDamageSources().inWall() && super.damage(source, amount);
     }
 
     @Override

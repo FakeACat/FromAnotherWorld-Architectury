@@ -80,9 +80,9 @@ public class ImpalerEntity extends AbsorberThingEntity implements BurstAttackThi
     protected void applyDamage(DamageSource source, float amount) {
         if (this.hasBackNeedles()){
             for (int i = 0; i < 8; i++){
-                NeedleEntity needleEntity = new NeedleEntity(world, this.getX(), this.getY() + 0.8F, this.getZ(), this);
+                NeedleEntity needleEntity = new NeedleEntity(this.getWorld(), this.getX(), this.getY() + 0.8F, this.getZ(), this);
                 needleEntity.setVelocity(new Vec3d(random.nextDouble() - 0.5D, random.nextDouble(), random.nextDouble() - 0.5D).multiply(0.75D));
-                world.spawnEntity(needleEntity);
+                this.getWorld().spawnEntity(needleEntity);
             }
             this.setBackNeedles(false);
         }
@@ -92,7 +92,7 @@ public class ImpalerEntity extends AbsorberThingEntity implements BurstAttackThi
     @Override
     public void tick() {
         super.tick();
-        if (!world.isClient()){
+        if (!this.getWorld().isClient()){
             if (!this.hasBackNeedles() && ++this.backNeedlesRegrow > 1200){
                 this.setBackNeedles(true);
                 this.backNeedlesRegrow = 0;
@@ -142,11 +142,11 @@ public class ImpalerEntity extends AbsorberThingEntity implements BurstAttackThi
     @Override
     public void shootBurst(LivingEntity target) {
         this.setMouthNeedles(false);
-        if (!world.isClient()){
+        if (!this.getWorld().isClient()){
             for (int i = 0; i < 15; i++){
-                NeedleEntity needle = new NeedleEntity(this.world, this);
+                NeedleEntity needle = new NeedleEntity(this.getWorld(), this);
                 needle.setVelocity(target.getPos().add(0, target.getHeight() / 2, 0).subtract(needle.getPos()).normalize().add(new Vec3d(random.nextInt(40) - 20, random.nextInt(40) - 20, random.nextInt(40) - 20).multiply(0.01f)).multiply(3.0D));
-                this.world.spawnEntity(needle);
+                this.getWorld().spawnEntity(needle);
             }
         }
     }

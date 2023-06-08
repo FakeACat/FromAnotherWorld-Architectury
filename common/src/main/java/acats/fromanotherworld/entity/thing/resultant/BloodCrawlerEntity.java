@@ -103,8 +103,8 @@ public class BloodCrawlerEntity extends ThingEntity {
     @Override
     public void onDeath(DamageSource damageSource) {
         BlockPos p = BlockPos.ofFloored(this.getX(), this.getY(), this.getZ());
-        if (!world.isClient && world.getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING) && BlockRegistry.THING_GORE.get().getDefaultState().canPlaceAt(world, p) && world.getBlockState(p).isReplaceable() && world.getBlockState(p).getFluidState().isEmpty()){
-            world.setBlockState(p, BlockRegistry.THING_GORE.get().getDefaultState());
+        if (!this.getWorld().isClient && this.getWorld().getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING) && BlockRegistry.THING_GORE.get().getDefaultState().canPlaceAt(this.getWorld(), p) && this.getWorld().getBlockState(p).isReplaceable() && this.getWorld().getBlockState(p).getFluidState().isEmpty()){
+            this.getWorld().setBlockState(p, BlockRegistry.THING_GORE.get().getDefaultState());
         }
         super.onDeathWithoutGoreDrops(damageSource);
     }

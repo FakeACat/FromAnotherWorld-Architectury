@@ -100,14 +100,14 @@ public class BlairThingEntity extends MinibossThingEntity {
     private void teleport2(double x, double y, double z) {
         double g = y;
         BlockPos blockPos = BlockPos.ofFloored(x, y, z);
-        World world = this.world;
+        World world = this.getWorld();
         if (world.isChunkLoaded(blockPos)) {
             boolean bl2 = false;
 
             while(!bl2 && blockPos.getY() > world.getBottomY()) {
                 BlockPos blockPos2 = blockPos.down();
                 BlockState blockState = world.getBlockState(blockPos2);
-                if (blockState.getMaterial().blocksMovement()) {
+                if (blockState.blocksMovement()) {
                     bl2 = true;
                 } else {
                     --g;
@@ -117,7 +117,7 @@ public class BlairThingEntity extends MinibossThingEntity {
 
             if (bl2) {
                 this.requestTeleport(x, g, z);
-                if (this.world.getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING)){
+                if (this.getWorld().getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING)){
                     this.grief(0, 1);
                 }
             }
@@ -198,13 +198,13 @@ public class BlairThingEntity extends MinibossThingEntity {
 
     @Override
     public void onDeath(DamageSource source) {
-        DogBeastSpitterEntity dogSpitterEntity = EntityRegistry.DOGBEAST_SPITTER.get().create(this.world);
+        DogBeastSpitterEntity dogSpitterEntity = EntityRegistry.DOGBEAST_SPITTER.get().create(this.getWorld());
         if (dogSpitterEntity != null) {
             dogSpitterEntity.setPosition(this.getPos());
             dogSpitterEntity.initializeFrom(this);
             dogSpitterEntity.canSpit = true;
             dogSpitterEntity.canGrief = true;
-            this.world.spawnEntity(dogSpitterEntity);
+            this.getWorld().spawnEntity(dogSpitterEntity);
         }
         super.onDeath(source);
     }

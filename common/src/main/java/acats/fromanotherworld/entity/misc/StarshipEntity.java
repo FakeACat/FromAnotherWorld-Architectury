@@ -60,21 +60,21 @@ public class StarshipEntity extends MobEntity implements GeoEntity {
             return;
         }
         if (this.isOnGround()){
-            if (!this.world.isClient()){
-                this.world.createExplosion(null, this.getX(), this.getY() + 3.0D, this.getZ(), 9, World.ExplosionSourceType.TNT);
-                ThingEntity thing = EntityRegistry.ALIEN_THING.get().create(this.world);
+            if (!this.getWorld().isClient()){
+                this.getWorld().createExplosion(null, this.getX(), this.getY() + 3.0D, this.getZ(), 9, World.ExplosionSourceType.TNT);
+                ThingEntity thing = EntityRegistry.ALIEN_THING.get().create(this.getWorld());
                 if (thing != null) {
                     thing.setPosition(this.getPos());
-                    this.world.spawnEntity(thing);
+                    this.getWorld().spawnEntity(thing);
                 }
                 this.setReleasedContents(true);
-                this.world.playSound(null, this.getBlockPos(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 16.0F, (1.0F + (this.world.random.nextFloat() - this.world.random.nextFloat()) * 0.2F) * 0.7F);
+                this.getWorld().playSound(null, this.getBlockPos(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 16.0F, (1.0F + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2F) * 0.7F);
             }
         }
-        else if (this.world.isClient()){
+        else if (this.getWorld().isClient()){
             for(int i = 0; i < 5; ++i) {
-                this.world.addParticle(ParticleRegistry.BIG_FLAMES, this.getX(), this.getY(), this.getZ(), (this.random.nextDouble() - 0.5D) / 5, (this.random.nextDouble() - 0.5D) / 5 + this.getVelocity().y, (this.random.nextDouble() - 0.5D) / 5);
-                this.world.addParticle(ParticleTypes.CAMPFIRE_SIGNAL_SMOKE, this.getX(), this.getY(), this.getZ(), (this.random.nextDouble() - 0.5D) / 2, ((this.random.nextDouble() - 0.5D) + this.getVelocity().y) / 2, (this.random.nextDouble() - 0.5D) / 2);
+                this.getWorld().addParticle(ParticleRegistry.BIG_FLAMES, this.getX(), this.getY(), this.getZ(), (this.random.nextDouble() - 0.5D) / 5, (this.random.nextDouble() - 0.5D) / 5 + this.getVelocity().y, (this.random.nextDouble() - 0.5D) / 5);
+                this.getWorld().addParticle(ParticleTypes.CAMPFIRE_SIGNAL_SMOKE, this.getX(), this.getY(), this.getZ(), (this.random.nextDouble() - 0.5D) / 2, ((this.random.nextDouble() - 0.5D) + this.getVelocity().y) / 2, (this.random.nextDouble() - 0.5D) / 2);
             }
         }
     }
@@ -148,10 +148,10 @@ public class StarshipEntity extends MobEntity implements GeoEntity {
     @Override
     protected void drop(DamageSource source) {
         for (int i = 0; i < 7; i++){
-            BloodCrawlerEntity bloodCrawlerEntity = EntityRegistry.BLOOD_CRAWLER.get().create(this.world);
+            BloodCrawlerEntity bloodCrawlerEntity = EntityRegistry.BLOOD_CRAWLER.get().create(this.getWorld());
             if (bloodCrawlerEntity != null) {
                 bloodCrawlerEntity.setPosition(this.getPos().add(this.getRandom().nextFloat() - 0.5F, 0, this.getRandom().nextFloat() - 0.5F));
-                this.world.spawnEntity(bloodCrawlerEntity);
+                this.getWorld().spawnEntity(bloodCrawlerEntity);
             }
         }
         super.drop(source);

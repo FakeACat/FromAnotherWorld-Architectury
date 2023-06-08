@@ -160,7 +160,7 @@ public class AlienThingEntity extends ThingEntity implements StalkerThing {
 
     @Override
     protected void mobTick() {
-        if (!this.world.isClient()){
+        if (!this.getWorld().isClient()){
             if (!this.isThingFrozen()){
                 PlayerEntity player = this.getWorld().getClosestPlayer(this, -1.0F);
                 if (player == null || player.squaredDistanceTo(this) > 16384){
@@ -179,7 +179,7 @@ public class AlienThingEntity extends ThingEntity implements StalkerThing {
                     if (this.age % 60 == 0 &&
                             this.getTarget() != null &&
                             this.getForm() == 1 &&
-                            this.world.getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING) &&
+                            this.getWorld().getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING) &&
                             this.getTarget().getY() > this.getY() + 1 &&
                             this.getNavigation().isIdle()){
                         int x = MathHelper.floor(this.getX());
@@ -187,8 +187,8 @@ public class AlienThingEntity extends ThingEntity implements StalkerThing {
                         int z = MathHelper.floor(this.getZ());
                         if (this.breakOrPlaceable(new BlockPos(x, y, z)) && this.breakOrPlaceable(new BlockPos(x, y + 2, z))){
                             this.setPos(x + 0.5D, y + 1, z + 0.5D);
-                            this.world.breakBlock(new BlockPos(x, y + 2, z), false, this);
-                            this.world.setBlockState(new BlockPos(x, y, z), Blocks.COBBLESTONE.getDefaultState());
+                            this.getWorld().breakBlock(new BlockPos(x, y + 2, z), false, this);
+                            this.getWorld().setBlockState(new BlockPos(x, y, z), Blocks.COBBLESTONE.getDefaultState());
                         }
                     }
                 }
@@ -217,14 +217,14 @@ public class AlienThingEntity extends ThingEntity implements StalkerThing {
     }
 
     private boolean breakOrPlaceable(BlockPos pos){
-        return EntityUtilities.canThingDestroy(world.getBlockState(pos)) || world.getBlockState(pos).isAir();
+        return EntityUtilities.canThingDestroy(this.getWorld().getBlockState(pos)) || this.getWorld().getBlockState(pos).isAir();
     }
 
     @Override
     public void tickMovement() {
         if (this.getSwitchProgress() > 0){
             for (int i = 0; i < 20.0F * this.getSwitchProgress2(); i++){
-                this.world.addParticle(ParticleRegistry.THING_GORE, this.getParticleX(0.6D), this.getRandomBodyY(), this.getParticleZ(0.6D), 0, 0, 0);
+                this.getWorld().addParticle(ParticleRegistry.THING_GORE, this.getParticleX(0.6D), this.getRandomBodyY(), this.getParticleZ(0.6D), 0, 0, 0);
             }
         }
         if (this.burrowingOrEmerging()){
@@ -235,7 +235,7 @@ public class AlienThingEntity extends ThingEntity implements StalkerThing {
                     double d = this.getX() + (double)MathHelper.nextBetween(random, -0.7F, 0.7F);
                     double e = this.getY();
                     double f = this.getZ() + (double)MathHelper.nextBetween(random, -0.7F, 0.7F);
-                    this.world.addParticle(new BlockStateParticleEffect(ParticleTypes.BLOCK, blockState), d, e, f, 0.0, 0.0, 0.0);
+                    this.getWorld().addParticle(new BlockStateParticleEffect(ParticleTypes.BLOCK, blockState), d, e, f, 0.0, 0.0, 0.0);
                 }
             }
         }

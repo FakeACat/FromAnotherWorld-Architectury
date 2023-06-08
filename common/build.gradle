@@ -8,12 +8,13 @@ loom {
 
 
 repositories{
+    maven { url "https://maven.terraformersmc.com/releases" }
     maven { url 'https://dl.cloudsmith.io/public/azuredoom-mods/azurelib/maven/'}
 }
 
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
-    modImplementation "mod.azure.azurelib:azurelib-fabric-${rootProject.azurelib_version}"
+    modImplementation "mod.azure.azurelib:azurelib-fabric-${rootProject.azurelib_version_fabric}"
 }
 
 publishing {

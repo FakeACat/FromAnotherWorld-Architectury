@@ -25,7 +25,7 @@ public class AlienThingFleeGoal extends FleeEntityGoal<LivingEntity> {
     }
 
     private boolean canStart2(){
-        this.targetEntity = this.mob.world.getClosestEntity(this.mob.world.getEntitiesByClass(this.classToFleeFrom, this.mob.getBoundingBox().expand(this.fleeDistance, this.fleeDistance, this.fleeDistance), (livingEntity) -> true), this.withinRangePredicate, this.mob, this.mob.getX(), this.mob.getY(), this.mob.getZ());
+        this.targetEntity = this.mob.getWorld().getClosestEntity(this.mob.getWorld().getEntitiesByClass(this.classToFleeFrom, this.mob.getBoundingBox().expand(this.fleeDistance, this.fleeDistance, this.fleeDistance), (livingEntity) -> true), this.withinRangePredicate, this.mob, this.mob.getX(), this.mob.getY(), this.mob.getZ());
         if (this.targetEntity == null) {
             return false;
         } else {

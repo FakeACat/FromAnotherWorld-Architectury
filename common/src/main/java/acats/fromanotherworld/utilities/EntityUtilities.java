@@ -104,7 +104,7 @@ public class EntityUtilities {
             int x = MathHelper.floor(targetEntity.getX()) + world.getRandom().nextBetween(minRangeH, maxRangeH) * (world.getRandom().nextBoolean() ? 1 : -1);
             int z = MathHelper.floor(targetEntity.getZ()) + world.getRandom().nextBetween(minRangeH, maxRangeH) * (world.getRandom().nextBoolean() ? 1 : -1);
             for (int y = MathHelper.floor(targetEntity.getY()) + world.getRandom().nextInt(rangeV); y > (int)targetEntity.getY() - rangeV; y--){
-                if (world.getBlockState(new BlockPos(x, y - 1, z)).getMaterial().blocksMovement()){
+                if (world.getBlockState(new BlockPos(x, y - 1, z)).blocksMovement()){
                     entity.setPosition(x + 0.5D, y, z + 0.5D);
                     if (world.isSpaceEmpty(entity) && !world.containsFluid(entity.getBoundingBox()))
                         return world.spawnEntity(entity);
@@ -117,7 +117,7 @@ public class EntityUtilities {
     public static void angerNearbyThings(int chance, LivingEntity entity, LivingEntity threat){
         double d = 16.0D;
         Box box = Box.from(entity.getPos()).expand(d, 10, d);
-        List<LivingEntity> potentialThings = entity.world.getEntitiesByClass(LivingEntity.class, box, EntityPredicates.EXCEPT_SPECTATOR);
+        List<LivingEntity> potentialThings = entity.getWorld().getEntitiesByClass(LivingEntity.class, box, EntityPredicates.EXCEPT_SPECTATOR);
         for (LivingEntity potentialThing:
                 potentialThings) {
             if (entity.getRandom().nextInt(chance) == 0){
@@ -157,7 +157,7 @@ public class EntityUtilities {
     }
 
     public static boolean canSee(Entity observer, Entity entity){
-        if (entity.world != observer.world) {
+        if (entity.getWorld() != observer.getWorld()) {
             return false;
         } else {
             Vec3d vec3d = new Vec3d(observer.getX(), observer.getEyeY(), observer.getZ());
@@ -165,7 +165,7 @@ public class EntityUtilities {
             if (vec3d2.squaredDistanceTo(vec3d) > 16384.0F) {
                 return false;
             } else {
-                return observer.world.raycast(new RaycastContext(vec3d, vec3d2, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, observer)).getType() == HitResult.Type.MISS;
+                return observer.getWorld().raycast(new RaycastContext(vec3d, vec3d2, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, observer)).getType() == HitResult.Type.MISS;
             }
         }
     }

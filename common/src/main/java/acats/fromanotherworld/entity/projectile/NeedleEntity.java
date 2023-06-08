@@ -28,10 +28,10 @@ public class NeedleEntity extends PersistentProjectileEntity {
 
     @Override
     protected void onEntityHit(EntityHitResult entityHitResult) {
-        if (!this.world.isClient()){
+        if (!this.getWorld().isClient()){
             Entity e = entityHitResult.getEntity();
             if (!EntityUtilities.assimilate(e) && !EntityUtilities.isThing(e)){
-                e.damage(this.world.getDamageSources().mobProjectile(this, (LivingEntity) this.getOwner()), 12.0F);
+                e.damage(this.getWorld().getDamageSources().mobProjectile(this, (LivingEntity) this.getOwner()), 12.0F);
                 this.discard();
             }
         }

@@ -74,7 +74,7 @@ public class PalmerThingEntity extends AbsorberThingEntity {
 
     public boolean targetGrabbed(){
         if (this.getTargetId() != 0){
-            Entity target = this.world.getEntityById(this.getTargetId());
+            Entity target = this.getWorld().getEntityById(this.getTargetId());
             if (target != null){
                 if (EntityUtilities.isThing(target)){
                     this.setTargetId(0);

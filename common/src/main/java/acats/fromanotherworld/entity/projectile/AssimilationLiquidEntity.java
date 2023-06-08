@@ -35,13 +35,13 @@ public class AssimilationLiquidEntity extends ThrownItemEntity {
     @Override
     protected void onEntityHit(EntityHitResult entityHitResult) {
         super.onEntityHit(entityHitResult);
-        if (!this.world.isClient()){
+        if (!this.getWorld().isClient()){
             Entity e = entityHitResult.getEntity();
             if (EntityUtilities.assimilate(e)){
                 this.discard();
             }
             else if (!EntityUtilities.isThing(e) && this.getOwner() != null){
-                e.damage(this.world.getDamageSources().mobProjectile(this, (LivingEntity) this.getOwner()), 3.0F);
+                e.damage(this.getWorld().getDamageSources().mobProjectile(this, (LivingEntity) this.getOwner()), 3.0F);
                 this.discard();
             }
         }
@@ -50,7 +50,7 @@ public class AssimilationLiquidEntity extends ThrownItemEntity {
     @Override
     protected void onCollision(HitResult hitResult) {
         super.onCollision(hitResult);
-        if (!this.world.isClient && hitResult.getType() != HitResult.Type.ENTITY) {
+        if (!this.getWorld().isClient && hitResult.getType() != HitResult.Type.ENTITY) {
             this.discard();
         }
     }
@@ -63,7 +63,7 @@ public class AssimilationLiquidEntity extends ThrownItemEntity {
         double f = packet.getVelocityZ();
         float g = 0.25F;
         for(int i = 0; i < 7; ++i) {
-            this.world.addParticle(ParticleRegistry.THING_SPIT, this.getX(), this.getY(), this.getZ(), d + (this.random.nextFloat() - 0.5F) * g, e + (this.random.nextFloat() - 0.5F) * g, f + (this.random.nextFloat() - 0.5F) * g);
+            this.getWorld().addParticle(ParticleRegistry.THING_SPIT, this.getX(), this.getY(), this.getZ(), d + (this.random.nextFloat() - 0.5F) * g, e + (this.random.nextFloat() - 0.5F) * g, f + (this.random.nextFloat() - 0.5F) * g);
         }
     }
 }

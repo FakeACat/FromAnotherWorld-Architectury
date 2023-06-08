@@ -98,9 +98,9 @@ public class DogBeastSpitterEntity extends AbsorberThingEntity implements Ranged
     @Override
     public void attack(LivingEntity target, float pullProgress) {
         for (int i = 0; i < (this.canSpit ? 6 : 3); i++){
-            AssimilationLiquidEntity assimilationLiquid = new AssimilationLiquidEntity(world, this);
+            AssimilationLiquidEntity assimilationLiquid = new AssimilationLiquidEntity(this.getWorld(), this);
             assimilationLiquid.setVelocity(target.getPos().add(0, target.getHeight() / 2, 0).subtract(assimilationLiquid.getPos()).normalize().add(new Vec3d(random.nextInt(40) - 20, random.nextInt(40) - 20, random.nextInt(40) - 20).multiply(this.canSpit ? 0.02 : 0.01)));
-            world.spawnEntity(assimilationLiquid);
+            this.getWorld().spawnEntity(assimilationLiquid);
         }
     }
 

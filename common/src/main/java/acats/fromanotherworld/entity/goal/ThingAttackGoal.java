@@ -24,9 +24,9 @@ public class ThingAttackGoal extends MeleeAttackGoal {
                     this.mob.tryAttack(target);
                 }
                 else{
-                    AssimilationLiquidEntity assimilationLiquid = new AssimilationLiquidEntity(this.mob.world, this.mob);
+                    AssimilationLiquidEntity assimilationLiquid = new AssimilationLiquidEntity(this.mob.getWorld(), this.mob);
                     assimilationLiquid.setVelocity(target.getPos().add(0, target.getHeight() / 2, 0).subtract(assimilationLiquid.getPos()).normalize());
-                    this.mob.world.spawnEntity(assimilationLiquid);
+                    this.mob.getWorld().spawnEntity(assimilationLiquid);
                     this.resetCooldown();
                 }
             }

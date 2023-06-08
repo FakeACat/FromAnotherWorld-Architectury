@@ -40,7 +40,7 @@ public class CommonLivingEntityEvents {
     public static void tick(LivingEntity entity){
         PossibleDisguisedThing thing = ((PossibleDisguisedThing) entity);
         if (thing.isAssimilated()){
-            if (entity.world.getDifficulty() == Difficulty.PEACEFUL){
+            if (entity.getWorld().getDifficulty() == Difficulty.PEACEFUL){
                 entity.discard();
                 return;
             }
@@ -59,7 +59,7 @@ public class CommonLivingEntityEvents {
         }
         else{
             if (thing.getSupercellConcentration() > 0){
-                if (entity.world.getDifficulty() == Difficulty.PEACEFUL){
+                if (entity.getWorld().getDifficulty() == Difficulty.PEACEFUL){
                     entity.discard();
                     return;
                 }
@@ -72,7 +72,7 @@ public class CommonLivingEntityEvents {
                     thing.setSupercellConcentration(0);
                 }
                 if (thing.getSupercellConcentration() >= 1.0F){
-                    if (!entity.world.isClient() && !EntityUtilities.isVulnerable(entity)){
+                    if (!entity.getWorld().isClient() && !EntityUtilities.isVulnerable(entity)){
                         entity.heal(1.0F);
                     }
                     entity.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 20, 6, false, false));
@@ -83,9 +83,9 @@ public class CommonLivingEntityEvents {
 
     public static void tickMovement(LivingEntity entity){
         PossibleDisguisedThing thing = ((PossibleDisguisedThing) entity);
-        if (entity.world.isClient() && thing.getSupercellConcentration() >= 1.0F){
+        if (entity.getWorld().isClient() && thing.getSupercellConcentration() >= 1.0F){
             for(int i = 0; i < thing.getSupercellConcentration() / 10; ++i) {
-                entity.world.addParticle(ParticleRegistry.THING_GORE, entity.getParticleX(0.6D), entity.getRandomBodyY(), entity.getParticleZ(0.6D), 0, 0, 0);
+                entity.getWorld().addParticle(ParticleRegistry.THING_GORE, entity.getParticleX(0.6D), entity.getRandomBodyY(), entity.getParticleZ(0.6D), 0, 0, 0);
             }
         }
     }
@@ -106,12 +106,12 @@ public class CommonLivingEntityEvents {
 
     public static void damage(LivingEntity entity, DamageSource damageSource){
         PossibleDisguisedThing thing = ((PossibleDisguisedThing) entity);
-        if (thing.isSleeper() && damageSource.getAttacker() instanceof PlayerEntity player && !entity.world.isClient()){
+        if (thing.isSleeper() && damageSource.getAttacker() instanceof PlayerEntity player && !entity.getWorld().isClient()){
             EntityUtilities.angerNearbyThings(1, entity, player);
             for (int i = 0; i < 20; i++){
-                AssimilationLiquidEntity assimilationLiquid = new AssimilationLiquidEntity(entity.world, entity.getX(), entity.getY(), entity.getZ());
+                AssimilationLiquidEntity assimilationLiquid = new AssimilationLiquidEntity(entity.getWorld(), entity.getX(), entity.getY(), entity.getZ());
                 assimilationLiquid.setVelocity(new Vec3d(entity.getRandom().nextDouble() - 0.5f, entity.getRandom().nextDouble(), entity.getRandom().nextDouble() - 0.5f));
-                entity.world.spawnEntity(assimilationLiquid);
+                entity.getWorld().spawnEntity(assimilationLiquid);
             }
             becomeResultant(entity);
         }
@@ -130,9 +130,9 @@ public class CommonLivingEntityEvents {
         int entityCheckDistH = 12;
         int entityCheckDistV = 2;
         int playerCheckDist = 32;
-        PlayerEntity p = entity.world.getClosestPlayer(entity, playerCheckDist);
-        if ((p == null || p.isSpectator() || p.isCreative()) && !entity.world.isClient()){
-            List<LivingEntity> nearbyEntities = entity.world.getEntitiesByClass(LivingEntity.class,
+        PlayerEntity p = entity.getWorld().getClosestPlayer(entity, playerCheckDist);
+        if ((p == null || p.isSpectator() || p.isCreative()) && !entity.getWorld().isClient()){
+            List<LivingEntity> nearbyEntities = entity.getWorld().getEntitiesByClass(LivingEntity.class,
                     new Box(entity.getX() - entityCheckDistH, entity.getY() - entityCheckDistV, entity.getZ() - entityCheckDistH, entity.getX() + entityCheckDistH, entity.getY() + entityCheckDistV, entity.getZ() + entityCheckDistH),
                     (entity2) -> EntityUtilities.canSee(entity2, entity));
             int assimilables = EntityUtilities.numAssimilablesInList(nearbyEntities);
@@ -158,16 +158,16 @@ public class CommonLivingEntityEvents {
         PossibleDisguisedThing thing = ((PossibleDisguisedThing) entity);
         thing.setTimeUntilFinishedRevealing(400);
         entity.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 400, 6, false, false));
-        ChestSpitterEntity chestSpitterEntity = EntityRegistry.CHEST_SPITTER.get().create(entity.world);
+        ChestSpitterEntity chestSpitterEntity = EntityRegistry.CHEST_SPITTER.get().create(entity.getWorld());
         if (chestSpitterEntity != null){
             chestSpitterEntity.setPosition(entity.getPos());
             chestSpitterEntity.host = entity;
-            entity.world.spawnEntity(chestSpitterEntity);
+            entity.getWorld().spawnEntity(chestSpitterEntity);
         }
     }
 
     public static void becomeResultant(LivingEntity entity){
-        if (entity.world.isClient()) {
+        if (entity.getWorld().isClient()) {
             return;
         }
         TransitionEntity.createFrom(entity);

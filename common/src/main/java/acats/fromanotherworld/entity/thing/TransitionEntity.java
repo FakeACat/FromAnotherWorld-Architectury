@@ -218,7 +218,7 @@ public class TransitionEntity extends LivingEntity implements MaybeThing {
             }
         }
         else if (type.isIn(VERY_LARGE_QUADRUPEDS)){
-            thing = EntityRegistry.BEAST.get().create(entity.world);
+            thing = EntityRegistry.BEAST.get().create(entity.getWorld());
             if (thing != null){
                 ((BeastEntity) thing).setTier(0, true);
             }
@@ -229,7 +229,7 @@ public class TransitionEntity extends LivingEntity implements MaybeThing {
         if (thing != null){
             thing.refreshPositionAndAngles(this.getX(), this.getY(), this.getZ(), this.getYaw(), this.getPitch());
             thing.initializeFrom(this);
-            this.world.spawnEntity(thing);
+            this.getWorld().spawnEntity(thing);
         }
         this.discard();
     }

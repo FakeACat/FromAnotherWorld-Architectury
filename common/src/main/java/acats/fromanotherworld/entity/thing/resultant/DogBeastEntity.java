@@ -60,11 +60,11 @@ public class DogBeastEntity extends AbsorberThingEntity {
     @Override
     public void onDeath(DamageSource source) {
         if (random.nextInt(3) == 0){
-            DogBeastSpitterEntity dogSpitterEntity = EntityRegistry.DOGBEAST_SPITTER.get().create(this.world);
+            DogBeastSpitterEntity dogSpitterEntity = EntityRegistry.DOGBEAST_SPITTER.get().create(this.getWorld());
             if (dogSpitterEntity != null) {
                 dogSpitterEntity.setPosition(this.getPos());
                 dogSpitterEntity.initializeFrom(this);
-                this.world.spawnEntity(dogSpitterEntity);
+                this.getWorld().spawnEntity(dogSpitterEntity);
             }
         }
         super.onDeath(source);

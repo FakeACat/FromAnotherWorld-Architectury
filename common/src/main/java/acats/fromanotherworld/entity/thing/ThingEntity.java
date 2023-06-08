@@ -220,7 +220,7 @@ public abstract class ThingEntity extends HostileEntity implements GeoEntity, Ma
     @Override
     public void tick() {
         super.tick();
-        if (!this.world.isClient()){
+        if (!this.getWorld().isClient()){
             if (this.canClimb()){
                 if (--this.climbStamina > 0) {
                     this.setClimbingWall(this.horizontalCollision);
@@ -240,7 +240,7 @@ public abstract class ThingEntity extends HostileEntity implements GeoEntity, Ma
                 if (this.canThingFreeze())
                     this.tickFreeze();
 
-                if (this.canGrief && this.isClimbing() && this.world.getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING))
+                if (this.canGrief && this.isClimbing() && this.getWorld().getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING))
                     this.grief(1, 1);
 
                 if (this.getTarget() == null){
@@ -252,14 +252,14 @@ public abstract class ThingEntity extends HostileEntity implements GeoEntity, Ma
                 }
                 else{
                     this.timeSinceLastSeenTarget = 0;
-                    if (this.canGrief && !this.isAiDisabled() && this.world.getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING)) {
+                    if (this.canGrief && !this.isAiDisabled() && this.getWorld().getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING)) {
                         this.grief(this.getTarget().getY() < this.getY() - 3 ? -1 : 0, 3);
                     }
                     if (this.canShootNeedles && !this.isAiDisabled() && this.age % 300 == 0){
                         for (int i = 0; i < 50; i++){
-                            NeedleEntity needleEntity = new NeedleEntity(world, this.getX(), this.getRandomBodyY(), this.getZ(), this);
+                            NeedleEntity needleEntity = new NeedleEntity(this.getWorld(), this.getX(), this.getRandomBodyY(), this.getZ(), this);
                             needleEntity.setVelocity(new Vec3d((random.nextDouble() - 0.5D) * 5, random.nextDouble() / 2, (random.nextDouble() - 0.5D) * 5));
-                            world.spawnEntity(needleEntity);
+                            this.getWorld().spawnEntity(needleEntity);
                         }
                     }
                 }
@@ -313,9 +313,9 @@ public abstract class ThingEntity extends HostileEntity implements GeoEntity, Ma
                     int s = l + q;
                     int t = n + p;
                     BlockPos blockPos = new BlockPos(r, s, t);
-                    BlockState blockState = this.world.getBlockState(blockPos);
+                    BlockState blockState = this.getWorld().getBlockState(blockPos);
                     if (EntityUtilities.canThingDestroy(blockState) && random.nextInt(chanceDenominator) == 0) {
-                        this.world.breakBlock(blockPos, true, this);
+                        this.getWorld().breakBlock(blockPos, true, this);
                     }
                 }
             }
@@ -328,7 +328,7 @@ public abstract class ThingEntity extends HostileEntity implements GeoEntity, Ma
 
     @Override
     public boolean damage(DamageSource source, float amount) {
-        if (!world.isClient()){
+        if (!this.getWorld().isClient()){
             if (source.getAttacker() instanceof LivingEntity e){
                 if (EntityUtilities.isVulnerable(this))
                     EntityUtilities.angerNearbyThings(10, this, e);
@@ -362,7 +362,7 @@ public abstract class ThingEntity extends HostileEntity implements GeoEntity, Ma
     @Override
     public boolean tryAttack(Entity target) {
         if (EntityUtilities.assimilate(target, this.shouldMergeOnAssimilate() ? 10 : 1)){
-            target.damage(this.world.getDamageSources().mobAttack(this), 0.0F);
+            target.damage(this.getWorld().getDamageSources().mobAttack(this), 0.0F);
             if (this.shouldMergeOnAssimilate()){
                 this.discard();
             }
@@ -375,12 +375,12 @@ public abstract class ThingEntity extends HostileEntity implements GeoEntity, Ma
     public void onDeath(DamageSource damageSource) {
         this.onDeathWithoutGoreDrops(damageSource);
         int size = (int)this.getDimensions(this.getPose()).width / 2 + 1;
-        if (!world.isClient && world.getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING)){
+        if (!this.getWorld().isClient && this.getWorld().getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING)){
             for(int x = (int)getX() - size; x < getX() + size; x++){
                 for(int y = (int)getY(); y < (int)getY() + this.getDimensions(this.getPose()).height; y++){
                     for(int z = (int)getZ() - size; z < getZ() + size; z++){
-                        if (random.nextInt(2) == 0 && BlockRegistry.THING_GORE.get().getDefaultState().canPlaceAt(world, new BlockPos(x, y, z)) && world.getBlockState(new BlockPos(x, y, z)).isReplaceable() && world.getBlockState(new BlockPos(x, y, z)).getFluidState().isEmpty()){
-                            world.setBlockState(new BlockPos(x, y, z), BlockRegistry.THING_GORE.get().getDefaultState());
+                        if (random.nextInt(2) == 0 && BlockRegistry.THING_GORE.get().getDefaultState().canPlaceAt(this.getWorld(), new BlockPos(x, y, z)) && this.getWorld().getBlockState(new BlockPos(x, y, z)).isReplaceable() && this.getWorld().getBlockState(new BlockPos(x, y, z)).getFluidState().isEmpty()){
+                            this.getWorld().setBlockState(new BlockPos(x, y, z), BlockRegistry.THING_GORE.get().getDefaultState());
                         }
                     }
                 }

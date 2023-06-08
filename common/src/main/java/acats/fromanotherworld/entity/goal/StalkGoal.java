@@ -17,7 +17,7 @@ public class StalkGoal extends Goal {
     }
     @Override
     public boolean canStart() {
-        return mob.getRandom().nextInt(40) == 0 && this.stalker.getStalkTarget() != null;
+        return mob.getRandom().nextInt(40) == 0 && this.stalker.findStalkTarget() != null;
     }
 
     @Override
@@ -28,7 +28,7 @@ public class StalkGoal extends Goal {
     @Override
     public void start() {
         int range = 64;
-        PlayerEntity player = this.stalker.getStalkTarget();
+        PlayerEntity player = this.stalker.findStalkTarget();
         if (player != null){
             this.mob.getNavigation().startMovingTo(player.getX() + this.mob.getRandom().nextInt(2 * range + 1) - range, player.getY(), player.getZ() + this.mob.getRandom().nextInt(2 * range + 1) - range, 1.0F);
         }

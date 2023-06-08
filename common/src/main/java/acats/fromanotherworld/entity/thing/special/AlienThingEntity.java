@@ -278,20 +278,16 @@ public class AlienThingEntity extends ThingEntity implements StalkerThing {
         this.canShootNeedles = form == 2 && this.getRandom().nextBoolean();
     }
 
-    private PlayerEntity stalkTarget = null;
+    private PlayerEntity stalkTarget;
+
     @Override
-    public PlayerEntity getStalkTarget(){
-        float d2 = ThingEntity.HUNTING_RANGE * ThingEntity.HUNTING_RANGE;
+    public PlayerEntity getStalkTarget() {
+        return this.stalkTarget;
+    }
 
-        if (this.stalkTarget != null && !this.stalkTarget.isCreative() && !this.stalkTarget.isSpectator() && this.stalkTarget.squaredDistanceTo(this) < d2)
-            return this.stalkTarget;
-
-        this.stalkTarget = this.world.getClosestPlayer(this, ThingEntity.HUNTING_RANGE);
-
-        if (this.stalkTarget != null && !this.stalkTarget.isCreative() && !this.stalkTarget.isSpectator() && this.stalkTarget.squaredDistanceTo(this) < d2)
-            return this.stalkTarget;
-
-        return null;
+    @Override
+    public void setStalkTarget(PlayerEntity stalkTarget) {
+        this.stalkTarget = stalkTarget;
     }
 
     public void escape(){

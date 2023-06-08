@@ -149,7 +149,7 @@ public class CommonLivingEntityEvents {
         List<LivingEntity> nearbyEntities = entity.getWorld().getNonSpectatingEntities(LivingEntity.class, new Box(entity.getX() - entityCheckDist, entity.getY() - entityCheckDist, entity.getZ() - entityCheckDist, entity.getX() + entityCheckDist, entity.getY() + entityCheckDist, entity.getZ() + entityCheckDist));
         int assimilables = EntityUtilities.numAssimilablesInList(nearbyEntities);
         int things = EntityUtilities.numThingsInList(nearbyEntities);
-        if (!entity.getWorld().isClient() && (entity.getRandom().nextInt(50) == 0 || (things > 4 && assimilables <= 1))){
+        if (!entity.getWorld().isClient() && (entity.getRandom().nextInt(20) == 0 || (things > 4 && assimilables <= 1))){
             becomeResultant(entity);
         }
     }
@@ -171,6 +171,7 @@ public class CommonLivingEntityEvents {
             return;
         }
         TransitionEntity.createFrom(entity);
+        EntityUtilities.angerNearbyThings(2, entity, null);
         entity.discard();
     }
 }

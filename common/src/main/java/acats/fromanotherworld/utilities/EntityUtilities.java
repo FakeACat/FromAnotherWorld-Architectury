@@ -126,7 +126,7 @@ public class EntityUtilities {
                     if (entity1.canTarget(threat))
                         entity1.setTarget(threat);
                 }
-                else if (!potentialThing.equals(entity) && potentialThing instanceof PossibleDisguisedThing possibleDisguisedThing && possibleDisguisedThing.isAssimilated() && !possibleDisguisedThing.isRevealed()){
+                else if (!potentialThing.equals(entity) && potentialThing instanceof PossibleDisguisedThing possibleDisguisedThing && possibleDisguisedThing.isAssimilated() && !possibleDisguisedThing.isRevealed() && !possibleDisguisedThing.isSleeper()){
                     CommonLivingEntityEvents.becomeResultant(potentialThing);
                 }
             }

@@ -20,7 +20,7 @@ public class AbsorbGoal extends Goal {
     private final int chance;
     private int timer = 0;
     public AbsorbGoal(AbsorberThingEntity absorber, Predicate<LivingEntity> absorbable){
-        this(absorber, absorbable, 300);
+        this(absorber, absorbable, 800);
     }
     public AbsorbGoal(AbsorberThingEntity absorber, Predicate<LivingEntity> absorbable, int chance){
         this.absorber = absorber;
@@ -29,8 +29,7 @@ public class AbsorbGoal extends Goal {
         absorbPredicate = TargetPredicate
                 .createNonAttackable()
                 .setPredicate(absorbable)
-                .setBaseMaxDistance(RANGE)
-                .ignoreVisibility();
+                .setBaseMaxDistance(RANGE);
     }
 
     @Override

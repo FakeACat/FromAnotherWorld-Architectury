@@ -1,50 +1,50 @@
 package acats.fromanotherworld.entity.navigation;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.ai.pathing.MobNavigation;
-import net.minecraft.entity.ai.pathing.Path;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.pathfinder.Path;
 import org.jetbrains.annotations.Nullable;
 
-public class ThingNavigation extends MobNavigation {
+public class ThingNavigation extends GroundPathNavigation {
     @Nullable
     private BlockPos targetPos;
 
-    public ThingNavigation(MobEntity mobEntity, World world) {
+    public ThingNavigation(Mob mobEntity, Level world) {
         super(mobEntity, world);
     }
 
-    public Path findPathTo(BlockPos target, int distance) {
+    public Path createPath(BlockPos target, int distance) {
         this.targetPos = target;
-        return super.findPathTo(target, distance);
+        return super.createPath(target, distance);
     }
 
-    public Path findPathTo(Entity entity, int distance) {
-        this.targetPos = entity.getBlockPos();
-        return super.findPathTo(entity, distance);
+    public Path createPath(Entity entity, int distance) {
+        this.targetPos = entity.blockPosition();
+        return super.createPath(entity, distance);
     }
 
-    public boolean startMovingTo(Entity entity, double speed) {
-        Path path = this.findPathTo(entity, 0);
+    public boolean moveTo(Entity entity, double speed) {
+        Path path = this.createPath(entity, 0);
         if (path != null) {
-            return this.startMovingAlong(path, speed);
+            return this.moveTo(path, speed);
         } else {
-            this.targetPos = entity.getBlockPos();
-            this.speed = speed;
+            this.targetPos = entity.blockPosition();
+            this.speedModifier = speed;
             return true;
         }
     }
 
     public void tick() {
-        if (!this.isIdle()) {
+        if (!this.isDone()) {
             super.tick();
         } else {
             if (this.targetPos != null) {
-                double d = Math.max(1.0D, this.entity.getWidth());
-                if (!this.targetPos.isWithinDistance(this.entity.getPos(), d) && (!(this.entity.getY() > (double)this.targetPos.getY()) || !BlockPos.ofFloored(this.targetPos.getX(), this.entity.getY(), this.targetPos.getZ()).isWithinDistance(this.entity.getPos(), d))) {
-                    this.entity.getMoveControl().moveTo(this.targetPos.getX(), this.targetPos.getY(), this.targetPos.getZ(), this.speed);
+                double d = Math.max(1.0D, this.mob.getBbWidth());
+                if (!this.targetPos.closerToCenterThan(this.mob.position(), d) && (!(this.mob.getY() > (double)this.targetPos.getY()) || !BlockPos.containing(this.targetPos.getX(), this.mob.getY(), this.targetPos.getZ()).closerToCenterThan(this.mob.position(), d))) {
+                    this.mob.getMoveControl().setWantedPosition(this.targetPos.getX(), this.targetPos.getY(), this.targetPos.getZ(), this.speedModifier);
                 } else {
                     this.targetPos = null;
                 }

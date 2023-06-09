@@ -1,14 +1,14 @@
 package acats.fromanotherworld.entity.goal;
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.SwimGoal;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
 
-public class ImprovedSwimGoal extends SwimGoal {
-    private final MobEntity mob;
+public class ImprovedSwimGoal extends FloatGoal {
+    private final Mob mob;
     private final float speed;
-    public ImprovedSwimGoal(MobEntity mob, float speed) {
+    public ImprovedSwimGoal(Mob mob, float speed) {
         super(mob);
         this.mob = mob;
         this.speed = speed;
@@ -21,9 +21,9 @@ public class ImprovedSwimGoal extends SwimGoal {
             super.tick();
         }
         else{
-            this.mob.setVelocity(target.getPos().add(0, target.getHeight() / 2, 0).subtract(this.mob.getPos()).normalize().multiply(mob.getAttributeValue(EntityAttributes.GENERIC_MOVEMENT_SPEED) * speed));
+            this.mob.setDeltaMovement(target.position().add(0, target.getBbHeight() / 2, 0).subtract(this.mob.position()).normalize().scale(mob.getAttributeValue(Attributes.MOVEMENT_SPEED) * speed));
             this.mob.getNavigation().stop();
-            this.mob.lookAtEntity(target, 10, 10);
+            this.mob.lookAt(target, 10, 10);
         }
     }
 }

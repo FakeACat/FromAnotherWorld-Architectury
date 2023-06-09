@@ -2,11 +2,11 @@ package acats.fromanotherworld.forge.registry;
 
 import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.registry.ParticleRegistry;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.CampfireSmokeParticle;
-import net.minecraft.client.particle.RainSplashParticle;
 import net.minecraft.client.particle.SpitParticle;
-import net.minecraft.particle.ParticleType;
+import net.minecraft.client.particle.WaterDropParticle;
+import net.minecraft.core.particles.ParticleType;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -24,8 +24,8 @@ public class ParticleRegistryForge {
 
     public static void clientRegister(){
 
-        MinecraftClient.getInstance().particleManager.registerFactory(ParticleRegistry.THING_GORE, RainSplashParticle.Factory::new);
-        MinecraftClient.getInstance().particleManager.registerFactory(ParticleRegistry.THING_SPIT, SpitParticle.Factory::new);
-        MinecraftClient.getInstance().particleManager.registerFactory(ParticleRegistry.BIG_FLAMES, CampfireSmokeParticle.SignalSmokeFactory::new);
+        Minecraft.getInstance().particleEngine.register(ParticleRegistry.THING_GORE, WaterDropParticle.Provider::new);
+        Minecraft.getInstance().particleEngine.register(ParticleRegistry.THING_SPIT, SpitParticle.Provider::new);
+        Minecraft.getInstance().particleEngine.register(ParticleRegistry.BIG_FLAMES, CampfireSmokeParticle.SignalProvider::new);
     }
 }

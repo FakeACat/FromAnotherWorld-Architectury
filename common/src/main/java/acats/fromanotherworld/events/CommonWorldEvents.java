@@ -2,12 +2,12 @@ package acats.fromanotherworld.events;
 
 import acats.fromanotherworld.config.General;
 import acats.fromanotherworld.spawning.SpawningManager;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.world.GameRules;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.GameRules;
 
 public class CommonWorldEvents {
-    public static void serverWorldTick(ServerWorld world){
-        if (world.getGameRules().getBoolean(GameRules.DO_DAYLIGHT_CYCLE) && world.getTimeOfDay() % 24000 == 6000 && General.thingEventsEnabled){
+    public static void serverWorldTick(ServerLevel world){
+        if (world.getGameRules().getBoolean(GameRules.RULE_DAYLIGHT) && world.getDayTime() % 24000 == 6000 && General.thingEventsEnabled){
             SpawningManager spawningManager = SpawningManager.getSpawningManager(world);
             spawningManager.update(world);
         }

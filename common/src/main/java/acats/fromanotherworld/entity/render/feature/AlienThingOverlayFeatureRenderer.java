@@ -1,14 +1,14 @@
 package acats.fromanotherworld.entity.render.feature;
 
 import acats.fromanotherworld.entity.thing.special.AlienThingEntity;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import acats.fromanotherworld.entity.texture.ThingOverlayTexture;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
 import mod.azure.azurelib.renderer.GeoRenderer;
 import mod.azure.azurelib.renderer.layer.GeoRenderLayer;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 
 public class AlienThingOverlayFeatureRenderer<T extends AlienThingEntity> extends GeoRenderLayer<T> {
     public AlienThingOverlayFeatureRenderer(GeoRenderer<T> entityRendererIn) {
@@ -17,10 +17,10 @@ public class AlienThingOverlayFeatureRenderer<T extends AlienThingEntity> extend
 
     //Original overlay logic credit to Gigeresque: https://github.com/cybercat-mods/gigeresque
     @Override
-    public void render(MatrixStack poseStack, T animatable, BakedGeoModel bakedModel, RenderLayer renderType, VertexConsumerProvider bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
+    public void render(PoseStack poseStack, T animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
         if (animatable.getSwitchProgress() > 0){
             float progress = animatable.getSwitchProgress2();
-            RenderLayer overlayLayer = ThingOverlayTexture.getFleshOverlayRenderLayer(this.getGeoModel().getTextureResource(animatable));
+            RenderType overlayLayer = ThingOverlayTexture.getFleshOverlayRenderLayer(this.getGeoModel().getTextureResource(animatable));
             renderer.reRender(this.getDefaultBakedModel(animatable), poseStack, bufferSource, animatable, overlayLayer, bufferSource.getBuffer(overlayLayer), partialTick, packedLight, packedOverlay, 1.0F, 1.0F, 1.0F, progress);
         }
     }

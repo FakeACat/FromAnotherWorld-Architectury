@@ -3,42 +3,42 @@ package acats.fromanotherworld.entity.projectile;
 import acats.fromanotherworld.registry.EntityRegistry;
 import acats.fromanotherworld.registry.ItemRegistry;
 import acats.fromanotherworld.utilities.EntityUtilities;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.projectile.PersistentProjectileEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.EntityHitResult;
 
-public class NeedleEntity extends PersistentProjectileEntity {
+public class NeedleEntity extends AbstractArrow {
 
-    public NeedleEntity(World world, double x, double y, double z, LivingEntity owner) {
+    public NeedleEntity(Level world, double x, double y, double z, LivingEntity owner) {
         super(EntityRegistry.NEEDLE.get(), owner, world);
-        this.setPosition(x, y, z);
+        this.setPos(x, y, z);
     }
 
-    public NeedleEntity(EntityType<NeedleEntity> needleEntityEntityType, World world) {
+    public NeedleEntity(EntityType<NeedleEntity> needleEntityEntityType, Level world) {
         super(needleEntityEntityType, world);
     }
 
-    public NeedleEntity(World world, LivingEntity owner) {
+    public NeedleEntity(Level world, LivingEntity owner) {
         super(EntityRegistry.NEEDLE.get(), owner, world);
     }
 
     @Override
-    protected void onEntityHit(EntityHitResult entityHitResult) {
-        if (!this.getWorld().isClient()){
+    protected void onHitEntity(EntityHitResult entityHitResult) {
+        if (!this.level().isClientSide()){
             Entity e = entityHitResult.getEntity();
             if (!EntityUtilities.assimilate(e) && !EntityUtilities.isThing(e)){
-                e.damage(this.getWorld().getDamageSources().mobProjectile(this, (LivingEntity) this.getOwner()), 12.0F);
+                e.hurt(this.level().damageSources().mobProjectile(this, (LivingEntity) this.getOwner()), 12.0F);
                 this.discard();
             }
         }
     }
 
     @Override
-    protected ItemStack asItemStack() {
-        return ItemRegistry.ASSIMILATION_LIQUID.get().getDefaultStack();
+    protected ItemStack getPickupItem() {
+        return ItemRegistry.ASSIMILATION_LIQUID.get().getDefaultInstance();
     }
 }

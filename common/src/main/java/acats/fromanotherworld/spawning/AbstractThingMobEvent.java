@@ -1,16 +1,15 @@
 package acats.fromanotherworld.spawning;
 
 import acats.fromanotherworld.utilities.EntityUtilities;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 
 public abstract class AbstractThingMobEvent extends AbstractThingEvent {
-    public AbstractThingMobEvent(ServerWorld world, ServerPlayerEntity player){
+    public AbstractThingMobEvent(ServerLevel world, ServerPlayer player){
         super(world, player);
         this.setMobs();
     }

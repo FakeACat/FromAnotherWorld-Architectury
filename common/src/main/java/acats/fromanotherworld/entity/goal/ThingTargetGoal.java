@@ -1,15 +1,15 @@
 package acats.fromanotherworld.entity.goal;
 
 import acats.fromanotherworld.entity.thing.ThingEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.TargetPredicate;
-import net.minecraft.entity.ai.goal.ActiveTargetGoal;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.math.Box;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 
-public class ThingTargetGoal<T extends LivingEntity> extends ActiveTargetGoal<T> {
+public class ThingTargetGoal<T extends LivingEntity> extends NearestAttackableTargetGoal<T> {
     protected final ThingEntity mob;
     public ThingTargetGoal(ThingEntity mob, Class<T> targetClass, boolean checkVisibility) {
         super(mob, targetClass, checkVisibility);
@@ -17,41 +17,41 @@ public class ThingTargetGoal<T extends LivingEntity> extends ActiveTargetGoal<T>
     }
 
     @Override
-    protected double getFollowRange() {
+    protected double getFollowDistance() {
         if (mob == null){
-            return super.getFollowRange();
+            return super.getFollowDistance();
         }
-        return mob.canHunt ? ThingEntity.HUNTING_RANGE : super.getFollowRange();
+        return mob.canHunt ? ThingEntity.HUNTING_RANGE : super.getFollowDistance();
     }
 
     @Override
-    protected boolean canTrack(@Nullable LivingEntity target, TargetPredicate targetPredicate) {
+    protected boolean canAttack(@Nullable LivingEntity target, TargetingConditions targetPredicate) {
         if (mob.canHunt){
-            return target != null && mob.canTarget(target);
+            return target != null && mob.canAttack(target);
         }
-        return super.canTrack(target, targetPredicate);
+        return super.canAttack(target, targetPredicate);
     }
 
     @Override
-    protected Box getSearchBox(double distance) {
+    protected AABB getTargetSearchArea(double distance) {
         if (mob.canHunt){
-            return this.mob.getBoundingBox().expand(distance, distance / 2, distance);
+            return this.mob.getBoundingBox().inflate(distance, distance / 2, distance);
         }
-        return super.getSearchBox(distance);
+        return super.getTargetSearchArea(distance);
     }
 
-    protected void findClosestTarget() {
+    protected void findTarget() {
         if (mob.canHunt){
-            LivingEntity livingEntity = this.mob.getWorld().getClosestPlayer(this.mob, ThingEntity.HUNTING_RANGE);
-            if (livingEntity != null && mob.canTarget(livingEntity)){
-                this.targetEntity = livingEntity;
+            LivingEntity livingEntity = this.mob.level().getNearestPlayer(this.mob, ThingEntity.HUNTING_RANGE);
+            if (livingEntity != null && mob.canAttack(livingEntity)){
+                this.target = livingEntity;
             }
             return;
         }
-        if (this.targetClass != PlayerEntity.class && this.targetClass != ServerPlayerEntity.class) {
-            this.targetEntity = this.mob.getWorld().getClosestEntity(this.mob.getWorld().getEntitiesByClass(this.targetClass, this.getSearchBox(this.getFollowRange()), (livingEntity) -> true), this.targetPredicate, this.mob, this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());
+        if (this.targetType != Player.class && this.targetType != ServerPlayer.class) {
+            this.target = this.mob.level().getNearestEntity(this.mob.level().getEntitiesOfClass(this.targetType, this.getTargetSearchArea(this.getFollowDistance()), (livingEntity) -> true), this.targetConditions, this.mob, this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());
         } else {
-            this.targetEntity = this.mob.getWorld().getClosestPlayer(this.targetPredicate, this.mob, this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());
+            this.target = this.mob.level().getNearestPlayer(this.targetConditions, this.mob, this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());
         }
     }
 }

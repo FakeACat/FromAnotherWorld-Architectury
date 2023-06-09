@@ -4,17 +4,17 @@ import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.entity.interfaces.VariableThingModel;
 import acats.fromanotherworld.entity.thing.resultant.ImpalerEntity;
 import mod.azure.azurelib.model.GeoModel;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.resources.ResourceLocation;
 
 public class ImpalerEntityModel extends GeoModel<ImpalerEntity> implements VariableThingModel<ImpalerEntity> {
     @Override
-    public Identifier getModelResource(ImpalerEntity animatable) {
+    public ResourceLocation getModelResource(ImpalerEntity animatable) {
         return this.getVariantModelResource(animatable);
     }
 
     @Override
-    public Identifier getTextureResource(ImpalerEntity animatable) {
+    public ResourceLocation getTextureResource(ImpalerEntity animatable) {
         String texture = this.getVariant(animatable);
         if (!animatable.hasBackNeedles() && !animatable.hasMouthNeedles())
             texture = texture + "_no_needles";
@@ -22,17 +22,17 @@ public class ImpalerEntityModel extends GeoModel<ImpalerEntity> implements Varia
             texture = texture + "_no_back_needles";
         else if (!animatable.hasMouthNeedles())
             texture = texture + "_no_mouth_needles";
-        return new Identifier(FromAnotherWorld.MOD_ID, "textures/" + this.getPath() + texture + ".png");
+        return new ResourceLocation(FromAnotherWorld.MOD_ID, "textures/" + this.getPath() + texture + ".png");
     }
 
     @Override
-    public Identifier getAnimationResource(ImpalerEntity animatable) {
+    public ResourceLocation getAnimationResource(ImpalerEntity animatable) {
         return this.getVariantAnimationResource(animatable);
     }
 
     @Override
-    public RenderLayer getRenderType(ImpalerEntity animatable, Identifier texture) {
-        return RenderLayer.getEntityCutoutNoCull(this.getTextureResource(animatable));
+    public RenderType getRenderType(ImpalerEntity animatable, ResourceLocation texture) {
+        return RenderType.entityCutoutNoCull(this.getTextureResource(animatable));
     }
 
     @Override

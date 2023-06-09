@@ -3,13 +3,13 @@ package acats.fromanotherworld.mixin.client;
 import acats.fromanotherworld.entity.render.feature.RevealedThingFeatureRenderer;
 import acats.fromanotherworld.entity.interfaces.PossibleDisguisedThing;
 import acats.fromanotherworld.registry.EntityRegistry;
-import net.minecraft.client.render.entity.EntityRenderer;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.LivingEntityRenderer;
-import net.minecraft.client.render.entity.feature.FeatureRenderer;
-import net.minecraft.client.render.entity.feature.FeatureRendererContext;
-import net.minecraft.client.render.entity.model.EntityModel;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.client.renderer.entity.layers.RenderLayer;
+import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -18,12 +18,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LivingEntityRenderer.class)
-public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extends EntityModel<T>> extends EntityRenderer<T> implements FeatureRendererContext<T, M>  {
-    protected LivingEntityRendererMixin(EntityRendererFactory.Context ctx) {
+public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extends EntityModel<T>> extends EntityRenderer<T> implements RenderLayerParent<T, M>  {
+    protected LivingEntityRendererMixin(EntityRendererProvider.Context ctx) {
         super(ctx);
     }
 
-    @Shadow protected abstract boolean addFeature(FeatureRenderer<T, M> feature);
+    @Shadow protected abstract boolean addLayer(RenderLayer<T, M> feature);
 
     @Inject(at = @At("HEAD"), method = "isShaking", cancellable = true)
     private void isShaking(T entity, CallbackInfoReturnable<Boolean> cir){
@@ -33,7 +33,7 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    private void init(EntityRendererFactory.Context ctx, M model, float shadowRadius, CallbackInfo ci){
-        this.addFeature(new RevealedThingFeatureRenderer<>(this, ctx.getModelLoader().getModelPart(EntityRegistry.spiderLegsModelLayer)));
+    private void init(EntityRendererProvider.Context ctx, M model, float shadowRadius, CallbackInfo ci){
+        this.addLayer(new RevealedThingFeatureRenderer<>(this, ctx.getModelSet().bakeLayer(EntityRegistry.spiderLegsModelLayer)));
     }
 }

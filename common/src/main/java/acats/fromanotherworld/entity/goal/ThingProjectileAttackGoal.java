@@ -1,13 +1,13 @@
 package acats.fromanotherworld.entity.goal;
 
 import acats.fromanotherworld.entity.thing.ThingEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.RangedAttackMob;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.monster.RangedAttackMob;
 
 public class ThingProjectileAttackGoal extends Goal {
     private final ThingEntity mob;
@@ -34,11 +34,11 @@ public class ThingProjectileAttackGoal extends Goal {
             this.maxIntervalTicks = maxIntervalTicks;
             this.maxShootRange = maxShootRange;
             this.squaredMaxShootRange = maxShootRange * maxShootRange;
-            this.setControls(EnumSet.of(Control.MOVE, Control.LOOK));
+            this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
         }
     }
 
-    public boolean canStart() {
+    public boolean canUse() {
         LivingEntity livingEntity = this.mob.getTarget();
         if (livingEntity != null && livingEntity.isAlive()) {
             this.target = livingEntity;
@@ -54,13 +54,13 @@ public class ThingProjectileAttackGoal extends Goal {
         this.updateCountdownTicks = -1;
     }
 
-    public boolean shouldRunEveryTick() {
+    public boolean requiresUpdateEveryTick() {
         return true;
     }
 
     public void tick() {
-        double d = this.mob.squaredDistanceTo(this.target.getX(), this.target.getY(), this.target.getZ());
-        boolean bl = this.mob.getVisibilityCache().canSee(this.target);
+        double d = this.mob.distanceToSqr(this.target.getX(), this.target.getY(), this.target.getZ());
+        boolean bl = this.mob.getSensing().hasLineOfSight(this.target);
         if (bl) {
             ++this.seenTargetTicks;
         } else {
@@ -70,21 +70,21 @@ public class ThingProjectileAttackGoal extends Goal {
         if (!(d > (double)this.squaredMaxShootRange) && this.seenTargetTicks >= 5) {
             this.mob.getNavigation().stop();
         } else {
-            this.mob.getNavigation().startMovingTo(this.target, this.mobSpeed);
+            this.mob.getNavigation().moveTo(this.target, this.mobSpeed);
         }
 
-        this.mob.getLookControl().lookAt(this.target, 30.0F, 30.0F);
+        this.mob.getLookControl().setLookAt(this.target, 30.0F, 30.0F);
         if (--this.updateCountdownTicks == 0) {
             if (!bl) {
                 return;
             }
 
             float f = (float)Math.sqrt(d) / this.maxShootRange;
-            float g = MathHelper.clamp(f, 0.1F, 1.0F);
-            this.owner.attack(this.target, g);
-            this.updateCountdownTicks = MathHelper.floor(f * (float)(this.maxIntervalTicks - this.minIntervalTicks) + (float)this.minIntervalTicks);
+            float g = Mth.clamp(f, 0.1F, 1.0F);
+            this.owner.performRangedAttack(this.target, g);
+            this.updateCountdownTicks = Mth.floor(f * (float)(this.maxIntervalTicks - this.minIntervalTicks) + (float)this.minIntervalTicks);
         } else if (this.updateCountdownTicks < 0) {
-            this.updateCountdownTicks = MathHelper.floor(MathHelper.lerp(Math.sqrt(d) / (double)this.maxShootRange, this.minIntervalTicks, this.maxIntervalTicks));
+            this.updateCountdownTicks = Mth.floor(Mth.lerp(Math.sqrt(d) / (double)this.maxShootRange, this.minIntervalTicks, this.maxIntervalTicks));
         }
 
     }

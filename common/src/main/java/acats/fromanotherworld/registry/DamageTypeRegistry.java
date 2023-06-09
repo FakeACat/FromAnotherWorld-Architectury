@@ -1,25 +1,25 @@
 package acats.fromanotherworld.registry;
 
 import acats.fromanotherworld.FromAnotherWorld;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.DamageType;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.World;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.level.Level;
 
 public class DamageTypeRegistry {
-    public static final RegistryKey<DamageType> AMONG_US_POTION = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, new Identifier(FromAnotherWorld.MOD_ID , "among_us_potion"));
-    public static DamageSource amongUsPotion(World world){
+    public static final ResourceKey<DamageType> AMONG_US_POTION = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(FromAnotherWorld.MOD_ID , "among_us_potion"));
+    public static DamageSource amongUsPotion(Level world){
         return damageSource(world, AMONG_US_POTION);
     }
 
-    public static final RegistryKey<DamageType> ASSIMILATION = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, new Identifier(FromAnotherWorld.MOD_ID , "assimilation"));
-    public static DamageSource assimilation(World world) {
+    public static final ResourceKey<DamageType> ASSIMILATION = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(FromAnotherWorld.MOD_ID , "assimilation"));
+    public static DamageSource assimilation(Level world) {
         return damageSource(world, ASSIMILATION);
     }
 
-    private static DamageSource damageSource(World world, RegistryKey<DamageType> registryKey){
-        return new DamageSource(world.getRegistryManager().get(RegistryKeys.DAMAGE_TYPE).entryOf(registryKey));
+    private static DamageSource damageSource(Level world, ResourceKey<DamageType> registryKey){
+        return new DamageSource(world.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(registryKey));
     }
 }

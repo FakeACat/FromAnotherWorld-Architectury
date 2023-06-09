@@ -1,8 +1,8 @@
 package acats.fromanotherworld.entity.goal;
 
 import acats.fromanotherworld.entity.thing.resultant.PalmerThingEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 
 public class PalmerAttackGoal extends ThingAttackGoal {
     protected final PalmerThingEntity mob;
@@ -18,9 +18,9 @@ public class PalmerAttackGoal extends ThingAttackGoal {
         super.tick();
         LivingEntity target = this.mob.getTarget();
         this.leapCooldown--;
-        if (target != null && this.leapCooldown <= 0 && this.mob.squaredDistanceTo(target) < 100 && !this.mob.targetGrabbed()){
-            Vec3d vel = target.getPos().add(0, target.getHeight() / 2, 0).subtract(mob.getPos()).normalize().multiply(2.0F).add(0, 0.2F, 0);
-            mob.setVelocity(vel);
+        if (target != null && this.leapCooldown <= 0 && this.mob.distanceToSqr(target) < 100 && !this.mob.targetGrabbed()){
+            Vec3 vel = target.position().add(0, target.getBbHeight() / 2, 0).subtract(mob.position()).normalize().scale(2.0F).add(0, 0.2F, 0);
+            mob.setDeltaMovement(vel);
             this.leapCooldown = 100;
         }
     }

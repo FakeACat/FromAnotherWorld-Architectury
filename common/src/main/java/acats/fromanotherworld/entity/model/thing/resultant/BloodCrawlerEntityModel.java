@@ -3,7 +3,7 @@ package acats.fromanotherworld.entity.model.thing.resultant;
 import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.entity.thing.resultant.BloodCrawlerEntity;
 import mod.azure.azurelib.model.GeoModel;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 public class BloodCrawlerEntityModel extends GeoModel<BloodCrawlerEntity> {
 
@@ -15,17 +15,17 @@ public class BloodCrawlerEntityModel extends GeoModel<BloodCrawlerEntity> {
     }
 
     @Override
-    public Identifier getModelResource(BloodCrawlerEntity object) {
-        return new Identifier(FromAnotherWorld.MOD_ID, "geo/entity/thing/resultant/" + getVariant(object) + ".geo.json");
+    public ResourceLocation getModelResource(BloodCrawlerEntity object) {
+        return new ResourceLocation(FromAnotherWorld.MOD_ID, "geo/entity/thing/resultant/" + getVariant(object) + ".geo.json");
     }
 
     @Override
-    public Identifier getTextureResource(BloodCrawlerEntity object) {
-        return new Identifier(FromAnotherWorld.MOD_ID, "textures/block/thing_gore.png");
+    public ResourceLocation getTextureResource(BloodCrawlerEntity object) {
+        return new ResourceLocation(FromAnotherWorld.MOD_ID, "textures/block/thing_gore.png");
     }
 
     @Override
-    public Identifier getAnimationResource(BloodCrawlerEntity animatable) {
-        return new Identifier(FromAnotherWorld.MOD_ID, "animations/entity/thing/resultant/" + getVariant(animatable) + ".animation.json");
+    public ResourceLocation getAnimationResource(BloodCrawlerEntity animatable) {
+        return new ResourceLocation(FromAnotherWorld.MOD_ID, "animations/entity/thing/resultant/" + getVariant(animatable) + ".animation.json");
     }
 }

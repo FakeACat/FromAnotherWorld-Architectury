@@ -2,19 +2,19 @@ package acats.fromanotherworld.entity.render.thing.resultant;
 
 import acats.fromanotherworld.entity.model.thing.resultant.BlairThingEntityModel;
 import acats.fromanotherworld.entity.thing.resultant.BlairThingEntity;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 
 public class BlairThingEntityRenderer extends AbsorberThingEntityRenderer<BlairThingEntity> {
-    public BlairThingEntityRenderer(EntityRendererFactory.Context renderManager) {
+    public BlairThingEntityRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new BlairThingEntityModel());
     }
 
     @Override
-    public void preRender(MatrixStack poseStack, BlairThingEntity animatable, BakedGeoModel model, VertexConsumerProvider bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void preRender(PoseStack poseStack, BlairThingEntity animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         if (!isReRender){
             float scale = 1.0F + 0.25F * animatable.getTier();
             poseStack.scale(scale, scale, scale);

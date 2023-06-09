@@ -11,31 +11,31 @@ import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.RangedAttackMob;
-import net.minecraft.entity.ai.goal.WanderAroundFarGoal;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.monster.RangedAttackMob;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 public class DogBeastSpitterEntity extends AbsorberThingEntity implements RangedAttackMob {
 
-    private static final TrackedData<Boolean> ATTACKING;
+    private static final EntityDataAccessor<Boolean> ATTACKING;
 
-    public DogBeastSpitterEntity(EntityType<? extends DogBeastSpitterEntity> entityType, World world) {
+    public DogBeastSpitterEntity(EntityType<? extends DogBeastSpitterEntity> entityType, Level world) {
         super(entityType, world);
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        this.dataTracker.startTracking(ATTACKING, false);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(ATTACKING, false);
     }
 
     @Override
@@ -44,26 +44,26 @@ public class DogBeastSpitterEntity extends AbsorberThingEntity implements Ranged
     }
 
     public void setHasTarget(boolean bl){
-        this.dataTracker.set(ATTACKING, bl);
+        this.entityData.set(ATTACKING, bl);
     }
 
     public boolean hasTarget(){
-        return this.dataTracker.get(ATTACKING);
+        return this.entityData.get(ATTACKING);
     }
 
     @Override
-    protected void mobTick() {
-        super.mobTick();
+    protected void customServerAiStep() {
+        super.customServerAiStep();
         this.setHasTarget(this.getTarget() != null);
     }
 
     @Override
-    protected void initGoals() {
+    protected void registerGoals() {
         this.addThingTargets(false);
-        this.goalSelector.add(0, new FleeOnFireGoal(this, 16.0F, 1.2, 1.5));
-        this.goalSelector.add(1, new AbsorbGoal(this, STANDARD));
-        this.goalSelector.add(2, new ThingProjectileAttackGoal(this, 1.0, 40, 80, 10.0F));
-        this.goalSelector.add(3, new WanderAroundFarGoal(this, 1.0D));
+        this.goalSelector.addGoal(0, new FleeOnFireGoal(this, 16.0F, 1.2, 1.5));
+        this.goalSelector.addGoal(1, new AbsorbGoal(this, STANDARD));
+        this.goalSelector.addGoal(2, new ThingProjectileAttackGoal(this, 1.0, 40, 80, 10.0F));
+        this.goalSelector.addGoal(3, new WaterAvoidingRandomStrollGoal(this, 1.0D));
     }
 
     private <E extends GeoEntity> PlayState predicate(AnimationState<E> event) {
@@ -91,16 +91,16 @@ public class DogBeastSpitterEntity extends AbsorberThingEntity implements Ranged
         return -0.5F;
     }
 
-    public static DefaultAttributeContainer.Builder createDogBeastSpitterAttributes(){
-        return HostileEntity.createHostileAttributes().add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.175D).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 6.0D).add(EntityAttributes.GENERIC_MAX_HEALTH, 22.0D);
+    public static AttributeSupplier.Builder createDogBeastSpitterAttributes(){
+        return Monster.createMonsterAttributes().add(Attributes.MOVEMENT_SPEED, 0.175D).add(Attributes.ATTACK_DAMAGE, 6.0D).add(Attributes.MAX_HEALTH, 22.0D);
     }
 
     @Override
-    public void attack(LivingEntity target, float pullProgress) {
+    public void performRangedAttack(LivingEntity target, float pullProgress) {
         for (int i = 0; i < (this.canSpit ? 6 : 3); i++){
-            AssimilationLiquidEntity assimilationLiquid = new AssimilationLiquidEntity(this.getWorld(), this);
-            assimilationLiquid.setVelocity(target.getPos().add(0, target.getHeight() / 2, 0).subtract(assimilationLiquid.getPos()).normalize().add(new Vec3d(random.nextInt(40) - 20, random.nextInt(40) - 20, random.nextInt(40) - 20).multiply(this.canSpit ? 0.02 : 0.01)));
-            this.getWorld().spawnEntity(assimilationLiquid);
+            AssimilationLiquidEntity assimilationLiquid = new AssimilationLiquidEntity(this.level(), this);
+            assimilationLiquid.setDeltaMovement(target.position().add(0, target.getBbHeight() / 2, 0).subtract(assimilationLiquid.position()).normalize().add(new Vec3(random.nextInt(40) - 20, random.nextInt(40) - 20, random.nextInt(40) - 20).scale(this.canSpit ? 0.02 : 0.01)));
+            this.level().addFreshEntity(assimilationLiquid);
         }
     }
 
@@ -110,7 +110,7 @@ public class DogBeastSpitterEntity extends AbsorberThingEntity implements Ranged
     }
 
     static {
-        ATTACKING = DataTracker.registerData(DogBeastSpitterEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+        ATTACKING = SynchedEntityData.defineId(DogBeastSpitterEntity.class, EntityDataSerializers.BOOLEAN);
     }
 
     @Override

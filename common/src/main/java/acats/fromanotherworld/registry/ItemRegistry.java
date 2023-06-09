@@ -3,26 +3,25 @@ package acats.fromanotherworld.registry;
 import acats.fromanotherworld.item.AssimilationLiquidItem;
 import acats.fromanotherworld.item.GoreBottleItem;
 import acats.fromanotherworld.item.ImpostorDetectorItem;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.item.Item;
-
 import java.util.HashMap;
 import java.util.function.Supplier;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.item.Item;
 
 public class ItemRegistry {
     public static final HashMap<String, FAWItem> ITEM_REGISTRY = new HashMap<>();
     public static final HashMap<String, FAWEgg> SPAWN_EGG_REGISTRY = new HashMap<>();
     public static final String TAB_ID = "from_another_world_group";
     public static class FAWEgg{
-        public FAWEgg(int primaryColour, int secondaryColour, Supplier<EntityType<? extends MobEntity>> entityTypeSupplier){
+        public FAWEgg(int primaryColour, int secondaryColour, Supplier<EntityType<? extends Mob>> entityTypeSupplier){
             this.primaryColour = primaryColour;
             this.secondaryColour = secondaryColour;
             this.entityTypeSupplier = entityTypeSupplier;
         }
         public int primaryColour;
         public int secondaryColour;
-        public Supplier<EntityType<? extends MobEntity>> entityTypeSupplier;
+        public Supplier<EntityType<? extends Mob>> entityTypeSupplier;
     }
 
     public static class FAWItem{
@@ -53,12 +52,12 @@ public class ItemRegistry {
         registerSpawnEgg("alien_thing_spawn_egg", 0x0000FF, 0x000000, EntityRegistry.ALIEN_THING::get);
         registerSpawnEgg("split_face_spawn_egg", 0xbe886c, 0x8c0a19, EntityRegistry.SPLIT_FACE::get);
     }
-    private static void registerSpawnEgg(String id, int primaryColour, int secondaryColour, Supplier<EntityType<? extends MobEntity>> entityTypeSupplier){
+    private static void registerSpawnEgg(String id, int primaryColour, int secondaryColour, Supplier<EntityType<? extends Mob>> entityTypeSupplier){
         SPAWN_EGG_REGISTRY.put(id, new FAWEgg(primaryColour, secondaryColour, entityTypeSupplier));
     }
-    public static final FAWItem ASSIMILATION_LIQUID = registerItem("assimilation_liquid", () -> new AssimilationLiquidItem(new Item.Settings().maxCount(64)));
-    public static final FAWItem IMPOSTOR_DETECTOR = registerItem("impostor_detector", () -> new ImpostorDetectorItem(new Item.Settings().maxCount(1)));
-    public static final FAWItem GORE_BOTTLE = registerItem("gore_bottle", () -> new GoreBottleItem(new Item.Settings().maxCount(64)));
+    public static final FAWItem ASSIMILATION_LIQUID = registerItem("assimilation_liquid", () -> new AssimilationLiquidItem(new Item.Properties().stacksTo(64)));
+    public static final FAWItem IMPOSTOR_DETECTOR = registerItem("impostor_detector", () -> new ImpostorDetectorItem(new Item.Properties().stacksTo(1)));
+    public static final FAWItem GORE_BOTTLE = registerItem("gore_bottle", () -> new GoreBottleItem(new Item.Properties().stacksTo(64)));
 
     private static FAWItem registerItem(String id, Supplier<Item> itemSupplier){
         FAWItem fawItem = new FAWItem(itemSupplier);

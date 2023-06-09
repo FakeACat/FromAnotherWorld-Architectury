@@ -10,27 +10,27 @@ import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class BlairThingEntity extends MinibossThingEntity {
 
-    public BlairThingEntity(EntityType<? extends BlairThingEntity> entityType, World world) {
+    public BlairThingEntity(EntityType<? extends BlairThingEntity> entityType, Level world) {
         super(entityType, world);
     }
 
-    private static final TrackedData<Integer> MOVE_COOLDOWN;
-    private static final TrackedData<Integer> ATTACK;
+    private static final EntityDataAccessor<Integer> MOVE_COOLDOWN;
+    private static final EntityDataAccessor<Integer> ATTACK;
     public static final int EMERGE_TIME_IN_TICKS = 40;
     public static final int RETREAT_TIME_IN_TICKS = 50;
     public static final int MOVE_COOLDOWN_IN_TICKS = 400;
@@ -38,11 +38,11 @@ public class BlairThingEntity extends MinibossThingEntity {
     public static final int TIME_UNTIL_ATTACK_IN_TICKS = 60;
 
     @Override
-    protected void initGoals() {
+    protected void registerGoals() {
         this.addThingTargets(false);
-        this.goalSelector.add(0, new AbsorbGoal(this, STANDARD));
-        this.goalSelector.add(1, new BlairThingSpecialAttacksGoal(this));
-        this.goalSelector.add(2, new BlairThingAttackGoal(this, 1.0D, false));
+        this.goalSelector.addGoal(0, new AbsorbGoal(this, STANDARD));
+        this.goalSelector.addGoal(1, new BlairThingSpecialAttacksGoal(this));
+        this.goalSelector.addGoal(2, new BlairThingAttackGoal(this, 1.0D, false));
     }
 
     @Override
@@ -85,29 +85,29 @@ public class BlairThingEntity extends MinibossThingEntity {
     }
 
     @Override
-    protected void mobTick() {
+    protected void customServerAiStep() {
         this.setMoveCooldown(this.getMoveCooldown() + 1);
         if (this.getMoveCooldown() > MOVE_COOLDOWN_IN_TICKS)
             this.setMoveCooldown(0);
-        if (this.getMoveCooldown() == MOVE_COOLDOWN_IN_TICKS - (EMERGE_TIME_IN_TICKS + TIME_UNDERGROUND_IN_TICKS) && this.getTarget() != null && !this.isAiDisabled()){
-            this.extinguish();
+        if (this.getMoveCooldown() == MOVE_COOLDOWN_IN_TICKS - (EMERGE_TIME_IN_TICKS + TIME_UNDERGROUND_IN_TICKS) && this.getTarget() != null && !this.isNoAi()){
+            this.clearFire();
             this.rerollAttack();
-            this.teleport2(this.getTarget().getPos().getX(), this.getTarget().getPos().getY(), this.getTarget().getPos().getZ());
+            this.teleport2(this.getTarget().position().x(), this.getTarget().position().y(), this.getTarget().position().z());
         }
-        super.mobTick();
+        super.customServerAiStep();
     }
 
     private void teleport2(double x, double y, double z) {
         double g = y;
-        BlockPos blockPos = BlockPos.ofFloored(x, y, z);
-        World world = this.getWorld();
-        if (world.isChunkLoaded(blockPos)) {
+        BlockPos blockPos = BlockPos.containing(x, y, z);
+        Level world = this.level();
+        if (world.hasChunkAt(blockPos)) {
             boolean bl2 = false;
 
-            while(!bl2 && blockPos.getY() > world.getBottomY()) {
-                BlockPos blockPos2 = blockPos.down();
+            while(!bl2 && blockPos.getY() > world.getMinBuildHeight()) {
+                BlockPos blockPos2 = blockPos.below();
                 BlockState blockState = world.getBlockState(blockPos2);
-                if (blockState.blocksMovement()) {
+                if (blockState.blocksMotion()) {
                     bl2 = true;
                 } else {
                     --g;
@@ -116,8 +116,8 @@ public class BlairThingEntity extends MinibossThingEntity {
             }
 
             if (bl2) {
-                this.requestTeleport(x, g, z);
-                if (this.getWorld().getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING)){
+                this.teleportTo(x, g, z);
+                if (this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)){
                     this.grief(0, 1);
                 }
             }
@@ -136,12 +136,12 @@ public class BlairThingEntity extends MinibossThingEntity {
     }
 
     @Override
-    public float getMovementSpeed() {
-        return this.getMoveCooldown() < MOVE_COOLDOWN_IN_TICKS - (EMERGE_TIME_IN_TICKS + TIME_UNDERGROUND_IN_TICKS + RETREAT_TIME_IN_TICKS) ? 0.0F : super.getMovementSpeed();
+    public float getSpeed() {
+        return this.getMoveCooldown() < MOVE_COOLDOWN_IN_TICKS - (EMERGE_TIME_IN_TICKS + TIME_UNDERGROUND_IN_TICKS + RETREAT_TIME_IN_TICKS) ? 0.0F : super.getSpeed();
     }
 
     @Override
-    protected void jump() {
+    protected void jumpFromGround() {
     }
 
     @Override
@@ -150,18 +150,18 @@ public class BlairThingEntity extends MinibossThingEntity {
     }
 
     @Override
-    public boolean damage(DamageSource source, float amount) {
+    public boolean hurt(DamageSource source, float amount) {
         if (this.getMoveCooldown() >= MOVE_COOLDOWN_IN_TICKS - (EMERGE_TIME_IN_TICKS + TIME_UNDERGROUND_IN_TICKS))
             return false;
-        return super.damage(source, amount);
+        return super.hurt(source, amount);
     }
 
     @Override
-    public void pushAwayFrom(Entity entity) {
+    public void push(Entity entity) {
     }
 
     @Override
-    protected void pushAway(Entity entity) {
+    protected void doPush(Entity entity) {
     }
 
     @Override
@@ -170,43 +170,43 @@ public class BlairThingEntity extends MinibossThingEntity {
     }
 
     public void setMoveCooldown(int moveCooldown){
-        this.dataTracker.set(MOVE_COOLDOWN, moveCooldown);
+        this.entityData.set(MOVE_COOLDOWN, moveCooldown);
     }
 
     public int getMoveCooldown() {
-        return this.dataTracker.get(MOVE_COOLDOWN);
+        return this.entityData.get(MOVE_COOLDOWN);
     }
 
     public void setAttack(int attack){
-        this.dataTracker.set(ATTACK, attack);
+        this.entityData.set(ATTACK, attack);
     }
 
     public int getAttack() {
-        return this.dataTracker.get(ATTACK);
+        return this.entityData.get(ATTACK);
     }
 
-    public static DefaultAttributeContainer.Builder createBlairThingAttributes(){
-        return createHostileAttributes().add(EntityAttributes.GENERIC_FOLLOW_RANGE, 48).add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 1.0D);
-    }
-
-    @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        this.dataTracker.startTracking(MOVE_COOLDOWN, 0);
-        this.dataTracker.startTracking(ATTACK, 1);
+    public static AttributeSupplier.Builder createBlairThingAttributes(){
+        return createMonsterAttributes().add(Attributes.FOLLOW_RANGE, 48).add(Attributes.KNOCKBACK_RESISTANCE, 1.0D);
     }
 
     @Override
-    public void onDeath(DamageSource source) {
-        DogBeastSpitterEntity dogSpitterEntity = EntityRegistry.DOGBEAST_SPITTER.get().create(this.getWorld());
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(MOVE_COOLDOWN, 0);
+        this.entityData.define(ATTACK, 1);
+    }
+
+    @Override
+    public void die(DamageSource source) {
+        DogBeastSpitterEntity dogSpitterEntity = EntityRegistry.DOGBEAST_SPITTER.get().create(this.level());
         if (dogSpitterEntity != null) {
-            dogSpitterEntity.setPosition(this.getPos());
+            dogSpitterEntity.setPos(this.position());
             dogSpitterEntity.initializeFrom(this);
             dogSpitterEntity.canSpit = true;
             dogSpitterEntity.canGrief = true;
-            this.getWorld().spawnEntity(dogSpitterEntity);
+            this.level().addFreshEntity(dogSpitterEntity);
         }
-        super.onDeath(source);
+        super.die(source);
     }
 
     private <E extends GeoEntity> PlayState predicate(AnimationState<E> event) {
@@ -243,7 +243,7 @@ public class BlairThingEntity extends MinibossThingEntity {
     }
 
     static {
-        MOVE_COOLDOWN = DataTracker.registerData(BlairThingEntity.class, TrackedDataHandlerRegistry.INTEGER);
-        ATTACK = DataTracker.registerData(BlairThingEntity.class, TrackedDataHandlerRegistry.INTEGER);
+        MOVE_COOLDOWN = SynchedEntityData.defineId(BlairThingEntity.class, EntityDataSerializers.INT);
+        ATTACK = SynchedEntityData.defineId(BlairThingEntity.class, EntityDataSerializers.INT);
     }
 }

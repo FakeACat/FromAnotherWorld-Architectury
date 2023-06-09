@@ -2,20 +2,20 @@ package acats.fromanotherworld.entity.render.thing.resultant;
 
 import acats.fromanotherworld.entity.model.thing.resultant.SplitFaceEntityModel;
 import acats.fromanotherworld.entity.thing.resultant.SplitFaceEntity;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 
 public class SplitFaceEntityRenderer extends AbsorberThingEntityRenderer<SplitFaceEntity> {
-    public SplitFaceEntityRenderer(EntityRendererFactory.Context renderManager) {
+    public SplitFaceEntityRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new SplitFaceEntityModel());
         this.shadowRadius = 0.6F;
     }
 
     @Override
-    public void preRender(MatrixStack poseStack, SplitFaceEntity animatable, BakedGeoModel model, VertexConsumerProvider bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void preRender(PoseStack poseStack, SplitFaceEntity animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         if (!isReRender){
             float g = 0.9375F;
             poseStack.scale(g, g, g);

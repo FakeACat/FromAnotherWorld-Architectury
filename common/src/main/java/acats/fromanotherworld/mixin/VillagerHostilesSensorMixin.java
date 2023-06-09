@@ -1,8 +1,8 @@
 package acats.fromanotherworld.mixin;
 
 import acats.fromanotherworld.entity.thing.ThingEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.brain.sensor.VillagerHostilesSensor;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.sensing.VillagerHostilesSensor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -18,10 +18,10 @@ public abstract class VillagerHostilesSensorMixin {
         }
     }
 
-    @Inject(at = @At("HEAD"), method = "isCloseEnoughForDanger", cancellable = true)
-    private void isCloseEnoughForDanger(LivingEntity villager, LivingEntity target, CallbackInfoReturnable<Boolean> cir){
+    @Inject(at = @At("HEAD"), method = "isClose", cancellable = true)
+    private void isClose(LivingEntity villager, LivingEntity target, CallbackInfoReturnable<Boolean> cir){
         if (target instanceof ThingEntity){
-            cir.setReturnValue(target.squaredDistanceTo(villager) <= 144);
+            cir.setReturnValue(target.distanceToSqr(villager) <= 144);
         }
     }
 }

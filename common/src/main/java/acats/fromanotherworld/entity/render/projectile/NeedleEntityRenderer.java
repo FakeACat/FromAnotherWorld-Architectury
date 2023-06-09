@@ -2,18 +2,19 @@ package acats.fromanotherworld.entity.render.projectile;
 
 import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.entity.projectile.NeedleEntity;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.ProjectileEntityRenderer;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.renderer.entity.ArrowRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
-public class NeedleEntityRenderer extends ProjectileEntityRenderer<NeedleEntity> {
+public class NeedleEntityRenderer extends ArrowRenderer<NeedleEntity> {
 
-    public NeedleEntityRenderer(EntityRendererFactory.Context context) {
+    public NeedleEntityRenderer(EntityRendererProvider.Context context) {
         super(context);
     }
 
     @Override
-    public Identifier getTexture(NeedleEntity entity) {
-        return new Identifier(FromAnotherWorld.MOD_ID, "textures/entity/projectile/needle.png");
+    public @NotNull ResourceLocation getTextureLocation(NeedleEntity entity) {
+        return new ResourceLocation(FromAnotherWorld.MOD_ID, "textures/entity/projectile/needle.png");
     }
 }

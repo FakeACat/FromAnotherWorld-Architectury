@@ -3,21 +3,21 @@ package acats.fromanotherworld.entity.model.misc;
 import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.entity.misc.StarshipEntity;
 import mod.azure.azurelib.model.GeoModel;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 public class StarshipEntityModel extends GeoModel<StarshipEntity> {
     @Override
-    public Identifier getModelResource(StarshipEntity animatable) {
-        return new Identifier(FromAnotherWorld.MOD_ID, "geo/entity/misc/starship.geo.json");
+    public ResourceLocation getModelResource(StarshipEntity animatable) {
+        return new ResourceLocation(FromAnotherWorld.MOD_ID, "geo/entity/misc/starship.geo.json");
     }
 
     @Override
-    public Identifier getTextureResource(StarshipEntity animatable) {
-        return new Identifier(FromAnotherWorld.MOD_ID, "textures/entity/misc/starship.png");
+    public ResourceLocation getTextureResource(StarshipEntity animatable) {
+        return new ResourceLocation(FromAnotherWorld.MOD_ID, "textures/entity/misc/starship.png");
     }
 
     @Override
-    public Identifier getAnimationResource(StarshipEntity animatable) {
-        return new Identifier(FromAnotherWorld.MOD_ID, "animations/entity/misc/starship.animation.json");
+    public ResourceLocation getAnimationResource(StarshipEntity animatable) {
+        return new ResourceLocation(FromAnotherWorld.MOD_ID, "animations/entity/misc/starship.animation.json");
     }
 }

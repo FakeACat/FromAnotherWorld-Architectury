@@ -10,28 +10,28 @@ import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.WanderAroundFarGoal;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.level.Level;
 
 public class CrawlerEntity extends AbsorberThingEntity {
 
-    public CrawlerEntity(EntityType<? extends CrawlerEntity> entityType, World world) {
+    public CrawlerEntity(EntityType<? extends CrawlerEntity> entityType, Level world) {
         super(entityType, world);
     }
 
     @Override
-    protected void initGoals() {
+    protected void registerGoals() {
         this.addThingTargets(false);
-        this.goalSelector.add(0, new FleeOnFireGoal(this, 16.0F, 1.2, 1.5));
-        this.goalSelector.add(1, new AbsorbGoal(this, STANDARD));
-        this.goalSelector.add(2, new ThingAttackGoal(this, 1.0D, false));
-        this.goalSelector.add(3, new WanderAroundFarGoal(this, 1.0D));
+        this.goalSelector.addGoal(0, new FleeOnFireGoal(this, 16.0F, 1.2, 1.5));
+        this.goalSelector.addGoal(1, new AbsorbGoal(this, STANDARD));
+        this.goalSelector.addGoal(2, new ThingAttackGoal(this, 1.0D, false));
+        this.goalSelector.addGoal(3, new WaterAvoidingRandomStrollGoal(this, 1.0D));
     }
 
     private <E extends GeoEntity> PlayState predicate(AnimationState<E> event) {
@@ -63,8 +63,8 @@ public class CrawlerEntity extends AbsorberThingEntity {
         return -0.5F;
     }
 
-    public static DefaultAttributeContainer.Builder createCrawlerAttributes(){
-        return HostileEntity.createHostileAttributes().add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25D).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 4.0D);
+    public static AttributeSupplier.Builder createCrawlerAttributes(){
+        return Monster.createMonsterAttributes().add(Attributes.MOVEMENT_SPEED, 0.25D).add(Attributes.ATTACK_DAMAGE, 4.0D);
     }
 
     @Override
@@ -85,14 +85,14 @@ public class CrawlerEntity extends AbsorberThingEntity {
     public boolean blairSpawned;
 
     @Override
-    public void writeCustomDataToNbt(NbtCompound nbt) {
-        super.writeCustomDataToNbt(nbt);
+    public void addAdditionalSaveData(CompoundTag nbt) {
+        super.addAdditionalSaveData(nbt);
         nbt.putBoolean("BlairSpawned", this.blairSpawned);
     }
 
     @Override
-    public void readCustomDataFromNbt(NbtCompound nbt) {
-        super.readCustomDataFromNbt(nbt);
+    public void readAdditionalSaveData(CompoundTag nbt) {
+        super.readAdditionalSaveData(nbt);
         this.blairSpawned = nbt.getBoolean("BlairSpawned");
     }
 

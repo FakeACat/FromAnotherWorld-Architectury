@@ -1,33 +1,34 @@
 package acats.fromanotherworld.entity.render.thing;
 
 import acats.fromanotherworld.entity.thing.TransitionEntity;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRenderer;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.Identifier;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 
 public class TransitionEntityRenderer extends EntityRenderer<TransitionEntity> {
-    public TransitionEntityRenderer(EntityRendererFactory.Context ctx) {
+    public TransitionEntityRenderer(EntityRendererProvider.Context ctx) {
         super(ctx);
     }
 
     @Override
-    public void render(TransitionEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
+    public void render(TransitionEntity entity, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light) {
         super.render(entity, yaw, tickDelta, matrices, vertexConsumers, light);
 
         this.renderFakeEntity(entity.getFakeEntity(), yaw, tickDelta, matrices, vertexConsumers, light);
     }
 
-    private <E extends Entity> void renderFakeEntity(E entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light){
-        EntityRenderer<? super E> renderer = MinecraftClient.getInstance().getEntityRenderDispatcher().getRenderer(entity);
+    private <E extends Entity> void renderFakeEntity(E entity, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light){
+        EntityRenderer<? super E> renderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(entity);
         renderer.render(entity, yaw, tickDelta, matrices, vertexConsumers, light);
     }
 
     @Override
-    public Identifier getTexture(TransitionEntity entity) {
+    public @NotNull ResourceLocation getTextureLocation(TransitionEntity entity) {
         return null;
     }
 }

@@ -10,41 +10,41 @@ import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.WanderAroundFarGoal;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.world.World;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.level.Level;
 
 import static acats.fromanotherworld.constants.Variants.JULIETTE;
 
 public class JulietteThingEntity extends AbsorberThingEntity {
 
-    public JulietteThingEntity(EntityType<? extends JulietteThingEntity> entityType, World world) {
+    public JulietteThingEntity(EntityType<? extends JulietteThingEntity> entityType, Level world) {
         super(entityType, world);
     }
 
     @Override
-    protected void initGoals() {
+    protected void registerGoals() {
         this.addThingTargets(false);
-        this.goalSelector.add(0, new FleeOnFireGoal(this, 16.0F, 1.2, 1.5));
-        this.goalSelector.add(1, new AbsorbGoal(this, STANDARD));
-        this.goalSelector.add(2, new ThingAttackGoal(this, 1.0D, false));
-        this.goalSelector.add(3, new WanderAroundFarGoal(this, 1.0D));
+        this.goalSelector.addGoal(0, new FleeOnFireGoal(this, 16.0F, 1.2, 1.5));
+        this.goalSelector.addGoal(1, new AbsorbGoal(this, STANDARD));
+        this.goalSelector.addGoal(2, new ThingAttackGoal(this, 1.0D, false));
+        this.goalSelector.addGoal(3, new WaterAvoidingRandomStrollGoal(this, 1.0D));
     }
 
-    public static DefaultAttributeContainer.Builder createJulietteThingAttributes(){
-        return HostileEntity.createHostileAttributes().add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.3D).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 7.0D).add(EntityAttributes.GENERIC_MAX_HEALTH, 40.0D);
+    public static AttributeSupplier.Builder createJulietteThingAttributes(){
+        return Monster.createMonsterAttributes().add(Attributes.MOVEMENT_SPEED, 0.3D).add(Attributes.ATTACK_DAMAGE, 7.0D).add(Attributes.MAX_HEALTH, 40.0D);
     }
 
     private <E extends GeoEntity> PlayState predicate(AnimationState<E> event) {
         if (this.isThingFrozen())
             return PlayState.STOP;
         if (event.isMoving()){
-            if (this.isAttacking()){
+            if (this.isAggressive()){
                 event.getController().setAnimation(RawAnimation.begin().thenLoop("animation.juliette_thing.chase"));
             }
             else{
@@ -58,17 +58,17 @@ public class JulietteThingEntity extends AbsorberThingEntity {
     }
 
     @Override
-    public void onDeath(DamageSource source) {
+    public void die(DamageSource source) {
         if (random.nextInt(3) == 0){
-            CrawlerEntity crawlerEntity = EntityRegistry.CRAWLER.get().create(this.getWorld());
+            CrawlerEntity crawlerEntity = EntityRegistry.CRAWLER.get().create(this.level());
             if (crawlerEntity != null) {
-                crawlerEntity.setPosition(this.getPos());
+                crawlerEntity.setPos(this.position());
                 crawlerEntity.initializeFrom(this);
                 crawlerEntity.setVictimType(JULIETTE);
-                this.getWorld().spawnEntity(crawlerEntity);
+                this.level().addFreshEntity(crawlerEntity);
             }
         }
-        super.onDeath(source);
+        super.die(source);
     }
 
     @Override

@@ -3,20 +3,20 @@ package acats.fromanotherworld.entity.goal;
 import acats.fromanotherworld.entity.interfaces.PossibleDisguisedThing;
 import acats.fromanotherworld.entity.thing.resultant.AbsorberThingEntity;
 import acats.fromanotherworld.utilities.EntityUtilities;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.TargetPredicate;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Predicate;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.level.Level;
 
 public class AbsorbGoal extends Goal {
     private static final int RANGE = 10;
-    private final TargetPredicate absorbPredicate;
+    private final TargetingConditions absorbPredicate;
     private final AbsorberThingEntity absorber;
-    private final World world;
+    private final Level world;
     private final int chance;
     private int timer = 0;
     public AbsorbGoal(AbsorberThingEntity absorber, Predicate<LivingEntity> absorbable){
@@ -24,21 +24,21 @@ public class AbsorbGoal extends Goal {
     }
     public AbsorbGoal(AbsorberThingEntity absorber, Predicate<LivingEntity> absorbable, int chance){
         this.absorber = absorber;
-        this.world = absorber.getWorld();
+        this.world = absorber.level();
         this.chance = chance;
-        absorbPredicate = TargetPredicate
-                .createNonAttackable()
-                .setPredicate(absorbable)
-                .setBaseMaxDistance(RANGE);
+        absorbPredicate = TargetingConditions
+                .forNonCombat()
+                .selector(absorbable)
+                .range(RANGE);
     }
 
     @Override
-    public boolean shouldRunEveryTick() {
+    public boolean requiresUpdateEveryTick() {
         return true;
     }
 
     @Override
-    public boolean canStart() {
+    public boolean canUse() {
         if (this.absorber.cannotMerge() || this.world.getRandom().nextInt(chance) != 0)
             return false;
         LivingEntity absorbTarget = this.findAbsorbable();
@@ -50,7 +50,7 @@ public class AbsorbGoal extends Goal {
     }
 
     @Override
-    public boolean shouldContinue() {
+    public boolean canContinueToUse() {
         LivingEntity absorbTarget = this.absorber.getAbsorbTarget();
         return this.timer < 300 && absorbTarget != null && absorbTarget.isAlive();
     }
@@ -83,14 +83,14 @@ public class AbsorbGoal extends Goal {
 
     @Nullable
     private LivingEntity findAbsorbable() {
-        List<? extends LivingEntity> list = this.world.getTargets(LivingEntity.class, absorbPredicate, this.absorber, this.absorber.getBoundingBox().expand(RANGE));
+        List<? extends LivingEntity> list = this.world.getNearbyEntities(LivingEntity.class, absorbPredicate, this.absorber, this.absorber.getBoundingBox().inflate(RANGE));
         double d = Double.MAX_VALUE;
         LivingEntity entity = null;
 
         for (LivingEntity entity1 : list) {
-            if (this.absorber.squaredDistanceTo(entity1) < d && EntityUtilities.canSee(this.absorber, entity1)) {
+            if (this.absorber.distanceToSqr(entity1) < d && EntityUtilities.canSee(this.absorber, entity1)) {
                 entity = entity1;
-                d = this.absorber.squaredDistanceTo(entity1);
+                d = this.absorber.distanceToSqr(entity1);
             }
         }
 

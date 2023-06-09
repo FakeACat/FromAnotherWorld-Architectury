@@ -2,10 +2,9 @@ package acats.fromanotherworld.entity.goal;
 
 import acats.fromanotherworld.entity.interfaces.StalkerThing;
 import acats.fromanotherworld.entity.thing.ThingEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.player.PlayerEntity;
-
 import java.util.EnumSet;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.player.Player;
 
 public class StalkGoal extends Goal {
     protected final ThingEntity mob;
@@ -13,24 +12,24 @@ public class StalkGoal extends Goal {
     public StalkGoal(StalkerThing stalker){
         this.stalker = stalker;
         this.mob = (ThingEntity) stalker;
-        this.setControls(EnumSet.of(Control.MOVE));
+        this.setFlags(EnumSet.of(Flag.MOVE));
     }
     @Override
-    public boolean canStart() {
+    public boolean canUse() {
         return mob.getRandom().nextInt(40) == 0 && this.stalker.findStalkTarget() != null;
     }
 
     @Override
-    public boolean shouldContinue() {
-        return !this.mob.getNavigation().isIdle();
+    public boolean canContinueToUse() {
+        return !this.mob.getNavigation().isDone();
     }
 
     @Override
     public void start() {
         int range = 64;
-        PlayerEntity player = this.stalker.findStalkTarget();
+        Player player = this.stalker.findStalkTarget();
         if (player != null){
-            this.mob.getNavigation().startMovingTo(player.getX() + this.mob.getRandom().nextInt(2 * range + 1) - range, player.getY(), player.getZ() + this.mob.getRandom().nextInt(2 * range + 1) - range, 1.0F);
+            this.mob.getNavigation().moveTo(player.getX() + this.mob.getRandom().nextInt(2 * range + 1) - range, player.getY(), player.getZ() + this.mob.getRandom().nextInt(2 * range + 1) - range, 1.0F);
         }
     }
 

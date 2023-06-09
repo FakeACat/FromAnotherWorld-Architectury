@@ -1,14 +1,14 @@
 package acats.fromanotherworld.block;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 
 public abstract class FlammableBlock extends Block {
 
-    public FlammableBlock(Settings settings, int burn, int spread) {
+    public FlammableBlock(Properties settings, int burn, int spread) {
         super(settings);
         this.burn = burn;
         this.spread = spread;
@@ -22,17 +22,17 @@ public abstract class FlammableBlock extends Block {
         return this.spread;
     }
 
-    public int getFlammability(BlockState state, BlockView level, BlockPos pos, Direction direction)
+    public int getFlammability(BlockState state, BlockGetter level, BlockPos pos, Direction direction)
     {
         return this.burn();
     }
 
-    public boolean isFlammable(BlockState state, BlockView level, BlockPos pos, Direction direction)
+    public boolean isFlammable(BlockState state, BlockGetter level, BlockPos pos, Direction direction)
     {
         return true;
     }
 
-    public int getFireSpreadSpeed(BlockState state, BlockView level, BlockPos pos, Direction direction)
+    public int getFireSpreadSpeed(BlockState state, BlockGetter level, BlockPos pos, Direction direction)
     {
         return this.spread();
     }

@@ -1,17 +1,17 @@
 package acats.fromanotherworld.entity.goal;
 
 import acats.fromanotherworld.utilities.EntityUtilities;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.FleeEntityGoal;
-import net.minecraft.entity.mob.PathAwareEntity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
 
-public class FleeOnFireGoal extends FleeEntityGoal<LivingEntity> {
-    public FleeOnFireGoal(PathAwareEntity mob, float distance, double slowSpeed, double fastSpeed) {
+public class FleeOnFireGoal extends AvoidEntityGoal<LivingEntity> {
+    public FleeOnFireGoal(PathfinderMob mob, float distance, double slowSpeed, double fastSpeed) {
         super(mob, LivingEntity.class, distance, slowSpeed, fastSpeed);
     }
 
     @Override
-    public boolean canStart() {
-        return EntityUtilities.isVulnerable(mob) && super.canStart();
+    public boolean canUse() {
+        return EntityUtilities.isVulnerable(mob) && super.canUse();
     }
 }

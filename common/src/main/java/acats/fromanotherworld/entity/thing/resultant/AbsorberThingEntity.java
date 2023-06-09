@@ -6,55 +6,55 @@ import acats.fromanotherworld.entity.render.thing.Tentacle;
 import acats.fromanotherworld.entity.thing.ThingEntity;
 import acats.fromanotherworld.registry.ParticleRegistry;
 import acats.fromanotherworld.tags.EntityTags;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 public abstract class AbsorberThingEntity extends ThingEntity implements TentacleThing {
     public static final int ABSORB_TIME = 120;
 
     public static final Predicate<LivingEntity> STANDARD = (livingEntity) ->
-            (livingEntity.getType().isIn(EntityTags.HUMANOIDS) || livingEntity.getType().isIn(EntityTags.QUADRUPEDS)) &&
+            (livingEntity.getType().is(EntityTags.HUMANOIDS) || livingEntity.getType().is(EntityTags.QUADRUPEDS)) &&
                     !((PossibleDisguisedThing) livingEntity).isAssimilated();
 
-    private static final TrackedData<Integer> ABSORB_PROGRESS;
-    private static final TrackedData<Integer> ABSORB_TARGET_ID;
+    private static final EntityDataAccessor<Integer> ABSORB_PROGRESS;
+    private static final EntityDataAccessor<Integer> ABSORB_TARGET_ID;
     public final List<Tentacle> absorbTentacles;
 
     @Override
     public float tentacleOriginOffset() {
-        return this.getHeight() * 0.5F;
+        return this.getBbHeight() * 0.5F;
     }
 
-    protected AbsorberThingEntity(EntityType<? extends AbsorberThingEntity> entityType, World world, boolean canHaveSpecialAbilities) {
+    protected AbsorberThingEntity(EntityType<? extends AbsorberThingEntity> entityType, Level world, boolean canHaveSpecialAbilities) {
         super(entityType, world, canHaveSpecialAbilities);
         absorbTentacles = new ArrayList<>();
         for (int i = 0; i < 25; i++){
             absorbTentacles.add(new Tentacle(this,
                     60,
-                    new Vec3d(this.getRandom().nextDouble() - 0.5D, this.getRandom().nextDouble(), this.getRandom().nextDouble() - 0.5D)));
+                    new Vec3(this.getRandom().nextDouble() - 0.5D, this.getRandom().nextDouble(), this.getRandom().nextDouble() - 0.5D)));
         }
     }
-    protected AbsorberThingEntity(EntityType<? extends AbsorberThingEntity> entityType, World world){
+    protected AbsorberThingEntity(EntityType<? extends AbsorberThingEntity> entityType, Level world){
         this(entityType, world, true);
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        this.dataTracker.startTracking(ABSORB_PROGRESS, 0);
-        this.dataTracker.startTracking(ABSORB_TARGET_ID, 0);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(ABSORB_PROGRESS, 0);
+        this.entityData.define(ABSORB_TARGET_ID, 0);
     }
 
     @Override
@@ -64,7 +64,7 @@ public abstract class AbsorberThingEntity extends ThingEntity implements Tentacl
         if (absorbTarget != null && this.getAbsorbProgress() > 0 && absorbTarget.isAlive()){
             this.tickAbsorb(absorbTarget);
         }
-        else if (this.getWorld().isClient()){
+        else if (this.level().isClientSide()){
             for (Tentacle tentacle:
                     absorbTentacles) {
                 tentacle.tick(null);
@@ -73,9 +73,9 @@ public abstract class AbsorberThingEntity extends ThingEntity implements Tentacl
     }
 
     public void tickAbsorb(@NotNull LivingEntity victim){
-        if (this.getWorld().isClient()){
+        if (this.level().isClientSide()){
             for(int i = 0; i < this.getAbsorbProgress() / 10; ++i) {
-                this.getWorld().addParticle(ParticleRegistry.THING_GORE, victim.getParticleX(0.6D), victim.getRandomBodyY(), victim.getParticleZ(0.6D), 0.0D, 0.0D, 0.0D);
+                this.level().addParticle(ParticleRegistry.THING_GORE, victim.getRandomX(0.6D), victim.getRandomY(), victim.getRandomZ(0.6D), 0.0D, 0.0D, 0.0D);
             }
             for (Tentacle tentacle:
                     absorbTentacles) {
@@ -93,50 +93,50 @@ public abstract class AbsorberThingEntity extends ThingEntity implements Tentacl
             double d = (this.getX() - victim.getX()) / (double)f;
             double e = (this.getY() - victim.getY()) / (double)f;
             double g = (this.getZ() - victim.getZ()) / (double)f;
-            victim.setVelocity(victim.getVelocity().add(Math.copySign(d * d * 0.1, d), Math.copySign(e * e * 0.1, e), Math.copySign(g * g * 0.1, g)));
+            victim.setDeltaMovement(victim.getDeltaMovement().add(Math.copySign(d * d * 0.1, d), Math.copySign(e * e * 0.1, e), Math.copySign(g * g * 0.1, g)));
         }
     }
 
     public void setAbsorbTarget(LivingEntity absorbTarget){
-        this.dataTracker.set(ABSORB_TARGET_ID, absorbTarget.getId());
+        this.entityData.set(ABSORB_TARGET_ID, absorbTarget.getId());
     }
     public void setAbsorbTargetID(int absorbTargetID){
-        this.dataTracker.set(ABSORB_TARGET_ID, absorbTargetID);
+        this.entityData.set(ABSORB_TARGET_ID, absorbTargetID);
     }
 
     @Nullable
     public LivingEntity getAbsorbTarget(){
-        return (LivingEntity) this.getWorld().getEntityById(this.getAbsorbTargetID());
+        return (LivingEntity) this.level().getEntity(this.getAbsorbTargetID());
     }
     public int getAbsorbTargetID(){
-        return this.dataTracker.get(ABSORB_TARGET_ID);
+        return this.entityData.get(ABSORB_TARGET_ID);
     }
 
     public void setAbsorbProgress(int absorbProgress){
-        this.dataTracker.set(ABSORB_PROGRESS, absorbProgress);
+        this.entityData.set(ABSORB_PROGRESS, absorbProgress);
     }
 
     public int getAbsorbProgress(){
-        return this.dataTracker.get(ABSORB_PROGRESS);
+        return this.entityData.get(ABSORB_PROGRESS);
     }
 
     @Override
-    public boolean canTarget(LivingEntity target) {
+    public boolean canAttack(LivingEntity target) {
         if (target.equals(this.getAbsorbTarget()))
             return false;
-        return super.canTarget(target);
+        return super.canAttack(target);
     }
 
     public abstract void grow(LivingEntity otherParent);
 
     public void growInto(EntityType<? extends ThingEntity> next){
         if (next != null){
-            ThingEntity nextThing = next.create(this.getWorld());
+            ThingEntity nextThing = next.create(this.level());
             if (nextThing != null){
-                nextThing.setPosition(this.getPos());
+                nextThing.setPos(this.position());
                 nextThing.initializeFrom(this);
-                this.getWorld().spawnEntity(nextThing);
-                if (this.getWorld().getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING))
+                this.level().addFreshEntity(nextThing);
+                if (this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING))
                     nextThing.grief(0, 1);
             }
         }
@@ -144,7 +144,7 @@ public abstract class AbsorberThingEntity extends ThingEntity implements Tentacl
     }
 
     static {
-        ABSORB_PROGRESS = DataTracker.registerData(AbsorberThingEntity.class, TrackedDataHandlerRegistry.INTEGER);
-        ABSORB_TARGET_ID = DataTracker.registerData(AbsorberThingEntity.class, TrackedDataHandlerRegistry.INTEGER);
+        ABSORB_PROGRESS = SynchedEntityData.defineId(AbsorberThingEntity.class, EntityDataSerializers.INT);
+        ABSORB_TARGET_ID = SynchedEntityData.defineId(AbsorberThingEntity.class, EntityDataSerializers.INT);
     }
 }

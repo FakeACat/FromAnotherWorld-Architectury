@@ -15,40 +15,45 @@ import acats.fromanotherworld.utilities.EntityUtilities;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.util.AzureLibUtil;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.*;
-import net.minecraft.entity.ai.goal.ActiveTargetGoal;
-import net.minecraft.entity.ai.pathing.EntityNavigation;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.*;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class ThingEntity extends HostileEntity implements GeoEntity, MaybeThing {
-    private static final TrackedData<Integer> VICTIM_TYPE;
-    private static final TrackedData<Boolean> HIBERNATING;
-    private static final TrackedData<Float> COLD;
-    private static final TrackedData<Boolean> CLIMBING;
-    protected ThingEntity(EntityType<? extends HostileEntity> entityType, World world, boolean canHaveSpecialAbilities) {
+public abstract class ThingEntity extends Monster implements GeoEntity, MaybeThing {
+    private static final EntityDataAccessor<Integer> VICTIM_TYPE;
+    private static final EntityDataAccessor<Boolean> HIBERNATING;
+    private static final EntityDataAccessor<Float> COLD;
+    private static final EntityDataAccessor<Boolean> CLIMBING;
+    protected ThingEntity(EntityType<? extends Monster> entityType, Level world, boolean canHaveSpecialAbilities) {
         super(entityType, world);
-        this.experiencePoints = STRONG_MONSTER_XP;
-        if (!this.getWorld().isClient()){
-            if (!entityType.isIn(EntityTags.THINGS)){
-                FromAnotherWorld.LOGGER.error(this.getSavedEntityId() + " extends ThingEntity but is not in the things tag!");
+        this.xpReward = XP_REWARD_LARGE;
+        if (!this.level().isClientSide()){
+            if (!entityType.is(EntityTags.THINGS)){
+                FromAnotherWorld.LOGGER.error(this.getEncodeId() + " extends ThingEntity but is not in the things tag!");
             }
 
             if (canHaveSpecialAbilities){
@@ -58,17 +63,17 @@ public abstract class ThingEntity extends HostileEntity implements GeoEntity, Ma
     }
 
     public void initializeFrom(Entity parent){
-        if (parent.getWorld() instanceof ServerWorld serverWorld){
-            this.initialize(serverWorld, serverWorld.getLocalDifficulty(parent.getBlockPos()), SpawnReason.CONVERSION, null, null);
+        if (parent.level() instanceof ServerLevel serverWorld){
+            this.finalizeSpawn(serverWorld, serverWorld.getCurrentDifficultyAt(parent.blockPosition()), MobSpawnType.CONVERSION, null, null);
         }
     }
 
     @Override
-    protected EntityNavigation createNavigation(World world) {
+    protected PathNavigation createNavigation(Level world) {
         return new ThingNavigation(this, world);
     }
 
-    protected ThingEntity(EntityType<? extends HostileEntity> entityType, World world){
+    protected ThingEntity(EntityType<? extends Monster> entityType, Level world){
         this(entityType, world, true);
     }
 
@@ -86,65 +91,65 @@ public abstract class ThingEntity extends HostileEntity implements GeoEntity, Ma
     private final AnimatableInstanceCache animatableInstanceCache = AzureLibUtil.createInstanceCache(this);
 
     public int getVictimType(){
-        return this.dataTracker.get(VICTIM_TYPE);
+        return this.entityData.get(VICTIM_TYPE);
     }
     public void setVictimType(int victimType){
-        this.dataTracker.set(VICTIM_TYPE, victimType);
+        this.entityData.set(VICTIM_TYPE, victimType);
     }
 
     public boolean hibernating(){
-        return this.dataTracker.get(HIBERNATING);
+        return this.entityData.get(HIBERNATING);
     }
     public void setHibernating(boolean asleep){
-        this.dataTracker.set(HIBERNATING, asleep);
+        this.entityData.set(HIBERNATING, asleep);
     }
 
     public float getCold(){
-        return this.dataTracker.get(COLD);
+        return this.entityData.get(COLD);
     }
     public void setCold(float cold){
-        this.dataTracker.set(COLD, MathHelper.clamp(cold, 0.0F, 1.0F));
+        this.entityData.set(COLD, Mth.clamp(cold, 0.0F, 1.0F));
     }
 
     public boolean isClimbingWall(){
-        return this.dataTracker.get(CLIMBING);
+        return this.entityData.get(CLIMBING);
     }
     public void setClimbingWall(boolean climbingWall){
-        this.dataTracker.set(CLIMBING, climbingWall);
+        this.entityData.set(CLIMBING, climbingWall);
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        this.dataTracker.startTracking(VICTIM_TYPE, -1);
-        this.dataTracker.startTracking(HIBERNATING, false);
-        this.dataTracker.startTracking(COLD, 0.0F);
-        this.dataTracker.startTracking(CLIMBING, false);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(VICTIM_TYPE, -1);
+        this.entityData.define(HIBERNATING, false);
+        this.entityData.define(COLD, 0.0F);
+        this.entityData.define(CLIMBING, false);
     }
 
     @Override
-    protected Identifier getLootTableId() {
-        return new Identifier(FromAnotherWorld.MOD_ID, "entities/thing/the_thing_default");
+    protected ResourceLocation getDefaultLootTable() {
+        return new ResourceLocation(FromAnotherWorld.MOD_ID, "entities/thing/the_thing_default");
     }
 
     @Override
-    public boolean canTarget(LivingEntity target) {
+    public boolean canAttack(LivingEntity target) {
         if (!EntityUtilities.isThing(target) &&
                 (target == this.currentThreat ||
                         EntityUtilities.canAssimilate(target) ||
-                        target.getType().isIn(EntityTags.ATTACKABLE_BUT_NOT_ASSIMILABLE))){
-            return super.canTarget(target);
+                        target.getType().is(EntityTags.ATTACKABLE_BUT_NOT_ASSIMILABLE))){
+            return super.canAttack(target);
         }
         return false;
     }
 
     public void addThingTargets(boolean prioritisePlayer){
-        this.targetSelector.add(prioritisePlayer ? 0 : 1, new ThingTargetGoal<>(this, PlayerEntity.class, true));
-        this.targetSelector.add(1, new ActiveTargetGoal<>(this, LivingEntity.class, true));
+        this.targetSelector.addGoal(prioritisePlayer ? 0 : 1, new ThingTargetGoal<>(this, Player.class, true));
+        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, LivingEntity.class, true));
     }
 
     @Override
-    public boolean cannotDespawn() {
+    public boolean requiresCustomPersistence() {
         return true;
     }
 
@@ -157,8 +162,8 @@ public abstract class ThingEntity extends HostileEntity implements GeoEntity, Ma
     }
 
     @Override
-    public boolean isClimbing() {
-        return this.isClimbingWall() || super.isClimbing();
+    public boolean onClimbable() {
+        return this.isClimbingWall() || super.onClimbable();
     }
     public boolean rotateWhenClimbing(){
         return false;
@@ -169,7 +174,7 @@ public abstract class ThingEntity extends HostileEntity implements GeoEntity, Ma
     public float climbRotateProgress = 0.0F;
     public float nextClimbRotateProgress = 0.0F;
     public boolean movingClimbing(){
-        return this.isClimbing() && !this.collidesWithStateAtPos(this.getBlockPos(), this.getWorld().getBlockState(this.getBlockPos().up()));
+        return this.onClimbable() && !this.isColliding(this.blockPosition(), this.level().getBlockState(this.blockPosition().above()));
     }
 
     @Override
@@ -209,18 +214,18 @@ public abstract class ThingEntity extends HostileEntity implements GeoEntity, Ma
     }
 
     @Override
-    public float getSoundPitch() {
+    public float getVoicePitch() {
         return switch (this.getFormStrength()){
-            default -> super.getSoundPitch();
-            case STANDARD_STRONG -> super.getSoundPitch() * 0.8F;
-            case STRONG -> super.getSoundPitch() * 0.6F;
+            default -> super.getVoicePitch();
+            case STANDARD_STRONG -> super.getVoicePitch() * 0.8F;
+            case STRONG -> super.getVoicePitch() * 0.6F;
         };
     }
 
     @Override
     public void tick() {
         super.tick();
-        if (!this.getWorld().isClient()){
+        if (!this.level().isClientSide()){
             if (this.canClimb()){
                 if (--this.climbStamina > 0) {
                     this.setClimbingWall(this.horizontalCollision);
@@ -228,19 +233,19 @@ public abstract class ThingEntity extends HostileEntity implements GeoEntity, Ma
                 else{
                     this.setClimbingWall(false);
                 }
-                if (this.isOnGround()) {
+                if (this.onGround()) {
                     this.climbStamina = 300;
                 }
             }
-            if (this.age % 10 == 0 && !EntityUtilities.isVulnerable(this)){
+            if (this.tickCount % 10 == 0 && !EntityUtilities.isVulnerable(this)){
                 this.heal(1.0F);
             }
 
-            if (this.age % 60 == 0){
+            if (this.tickCount % 60 == 0){
                 if (this.canThingFreeze())
                     this.tickFreeze();
 
-                if (this.canGrief && this.isClimbing() && this.getWorld().getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING))
+                if (this.canGrief && this.onClimbable() && this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING))
                     this.grief(1, 1);
 
                 if (this.getTarget() == null){
@@ -252,33 +257,33 @@ public abstract class ThingEntity extends HostileEntity implements GeoEntity, Ma
                 }
                 else{
                     this.timeSinceLastSeenTarget = 0;
-                    if (this.canGrief && !this.isAiDisabled() && this.getWorld().getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING)) {
+                    if (this.canGrief && !this.isNoAi() && this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
                         this.grief(this.getTarget().getY() < this.getY() - 3 ? -1 : 0, 3);
                     }
-                    if (this.canShootNeedles && !this.isAiDisabled() && this.age % 300 == 0){
+                    if (this.canShootNeedles && !this.isNoAi() && this.tickCount % 300 == 0){
                         for (int i = 0; i < 50; i++){
-                            NeedleEntity needleEntity = new NeedleEntity(this.getWorld(), this.getX(), this.getRandomBodyY(), this.getZ(), this);
-                            needleEntity.setVelocity(new Vec3d((random.nextDouble() - 0.5D) * 5, random.nextDouble() / 2, (random.nextDouble() - 0.5D) * 5));
-                            this.getWorld().spawnEntity(needleEntity);
+                            NeedleEntity needleEntity = new NeedleEntity(this.level(), this.getX(), this.getRandomY(), this.getZ(), this);
+                            needleEntity.setDeltaMovement(new Vec3((random.nextDouble() - 0.5D) * 5, random.nextDouble() / 2, (random.nextDouble() - 0.5D) * 5));
+                            this.level().addFreshEntity(needleEntity);
                         }
                     }
                 }
             }
 
-            if (this.canShootNeedles && !this.isAiDisabled() && this.age % 300 == 240){
+            if (this.canShootNeedles && !this.isNoAi() && this.tickCount % 300 == 240){
                 this.playSound(SoundRegistry.STRONG_AMBIENT.get(), 1.0F, 0.4F);
-                this.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 80, 6, false, false));
+                this.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 80, 6, false, false));
             }
 
             if (this.hibernating()){
-                this.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 20, 6, false, false));
+                this.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20, 6, false, false));
                 if (this.getTarget() != null)
                     this.setHibernating(false);
             }
         }
         else {
             if (this.rotateWhenClimbing()){
-                if (this.isClimbing()) {
+                if (this.onClimbable()) {
                     this.climbRotateProgress = this.nextClimbRotateProgress;
                     this.nextClimbRotateProgress = Math.min(this.climbRotateProgress + 0.05F, 1.0F);
                 }
@@ -292,19 +297,19 @@ public abstract class ThingEntity extends HostileEntity implements GeoEntity, Ma
             if (alertSoundCooldown > 0){
                 alertSoundCooldown--;
             }
-            else if (this.isAttacking()){
+            else if (this.isAggressive()){
                 alertSoundCooldown = 6000;
-                this.playSound(this.getAlertSound(), this.getSoundVolume(), this.getSoundPitch());
+                this.playSound(this.getAlertSound(), this.getSoundVolume(), this.getVoicePitch());
             }
         }
     }
 
     public void grief(int yOffset, int chanceDenominator){
-        int l = MathHelper.floor(this.getY()) + yOffset;
-        int m = MathHelper.floor(this.getX());
-        int n = MathHelper.floor(this.getZ());
+        int l = Mth.floor(this.getY()) + yOffset;
+        int m = Mth.floor(this.getX());
+        int n = Mth.floor(this.getZ());
 
-        int size = MathHelper.floor(1 + this.getDimensions(this.getPose()).width / 2);
+        int size = Mth.floor(1 + this.getDimensions(this.getPose()).width / 2);
 
         for(int o = -size; o <= size; ++o) {
             for(int p = -size; p <= size; ++p) {
@@ -313,9 +318,9 @@ public abstract class ThingEntity extends HostileEntity implements GeoEntity, Ma
                     int s = l + q;
                     int t = n + p;
                     BlockPos blockPos = new BlockPos(r, s, t);
-                    BlockState blockState = this.getWorld().getBlockState(blockPos);
+                    BlockState blockState = this.level().getBlockState(blockPos);
                     if (EntityUtilities.canThingDestroy(blockState) && random.nextInt(chanceDenominator) == 0) {
-                        this.getWorld().breakBlock(blockPos, true, this);
+                        this.level().destroyBlock(blockPos, true, this);
                     }
                 }
             }
@@ -327,13 +332,13 @@ public abstract class ThingEntity extends HostileEntity implements GeoEntity, Ma
     }
 
     @Override
-    public boolean damage(DamageSource source, float amount) {
-        if (!this.getWorld().isClient()){
-            if (source.getAttacker() instanceof LivingEntity e){
+    public boolean hurt(DamageSource source, float amount) {
+        if (!this.level().isClientSide()){
+            if (source.getEntity() instanceof LivingEntity e){
                 if (EntityUtilities.isVulnerable(this))
                     EntityUtilities.angerNearbyThings(10, this, e);
                 this.currentThreat = e;
-                if (this.canTarget(e)){
+                if (this.canAttack(e)){
                     this.setTarget(e);
                 }
             }
@@ -342,17 +347,17 @@ public abstract class ThingEntity extends HostileEntity implements GeoEntity, Ma
                     EntityUtilities.angerNearbyThings(10, this, null);
             }
         }
-        if (this.isThingFrozen() && source == this.getWorld().getDamageSources().inWall()){
+        if (this.isThingFrozen() && source == this.level().damageSources().inWall()){
             return false;
         }
-        return super.damage(source, amount);
+        return super.hurt(source, amount);
     }
 
     @Override
-    protected float modifyAppliedDamage(DamageSource source, float amount) {
+    protected float getDamageAfterMagicAbsorb(DamageSource source, float amount) {
         boolean vul1 = EntityUtilities.isVulnerable(this);
-        boolean vul2 = source.isIn(DamageTypeTags.ALWAYS_HURTS_THINGS);
-        return (vul1 || vul2) ? super.modifyAppliedDamage(source, amount) : Math.min(super.modifyAppliedDamage(source, amount), 1.0F);
+        boolean vul2 = source.is(DamageTypeTags.ALWAYS_HURTS_THINGS);
+        return (vul1 || vul2) ? super.getDamageAfterMagicAbsorb(source, amount) : Math.min(super.getDamageAfterMagicAbsorb(source, amount), 1.0F);
     }
 
     public boolean shouldMergeOnAssimilate() {
@@ -360,27 +365,27 @@ public abstract class ThingEntity extends HostileEntity implements GeoEntity, Ma
     }
 
     @Override
-    public boolean tryAttack(Entity target) {
+    public boolean doHurtTarget(Entity target) {
         if (EntityUtilities.assimilate(target, this.shouldMergeOnAssimilate() ? 10 : 1)){
-            target.damage(this.getWorld().getDamageSources().mobAttack(this), 0.0F);
+            target.hurt(this.level().damageSources().mobAttack(this), 0.0F);
             if (this.shouldMergeOnAssimilate()){
                 this.discard();
             }
             return false;
         }
-        return super.tryAttack(target);
+        return super.doHurtTarget(target);
     }
 
     @Override
-    public void onDeath(DamageSource damageSource) {
+    public void die(DamageSource damageSource) {
         this.onDeathWithoutGoreDrops(damageSource);
         int size = (int)this.getDimensions(this.getPose()).width / 2 + 1;
-        if (!this.getWorld().isClient && this.getWorld().getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING)){
+        if (!this.level().isClientSide && this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)){
             for(int x = (int)getX() - size; x < getX() + size; x++){
                 for(int y = (int)getY(); y < (int)getY() + this.getDimensions(this.getPose()).height; y++){
                     for(int z = (int)getZ() - size; z < getZ() + size; z++){
-                        if (random.nextInt(2) == 0 && BlockRegistry.THING_GORE.get().getDefaultState().canPlaceAt(this.getWorld(), new BlockPos(x, y, z)) && this.getWorld().getBlockState(new BlockPos(x, y, z)).isReplaceable() && this.getWorld().getBlockState(new BlockPos(x, y, z)).getFluidState().isEmpty()){
-                            this.getWorld().setBlockState(new BlockPos(x, y, z), BlockRegistry.THING_GORE.get().getDefaultState());
+                        if (random.nextInt(2) == 0 && BlockRegistry.THING_GORE.get().defaultBlockState().canSurvive(this.level(), new BlockPos(x, y, z)) && this.level().getBlockState(new BlockPos(x, y, z)).canBeReplaced() && this.level().getBlockState(new BlockPos(x, y, z)).getFluidState().isEmpty()){
+                            this.level().setBlockAndUpdate(new BlockPos(x, y, z), BlockRegistry.THING_GORE.get().defaultBlockState());
                         }
                     }
                 }
@@ -389,11 +394,11 @@ public abstract class ThingEntity extends HostileEntity implements GeoEntity, Ma
     }
 
     public void onDeathWithoutGoreDrops(DamageSource damageSource){
-        super.onDeath(damageSource);
+        super.die(damageSource);
     }
 
     @Override
-    public boolean canBreatheInWater() {
+    public boolean canBreatheUnderwater() {
         return true;
     }
 
@@ -410,12 +415,12 @@ public abstract class ThingEntity extends HostileEntity implements GeoEntity, Ma
             this.setCold(this.getCold() - 0.2F * random);
             return;
         }
-        if (this.getWorld().getBlockState(this.getBlockPos()).isIn(BlockTags.FREEZES_THINGS)){
+        if (this.level().getBlockState(this.blockPosition()).is(BlockTags.FREEZES_THINGS)){
             this.setCold(this.getCold() + 0.1F * random);
             return;
         }
-        BlockPos blockPos = this.getBlockPos();
-        if (this.hasSnow(blockPos) || this.hasSnow(BlockPos.ofFloored(blockPos.getX(), this.getBoundingBox().maxY, blockPos.getZ()))){
+        BlockPos blockPos = this.blockPosition();
+        if (this.hasSnow(blockPos) || this.hasSnow(BlockPos.containing(blockPos.getX(), this.getBoundingBox().maxY, blockPos.getZ()))){
             this.setCold(this.getCold() + 0.01F * random);
             return;
         }
@@ -423,15 +428,15 @@ public abstract class ThingEntity extends HostileEntity implements GeoEntity, Ma
     }
 
     private boolean hasSnow(BlockPos blockPos){
-        if (!this.getWorld().isRaining()) {
+        if (!this.level().isRaining()) {
             return false;
-        } else if (!this.getWorld().isSkyVisible(blockPos)) {
+        } else if (!this.level().canSeeSky(blockPos)) {
             return false;
-        } else if (this.getWorld().getTopPosition(Heightmap.Type.MOTION_BLOCKING, blockPos).getY() > blockPos.getY()) {
+        } else if (this.level().getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, blockPos).getY() > blockPos.getY()) {
             return false;
         } else {
-            Biome biome = this.getWorld().getBiome(blockPos).value();
-            return biome.getPrecipitation(blockPos) == Biome.Precipitation.SNOW;
+            Biome biome = this.level().getBiome(blockPos).value();
+            return biome.getPrecipitationAt(blockPos) == Biome.Precipitation.SNOW;
         }
     }
 
@@ -459,19 +464,19 @@ public abstract class ThingEntity extends HostileEntity implements GeoEntity, Ma
     }
 
     @Override
-    public boolean isAiDisabled() {
-        return super.isAiDisabled() || this.isThingFrozen();
+    public boolean isNoAi() {
+        return super.isNoAi() || this.isThingFrozen();
     }
 
     @Override
-    protected void jump() {
+    protected void jumpFromGround() {
         if (!this.hibernating())
-            super.jump();
+            super.jumpFromGround();
     }
 
     @Override
-    public void writeCustomDataToNbt(NbtCompound nbt) {
-        super.writeCustomDataToNbt(nbt);
+    public void addAdditionalSaveData(CompoundTag nbt) {
+        super.addAdditionalSaveData(nbt);
         nbt.putBoolean("CanSpit", this.canSpit);
         nbt.putBoolean("CanHunt", this.canHunt);
         nbt.putBoolean("CanGrief", this.canGrief);
@@ -483,14 +488,14 @@ public abstract class ThingEntity extends HostileEntity implements GeoEntity, Ma
         nbt.putInt("TimeSinceLastSeenTarget", this.timeSinceLastSeenTarget);
         nbt.putFloat("Cold", this.getCold());
 
-        if (this.isAiDisabled()) {
-            nbt.putBoolean("NoAI", super.isAiDisabled());
+        if (this.isNoAi()) {
+            nbt.putBoolean("NoAI", super.isNoAi());
         }
     }
 
     @Override
-    public void readCustomDataFromNbt(NbtCompound nbt) {
-        super.readCustomDataFromNbt(nbt);
+    public void readAdditionalSaveData(CompoundTag nbt) {
+        super.readAdditionalSaveData(nbt);
         this.canSpit = nbt.getBoolean("CanSpit");
         this.canHunt = nbt.getBoolean("CanHunt");
         this.canGrief = nbt.getBoolean("CanGrief");
@@ -526,9 +531,9 @@ public abstract class ThingEntity extends HostileEntity implements GeoEntity, Ma
     public abstract Strength getFormStrength();
 
     static {
-        VICTIM_TYPE = DataTracker.registerData(ThingEntity.class, TrackedDataHandlerRegistry.INTEGER);
-        HIBERNATING = DataTracker.registerData(ThingEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-        COLD = DataTracker.registerData(ThingEntity.class, TrackedDataHandlerRegistry.FLOAT);
-        CLIMBING = DataTracker.registerData(ThingEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+        VICTIM_TYPE = SynchedEntityData.defineId(ThingEntity.class, EntityDataSerializers.INT);
+        HIBERNATING = SynchedEntityData.defineId(ThingEntity.class, EntityDataSerializers.BOOLEAN);
+        COLD = SynchedEntityData.defineId(ThingEntity.class, EntityDataSerializers.FLOAT);
+        CLIMBING = SynchedEntityData.defineId(ThingEntity.class, EntityDataSerializers.BOOLEAN);
     }
 }

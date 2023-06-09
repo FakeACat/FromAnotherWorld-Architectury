@@ -1,18 +1,18 @@
 package acats.fromanotherworld.spawning;
 
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 
 public abstract class AbstractThingEvent {
-    public final ServerWorld world;
-    public final ServerPlayerEntity player;
-    public AbstractThingEvent(ServerWorld world, ServerPlayerEntity player){
+    public final ServerLevel world;
+    public final ServerPlayer player;
+    public AbstractThingEvent(ServerLevel world, ServerPlayer player){
         this.world = world;
         this.player = player;
     }
     public void run(){
-        player.sendMessage(Text.literal(this.warning()));
+        player.sendSystemMessage(Component.literal(this.warning()));
     }
     abstract String warning();
 }

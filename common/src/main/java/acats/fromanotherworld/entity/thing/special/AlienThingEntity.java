@@ -15,39 +15,38 @@ import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.particle.BlockStateParticleEffect;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.World;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockState;
 import java.util.Objects;
 
 public class AlienThingEntity extends ThingEntity implements StalkerThing {
-    public AlienThingEntity(EntityType<? extends AlienThingEntity> entityType, World world) {
+    public AlienThingEntity(EntityType<? extends AlienThingEntity> entityType, Level world) {
         super(entityType, world, false);
-        this.experiencePoints = 25;
+        this.xpReward = 25;
     }
 
-    private static final TrackedData<Integer> FORM;
-    private static final TrackedData<Integer> SWITCH_PROGRESS;
-    private static final TrackedData<Integer> EMERGING;
-    private static final TrackedData<Integer> BURROWING;
+    private static final EntityDataAccessor<Integer> FORM;
+    private static final EntityDataAccessor<Integer> SWITCH_PROGRESS;
+    private static final EntityDataAccessor<Integer> EMERGING;
+    private static final EntityDataAccessor<Integer> BURROWING;
 
     public boolean fleeing;
     private int switchTimer;
@@ -57,46 +56,46 @@ public class AlienThingEntity extends ThingEntity implements StalkerThing {
     private static final double DEFAULT_ATTACK_DAMAGE = 7.0D;
     private static final double DEFAULT_KNOCKBACK_RESISTANCE = 0.0D;
 
-    public static DefaultAttributeContainer.Builder createAlienThingAttributes(){
-        return HostileEntity.createHostileAttributes().add(EntityAttributes.GENERIC_FOLLOW_RANGE, 32).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, DEFAULT_MOVEMENT_SPEED).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, DEFAULT_ATTACK_DAMAGE).add(EntityAttributes.GENERIC_MAX_HEALTH, 100.0D).add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, DEFAULT_KNOCKBACK_RESISTANCE);
+    public static AttributeSupplier.Builder createAlienThingAttributes(){
+        return Monster.createMonsterAttributes().add(Attributes.FOLLOW_RANGE, 32).add(Attributes.MOVEMENT_SPEED, DEFAULT_MOVEMENT_SPEED).add(Attributes.ATTACK_DAMAGE, DEFAULT_ATTACK_DAMAGE).add(Attributes.MAX_HEALTH, 100.0D).add(Attributes.KNOCKBACK_RESISTANCE, DEFAULT_KNOCKBACK_RESISTANCE);
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        this.dataTracker.startTracking(FORM, 0);
-        this.dataTracker.startTracking(SWITCH_PROGRESS, 0);
-        this.dataTracker.startTracking(EMERGING, 0);
-        this.dataTracker.startTracking(BURROWING, 0);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(FORM, 0);
+        this.entityData.define(SWITCH_PROGRESS, 0);
+        this.entityData.define(EMERGING, 0);
+        this.entityData.define(BURROWING, 0);
     }
 
     @Override
-    protected void initGoals() {
+    protected void registerGoals() {
         this.addThingTargets(true);
-        this.goalSelector.add(0, new AlienThingSwimGoal(this, 0.5F));
-        this.goalSelector.add(1, new AlienThingFleeGoal(this));
-        this.goalSelector.add(2, new ThingAttackGoal(this, 1.0D, false));
-        this.goalSelector.add(3, new StalkGoal(this));
+        this.goalSelector.addGoal(0, new AlienThingSwimGoal(this, 0.5F));
+        this.goalSelector.addGoal(1, new AlienThingFleeGoal(this));
+        this.goalSelector.addGoal(2, new ThingAttackGoal(this, 1.0D, false));
+        this.goalSelector.addGoal(3, new StalkGoal(this));
     }
 
 
     private void setAttributes(double speed, double damage, double kbResist){
-        Objects.requireNonNull(this.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED)).setBaseValue(speed);
-        Objects.requireNonNull(this.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE)).setBaseValue(damage);
-        Objects.requireNonNull(this.getAttributeInstance(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE)).setBaseValue(kbResist);
+        Objects.requireNonNull(this.getAttribute(Attributes.MOVEMENT_SPEED)).setBaseValue(speed);
+        Objects.requireNonNull(this.getAttribute(Attributes.ATTACK_DAMAGE)).setBaseValue(damage);
+        Objects.requireNonNull(this.getAttribute(Attributes.KNOCKBACK_RESISTANCE)).setBaseValue(kbResist);
     }
     private void setForm(int form){
-        this.dataTracker.set(FORM, form);
+        this.entityData.set(FORM, form);
     }
     public int getForm(){
-        return this.dataTracker.get(FORM);
+        return this.entityData.get(FORM);
     }
 
     private void setSwitchProgress(int switchProgress){
-        this.dataTracker.set(SWITCH_PROGRESS, switchProgress);
+        this.entityData.set(SWITCH_PROGRESS, switchProgress);
     }
     public int getSwitchProgress(){
-        return this.dataTracker.get(SWITCH_PROGRESS);
+        return this.entityData.get(SWITCH_PROGRESS);
     }
     public float getSwitchProgress2(){
         return 1.0F - (1.0F - this.getSwitchProgress() / 50.0F) * (1.0F - this.getSwitchProgress() / 50.0F);
@@ -105,31 +104,31 @@ public class AlienThingEntity extends ThingEntity implements StalkerThing {
     private static final int EMERGE_TIME_TICKS = 50;
     private static final float ANIMATION_SPEED_MULTIPLIER = 2.0F;
     private boolean isEmerging(){
-        return this.dataTracker.get(EMERGING) > 0;
+        return this.entityData.get(EMERGING) > 0;
     }
     public void tickEmerging(){
-        int emerging = this.dataTracker.get(EMERGING);
+        int emerging = this.entityData.get(EMERGING);
         if (emerging > EMERGE_TIME_TICKS)
             emerging = -1;
-        this.dataTracker.set(EMERGING, emerging + 1);
+        this.entityData.set(EMERGING, emerging + 1);
     }
     private boolean isBurrowing(){
-        return this.dataTracker.get(BURROWING) > 0;
+        return this.entityData.get(BURROWING) > 0;
     }
     private void tickBurrowing(){
-        int burrowing = this.dataTracker.get(BURROWING);
+        int burrowing = this.entityData.get(BURROWING);
         if (burrowing > EMERGE_TIME_TICKS) {
             this.leave();
             return;
         }
-        this.dataTracker.set(BURROWING, burrowing + 1);
+        this.entityData.set(BURROWING, burrowing + 1);
     }
 
     private void leave(){
-        if (!this.getWorld().isClient()){
-            SpawningManager spawningManager = SpawningManager.getSpawningManager((ServerWorld) this.getWorld());
+        if (!this.level().isClientSide()){
+            SpawningManager spawningManager = SpawningManager.getSpawningManager((ServerLevel) this.level());
             spawningManager.alienThingsToSpawn++;
-            spawningManager.markDirty();
+            spawningManager.setDirty();
             this.discard();
         }
     }
@@ -139,8 +138,8 @@ public class AlienThingEntity extends ThingEntity implements StalkerThing {
     }
 
     @Override
-    public boolean isAiDisabled() {
-        return super.isAiDisabled() || this.burrowingOrEmerging();
+    public boolean isNoAi() {
+        return super.isNoAi() || this.burrowingOrEmerging();
     }
 
     @Override
@@ -159,11 +158,11 @@ public class AlienThingEntity extends ThingEntity implements StalkerThing {
     }
 
     @Override
-    protected void mobTick() {
-        if (!this.getWorld().isClient()){
+    protected void customServerAiStep() {
+        if (!this.level().isClientSide()){
             if (!this.isThingFrozen()){
-                PlayerEntity player = this.getWorld().getClosestPlayer(this, -1.0F);
-                if (player == null || player.squaredDistanceTo(this) > 16384){
+                Player player = this.level().getNearestPlayer(this, -1.0F);
+                if (player == null || player.distanceToSqr(this) > 16384){
                     this.leave();
                     return;
                 }
@@ -173,22 +172,22 @@ public class AlienThingEntity extends ThingEntity implements StalkerThing {
                     if (this.getRandom().nextBoolean())
                         this.initiateSwitch();
                 }
-                if (this.age % 20 == 0){
+                if (this.tickCount % 20 == 0){
                     if (this.fleeing || this.bored)
                         this.escape();
-                    if (this.age % 60 == 0 &&
+                    if (this.tickCount % 60 == 0 &&
                             this.getTarget() != null &&
                             this.getForm() == 1 &&
-                            this.getWorld().getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING) &&
+                            this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) &&
                             this.getTarget().getY() > this.getY() + 1 &&
-                            this.getNavigation().isIdle()){
-                        int x = MathHelper.floor(this.getX());
-                        int y = MathHelper.floor(this.getY());
-                        int z = MathHelper.floor(this.getZ());
+                            this.getNavigation().isDone()){
+                        int x = Mth.floor(this.getX());
+                        int y = Mth.floor(this.getY());
+                        int z = Mth.floor(this.getZ());
                         if (this.breakOrPlaceable(new BlockPos(x, y, z)) && this.breakOrPlaceable(new BlockPos(x, y + 2, z))){
-                            this.setPos(x + 0.5D, y + 1, z + 0.5D);
-                            this.getWorld().breakBlock(new BlockPos(x, y + 2, z), false, this);
-                            this.getWorld().setBlockState(new BlockPos(x, y, z), Blocks.COBBLESTONE.getDefaultState());
+                            this.setPosRaw(x + 0.5D, y + 1, z + 0.5D);
+                            this.level().destroyBlock(new BlockPos(x, y + 2, z), false, this);
+                            this.level().setBlockAndUpdate(new BlockPos(x, y, z), Blocks.COBBLESTONE.defaultBlockState());
                         }
                     }
                 }
@@ -197,7 +196,7 @@ public class AlienThingEntity extends ThingEntity implements StalkerThing {
             if (this.getSwitchProgress() > 0)
                 this.tickSwitch();
         }
-        super.mobTick();
+        super.customServerAiStep();
     }
 
     @Override
@@ -206,8 +205,8 @@ public class AlienThingEntity extends ThingEntity implements StalkerThing {
     }
 
     @Override
-    public boolean isClimbing() {
-        return super.isClimbing() && !this.fleeing;
+    public boolean onClimbable() {
+        return super.onClimbable() && !this.fleeing;
     }
 
     @Override
@@ -217,29 +216,29 @@ public class AlienThingEntity extends ThingEntity implements StalkerThing {
     }
 
     private boolean breakOrPlaceable(BlockPos pos){
-        return EntityUtilities.canThingDestroy(this.getWorld().getBlockState(pos)) || this.getWorld().getBlockState(pos).isAir();
+        return EntityUtilities.canThingDestroy(this.level().getBlockState(pos)) || this.level().getBlockState(pos).isAir();
     }
 
     @Override
-    public void tickMovement() {
+    public void aiStep() {
         if (this.getSwitchProgress() > 0){
             for (int i = 0; i < 20.0F * this.getSwitchProgress2(); i++){
-                this.getWorld().addParticle(ParticleRegistry.THING_GORE, this.getParticleX(0.6D), this.getRandomBodyY(), this.getParticleZ(0.6D), 0, 0, 0);
+                this.level().addParticle(ParticleRegistry.THING_GORE, this.getRandomX(0.6D), this.getRandomY(), this.getRandomZ(0.6D), 0, 0, 0);
             }
         }
         if (this.burrowingOrEmerging()){
-            Random random = this.getRandom();
-            BlockState blockState = this.getSteppingBlockState();
-            if (blockState.getRenderType() != BlockRenderType.INVISIBLE) {
+            RandomSource random = this.getRandom();
+            BlockState blockState = this.getBlockStateOn();
+            if (blockState.getRenderShape() != RenderShape.INVISIBLE) {
                 for(int i = 0; i < 30; ++i) {
-                    double d = this.getX() + (double)MathHelper.nextBetween(random, -0.7F, 0.7F);
+                    double d = this.getX() + (double)Mth.randomBetween(random, -0.7F, 0.7F);
                     double e = this.getY();
-                    double f = this.getZ() + (double)MathHelper.nextBetween(random, -0.7F, 0.7F);
-                    this.getWorld().addParticle(new BlockStateParticleEffect(ParticleTypes.BLOCK, blockState), d, e, f, 0.0, 0.0, 0.0);
+                    double f = this.getZ() + (double)Mth.randomBetween(random, -0.7F, 0.7F);
+                    this.level().addParticle(new BlockParticleOption(ParticleTypes.BLOCK, blockState), d, e, f, 0.0, 0.0, 0.0);
                 }
             }
         }
-        super.tickMovement();
+        super.aiStep();
     }
 
     private void initiateSwitch(){
@@ -278,20 +277,20 @@ public class AlienThingEntity extends ThingEntity implements StalkerThing {
         this.canShootNeedles = form == 2 && this.getRandom().nextBoolean();
     }
 
-    private PlayerEntity stalkTarget;
+    private Player stalkTarget;
 
     @Override
-    public PlayerEntity getStalkTarget() {
+    public Player getStalkTarget() {
         return this.stalkTarget;
     }
 
     @Override
-    public void setStalkTarget(PlayerEntity stalkTarget) {
+    public void setStalkTarget(Player stalkTarget) {
         this.stalkTarget = stalkTarget;
     }
 
     public void escape(){
-        if (this.isOnGround() && !this.isThingFrozen() && !this.isBurrowing())
+        if (this.onGround() && !this.isThingFrozen() && !this.isBurrowing())
             this.tickBurrowing();
     }
 
@@ -308,7 +307,7 @@ public class AlienThingEntity extends ThingEntity implements StalkerThing {
     }
 
     @Override
-    protected int computeFallDamage(float fallDistance, float damageMultiplier) {
+    protected int calculateFallDamage(float fallDistance, float damageMultiplier) {
         return 0;
     }
 
@@ -329,7 +328,7 @@ public class AlienThingEntity extends ThingEntity implements StalkerThing {
                 return PlayState.CONTINUE;
             }
             event.getController().setAnimationSpeed(this.getForm() == 2 && event.isMoving() ? 2.0D : 1.0D);
-            if (this.isSubmergedInWater()){
+            if (this.isUnderWater()){
                 event.getController().setAnimation(RawAnimation.begin().thenPlay(this.currentAnimation() + ".swim"));
             }
             else{
@@ -353,8 +352,8 @@ public class AlienThingEntity extends ThingEntity implements StalkerThing {
     }
 
     private <E extends GeoEntity> PlayState ttfawPredicate(AnimationState<E> event){
-        if (this.getForm() == 1 && !this.isThingFrozen() && event.isMoving() && !this.isSubmergedInWater()){
-            if (this.isAttacking()){
+        if (this.getForm() == 1 && !this.isThingFrozen() && event.isMoving() && !this.isUnderWater()){
+            if (this.isAggressive()){
                 event.getController().setAnimation(RawAnimation.begin().thenPlay("animation.alien_thing_1951.arms_chase"));
             }
             else{
@@ -383,26 +382,26 @@ public class AlienThingEntity extends ThingEntity implements StalkerThing {
     }
 
     @Override
-    public void writeCustomDataToNbt(NbtCompound nbt) {
-        super.writeCustomDataToNbt(nbt);
+    public void addAdditionalSaveData(CompoundTag nbt) {
+        super.addAdditionalSaveData(nbt);
         nbt.putBoolean("Fleeing", this.fleeing);
         nbt.putInt("SwitchTimer", this.switchTimer);
         nbt.putInt("Form", this.getForm());
         nbt.putInt("SwitchProgress", this.getSwitchProgress());
-        nbt.putInt("Emerging", this.dataTracker.get(EMERGING));
-        nbt.putInt("Burrowing", this.dataTracker.get(BURROWING));
+        nbt.putInt("Emerging", this.entityData.get(EMERGING));
+        nbt.putInt("Burrowing", this.entityData.get(BURROWING));
         nbt.putBoolean("Bored", this.bored);
     }
 
     @Override
-    public void readCustomDataFromNbt(NbtCompound nbt) {
-        super.readCustomDataFromNbt(nbt);
+    public void readAdditionalSaveData(CompoundTag nbt) {
+        super.readAdditionalSaveData(nbt);
         this.fleeing = nbt.getBoolean("Fleeing");
         this.switchTimer = nbt.getInt("SwitchTimer");
         this.setForm(nbt.getInt("Form"));
         this.setSwitchProgress(nbt.getInt("SwitchProgress"));
-        this.dataTracker.set(EMERGING, nbt.getInt("Emerging"));
-        this.dataTracker.set(BURROWING, nbt.getInt("Burrowing"));
+        this.entityData.set(EMERGING, nbt.getInt("Emerging"));
+        this.entityData.set(BURROWING, nbt.getInt("Burrowing"));
         this.bored = nbt.getBoolean("Bored");
     }
 
@@ -412,9 +411,9 @@ public class AlienThingEntity extends ThingEntity implements StalkerThing {
     }
 
     static {
-        FORM = DataTracker.registerData(AlienThingEntity.class, TrackedDataHandlerRegistry.INTEGER);
-        SWITCH_PROGRESS = DataTracker.registerData(AlienThingEntity.class, TrackedDataHandlerRegistry.INTEGER);
-        EMERGING = DataTracker.registerData(AlienThingEntity.class, TrackedDataHandlerRegistry.INTEGER);
-        BURROWING = DataTracker.registerData(AlienThingEntity.class, TrackedDataHandlerRegistry.INTEGER);
+        FORM = SynchedEntityData.defineId(AlienThingEntity.class, EntityDataSerializers.INT);
+        SWITCH_PROGRESS = SynchedEntityData.defineId(AlienThingEntity.class, EntityDataSerializers.INT);
+        EMERGING = SynchedEntityData.defineId(AlienThingEntity.class, EntityDataSerializers.INT);
+        BURROWING = SynchedEntityData.defineId(AlienThingEntity.class, EntityDataSerializers.INT);
     }
 }

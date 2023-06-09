@@ -2,22 +2,22 @@ package acats.fromanotherworld.entity.render.misc;
 
 import acats.fromanotherworld.entity.misc.StarshipEntity;
 import acats.fromanotherworld.entity.model.misc.StarshipEntityModel;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
 import mod.azure.azurelib.renderer.GeoEntityRenderer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.RotationAxis;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 
 public class StarshipEntityRenderer extends GeoEntityRenderer<StarshipEntity> {
-    public StarshipEntityRenderer(EntityRendererFactory.Context renderManager) {
+    public StarshipEntityRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new StarshipEntityModel());
     }
 
     @Override
-    public void preRender(MatrixStack poseStack, StarshipEntity animatable, BakedGeoModel model, VertexConsumerProvider bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        poseStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(animatable.isOnGround() ? 15.0F : 90.0F));
+    public void preRender(PoseStack poseStack, StarshipEntity animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        poseStack.mulPose(Axis.XP.rotationDegrees(animatable.onGround() ? 15.0F : 90.0F));
         float scale = 1.5F;
         poseStack.scale(scale, scale, scale);
         super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);

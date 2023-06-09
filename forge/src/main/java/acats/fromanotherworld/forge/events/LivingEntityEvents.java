@@ -2,8 +2,8 @@ package acats.fromanotherworld.forge.events;
 
 import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.events.CommonLivingEntityEvents;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -15,9 +15,9 @@ import net.minecraftforge.fml.common.Mod;
 public class LivingEntityEvents {
     @SubscribeEvent
     public static void livingDeath(LivingDeathEvent event){
-        if (!event.getEntity().getWorld().isClient()){
+        if (!event.getEntity().level().isClientSide()){
             CommonLivingEntityEvents.serverEntityDeath(event.getEntity(), event.getSource());
-            if (event.getEntity() instanceof PlayerEntity player)
+            if (event.getEntity() instanceof Player player)
                 CommonLivingEntityEvents.serverPlayerEntityDeath(player, event.getSource());
         }
     }

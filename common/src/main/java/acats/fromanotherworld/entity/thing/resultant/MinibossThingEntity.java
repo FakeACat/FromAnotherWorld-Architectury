@@ -1,31 +1,36 @@
 package acats.fromanotherworld.entity.thing.resultant;
 
 import acats.fromanotherworld.config.General;
-import net.minecraft.entity.*;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.world.LocalDifficulty;
-import net.minecraft.world.ServerWorldAccess;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
 public abstract class MinibossThingEntity extends AbsorberThingEntity {
-    private static final TrackedData<Integer> TIER;
+    private static final EntityDataAccessor<Integer> TIER;
 
-    public MinibossThingEntity(EntityType<? extends AbsorberThingEntity> entityType, World world) {
+    public MinibossThingEntity(EntityType<? extends AbsorberThingEntity> entityType, Level world) {
         super(entityType, world, true);
-        this.reinitDimensions();
+        this.fixupDimensions();
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        this.dataTracker.startTracking(TIER, 0);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(TIER, 0);
     }
 
     abstract double getStartingHealth();
@@ -36,63 +41,63 @@ public abstract class MinibossThingEntity extends AbsorberThingEntity {
     abstract double getScalingDamage();
 
     public void setTier(int tier, boolean heal){
-        this.dataTracker.set(TIER, tier);
-        this.refreshPosition();
-        this.calculateDimensions();
-        Objects.requireNonNull(this.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH)).setBaseValue(this.getStartingHealth() + this.getScalingHealth() * tier);
-        Objects.requireNonNull(this.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED)).setBaseValue(this.getStartingSpeed() + this.getScalingSpeed() * tier);
-        Objects.requireNonNull(this.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE)).setBaseValue(this.getStartingDamage() + this.getScalingDamage() * tier);
+        this.entityData.set(TIER, tier);
+        this.reapplyPosition();
+        this.refreshDimensions();
+        Objects.requireNonNull(this.getAttribute(Attributes.MAX_HEALTH)).setBaseValue(this.getStartingHealth() + this.getScalingHealth() * tier);
+        Objects.requireNonNull(this.getAttribute(Attributes.MOVEMENT_SPEED)).setBaseValue(this.getStartingSpeed() + this.getScalingSpeed() * tier);
+        Objects.requireNonNull(this.getAttribute(Attributes.ATTACK_DAMAGE)).setBaseValue(this.getStartingDamage() + this.getScalingDamage() * tier);
 
         if (heal){
             this.setHealth(this.getMaxHealth());
         }
 
-        this.experiencePoints = tier * STRONGER_MONSTER_XP;
+        this.xpReward = tier * XP_REWARD_HUGE;
     }
 
     public int getTier() {
-        return this.dataTracker.get(TIER);
+        return this.entityData.get(TIER);
     }
 
     @Override
-    public void writeCustomDataToNbt(NbtCompound nbt) {
-        super.writeCustomDataToNbt(nbt);
+    public void addAdditionalSaveData(CompoundTag nbt) {
+        super.addAdditionalSaveData(nbt);
         nbt.putInt("Tier", this.getTier());
     }
 
     @Override
-    public void readCustomDataFromNbt(NbtCompound nbt) {
+    public void readAdditionalSaveData(CompoundTag nbt) {
         this.setTier(nbt.getInt("Tier"), false);
-        super.readCustomDataFromNbt(nbt);
+        super.readAdditionalSaveData(nbt);
     }
 
     @Override
-    public void calculateDimensions() {
+    public void refreshDimensions() {
         double d = this.getX();
         double e = this.getY();
         double f = this.getZ();
-        super.calculateDimensions();
-        this.setPosition(d, e, f);
+        super.refreshDimensions();
+        this.setPos(d, e, f);
     }
 
     @Override
-    public void onTrackedDataSet(TrackedData<?> data) {
+    public void onSyncedDataUpdated(EntityDataAccessor<?> data) {
         if (TIER.equals(data)) {
-            this.calculateDimensions();
+            this.refreshDimensions();
         }
 
-        super.onTrackedDataSet(data);
+        super.onSyncedDataUpdated(data);
     }
 
-    public EntityDimensions getDimensions(EntityPose pose) {
-        return super.getDimensions(pose).scaled(1.0F + 0.25F * (float)this.getTier());
+    public EntityDimensions getDimensions(Pose pose) {
+        return super.getDimensions(pose).scale(1.0F + 0.25F * (float)this.getTier());
     }
 
     @Nullable
     @Override
-    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType spawnReason, @Nullable SpawnGroupData entityData, @Nullable CompoundTag entityNbt) {
         this.setTier(this.getTier(), true);
-        return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
+        return super.finalizeSpawn(world, difficulty, spawnReason, entityData, entityNbt);
     }
 
     @Override
@@ -111,6 +116,6 @@ public abstract class MinibossThingEntity extends AbsorberThingEntity {
     }
 
     static {
-        TIER = DataTracker.registerData(MinibossThingEntity.class, TrackedDataHandlerRegistry.INTEGER);
+        TIER = SynchedEntityData.defineId(MinibossThingEntity.class, EntityDataSerializers.INT);
     }
 }

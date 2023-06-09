@@ -30,7 +30,7 @@ public final class FAWAnimations {
     }
 
     private static <E extends ThingEntity> void movement(AnimationState<E> event, E thing){
-        if (thing.isAttacking()){
+        if (thing.isAggressive()){
             event.getController().setAnimation(CHASE);
         }
         else{

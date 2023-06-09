@@ -9,10 +9,11 @@ import acats.fromanotherworld.entity.render.thing.resultant.*;
 import acats.fromanotherworld.entity.render.thing.revealed.ChestSpitterEntityRenderer;
 import acats.fromanotherworld.entity.render.thing.special.AlienThingEntityRenderer;
 import acats.fromanotherworld.registry.EntityRegistry;
-import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
-import net.minecraft.client.render.entity.model.EntityModelLayer;
-import net.minecraft.entity.EntityType;
-import net.minecraft.util.Identifier;
+import acats.fromanotherworld.registry.EntityRegistry.FAWEntity;
+import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.renderer.entity.ThrownItemRenderer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
@@ -35,7 +36,7 @@ public class EntityRegistryForge {
     public static void clientRegister(EntityRenderersEvent.RegisterRenderers event){
         event.registerEntityRenderer(CRAWLER.get(), CrawlerEntityRenderer::new);
         event.registerEntityRenderer(CHEST_SPITTER.get(), ChestSpitterEntityRenderer::new);
-        event.registerEntityRenderer(ASSIMILATION_LIQUID.get(), FlyingItemEntityRenderer::new);
+        event.registerEntityRenderer(ASSIMILATION_LIQUID.get(), ThrownItemRenderer::new);
         event.registerEntityRenderer(JULIETTE_THING.get(), JulietteThingEntityRenderer::new);
         event.registerEntityRenderer(DOGBEAST.get(), DogBeastEntityRenderer::new);
         event.registerEntityRenderer(BLOOD_CRAWLER.get(), BloodCrawlerEntityRenderer::new);
@@ -52,7 +53,7 @@ public class EntityRegistryForge {
     }
 
     public static void clientRegisterLayers(EntityRenderersEvent.RegisterLayerDefinitions event){
-        spiderLegsModelLayer = new EntityModelLayer(new Identifier(FromAnotherWorld.MOD_ID, "spider_legs"), "main");
+        spiderLegsModelLayer = new ModelLayerLocation(new ResourceLocation(FromAnotherWorld.MOD_ID, "spider_legs"), "main");
         event.registerLayerDefinition(EntityRegistry.spiderLegsModelLayer, SpiderLegsEntityModel::getTexturedModelData);
     }
 }

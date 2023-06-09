@@ -1,9 +1,9 @@
 package acats.fromanotherworld.entity.goal;
 
 import acats.fromanotherworld.entity.thing.ThingEntity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.Goal;
 import acats.fromanotherworld.entity.interfaces.BurstAttackThing;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.Goal;
 
 public class ThingProjectileBurstGoal extends Goal {
     private final BurstAttackThing thing;
@@ -18,9 +18,9 @@ public class ThingProjectileBurstGoal extends Goal {
         this.chargeUpTime = chargeUpTime;
     }
     @Override
-    public boolean canStart() {
+    public boolean canUse() {
         LivingEntity livingEntity = this.mob.getTarget();
-        return livingEntity != null && livingEntity.isAlive() && this.thing.canShootBurst() && this.mob.squaredDistanceTo(livingEntity) < this.range * this.range;
+        return livingEntity != null && livingEntity.isAlive() && this.thing.canShootBurst() && this.mob.distanceToSqr(livingEntity) < this.range * this.range;
     }
 
     @Override

@@ -2,51 +2,50 @@ package acats.fromanotherworld.item;
 
 import acats.fromanotherworld.spawning.SpawningManager;
 import acats.fromanotherworld.utilities.EntityUtilities;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypeFilter;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.math.Box;
-import net.minecraft.world.World;
-
 import java.util.List;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.entity.EntityTypeTest;
+import net.minecraft.world.phys.AABB;
 
 public class ImpostorDetectorItem extends Item {
-    public ImpostorDetectorItem(Settings settings) {
+    public ImpostorDetectorItem(Properties settings) {
         super(settings);
     }
 
     @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        boolean count = user.isSneaking();
+    public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
+        boolean count = user.isShiftKeyDown();
 
         if (count){
-            if (!world.isClient()){
-                List<? extends LivingEntity> allEntities = ((ServerWorld) world).getEntitiesByType(TypeFilter.instanceOf(LivingEntity.class), EntityPredicates.EXCEPT_SPECTATOR);
+            if (!world.isClientSide()){
+                List<? extends LivingEntity> allEntities = ((ServerLevel) world).getEntities(EntityTypeTest.forClass(LivingEntity.class), EntitySelector.NO_SPECTATORS);
                 int things = EntityUtilities.numThingsInList(allEntities);
-                SpawningManager spawningManager = SpawningManager.getSpawningManager((ServerWorld) world);
-                user.sendMessage(Text.literal(things + " Things"));
-                user.sendMessage(Text.literal(spawningManager.alienThingsToSpawn + " Alien Things waiting to spawn"));
+                SpawningManager spawningManager = SpawningManager.getSpawningManager((ServerLevel) world);
+                user.sendSystemMessage(Component.literal(things + " Things"));
+                user.sendSystemMessage(Component.literal(spawningManager.alienThingsToSpawn + " Alien Things waiting to spawn"));
             }
         }
         else{
             int entityCheckDist = 512;
-            List<LivingEntity> nearbyEntities = world.getNonSpectatingEntities(LivingEntity.class, new Box(user.getX() - entityCheckDist, user.getY() - entityCheckDist, user.getZ() - entityCheckDist, user.getX() + entityCheckDist, user.getY() + entityCheckDist, user.getZ() + entityCheckDist));
+            List<LivingEntity> nearbyEntities = world.getEntitiesOfClass(LivingEntity.class, new AABB(user.getX() - entityCheckDist, user.getY() - entityCheckDist, user.getZ() - entityCheckDist, user.getX() + entityCheckDist, user.getY() + entityCheckDist, user.getZ() + entityCheckDist));
             for (LivingEntity e:
                     nearbyEntities) {
                 if (EntityUtilities.isThing(e)){
-                    e.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 20, 0, false, false));
+                    e.addEffect(new MobEffectInstance(MobEffects.GLOWING, 20, 0, false, false));
                 }
             }
         }
-        return TypedActionResult.success(user.getStackInHand(hand), world.isClient());
+        return InteractionResultHolder.sidedSuccess(user.getItemInHand(hand), world.isClientSide());
     }
 }

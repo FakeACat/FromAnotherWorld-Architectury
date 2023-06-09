@@ -1,30 +1,29 @@
 package acats.fromanotherworld.registry;
 
 import acats.fromanotherworld.statuseffects.SlowAssimilationStatusEffect;
-import net.minecraft.entity.effect.StatusEffect;
-
 import java.util.HashMap;
 import java.util.function.Supplier;
+import net.minecraft.world.effect.MobEffect;
 
 public class StatusEffectRegistry {
     public static class FAWEffect{
-        public FAWEffect(Supplier<StatusEffect> statusEffectSupplier){
+        public FAWEffect(Supplier<MobEffect> statusEffectSupplier){
             this.statusEffectSupplier = statusEffectSupplier;
         }
-        private final Supplier<StatusEffect> statusEffectSupplier;
-        private StatusEffect statusEffect;
-        public StatusEffect build(){
+        private final Supplier<MobEffect> statusEffectSupplier;
+        private MobEffect statusEffect;
+        public MobEffect build(){
             this.statusEffect = statusEffectSupplier.get();
             return statusEffect;
         }
-        public StatusEffect get(){
+        public MobEffect get(){
             return statusEffect;
         }
     }
     public static final HashMap<String, FAWEffect> STATUS_EFFECT_REGISTRY = new HashMap<>();
     public static final FAWEffect SLOW_ASSIMILATION = registerEffect("slow_assimilation", SlowAssimilationStatusEffect::new);
 
-    private static FAWEffect registerEffect(String id, Supplier<StatusEffect> statusEffectSupplier){
+    private static FAWEffect registerEffect(String id, Supplier<MobEffect> statusEffectSupplier){
         FAWEffect fawEffect = new FAWEffect(statusEffectSupplier);
         STATUS_EFFECT_REGISTRY.put(id, fawEffect);
         return fawEffect;

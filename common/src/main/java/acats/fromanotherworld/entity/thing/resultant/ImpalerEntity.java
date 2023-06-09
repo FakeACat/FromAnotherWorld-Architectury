@@ -8,54 +8,54 @@ import acats.fromanotherworld.entity.goal.ThingProjectileBurstGoal;
 import acats.fromanotherworld.entity.projectile.NeedleEntity;
 import acats.fromanotherworld.registry.EntityRegistry;
 import mod.azure.azurelib.core.animation.AnimatableManager;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.WanderAroundFarGoal;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 public class ImpalerEntity extends AbsorberThingEntity implements BurstAttackThing {
 
-    private static final TrackedData<Boolean> BACK_NEEDLES;
+    private static final EntityDataAccessor<Boolean> BACK_NEEDLES;
     private int backNeedlesRegrow = 0;
-    private static final TrackedData<Boolean> MOUTH_NEEDLES;
+    private static final EntityDataAccessor<Boolean> MOUTH_NEEDLES;
     private int mouthNeedlesRegrow = 0;
 
-    public ImpalerEntity(EntityType<? extends ImpalerEntity> entityType, World world) {
+    public ImpalerEntity(EntityType<? extends ImpalerEntity> entityType, Level world) {
         super(entityType, world);
     }
 
     public void setBackNeedles(boolean b){
-        this.dataTracker.set(BACK_NEEDLES, b);
+        this.entityData.set(BACK_NEEDLES, b);
     }
 
     public boolean hasBackNeedles() {
-        return this.dataTracker.get(BACK_NEEDLES);
+        return this.entityData.get(BACK_NEEDLES);
     }
 
     public void setMouthNeedles(boolean b){
-        this.dataTracker.set(MOUTH_NEEDLES, b);
+        this.entityData.set(MOUTH_NEEDLES, b);
     }
 
     public boolean hasMouthNeedles() {
-        return this.dataTracker.get(MOUTH_NEEDLES);
+        return this.entityData.get(MOUTH_NEEDLES);
     }
 
     @Override
-    protected void initGoals() {
+    protected void registerGoals() {
         this.addThingTargets(false);
-        this.goalSelector.add(0, new ThingProjectileBurstGoal(this, 16.0F, 30));
-        this.goalSelector.add(1, new AbsorbGoal(this, STANDARD));
-        this.goalSelector.add(2, new ThingAttackGoal(this, 1.0D, false));
-        this.goalSelector.add(3, new WanderAroundFarGoal(this, 1.0D));
+        this.goalSelector.addGoal(0, new ThingProjectileBurstGoal(this, 16.0F, 30));
+        this.goalSelector.addGoal(1, new AbsorbGoal(this, STANDARD));
+        this.goalSelector.addGoal(2, new ThingAttackGoal(this, 1.0D, false));
+        this.goalSelector.addGoal(3, new WaterAvoidingRandomStrollGoal(this, 1.0D));
     }
 
     @Override
@@ -68,31 +68,31 @@ public class ImpalerEntity extends AbsorberThingEntity implements BurstAttackThi
         return -0.5F;
     }
 
-    public static DefaultAttributeContainer.Builder createImpalerAttributes(){
-        return HostileEntity.createHostileAttributes()
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.2D)
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 12.0D)
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 60.0D)
-                .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 1.0D);
+    public static AttributeSupplier.Builder createImpalerAttributes(){
+        return Monster.createMonsterAttributes()
+                .add(Attributes.MOVEMENT_SPEED, 0.2D)
+                .add(Attributes.ATTACK_DAMAGE, 12.0D)
+                .add(Attributes.MAX_HEALTH, 60.0D)
+                .add(Attributes.KNOCKBACK_RESISTANCE, 1.0D);
     }
 
     @Override
-    protected void applyDamage(DamageSource source, float amount) {
+    protected void actuallyHurt(DamageSource source, float amount) {
         if (this.hasBackNeedles()){
             for (int i = 0; i < 8; i++){
-                NeedleEntity needleEntity = new NeedleEntity(this.getWorld(), this.getX(), this.getY() + 0.8F, this.getZ(), this);
-                needleEntity.setVelocity(new Vec3d(random.nextDouble() - 0.5D, random.nextDouble(), random.nextDouble() - 0.5D).multiply(0.75D));
-                this.getWorld().spawnEntity(needleEntity);
+                NeedleEntity needleEntity = new NeedleEntity(this.level(), this.getX(), this.getY() + 0.8F, this.getZ(), this);
+                needleEntity.setDeltaMovement(new Vec3(random.nextDouble() - 0.5D, random.nextDouble(), random.nextDouble() - 0.5D).scale(0.75D));
+                this.level().addFreshEntity(needleEntity);
             }
             this.setBackNeedles(false);
         }
-        super.applyDamage(source, amount);
+        super.actuallyHurt(source, amount);
     }
 
     @Override
     public void tick() {
         super.tick();
-        if (!this.getWorld().isClient()){
+        if (!this.level().isClientSide()){
             if (!this.hasBackNeedles() && ++this.backNeedlesRegrow > 1200){
                 this.setBackNeedles(true);
                 this.backNeedlesRegrow = 0;
@@ -110,15 +110,15 @@ public class ImpalerEntity extends AbsorberThingEntity implements BurstAttackThi
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        this.dataTracker.startTracking(BACK_NEEDLES, true);
-        this.dataTracker.startTracking(MOUTH_NEEDLES, true);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(BACK_NEEDLES, true);
+        this.entityData.define(MOUTH_NEEDLES, true);
     }
 
     @Override
-    public void writeCustomDataToNbt(NbtCompound nbt) {
-        super.writeCustomDataToNbt(nbt);
+    public void addAdditionalSaveData(CompoundTag nbt) {
+        super.addAdditionalSaveData(nbt);
         nbt.putBoolean("BackNeedles", this.hasBackNeedles());
         nbt.putInt("BackNeedlesRegrow", this.backNeedlesRegrow);
         nbt.putBoolean("MouthNeedles", this.hasMouthNeedles());
@@ -126,8 +126,8 @@ public class ImpalerEntity extends AbsorberThingEntity implements BurstAttackThi
     }
 
     @Override
-    public void readCustomDataFromNbt(NbtCompound nbt) {
-        super.readCustomDataFromNbt(nbt);
+    public void readAdditionalSaveData(CompoundTag nbt) {
+        super.readAdditionalSaveData(nbt);
         this.setBackNeedles(nbt.getBoolean("BackNeedles"));
         this.backNeedlesRegrow = nbt.getInt("BackNeedlesRegrow");
         this.setMouthNeedles(nbt.getBoolean("MouthNeedles"));
@@ -135,18 +135,18 @@ public class ImpalerEntity extends AbsorberThingEntity implements BurstAttackThi
     }
 
     static {
-        BACK_NEEDLES = DataTracker.registerData(ImpalerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-        MOUTH_NEEDLES = DataTracker.registerData(ImpalerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+        BACK_NEEDLES = SynchedEntityData.defineId(ImpalerEntity.class, EntityDataSerializers.BOOLEAN);
+        MOUTH_NEEDLES = SynchedEntityData.defineId(ImpalerEntity.class, EntityDataSerializers.BOOLEAN);
     }
 
     @Override
     public void shootBurst(LivingEntity target) {
         this.setMouthNeedles(false);
-        if (!this.getWorld().isClient()){
+        if (!this.level().isClientSide()){
             for (int i = 0; i < 15; i++){
-                NeedleEntity needle = new NeedleEntity(this.getWorld(), this);
-                needle.setVelocity(target.getPos().add(0, target.getHeight() / 2, 0).subtract(needle.getPos()).normalize().add(new Vec3d(random.nextInt(40) - 20, random.nextInt(40) - 20, random.nextInt(40) - 20).multiply(0.01f)).multiply(3.0D));
-                this.getWorld().spawnEntity(needle);
+                NeedleEntity needle = new NeedleEntity(this.level(), this);
+                needle.setDeltaMovement(target.position().add(0, target.getBbHeight() / 2, 0).subtract(needle.position()).normalize().add(new Vec3(random.nextInt(40) - 20, random.nextInt(40) - 20, random.nextInt(40) - 20).scale(0.01f)).scale(3.0D));
+                this.level().addFreshEntity(needle);
             }
         }
     }

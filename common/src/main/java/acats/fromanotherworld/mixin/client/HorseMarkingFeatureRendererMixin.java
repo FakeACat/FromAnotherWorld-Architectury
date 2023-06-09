@@ -2,15 +2,7 @@ package acats.fromanotherworld.mixin.client;
 
 import acats.fromanotherworld.entity.interfaces.PossibleDisguisedThing;
 import acats.fromanotherworld.entity.render.feature.RevealedThingFeatureRenderer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.feature.FeatureRenderer;
-import net.minecraft.client.render.entity.feature.FeatureRendererContext;
-import net.minecraft.client.render.entity.feature.HorseMarkingFeatureRenderer;
-import net.minecraft.client.render.entity.model.HorseEntityModel;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.passive.HorseEntity;
-import net.minecraft.entity.passive.HorseMarking;
-import net.minecraft.util.Identifier;
+import com.mojang.blaze3d.vertex.PoseStack;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -19,21 +11,29 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Map;
+import net.minecraft.client.model.HorseModel;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.client.renderer.entity.layers.HorseMarkingLayer;
+import net.minecraft.client.renderer.entity.layers.RenderLayer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.animal.horse.Horse;
+import net.minecraft.world.entity.animal.horse.Markings;
 
-@Mixin(HorseMarkingFeatureRenderer.class)
-public abstract class HorseMarkingFeatureRendererMixin extends FeatureRenderer<HorseEntity, HorseEntityModel<HorseEntity>> {
-    public HorseMarkingFeatureRendererMixin(FeatureRendererContext<HorseEntity, HorseEntityModel<HorseEntity>> context) {
+@Mixin(HorseMarkingLayer.class)
+public abstract class HorseMarkingFeatureRendererMixin extends RenderLayer<Horse, HorseModel<Horse>> {
+    public HorseMarkingFeatureRendererMixin(RenderLayerParent<Horse, HorseModel<Horse>> context) {
         super(context);
     }
 
     @Final
-    @Shadow private static Map<HorseMarking, Identifier> TEXTURES;
+    @Shadow private static Map<Markings, ResourceLocation> LOCATION_BY_MARKINGS;
 
-    @Inject(at = @At("TAIL"), method = "render(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;ILnet/minecraft/entity/passive/HorseEntity;FFFFFF)V")
-    private void render(MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, HorseEntity horseEntity, float f, float g, float h, float j, float k, float l, CallbackInfo ci){
+    @Inject(at = @At("TAIL"), method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/world/entity/animal/horse/Horse;FFFFFF)V")
+    private void render(PoseStack matrixStack, MultiBufferSource vertexConsumerProvider, int i, Horse horseEntity, float f, float g, float h, float j, float k, float l, CallbackInfo ci){
         if (!horseEntity.isInvisible()){
-            Identifier identifier = TEXTURES.get(horseEntity.getMarking());
-            RevealedThingFeatureRenderer.renderFleshOverlay((PossibleDisguisedThing) horseEntity, this.getContextModel(), identifier, matrixStack, vertexConsumerProvider, i, horseEntity, f, g, h, j, k, l);
+            ResourceLocation identifier = LOCATION_BY_MARKINGS.get(horseEntity.getMarkings());
+            RevealedThingFeatureRenderer.renderFleshOverlay((PossibleDisguisedThing) horseEntity, this.getParentModel(), identifier, matrixStack, vertexConsumerProvider, i, horseEntity, f, g, h, j, k, l);
         }
     }
 }

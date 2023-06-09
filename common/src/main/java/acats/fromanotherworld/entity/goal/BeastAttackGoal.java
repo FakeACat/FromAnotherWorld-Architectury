@@ -8,16 +8,16 @@ public class BeastAttackGoal extends ThingAttackGoal {
     }
 
     @Override
-    public boolean shouldContinue() {
+    public boolean canContinueToUse() {
         if (!((BeastEntity) mob).isMelee())
             return false;
-        return super.shouldContinue();
+        return super.canContinueToUse();
     }
 
     @Override
-    public boolean canStart() {
+    public boolean canUse() {
         if (!((BeastEntity) mob).isMelee())
             return false;
-        return super.canStart();
+        return super.canUse();
     }
 }

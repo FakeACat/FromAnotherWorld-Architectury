@@ -1,24 +1,24 @@
 package acats.fromanotherworld.entity.interfaces;
 
 import acats.fromanotherworld.entity.thing.ThingEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 
 public interface StalkerThing {
 
     int HUNTING_RANGE_SQUARED = ThingEntity.HUNTING_RANGE * ThingEntity.HUNTING_RANGE;
 
-    PlayerEntity getStalkTarget();
+    Player getStalkTarget();
 
-    void setStalkTarget(PlayerEntity stalkTarget);
+    void setStalkTarget(Player stalkTarget);
 
-    default PlayerEntity findStalkTarget(){
+    default Player findStalkTarget(){
         if (this instanceof Entity entity){
 
             if (this.isAcceptableStalkTarget(this.getStalkTarget()))
                 return this.getStalkTarget();
 
-            PlayerEntity stalkTarget = entity.getWorld().getClosestPlayer(entity, ThingEntity.HUNTING_RANGE);
+            Player stalkTarget = entity.level().getNearestPlayer(entity, ThingEntity.HUNTING_RANGE);
 
             if (this.isAcceptableStalkTarget(stalkTarget)) {
                 this.setStalkTarget(stalkTarget);
@@ -29,7 +29,7 @@ public interface StalkerThing {
         return null;
     }
 
-    default boolean isAcceptableStalkTarget(PlayerEntity playerEntity){
-        return playerEntity != null && !playerEntity.isCreative() && !playerEntity.isSpectator() && playerEntity.squaredDistanceTo((Entity) this) < HUNTING_RANGE_SQUARED;
+    default boolean isAcceptableStalkTarget(Player playerEntity){
+        return playerEntity != null && !playerEntity.isCreative() && !playerEntity.isSpectator() && playerEntity.distanceToSqr((Entity) this) < HUNTING_RANGE_SQUARED;
     }
 }

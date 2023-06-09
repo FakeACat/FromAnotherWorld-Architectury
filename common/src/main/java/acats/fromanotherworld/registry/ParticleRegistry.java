@@ -1,10 +1,10 @@
 package acats.fromanotherworld.registry;
 
-import net.minecraft.particle.DefaultParticleType;
+import net.minecraft.core.particles.SimpleParticleType;
 
 public class ParticleRegistry {
 
-    public static final DefaultParticleType THING_GORE = new DefaultParticleType(false) {};
-    public static final DefaultParticleType THING_SPIT = new DefaultParticleType(false) {};
-    public static final DefaultParticleType BIG_FLAMES = new DefaultParticleType(true) {};
+    public static final SimpleParticleType THING_GORE = new SimpleParticleType(false) {};
+    public static final SimpleParticleType THING_SPIT = new SimpleParticleType(false) {};
+    public static final SimpleParticleType BIG_FLAMES = new SimpleParticleType(true) {};
 }

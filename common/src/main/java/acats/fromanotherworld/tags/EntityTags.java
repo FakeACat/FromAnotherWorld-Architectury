@@ -1,10 +1,10 @@
 package acats.fromanotherworld.tags;
 
 import acats.fromanotherworld.FromAnotherWorld;
-import net.minecraft.entity.EntityType;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.EntityType;
 
 public class EntityTags {
     public static final TagKey<EntityType<?>> HUMANOIDS = entityTag("humanoids");
@@ -23,6 +23,6 @@ public class EntityTags {
     public static final TagKey<EntityType<?>> LLAMAS = entityTag("llamas");
 
     private static TagKey<EntityType<?>> entityTag(String id){
-        return TagKey.of(RegistryKeys.ENTITY_TYPE, new Identifier(FromAnotherWorld.MOD_ID, id));
+        return TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(FromAnotherWorld.MOD_ID, id));
     }
 }

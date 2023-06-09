@@ -12,117 +12,117 @@ import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.util.AzureLibUtil;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.world.World;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
-public class StarshipEntity extends MobEntity implements GeoEntity {
+public class StarshipEntity extends Mob implements GeoEntity {
 
-    private static final TrackedData<Boolean> RELEASED_CONTENTS;
+    private static final EntityDataAccessor<Boolean> RELEASED_CONTENTS;
 
     public void setReleasedContents(boolean releasedContents){
-        this.dataTracker.set(RELEASED_CONTENTS, releasedContents);
+        this.entityData.set(RELEASED_CONTENTS, releasedContents);
     }
 
     private boolean releasedContents(){
-        return this.dataTracker.get(RELEASED_CONTENTS);
+        return this.entityData.get(RELEASED_CONTENTS);
     }
 
     @Override
-    protected void initDataTracker() {
-        this.dataTracker.startTracking(RELEASED_CONTENTS, false);
-        super.initDataTracker();
+    protected void defineSynchedData() {
+        this.entityData.define(RELEASED_CONTENTS, false);
+        super.defineSynchedData();
     }
 
     private final AnimatableInstanceCache animatableInstanceCache = AzureLibUtil.createInstanceCache(this);
 
-    public StarshipEntity(EntityType<? extends MobEntity> entityType, World world) {
+    public StarshipEntity(EntityType<? extends Mob> entityType, Level world) {
         super(entityType, world);
     }
 
     @Override
     public void tick() {
         super.tick();
-        if (this.releasedContents() || this.isRegionUnloaded()){
+        if (this.releasedContents() || this.touchingUnloadedChunk()){
             return;
         }
-        if (this.isOnGround()){
-            if (!this.getWorld().isClient()){
-                this.getWorld().createExplosion(null, this.getX(), this.getY() + 3.0D, this.getZ(), 9, World.ExplosionSourceType.TNT);
-                ThingEntity thing = EntityRegistry.ALIEN_THING.get().create(this.getWorld());
+        if (this.onGround()){
+            if (!this.level().isClientSide()){
+                this.level().explode(null, this.getX(), this.getY() + 3.0D, this.getZ(), 9, Level.ExplosionInteraction.TNT);
+                ThingEntity thing = EntityRegistry.ALIEN_THING.get().create(this.level());
                 if (thing != null) {
-                    thing.setPosition(this.getPos());
-                    this.getWorld().spawnEntity(thing);
+                    thing.setPos(this.position());
+                    this.level().addFreshEntity(thing);
                 }
                 this.setReleasedContents(true);
-                this.getWorld().playSound(null, this.getBlockPos(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 16.0F, (1.0F + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2F) * 0.7F);
+                this.level().playSound(null, this.blockPosition(), SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS, 16.0F, (1.0F + (this.level().random.nextFloat() - this.level().random.nextFloat()) * 0.2F) * 0.7F);
             }
         }
-        else if (this.getWorld().isClient()){
+        else if (this.level().isClientSide()){
             for(int i = 0; i < 5; ++i) {
-                this.getWorld().addParticle(ParticleRegistry.BIG_FLAMES, this.getX(), this.getY(), this.getZ(), (this.random.nextDouble() - 0.5D) / 5, (this.random.nextDouble() - 0.5D) / 5 + this.getVelocity().y, (this.random.nextDouble() - 0.5D) / 5);
-                this.getWorld().addParticle(ParticleTypes.CAMPFIRE_SIGNAL_SMOKE, this.getX(), this.getY(), this.getZ(), (this.random.nextDouble() - 0.5D) / 2, ((this.random.nextDouble() - 0.5D) + this.getVelocity().y) / 2, (this.random.nextDouble() - 0.5D) / 2);
+                this.level().addParticle(ParticleRegistry.BIG_FLAMES, this.getX(), this.getY(), this.getZ(), (this.random.nextDouble() - 0.5D) / 5, (this.random.nextDouble() - 0.5D) / 5 + this.getDeltaMovement().y, (this.random.nextDouble() - 0.5D) / 5);
+                this.level().addParticle(ParticleTypes.CAMPFIRE_SIGNAL_SMOKE, this.getX(), this.getY(), this.getZ(), (this.random.nextDouble() - 0.5D) / 2, ((this.random.nextDouble() - 0.5D) + this.getDeltaMovement().y) / 2, (this.random.nextDouble() - 0.5D) / 2);
             }
         }
     }
 
     @Override
-    public boolean damage(DamageSource source, float amount) {
+    public boolean hurt(DamageSource source, float amount) {
         if (!this.releasedContents())
             return false;
-        return super.damage(source, amount);
+        return super.hurt(source, amount);
     }
 
     @Override
-    public void writeCustomDataToNbt(NbtCompound nbt) {
-        super.writeCustomDataToNbt(nbt);
+    public void addAdditionalSaveData(CompoundTag nbt) {
+        super.addAdditionalSaveData(nbt);
         nbt.putBoolean("ReleasedThings", this.releasedContents());
     }
 
     @Override
-    public void readCustomDataFromNbt(NbtCompound nbt) {
-        super.readCustomDataFromNbt(nbt);
+    public void readAdditionalSaveData(CompoundTag nbt) {
+        super.readAdditionalSaveData(nbt);
         this.setReleasedContents(nbt.getBoolean("ReleasedThings"));
     }
 
-    public static DefaultAttributeContainer.Builder createStarshipAttributes(){
-        return MobEntity.createMobAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 80)
-                .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 1);
+    public static AttributeSupplier.Builder createStarshipAttributes(){
+        return Mob.createMobAttributes()
+                .add(Attributes.MAX_HEALTH, 80)
+                .add(Attributes.KNOCKBACK_RESISTANCE, 1);
     }
 
     @Override
-    protected int computeFallDamage(float fallDistance, float damageMultiplier) {
+    protected int calculateFallDamage(float fallDistance, float damageMultiplier) {
         return 0;
     }
 
     @Nullable
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.ENTITY_IRON_GOLEM_HURT;
+        return SoundEvents.IRON_GOLEM_HURT;
     }
 
     @Nullable
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.ENTITY_IRON_GOLEM_DEATH;
+        return SoundEvents.IRON_GOLEM_DEATH;
     }
 
     @Override
-    public float getSoundPitch() {
+    public float getVoicePitch() {
         return 0.5F;
     }
 
@@ -132,29 +132,29 @@ public class StarshipEntity extends MobEntity implements GeoEntity {
     }
 
     @Override
-    protected void pushAway(Entity entity) {
+    protected void doPush(Entity entity) {
     }
 
     @Override
-    public boolean cannotDespawn() {
+    public boolean requiresCustomPersistence() {
         return true;
     }
 
     @Override
-    public boolean canBreatheInWater() {
+    public boolean canBreatheUnderwater() {
         return true;
     }
 
     @Override
-    protected void drop(DamageSource source) {
+    protected void dropAllDeathLoot(DamageSource source) {
         for (int i = 0; i < 7; i++){
-            BloodCrawlerEntity bloodCrawlerEntity = EntityRegistry.BLOOD_CRAWLER.get().create(this.getWorld());
+            BloodCrawlerEntity bloodCrawlerEntity = EntityRegistry.BLOOD_CRAWLER.get().create(this.level());
             if (bloodCrawlerEntity != null) {
-                bloodCrawlerEntity.setPosition(this.getPos().add(this.getRandom().nextFloat() - 0.5F, 0, this.getRandom().nextFloat() - 0.5F));
-                this.getWorld().spawnEntity(bloodCrawlerEntity);
+                bloodCrawlerEntity.setPos(this.position().add(this.getRandom().nextFloat() - 0.5F, 0, this.getRandom().nextFloat() - 0.5F));
+                this.level().addFreshEntity(bloodCrawlerEntity);
             }
         }
-        super.drop(source);
+        super.dropAllDeathLoot(source);
     }
 
     @Override
@@ -163,7 +163,7 @@ public class StarshipEntity extends MobEntity implements GeoEntity {
     }
 
     private <E extends GeoEntity> PlayState predicate(AnimationState<E> event) {
-        if (this.isOnGround()){
+        if (this.onGround()){
             return PlayState.STOP;
         }
         event.getController().setAnimation(RawAnimation.begin().thenLoop("animation.starship.spin"));
@@ -176,6 +176,6 @@ public class StarshipEntity extends MobEntity implements GeoEntity {
     }
 
     static {
-        RELEASED_CONTENTS = DataTracker.registerData(StarshipEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+        RELEASED_CONTENTS = SynchedEntityData.defineId(StarshipEntity.class, EntityDataSerializers.BOOLEAN);
     }
 }

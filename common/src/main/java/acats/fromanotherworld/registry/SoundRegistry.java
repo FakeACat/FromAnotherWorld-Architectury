@@ -1,14 +1,11 @@
 package acats.fromanotherworld.registry;
 
 import acats.fromanotherworld.FromAnotherWorld;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.Identifier;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 
 public class SoundRegistry {
 
@@ -29,6 +26,6 @@ public class SoundRegistry {
     public static final Supplier<SoundEvent> STRONG_ALERT = register("fromanotherworld.entity.thing.strong.alert");
     private static Supplier<SoundEvent> register(String id){
         SOUND_REGISTRY.add(id);
-        return () -> SoundEvent.of(new Identifier(FromAnotherWorld.MOD_ID, id));
+        return () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(FromAnotherWorld.MOD_ID, id));
     }
 }

@@ -10,39 +10,39 @@ import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.RangedAttackMob;
-import net.minecraft.entity.ai.goal.FleeEntityGoal;
-import net.minecraft.entity.ai.goal.SwimGoal;
-import net.minecraft.entity.ai.goal.WanderAroundFarGoal;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.monster.RangedAttackMob;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 public class BeastEntity extends MinibossThingEntity implements RangedAttackMob {
 
-    private static final TrackedData<Boolean> MELEE;
+    private static final EntityDataAccessor<Boolean> MELEE;
 
-    public BeastEntity(EntityType<? extends BeastEntity> entityType, World world) {
+    public BeastEntity(EntityType<? extends BeastEntity> entityType, Level world) {
         super(entityType, world);
         this.canGrief = true;
     }
 
     @Override
-    protected void initGoals() {
+    protected void registerGoals() {
         this.addThingTargets(false);
-        this.goalSelector.add(0, new SwimGoal(this));
-        this.goalSelector.add(1, new AbsorbGoal(this, STANDARD));
-        this.goalSelector.add(2, new BeastAttackGoal(this, 1.0D, false));
-        this.goalSelector.add(3, new FleeEntityGoal<>(this, LivingEntity.class, 10.0F, 1.0, 1.2, (livingEntity) -> livingEntity.equals(this.getTarget())));
-        this.goalSelector.add(4, new ThingProjectileAttackGoal(this, 1.0, 20, 20, 16.0F));
-        this.goalSelector.add(5, new WanderAroundFarGoal(this, 1.0D));
+        this.goalSelector.addGoal(0, new FloatGoal(this));
+        this.goalSelector.addGoal(1, new AbsorbGoal(this, STANDARD));
+        this.goalSelector.addGoal(2, new BeastAttackGoal(this, 1.0D, false));
+        this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, LivingEntity.class, 10.0F, 1.0, 1.2, (livingEntity) -> livingEntity.equals(this.getTarget())));
+        this.goalSelector.addGoal(4, new ThingProjectileAttackGoal(this, 1.0, 20, 20, 16.0F));
+        this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 1.0D));
     }
 
     @Override
@@ -86,24 +86,24 @@ public class BeastEntity extends MinibossThingEntity implements RangedAttackMob 
     }
 
     @Override
-    protected void initDataTracker() {
-        this.dataTracker.startTracking(MELEE, false);
-        super.initDataTracker();
+    protected void defineSynchedData() {
+        this.entityData.define(MELEE, false);
+        super.defineSynchedData();
     }
 
     private void toggleMelee(){
-        this.dataTracker.set(MELEE, !this.isMelee());
+        this.entityData.set(MELEE, !this.isMelee());
     }
 
     public boolean isMelee(){
-        return this.dataTracker.get(MELEE);
+        return this.entityData.get(MELEE);
     }
 
     @Override
-    protected void mobTick() {
-        super.mobTick();
+    protected void customServerAiStep() {
+        super.customServerAiStep();
 
-        if (this.age % 300 == 0)
+        if (this.tickCount % 300 == 0)
             this.toggleMelee();
     }
 
@@ -144,34 +144,34 @@ public class BeastEntity extends MinibossThingEntity implements RangedAttackMob 
     }
 
     @Override
-    public void writeCustomDataToNbt(NbtCompound nbt) {
+    public void addAdditionalSaveData(CompoundTag nbt) {
         nbt.putBoolean("IsMelee", this.isMelee());
-        super.writeCustomDataToNbt(nbt);
+        super.addAdditionalSaveData(nbt);
     }
 
     @Override
-    public void readCustomDataFromNbt(NbtCompound nbt) {
+    public void readAdditionalSaveData(CompoundTag nbt) {
         if (nbt.contains("IsMelee") && nbt.getBoolean("IsMelee")){
             this.toggleMelee();
         }
-        super.readCustomDataFromNbt(nbt);
+        super.readAdditionalSaveData(nbt);
     }
 
-    public static DefaultAttributeContainer.Builder createBeastAttributes(){
-        return createHostileAttributes().add(EntityAttributes.GENERIC_FOLLOW_RANGE, 48);
+    public static AttributeSupplier.Builder createBeastAttributes(){
+        return createMonsterAttributes().add(Attributes.FOLLOW_RANGE, 48);
     }
 
     static {
-        MELEE = DataTracker.registerData(BeastEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+        MELEE = SynchedEntityData.defineId(BeastEntity.class, EntityDataSerializers.BOOLEAN);
     }
 
     @Override
-    public void attack(LivingEntity target, float pullProgress) {
+    public void performRangedAttack(LivingEntity target, float pullProgress) {
         for (int i = 0; i < 4; i++){
-            AssimilationLiquidEntity assimilationLiquid = new AssimilationLiquidEntity(this.getWorld(), this);
-            assimilationLiquid.setPos(this.getX(), this.getBodyY(0.5D), this.getZ());
-            assimilationLiquid.setVelocity(target.getPos().add(0, target.getHeight() / 2, 0).subtract(assimilationLiquid.getPos()).normalize().multiply(1.75D).add(new Vec3d(random.nextInt(40) - 20, random.nextInt(40) - 20, random.nextInt(40) - 20).multiply(0.01)));
-            this.getWorld().spawnEntity(assimilationLiquid);
+            AssimilationLiquidEntity assimilationLiquid = new AssimilationLiquidEntity(this.level(), this);
+            assimilationLiquid.setPosRaw(this.getX(), this.getY(0.5D), this.getZ());
+            assimilationLiquid.setDeltaMovement(target.position().add(0, target.getBbHeight() / 2, 0).subtract(assimilationLiquid.position()).normalize().scale(1.75D).add(new Vec3(random.nextInt(40) - 20, random.nextInt(40) - 20, random.nextInt(40) - 20).scale(0.01)));
+            this.level().addFreshEntity(assimilationLiquid);
         }
     }
 }

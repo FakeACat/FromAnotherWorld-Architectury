@@ -4,21 +4,21 @@ import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.registry.ParticleRegistry;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.minecraft.client.particle.CampfireSmokeParticle;
-import net.minecraft.client.particle.RainSplashParticle;
 import net.minecraft.client.particle.SpitParticle;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.particle.WaterDropParticle;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 
 public class ParticleRegistryFabric {
     public static void register(){
-        Registry.register(Registries.PARTICLE_TYPE, new Identifier(FromAnotherWorld.MOD_ID, "thing_gore"), ParticleRegistry.THING_GORE);
-        Registry.register(Registries.PARTICLE_TYPE, new Identifier(FromAnotherWorld.MOD_ID, "thing_spit"), ParticleRegistry.THING_SPIT);
-        Registry.register(Registries.PARTICLE_TYPE, new Identifier(FromAnotherWorld.MOD_ID, "big_flames"), ParticleRegistry.BIG_FLAMES);
+        Registry.register(BuiltInRegistries.PARTICLE_TYPE, new ResourceLocation(FromAnotherWorld.MOD_ID, "thing_gore"), ParticleRegistry.THING_GORE);
+        Registry.register(BuiltInRegistries.PARTICLE_TYPE, new ResourceLocation(FromAnotherWorld.MOD_ID, "thing_spit"), ParticleRegistry.THING_SPIT);
+        Registry.register(BuiltInRegistries.PARTICLE_TYPE, new ResourceLocation(FromAnotherWorld.MOD_ID, "big_flames"), ParticleRegistry.BIG_FLAMES);
     }
     public static void clientRegister(){
-        ParticleFactoryRegistry.getInstance().register(ParticleRegistry.THING_GORE, RainSplashParticle.Factory::new);
-        ParticleFactoryRegistry.getInstance().register(ParticleRegistry.THING_SPIT, SpitParticle.Factory::new);
-        ParticleFactoryRegistry.getInstance().register(ParticleRegistry.BIG_FLAMES, CampfireSmokeParticle.SignalSmokeFactory::new);
+        ParticleFactoryRegistry.getInstance().register(ParticleRegistry.THING_GORE, WaterDropParticle.Provider::new);
+        ParticleFactoryRegistry.getInstance().register(ParticleRegistry.THING_SPIT, SpitParticle.Provider::new);
+        ParticleFactoryRegistry.getInstance().register(ParticleRegistry.BIG_FLAMES, CampfireSmokeParticle.SignalProvider::new);
     }
 }

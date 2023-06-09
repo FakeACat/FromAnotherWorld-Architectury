@@ -1,11 +1,10 @@
 package acats.fromanotherworld.registry;
 
 import acats.fromanotherworld.block.ThingGore;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-
 import java.util.HashMap;
 import java.util.function.Supplier;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 
 public class BlockRegistry {
     public static final HashMap<String, FAWBlock> BLOCK_REGISTRY = new HashMap<>();
@@ -23,7 +22,7 @@ public class BlockRegistry {
             return this.block;
         }
     }
-    public static final FAWBlock THING_GORE = registerBlock("thing_gore", () -> new ThingGore(AbstractBlock.Settings.create().noCollision().nonOpaque().ticksRandomly()));
+    public static final FAWBlock THING_GORE = registerBlock("thing_gore", () -> new ThingGore(BlockBehaviour.Properties.of().noCollission().noOcclusion().randomTicks()));
 
     private static FAWBlock registerBlock(String id, Supplier<Block> blockSupplier){
         FAWBlock fawBlock = new FAWBlock(blockSupplier);

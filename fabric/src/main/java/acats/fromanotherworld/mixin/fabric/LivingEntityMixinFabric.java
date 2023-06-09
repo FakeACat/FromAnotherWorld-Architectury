@@ -1,8 +1,8 @@
 package acats.fromanotherworld.mixin.fabric;
 
 import acats.fromanotherworld.events.CommonLivingEntityEvents;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -15,8 +15,8 @@ public abstract class LivingEntityMixinFabric {
         return (LivingEntity) (Object) this;
     }
 
-    @Inject(at = @At("HEAD"), method = "onDeath")
-    private void onDeath(DamageSource damageSource, CallbackInfo ci){
+    @Inject(at = @At("HEAD"), method = "die")
+    private void die(DamageSource damageSource, CallbackInfo ci){
         CommonLivingEntityEvents.serverEntityDeath(this.getEntity(), damageSource);
     }
 
@@ -25,19 +25,19 @@ public abstract class LivingEntityMixinFabric {
         CommonLivingEntityEvents.tick(this.getEntity());
     }
 
-    @Inject(at = @At("HEAD"), method = "tickMovement")
-    private void tickMovement(CallbackInfo ci){
+    @Inject(at = @At("HEAD"), method = "aiStep")
+    private void aiStep(CallbackInfo ci){
         CommonLivingEntityEvents.tickMovement(this.getEntity());
     }
 
-    @Inject(at = @At("HEAD"), method = "canTarget(Lnet/minecraft/entity/LivingEntity;)Z", cancellable = true)
-    private void canTarget(LivingEntity target, CallbackInfoReturnable<Boolean> cir){
+    @Inject(at = @At("HEAD"), method = "canAttack(Lnet/minecraft/world/entity/LivingEntity;)Z", cancellable = true)
+    private void canAttack(LivingEntity target, CallbackInfoReturnable<Boolean> cir){
         if (!CommonLivingEntityEvents.canTarget(this.getEntity(), target))
             cir.setReturnValue(false);
     }
 
-    @Inject(at = @At("HEAD"), method = "damage")
-    private void damage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir){
+    @Inject(at = @At("HEAD"), method = "hurt")
+    private void hurt(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir){
         CommonLivingEntityEvents.damage(this.getEntity(), source);
     }
 }

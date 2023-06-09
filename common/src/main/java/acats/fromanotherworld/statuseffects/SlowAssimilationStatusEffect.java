@@ -1,17 +1,17 @@
 package acats.fromanotherworld.statuseffects;
 
 import acats.fromanotherworld.registry.DamageTypeRegistry;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectCategory;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.entity.LivingEntity;
 
-public class SlowAssimilationStatusEffect extends StatusEffect {
+public class SlowAssimilationStatusEffect extends MobEffect {
     public SlowAssimilationStatusEffect() {
-        super(StatusEffectCategory.HARMFUL, 0x800000);
+        super(MobEffectCategory.HARMFUL, 0x800000);
     }
 
     @Override
-    public boolean canApplyUpdateEffect(int duration, int amplifier) {
+    public boolean isDurationEffectTick(int duration, int amplifier) {
         int i = 200 / (amplifier + 1);
         if (i > 0) {
             return duration % i == 0;
@@ -21,9 +21,9 @@ public class SlowAssimilationStatusEffect extends StatusEffect {
     }
 
     @Override
-    public void applyUpdateEffect(LivingEntity entity, int amplifier) {
+    public void applyEffectTick(LivingEntity entity, int amplifier) {
         if (entity.getHealth() > 1.0F || amplifier > 8) {
-            entity.damage(DamageTypeRegistry.assimilation(entity.getWorld()), 1.0F);
+            entity.hurt(DamageTypeRegistry.assimilation(entity.level()), 1.0F);
         }
     }
 }

@@ -1,19 +1,19 @@
 package acats.fromanotherworld.spawning;
 
 import acats.fromanotherworld.entity.interfaces.PossibleDisguisedThing;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.passive.WolfEntity;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.animal.Wolf;
 
 public class DisguisedDogEvent extends AbstractThingMobEvent {
-    public DisguisedDogEvent(ServerWorld world, ServerPlayerEntity player) {
+    public DisguisedDogEvent(ServerLevel world, ServerPlayer player) {
         super(world, player);
     }
 
     @Override
     void setMobs() {
-        WolfEntity wolfEntity = EntityType.WOLF.create(world);
+        Wolf wolfEntity = EntityType.WOLF.create(world);
         if (wolfEntity != null){
             ((PossibleDisguisedThing) wolfEntity).setAssimilated(true);
             this.addToSpawns(wolfEntity);

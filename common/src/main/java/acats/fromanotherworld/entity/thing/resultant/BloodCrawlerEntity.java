@@ -10,39 +10,39 @@ import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.goal.FleeEntityGoal;
-import net.minecraft.entity.ai.goal.WanderAroundGoal;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.entity.passive.IronGolemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.entity.animal.IronGolem;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class BloodCrawlerEntity extends ThingEntity {
 
-    private static final TrackedData<Integer> VARIANT;
-    public BloodCrawlerEntity(EntityType<? extends BloodCrawlerEntity> entityType, World world) {
+    private static final EntityDataAccessor<Integer> VARIANT;
+    public BloodCrawlerEntity(EntityType<? extends BloodCrawlerEntity> entityType, Level world) {
         super(entityType, world, false);
-        this.experiencePoints = SMALL_MONSTER_XP;
+        this.xpReward = XP_REWARD_SMALL;
     }
 
     @Override
-    protected void initGoals() {
+    protected void registerGoals() {
         this.addThingTargets(false);
-        this.goalSelector.add(0, new FleeEntityGoal<>(this, PlayerEntity.class, 16.0F, 1.0, 1.2));
-        this.goalSelector.add(0, new FleeEntityGoal<>(this, IronGolemEntity.class, 16.0F, 1.0, 1.2));
-        this.goalSelector.add(1, new ThingAttackGoal(this, 1.0D, false));
-        this.goalSelector.add(2, new WanderAroundGoal(this, 1.0D, 1));
+        this.goalSelector.addGoal(0, new AvoidEntityGoal<>(this, Player.class, 16.0F, 1.0, 1.2));
+        this.goalSelector.addGoal(0, new AvoidEntityGoal<>(this, IronGolem.class, 16.0F, 1.0, 1.2));
+        this.goalSelector.addGoal(1, new ThingAttackGoal(this, 1.0D, false));
+        this.goalSelector.addGoal(2, new RandomStrollGoal(this, 1.0D, 1));
     }
 
     private <E extends GeoEntity> PlayState predicate(AnimationState<E> event) {
@@ -65,8 +65,8 @@ public class BloodCrawlerEntity extends ThingEntity {
         return -0.25F;
     }
 
-    public static DefaultAttributeContainer.Builder createBloodCrawlerAttributes(){
-        return HostileEntity.createHostileAttributes().add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.3D).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 3.0D).add(EntityAttributes.GENERIC_MAX_HEALTH, 1.0D);
+    public static AttributeSupplier.Builder createBloodCrawlerAttributes(){
+        return Monster.createMonsterAttributes().add(Attributes.MOVEMENT_SPEED, 0.3D).add(Attributes.ATTACK_DAMAGE, 3.0D).add(Attributes.MAX_HEALTH, 1.0D);
     }
 
     @Override
@@ -75,42 +75,42 @@ public class BloodCrawlerEntity extends ThingEntity {
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        this.dataTracker.startTracking(VARIANT, random.nextInt(2));
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(VARIANT, random.nextInt(2));
     }
 
     public void setVariant(int variant){
-        this.dataTracker.set(VARIANT, variant);
+        this.entityData.set(VARIANT, variant);
     }
 
     public int getVariant() {
-        return this.dataTracker.get(VARIANT);
+        return this.entityData.get(VARIANT);
     }
 
     @Override
-    public void writeCustomDataToNbt(NbtCompound nbt) {
-        super.writeCustomDataToNbt(nbt);
+    public void addAdditionalSaveData(CompoundTag nbt) {
+        super.addAdditionalSaveData(nbt);
         nbt.putInt("Variant", this.getVariant());
     }
 
     @Override
-    public void readCustomDataFromNbt(NbtCompound nbt) {
-        super.readCustomDataFromNbt(nbt);
+    public void readAdditionalSaveData(CompoundTag nbt) {
+        super.readAdditionalSaveData(nbt);
         this.setVariant(nbt.getInt("Variant"));
     }
 
     @Override
-    public void onDeath(DamageSource damageSource) {
-        BlockPos p = BlockPos.ofFloored(this.getX(), this.getY(), this.getZ());
-        if (!this.getWorld().isClient && this.getWorld().getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING) && BlockRegistry.THING_GORE.get().getDefaultState().canPlaceAt(this.getWorld(), p) && this.getWorld().getBlockState(p).isReplaceable() && this.getWorld().getBlockState(p).getFluidState().isEmpty()){
-            this.getWorld().setBlockState(p, BlockRegistry.THING_GORE.get().getDefaultState());
+    public void die(DamageSource damageSource) {
+        BlockPos p = BlockPos.containing(this.getX(), this.getY(), this.getZ());
+        if (!this.level().isClientSide && this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) && BlockRegistry.THING_GORE.get().defaultBlockState().canSurvive(this.level(), p) && this.level().getBlockState(p).canBeReplaced() && this.level().getBlockState(p).getFluidState().isEmpty()){
+            this.level().setBlockAndUpdate(p, BlockRegistry.THING_GORE.get().defaultBlockState());
         }
         super.onDeathWithoutGoreDrops(damageSource);
     }
 
     static {
-        VARIANT = DataTracker.registerData(BloodCrawlerEntity.class, TrackedDataHandlerRegistry.INTEGER);
+        VARIANT = SynchedEntityData.defineId(BloodCrawlerEntity.class, EntityDataSerializers.INT);
     }
 
     @Override

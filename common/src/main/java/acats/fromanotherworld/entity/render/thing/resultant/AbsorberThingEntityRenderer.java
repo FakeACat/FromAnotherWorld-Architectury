@@ -3,19 +3,19 @@ package acats.fromanotherworld.entity.render.thing.resultant;
 import acats.fromanotherworld.entity.render.thing.Tentacle;
 import acats.fromanotherworld.entity.render.thing.ThingEntityRenderer;
 import acats.fromanotherworld.entity.thing.resultant.AbsorberThingEntity;
+import com.mojang.blaze3d.vertex.PoseStack;
 import mod.azure.azurelib.model.GeoModel;
-import net.minecraft.client.render.Frustum;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.culling.Frustum;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 
 public class AbsorberThingEntityRenderer<T extends AbsorberThingEntity> extends ThingEntityRenderer<T> {
-    public AbsorberThingEntityRenderer(EntityRendererFactory.Context renderManager, GeoModel<T> model) {
+    public AbsorberThingEntityRenderer(EntityRendererProvider.Context renderManager, GeoModel<T> model) {
         super(renderManager, model);
     }
 
     @Override
-    public void render(T entity, float entityYaw, float partialTick, MatrixStack poseStack, VertexConsumerProvider bufferSource, int packedLight) {
+    public void render(T entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
         super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
         for (Tentacle tentacle:
              entity.absorbTentacles) {

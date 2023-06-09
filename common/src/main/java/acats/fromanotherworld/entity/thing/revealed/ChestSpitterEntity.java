@@ -9,19 +9,18 @@ import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import java.util.EnumSet;
 
 public class ChestSpitterEntity extends ThingEntity {
@@ -29,22 +28,22 @@ public class ChestSpitterEntity extends ThingEntity {
     private static final int ATTACK_TIME = 100;
     public Entity host;
 
-    public ChestSpitterEntity(EntityType<? extends ChestSpitterEntity> entityType, World world) {
+    public ChestSpitterEntity(EntityType<? extends ChestSpitterEntity> entityType, Level world) {
         super(entityType, world, false);
     }
 
     @Override
-    protected void initGoals() {
+    protected void registerGoals() {
         this.addThingTargets(false);
-        this.goalSelector.add(0, new FleeOnFireGoal(this, 16.0F, 1.2, 1.5));
-        this.goalSelector.add(1, new LookAtTargetGoal(this));
+        this.goalSelector.addGoal(0, new FleeOnFireGoal(this, 16.0F, 1.2, 1.5));
+        this.goalSelector.addGoal(1, new LookAtTargetGoal(this));
     }
 
     private <E extends GeoEntity> PlayState predicate(AnimationState<E> event) {
-        if (this.age < REVEAL_TIME){
+        if (this.tickCount < REVEAL_TIME){
             event.getController().setAnimation(RawAnimation.begin().thenPlayAndHold("animation.chest_spitter.emerge"));
         }
-        else if (this.age < REVEAL_TIME + ATTACK_TIME){
+        else if (this.tickCount < REVEAL_TIME + ATTACK_TIME){
             event.getController().setTransitionLength(4);
             event.getController().setAnimation(RawAnimation.begin().thenLoop("animation.chest_spitter.spit"));
         }
@@ -54,8 +53,8 @@ public class ChestSpitterEntity extends ThingEntity {
         return PlayState.CONTINUE;
     }
 
-    public static DefaultAttributeContainer.Builder createChestSpitterAttributes(){
-        return HostileEntity.createHostileAttributes().add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.0D).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 0.0D).add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 1.0D).add(EntityAttributes.GENERIC_FOLLOW_RANGE, 40.0D);
+    public static AttributeSupplier.Builder createChestSpitterAttributes(){
+        return Monster.createMonsterAttributes().add(Attributes.MOVEMENT_SPEED, 0.0D).add(Attributes.ATTACK_DAMAGE, 0.0D).add(Attributes.KNOCKBACK_RESISTANCE, 1.0D).add(Attributes.FOLLOW_RANGE, 40.0D);
     }
 
     @Override
@@ -64,54 +63,54 @@ public class ChestSpitterEntity extends ThingEntity {
     }
 
     @Override
-    public boolean saveNbt(NbtCompound nbt) {
+    public boolean save(CompoundTag nbt) {
         return false;
     }
 
     @Override
-    public boolean hasNoGravity() {
+    public boolean isNoGravity() {
         return true;
     }
 
     @Override
-    public void pushAwayFrom(Entity entity) {
+    public void push(Entity entity) {
     }
     @Override
-    protected void pushAway(Entity entity) {
+    protected void doPush(Entity entity) {
     }
 
     @Override
     public void tick() {
         super.tick();
 
-        if (this.age > REVEAL_TIME + 10 && this.age < REVEAL_TIME + ATTACK_TIME && !this.getWorld().isClient() && this.getTarget() != null){
-            AssimilationLiquidEntity assimilationLiquid = new AssimilationLiquidEntity(this.getWorld(), this);
-            assimilationLiquid.setVelocity(this, this.getPitch(), this.getYaw(), 0.0F, 2.5F, 10.0F);
+        if (this.tickCount > REVEAL_TIME + 10 && this.tickCount < REVEAL_TIME + ATTACK_TIME && !this.level().isClientSide() && this.getTarget() != null){
+            AssimilationLiquidEntity assimilationLiquid = new AssimilationLiquidEntity(this.level(), this);
+            assimilationLiquid.shootFromRotation(this, this.getXRot(), this.getYRot(), 0.0F, 2.5F, 10.0F);
             double d = 0.5D;
-            assimilationLiquid.setPos(assimilationLiquid.getX() + assimilationLiquid.getVelocity().x * d, assimilationLiquid.getY() + assimilationLiquid.getVelocity().y * d, assimilationLiquid.getZ() + assimilationLiquid.getVelocity().z * d);
-            this.getWorld().spawnEntity(assimilationLiquid);
+            assimilationLiquid.setPosRaw(assimilationLiquid.getX() + assimilationLiquid.getDeltaMovement().x * d, assimilationLiquid.getY() + assimilationLiquid.getDeltaMovement().y * d, assimilationLiquid.getZ() + assimilationLiquid.getDeltaMovement().z * d);
+            this.level().addFreshEntity(assimilationLiquid);
         }
 
-        if (this.age > 2 * REVEAL_TIME + ATTACK_TIME - 20){
+        if (this.tickCount > 2 * REVEAL_TIME + ATTACK_TIME - 20){
             this.discard();
         }
     }
 
     @Override
-    protected void mobTick() {
-        super.mobTick();
+    protected void customServerAiStep() {
+        super.customServerAiStep();
         if (this.host == null || !this.host.isAlive()){
             this.kill();
         }
         else{
-            Vec3d pos = this.host.getPos().add(0, (this.host.getHeight() * 0.55) - (this.getHeight() / 2), 0);
-            this.setPosition(pos);
+            Vec3 pos = this.host.position().add(0, (this.host.getBbHeight() * 0.55) - (this.getBbHeight() / 2), 0);
+            this.setPos(pos);
         }
     }
 
     @Override
-    public boolean damage(DamageSource source, float amount) {
-        return source != this.getWorld().getDamageSources().inWall() && super.damage(source, amount);
+    public boolean hurt(DamageSource source, float amount) {
+        return source != this.level().damageSources().inWall() && super.hurt(source, amount);
     }
 
     @Override
@@ -134,14 +133,14 @@ public class ChestSpitterEntity extends ThingEntity {
 
         public LookAtTargetGoal(ChestSpitterEntity spitter) {
             this.spitter = spitter;
-            this.setControls(EnumSet.of(Control.LOOK));
+            this.setFlags(EnumSet.of(Flag.LOOK));
         }
 
-        public boolean canStart() {
+        public boolean canUse() {
             return true;
         }
 
-        public boolean shouldRunEveryTick() {
+        public boolean requiresUpdateEveryTick() {
             return true;
         }
 
@@ -149,11 +148,11 @@ public class ChestSpitterEntity extends ThingEntity {
             if (this.spitter.getTarget() != null) {
                 LivingEntity vec3d = this.spitter.getTarget();
                 double d = 64.0D;
-                if (vec3d.squaredDistanceTo(this.spitter) < d*d) {
+                if (vec3d.distanceToSqr(this.spitter) < d*d) {
                     double e = vec3d.getX() - this.spitter.getX();
                     double f = vec3d.getZ() - this.spitter.getZ();
-                    this.spitter.setYaw(-((float)MathHelper.atan2(e, f)) * 57.295776F);
-                    this.spitter.bodyYaw = this.spitter.getYaw();
+                    this.spitter.setYRot(-((float)Mth.atan2(e, f)) * 57.295776F);
+                    this.spitter.yBodyRot = this.spitter.getYRot();
                 }
             }
         }

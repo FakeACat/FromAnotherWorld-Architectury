@@ -71,7 +71,7 @@ public class TransitionEntity extends LivingEntity implements MaybeThing {
     }
 
     @Override
-    public EntityDimensions getDimensions(Pose pose) {
+    public @NotNull EntityDimensions getDimensions(Pose pose) {
         return super.getDimensions(pose).scale(this.entityData.get(WIDTH), this.entityData.get(HEIGHT));
     }
 
@@ -169,7 +169,7 @@ public class TransitionEntity extends LivingEntity implements MaybeThing {
     }
 
     private void clientTick(){
-        for (int i = 0; i < (this.tickCount * this.tickCount) / 100; i++){
+        for (int i = 0; i < (this.tickCount * this.tickCount) / 200; i++){
             this.level().addParticle(ParticleRegistry.THING_GORE, this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D), 0, 0, 0);
         }
     }
@@ -235,6 +235,7 @@ public class TransitionEntity extends LivingEntity implements MaybeThing {
             thing.initializeFrom(this);
             this.level().addFreshEntity(thing);
         }
+        EntityUtilities.angerNearbyThings(2, this, null);
         this.discard();
     }
 
@@ -261,12 +262,12 @@ public class TransitionEntity extends LivingEntity implements MaybeThing {
     }
 
     @Override
-    public Iterable<ItemStack> getArmorSlots() {
+    public @NotNull Iterable<ItemStack> getArmorSlots() {
         return NonNullList.withSize(4, ItemStack.EMPTY);
     }
 
     @Override
-    public ItemStack getItemBySlot(EquipmentSlot slot) {
+    public @NotNull ItemStack getItemBySlot(EquipmentSlot slot) {
         return ItemStack.EMPTY;
     }
 
@@ -276,7 +277,7 @@ public class TransitionEntity extends LivingEntity implements MaybeThing {
     }
 
     @Override
-    public HumanoidArm getMainArm() {
+    public @NotNull HumanoidArm getMainArm() {
         return HumanoidArm.RIGHT;
     }
 

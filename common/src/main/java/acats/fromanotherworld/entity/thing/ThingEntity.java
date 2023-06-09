@@ -41,6 +41,7 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class ThingEntity extends Monster implements GeoEntity, MaybeThing {
@@ -69,7 +70,7 @@ public abstract class ThingEntity extends Monster implements GeoEntity, MaybeThi
     }
 
     @Override
-    protected PathNavigation createNavigation(Level world) {
+    protected @NotNull PathNavigation createNavigation(Level world) {
         return new ThingNavigation(this, world);
     }
 
@@ -128,7 +129,7 @@ public abstract class ThingEntity extends Monster implements GeoEntity, MaybeThi
     }
 
     @Override
-    protected ResourceLocation getDefaultLootTable() {
+    protected @NotNull ResourceLocation getDefaultLootTable() {
         return new ResourceLocation(FromAnotherWorld.MOD_ID, "entities/thing/the_thing_default");
     }
 

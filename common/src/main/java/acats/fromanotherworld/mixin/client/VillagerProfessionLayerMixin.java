@@ -29,8 +29,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(VillagerProfessionLayer.class)
-public abstract class VillagerClothingFeatureRendererMixin<T extends LivingEntity & VillagerDataHolder, M extends EntityModel<T> & VillagerHeadModel> extends RenderLayer<T, M> {
-    public VillagerClothingFeatureRendererMixin(RenderLayerParent<T, M> context) {
+public abstract class VillagerProfessionLayerMixin<T extends LivingEntity & VillagerDataHolder, M extends EntityModel<T> & VillagerHeadModel> extends RenderLayer<T, M> {
+    public VillagerProfessionLayerMixin(RenderLayerParent<T, M> context) {
         super(context);
     }
     @Shadow public abstract <K> VillagerMetaDataSection.Hat getHatData(Object2ObjectMap<K, VillagerMetaDataSection.Hat> hatLookUp, String keyType, DefaultedRegistry<K> registry, K key);

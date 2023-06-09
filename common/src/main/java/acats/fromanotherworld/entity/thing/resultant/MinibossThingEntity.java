@@ -15,6 +15,7 @@ import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -89,7 +90,7 @@ public abstract class MinibossThingEntity extends AbsorberThingEntity {
         super.onSyncedDataUpdated(data);
     }
 
-    public EntityDimensions getDimensions(Pose pose) {
+    public @NotNull EntityDimensions getDimensions(Pose pose) {
         return super.getDimensions(pose).scale(1.0F + 0.25F * (float)this.getTier());
     }
 

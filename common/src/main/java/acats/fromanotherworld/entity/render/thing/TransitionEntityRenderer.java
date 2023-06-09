@@ -27,8 +27,10 @@ public class TransitionEntityRenderer extends EntityRenderer<TransitionEntity> {
         renderer.render(entity, yaw, tickDelta, matrices, vertexConsumers, light);
     }
 
+    private static final ResourceLocation PIG_LOCATION = new ResourceLocation("textures/entity/pig/pig.png");
+
     @Override
     public @NotNull ResourceLocation getTextureLocation(TransitionEntity entity) {
-        return null;
+        return PIG_LOCATION;
     }
 }

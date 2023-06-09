@@ -15,12 +15,12 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Fox.class)
-public abstract class FoxEntityMixin extends LivingEntity {
+public abstract class FoxMixin extends LivingEntity {
 
     @Shadow
     private int ticksSinceEaten;
 
-    protected FoxEntityMixin(EntityType<? extends LivingEntity> entityType, Level world) {
+    protected FoxMixin(EntityType<? extends LivingEntity> entityType, Level world) {
         super(entityType, world);
     }
 

@@ -21,8 +21,8 @@ import net.minecraft.world.entity.animal.horse.Horse;
 import net.minecraft.world.entity.animal.horse.Markings;
 
 @Mixin(HorseMarkingLayer.class)
-public abstract class HorseMarkingFeatureRendererMixin extends RenderLayer<Horse, HorseModel<Horse>> {
-    public HorseMarkingFeatureRendererMixin(RenderLayerParent<Horse, HorseModel<Horse>> context) {
+public abstract class HorseMarkingLayerMixin extends RenderLayer<Horse, HorseModel<Horse>> {
+    public HorseMarkingLayerMixin(RenderLayerParent<Horse, HorseModel<Horse>> context) {
         super(context);
     }
 

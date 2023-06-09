@@ -75,5 +75,7 @@
   "subtitle.fromanotherworld.entity.thing.strong.death": "Strong Thing dies",
   "subtitle.fromanotherworld.entity.thing.strong.alert": "Strong Thing alert",
 
-  "effect.fromanotherworld.slow_assimilation": "Slow Assimilation"
+  "effect.fromanotherworld.slow_assimilation": "Slow Assimilation",
+
+  "fromanotherworld.from_another_world_group": "From Another World"
 }

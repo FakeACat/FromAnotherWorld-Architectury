@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(SheepFurLayer.class)
-public abstract class SheepWoolFeatureRendererMixin {
+public abstract class SheepFurLayerMixin {
     @Final
     @Shadow private static ResourceLocation SHEEP_FUR_LOCATION;
     @Final

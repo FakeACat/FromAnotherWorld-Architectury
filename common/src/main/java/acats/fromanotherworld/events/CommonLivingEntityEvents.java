@@ -170,7 +170,6 @@ public class CommonLivingEntityEvents {
             return;
         }
         TransitionEntity.createFrom(entity);
-        EntityUtilities.angerNearbyThings(2, entity, null);
         entity.discard();
     }
 }

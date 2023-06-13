@@ -2,7 +2,7 @@ package acats.fromanotherworld.entity.thing.resultant;
 
 import acats.fromanotherworld.entity.interfaces.PossibleDisguisedThing;
 import acats.fromanotherworld.entity.interfaces.TentacleThing;
-import acats.fromanotherworld.entity.render.thing.Tentacle;
+import acats.fromanotherworld.entity.render.thing.growths.Tentacle;
 import acats.fromanotherworld.entity.thing.ThingEntity;
 import acats.fromanotherworld.registry.ParticleRegistry;
 import acats.fromanotherworld.tags.EntityTags;

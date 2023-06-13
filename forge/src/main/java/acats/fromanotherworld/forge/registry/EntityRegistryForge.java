@@ -1,6 +1,7 @@
 package acats.fromanotherworld.forge.registry;
 
 import acats.fromanotherworld.FromAnotherWorld;
+import acats.fromanotherworld.entity.model.thing.growths.TentacleSegmentModel;
 import acats.fromanotherworld.entity.model.thing.revealed.SpiderLegsEntityModel;
 import acats.fromanotherworld.entity.render.misc.StarshipEntityRenderer;
 import acats.fromanotherworld.entity.render.projectile.NeedleEntityRenderer;
@@ -8,7 +9,6 @@ import acats.fromanotherworld.entity.render.thing.TransitionEntityRenderer;
 import acats.fromanotherworld.entity.render.thing.resultant.*;
 import acats.fromanotherworld.entity.render.thing.revealed.ChestSpitterEntityRenderer;
 import acats.fromanotherworld.entity.render.thing.special.AlienThingEntityRenderer;
-import acats.fromanotherworld.registry.EntityRegistry;
 import acats.fromanotherworld.registry.EntityRegistry.FAWEntity;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
@@ -54,6 +54,8 @@ public class EntityRegistryForge {
 
     public static void clientRegisterLayers(EntityRenderersEvent.RegisterLayerDefinitions event){
         spiderLegsModelLayer = new ModelLayerLocation(new ResourceLocation(FromAnotherWorld.MOD_ID, "spider_legs"), "main");
-        event.registerLayerDefinition(EntityRegistry.spiderLegsModelLayer, SpiderLegsEntityModel::getTexturedModelData);
+        event.registerLayerDefinition(spiderLegsModelLayer, SpiderLegsEntityModel::getTexturedModelData);
+        tentacleSegmentModelLayer = new ModelLayerLocation(new ResourceLocation(FromAnotherWorld.MOD_ID, "tentacle_segment"), "main");
+        event.registerLayerDefinition(tentacleSegmentModelLayer, TentacleSegmentModel::createBodyLayer);
     }
 }

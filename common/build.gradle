@@ -14,7 +14,7 @@ repositories{
 
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
-    modImplementation "mod.azure.azurelib:azurelib-fabric-${rootProject.azurelib_version_fabric}"
+    modImplementation "mod.azure.azurelib:azurelib-fabric-${rootProject.minecraft_version}:${rootProject.azurelib_version_fabric}"
 }
 
 publishing {

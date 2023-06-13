@@ -141,4 +141,5 @@ public class EntityRegistry {
     }
 
     public static ModelLayerLocation spiderLegsModelLayer;
+    public static ModelLayerLocation tentacleSegmentModelLayer;
 }

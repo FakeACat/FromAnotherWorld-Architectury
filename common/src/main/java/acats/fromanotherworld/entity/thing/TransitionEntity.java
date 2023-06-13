@@ -2,6 +2,7 @@ package acats.fromanotherworld.entity.thing;
 
 import acats.fromanotherworld.constants.Variants;
 import acats.fromanotherworld.entity.interfaces.MaybeThing;
+import acats.fromanotherworld.entity.render.thing.growths.TentacleMass;
 import acats.fromanotherworld.entity.thing.resultant.BeastEntity;
 import acats.fromanotherworld.entity.thing.resultant.BloodCrawlerEntity;
 import acats.fromanotherworld.registry.EntityRegistry;
@@ -19,12 +20,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.EntityDimensions;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.Pig;
@@ -40,10 +36,13 @@ public class TransitionEntity extends LivingEntity implements MaybeThing {
     private static final EntityDataAccessor<CompoundTag> FAKE_ENTITY_NBT;
     private static final EntityDataAccessor<Float> WIDTH;
     private static final EntityDataAccessor<Float> HEIGHT;
+    private static final int MAX_AGE = 110;
+    public final TentacleMass tentacleMass;
     public TransitionEntity(EntityType<? extends LivingEntity> entityType, Level world) {
         super(entityType, world);
         this.fixupDimensions();
         this.fakeEntity = null;
+        this.tentacleMass = new TentacleMass(world, 30, 20, 0.0F, 0.95F);
     }
 
     private LivingEntity fakeEntity;
@@ -106,6 +105,7 @@ public class TransitionEntity extends LivingEntity implements MaybeThing {
         double f = this.getZ();
         super.refreshDimensions();
         this.setPos(d, e, f);
+        tentacleMass.rootYOffset = this.entityData.get(HEIGHT) * 0.5F;
     }
 
     @Override
@@ -145,7 +145,7 @@ public class TransitionEntity extends LivingEntity implements MaybeThing {
     @Override
     public void tick() {
         super.tick();
-        if (this.fakeEntity != null){
+        if (this.shouldRenderFakeEntity() && this.fakeEntity != null){
             this.fakeEntity.yRotO = this.fakeEntity.getYRot();
             this.fakeEntity.yHeadRotO = this.fakeEntity.getYHeadRot();
             this.fakeEntity.yBodyRotO = this.fakeEntity.getVisualRotationYInDegrees();
@@ -163,13 +163,31 @@ public class TransitionEntity extends LivingEntity implements MaybeThing {
             this.discard();
             return;
         }
-        if (this.tickCount > 100){
+        if (this.tickCount == 100){
             this.becomeResultant();
+        }
+        if (this.tickCount == MAX_AGE){
+            this.discard();
         }
     }
 
+    public boolean shouldRenderFakeEntity(){
+        return this.tickCount < 100;
+    }
+
     private void clientTick(){
-        for (int i = 0; i < (this.tickCount * this.tickCount) / 200; i++){
+        tentacleMass.tick();
+        if (this.tickCount < MAX_AGE * 0.25F){
+            tentacleMass.scale = this.tickCount / (MAX_AGE * 0.25F);
+        }
+        else if (this.tickCount > MAX_AGE * 0.75F){
+            tentacleMass.scale = 4.0F - this.tickCount / (MAX_AGE * 0.25F);
+        }
+        else{
+            tentacleMass.scale = 1.0F;
+        }
+        tentacleMass.scale *= this.entityData.get(WIDTH);
+        for (int i = 0; i < (this.tickCount * this.tickCount) / 400; i++){
             this.level().addParticle(ParticleRegistry.THING_GORE, this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D), 0, 0, 0);
         }
     }
@@ -236,7 +254,6 @@ public class TransitionEntity extends LivingEntity implements MaybeThing {
             this.level().addFreshEntity(thing);
         }
         EntityUtilities.angerNearbyThings(2, this, null);
-        this.discard();
     }
 
     private void spawnCrawlers(int crawlers){
@@ -295,6 +312,16 @@ public class TransitionEntity extends LivingEntity implements MaybeThing {
         if (nbt.contains("FakeEntity")){
             this.setFakeEntityNbt(nbt.getCompound("FakeEntity"));
         }
+    }
+
+    @Override
+    public void push(Entity entity) {
+
+    }
+
+    @Override
+    protected void doPush(Entity entity) {
+
     }
 
     static {

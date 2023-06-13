@@ -1,6 +1,6 @@
 package acats.fromanotherworld.entity.render.thing.resultant;
 
-import acats.fromanotherworld.entity.render.thing.Tentacle;
+import acats.fromanotherworld.entity.render.thing.growths.Tentacle;
 import acats.fromanotherworld.entity.render.thing.ThingEntityRenderer;
 import acats.fromanotherworld.entity.thing.resultant.AbsorberThingEntity;
 import com.mojang.blaze3d.vertex.PoseStack;

@@ -1,6 +1,7 @@
 package acats.fromanotherworld.fabric.registry;
 
 import acats.fromanotherworld.FromAnotherWorld;
+import acats.fromanotherworld.entity.model.thing.growths.TentacleSegmentModel;
 import acats.fromanotherworld.entity.model.thing.revealed.SpiderLegsEntityModel;
 import acats.fromanotherworld.entity.render.misc.StarshipEntityRenderer;
 import acats.fromanotherworld.entity.render.projectile.NeedleEntityRenderer;
@@ -38,6 +39,8 @@ public class EntityRegistryFabric {
     public static void clientRegister(){
         spiderLegsModelLayer = new ModelLayerLocation(new ResourceLocation(FromAnotherWorld.MOD_ID, "spider_legs"), "main");
         EntityModelLayerRegistry.registerModelLayer(spiderLegsModelLayer, SpiderLegsEntityModel::getTexturedModelData);
+        tentacleSegmentModelLayer = new ModelLayerLocation(new ResourceLocation(FromAnotherWorld.MOD_ID, "tentacle_segment"), "main");
+        EntityModelLayerRegistry.registerModelLayer(tentacleSegmentModelLayer, TentacleSegmentModel::createBodyLayer);
 
         EntityRendererRegistry.register(CRAWLER.get(), CrawlerEntityRenderer::new);
         EntityRendererRegistry.register(CHEST_SPITTER.get(), ChestSpitterEntityRenderer::new);

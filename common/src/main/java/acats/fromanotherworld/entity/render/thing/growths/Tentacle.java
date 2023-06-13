@@ -1,4 +1,4 @@
-package acats.fromanotherworld.entity.render.thing;
+package acats.fromanotherworld.entity.render.thing.growths;
 
 import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.entity.interfaces.TentacleThing;

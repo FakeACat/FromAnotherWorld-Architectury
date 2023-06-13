@@ -6,7 +6,7 @@
   "description": "adds the thing from the thing",
   "authors": [
     "a cats (code, models, textures)",
-    "ImpulsiveLad (Palmer Thing model and texture)"
+    "ImpulsiveLass (Palmer Thing model and texture)"
   ],
   "contact": {
     "homepage": "https://www.curseforge.com/minecraft/mc-mods/from-another-world",
@@ -31,7 +31,7 @@
   "depends": {
     "java": ">=17",
     "fabric": "*",
-    "minecraft": ">=1.20",
-    "azurelib": ">=1.0.9"
+    "minecraft": ">=1.20.1",
+    "azurelib": ">=1.0.15"
   }
 }

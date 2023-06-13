@@ -7,7 +7,7 @@ license = "MIT"
 modId = "fromanotherworld"
 version = "${version}"
 displayName = "From Another World"
-authors = "a cats (code, models, textures), ImpulsiveLad (Palmer Thing model and texture)"
+authors = "a cats (code, models, textures), ImpulsiveLass (Palmer Thing model and texture)"
 description = '''
 adds the thing from the thing
 '''
@@ -16,20 +16,20 @@ logoFile = "assets/fromanotherworld/icon.png"
 [[dependencies.fromanotherworld]]
 modId = "forge"
 mandatory = true
-versionRange = "[46,)"
+versionRange = "[47,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.fromanotherworld]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.20,)"
+versionRange = "[1.20.1,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.fromanotherworld]]
 modId = "azurelib"
 mandatory = true
-versionRange="[1.0.9,)"
+versionRange="[1.0.15,)"
 ordering = "NONE"
 side = "BOTH"

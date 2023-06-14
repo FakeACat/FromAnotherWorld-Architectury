@@ -27,10 +27,13 @@ public class TentacleMass {
             tentacles.add(i, new Tentacle(tentacleSegments, scaleMultiplier));
         }
         this.rootYOffset = 0.0F;
+        this.progress = 0;
     }
     public float scale;
     public float rootYOffset;
+    private int progress;
     public void tick(){
+        this.progress++;
         for (Tentacle tentacle:
              tentacles) {
             tentacle.tick();
@@ -85,8 +88,8 @@ public class TentacleMass {
                     segment.prevOffsetZ = segment.offsetZ;
                     segment.prevScale = segment.scale;
 
-                    segment.xRot = previous.xRot + (float)Math.sin(this.rotDesyncX + this.rotMultX * level.getDayTime() / 12.0F) / 4.0F;
-                    segment.yRot = previous.yRot + (float)Math.cos(this.rotDesyncY + this.rotMultY * level.getDayTime() / 12.0F) / 4.0F;
+                    segment.xRot = previous.xRot + (float)Math.sin(this.rotDesyncX + this.rotMultX * progress) / 4.0F;
+                    segment.yRot = previous.yRot + (float)Math.cos(this.rotDesyncY + this.rotMultY * progress) / 4.0F;
                     Vec3 offset = Vec3.directionFromRotation((float)Math.toDegrees(segment.xRot), (float)Math.toDegrees(segment.yRot));
                     segment.scale = previous.scale * scaleMultiplier;
                     segment.offsetX = previous.offsetX + (float)offset.x() * SEGMENT_LENGTH * segment.scale;

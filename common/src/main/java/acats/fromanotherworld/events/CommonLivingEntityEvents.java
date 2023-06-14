@@ -31,7 +31,7 @@ public class CommonLivingEntityEvents {
 
     public static void initGoals(Mob mob, GoalSelector goalSelector){
         if (!mob.getType().is(EntityTags.NOT_AFRAID_OF_THINGS) &&
-                EntityUtilities.canAssimilate(mob) &&
+                EntityUtilities.isAssimilableType(mob) &&
                 mob instanceof PathfinderMob pathfinderMob){
             goalSelector.addGoal(0, new AvoidEntityGoal<>(pathfinderMob, ThingEntity.class, 6.0F, 1.0F, 1.2F));
         }

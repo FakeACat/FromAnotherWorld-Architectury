@@ -61,12 +61,15 @@ public class EntityUtilities {
             return false;
         }
     }
-    public static boolean canAssimilate(Entity e){
-        return !isThing(e) && (e.getType().is(HUMANOIDS) ||
+    public static boolean isAssimilableType(Entity e){
+        return e.getType().is(HUMANOIDS) ||
                 e.getType().is(QUADRUPEDS) ||
                 e.getType().is(LARGE_QUADRUPEDS) ||
                 e.getType().is(VERY_LARGE_QUADRUPEDS) ||
-                e.getType().is(MISC));
+                e.getType().is(MISC);
+    }
+    public static boolean canAssimilate(Entity e){
+        return !isThing(e) && isAssimilableType(e);
     }
     public static int numThingsInList(List<? extends LivingEntity> list){
         int t = 0;
@@ -125,7 +128,7 @@ public class EntityUtilities {
                     if (entity1.canAttack(threat))
                         entity1.setTarget(threat);
                 }
-                else if (!potentialThing.equals(entity) && potentialThing instanceof PossibleDisguisedThing possibleDisguisedThing && possibleDisguisedThing.isAssimilated() && !possibleDisguisedThing.isRevealed() && !possibleDisguisedThing.isSleeper()){
+                else if (!potentialThing.equals(entity) && potentialThing.getRemovalReason() == null && potentialThing instanceof PossibleDisguisedThing possibleDisguisedThing && possibleDisguisedThing.isAssimilated() && !possibleDisguisedThing.isRevealed() && !possibleDisguisedThing.isSleeper()){
                     CommonLivingEntityEvents.becomeResultant(potentialThing);
                 }
             }

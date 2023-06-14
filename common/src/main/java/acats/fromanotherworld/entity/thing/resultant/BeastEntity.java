@@ -46,6 +46,11 @@ public class BeastEntity extends MinibossThingEntity implements RangedAttackMob 
     }
 
     @Override
+    public float maxUpStep() {
+        return 2.0F;
+    }
+
+    @Override
     public boolean rotateWhenClimbing() {
         return true;
     }

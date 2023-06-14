@@ -1,9 +1,6 @@
 package acats.fromanotherworld.entity.thing.special;
 
-import acats.fromanotherworld.entity.goal.AlienThingFleeGoal;
-import acats.fromanotherworld.entity.goal.AlienThingSwimGoal;
-import acats.fromanotherworld.entity.goal.StalkGoal;
-import acats.fromanotherworld.entity.goal.ThingAttackGoal;
+import acats.fromanotherworld.entity.goal.*;
 import acats.fromanotherworld.entity.interfaces.StalkerThing;
 import acats.fromanotherworld.entity.thing.ThingEntity;
 import acats.fromanotherworld.registry.ParticleRegistry;
@@ -28,6 +25,8 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.OpenDoorGoal;
+import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameRules;
@@ -41,6 +40,7 @@ public class AlienThingEntity extends ThingEntity implements StalkerThing {
     public AlienThingEntity(EntityType<? extends AlienThingEntity> entityType, Level world) {
         super(entityType, world, false);
         this.xpReward = 25;
+        ((GroundPathNavigation)this.getNavigation()).setCanOpenDoors(true);
     }
 
     private static final EntityDataAccessor<Integer> FORM;
@@ -74,8 +74,9 @@ public class AlienThingEntity extends ThingEntity implements StalkerThing {
         this.addThingTargets(true);
         this.goalSelector.addGoal(0, new AlienThingSwimGoal(this, 0.5F));
         this.goalSelector.addGoal(1, new AlienThingFleeGoal(this));
-        this.goalSelector.addGoal(2, new ThingAttackGoal(this, 1.0D, false));
-        this.goalSelector.addGoal(3, new StalkGoal(this));
+        this.goalSelector.addGoal(2, new OpenDoorGoal(this, true));
+        this.goalSelector.addGoal(3, new ThingAttackGoal(this, 1.0D, false));
+        this.goalSelector.addGoal(4, new StalkGoal(this));
     }
 
 

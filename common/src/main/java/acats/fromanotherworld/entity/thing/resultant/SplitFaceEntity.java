@@ -12,6 +12,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.MoveThroughVillageGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
@@ -29,8 +30,9 @@ public class SplitFaceEntity extends AbsorberThingEntity implements StalkerThing
         this.goalSelector.addGoal(0, new FleeOnFireGoal(this, 16.0F, 1.2, 1.5));
         this.goalSelector.addGoal(1, new AbsorbGoal(this, STANDARD));
         this.goalSelector.addGoal(2, new ThingAttackGoal(this, 2.0D, false));
-        this.goalSelector.addGoal(3, new StalkGoal(this));
-        this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+        this.goalSelector.addGoal(3, new MoveThroughVillageGoal(this, 1.0, false, 4, () -> true));
+        this.goalSelector.addGoal(4, new StalkGoal(this));
+        this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 1.0D));
     }
 
     public static AttributeSupplier.Builder createSplitFaceAttributes(){
@@ -39,6 +41,11 @@ public class SplitFaceEntity extends AbsorberThingEntity implements StalkerThing
                 .add(Attributes.MAX_HEALTH, 80.0D)
                 .add(Attributes.FOLLOW_RANGE, 32.0D)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 1.0D);
+    }
+
+    @Override
+    public float maxUpStep() {
+        return 2.0F;
     }
 
     @Override

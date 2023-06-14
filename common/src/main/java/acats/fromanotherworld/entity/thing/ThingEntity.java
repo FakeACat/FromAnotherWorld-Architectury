@@ -74,6 +74,11 @@ public abstract class ThingEntity extends Monster implements GeoEntity, MaybeThi
         return new ThingNavigation(this, world);
     }
 
+    @Override
+    public float maxUpStep() {
+        return 1.5F;
+    }
+
     protected ThingEntity(EntityType<? extends Monster> entityType, Level world){
         this(entityType, world, true);
     }

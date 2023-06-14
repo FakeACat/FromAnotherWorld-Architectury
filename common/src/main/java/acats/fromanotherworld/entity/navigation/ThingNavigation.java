@@ -14,6 +14,7 @@ public class ThingNavigation extends GroundPathNavigation {
 
     public ThingNavigation(Mob mobEntity, Level world) {
         super(mobEntity, world);
+        this.setCanWalkOverFences(true);
     }
 
     public Path createPath(BlockPos target, int distance) {

@@ -22,7 +22,10 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.MoveThroughVillageGoal;
+import net.minecraft.world.entity.ai.goal.OpenDoorGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 
@@ -33,6 +36,7 @@ public class PalmerThingEntity extends AbsorberThingEntity {
 
     public PalmerThingEntity(EntityType<? extends PalmerThingEntity> entityType, Level world) {
         super(entityType, world);
+        ((GroundPathNavigation)this.getNavigation()).setCanOpenDoors(true);
     }
 
     public Tentacle getTongue(){
@@ -48,9 +52,11 @@ public class PalmerThingEntity extends AbsorberThingEntity {
     protected void registerGoals() {
         this.addThingTargets(false);
         this.goalSelector.addGoal(0, new FleeOnFireGoal(this, 16.0F, 1.2, 1.5));
-        this.goalSelector.addGoal(1, new AbsorbGoal(this, STANDARD));
-        this.goalSelector.addGoal(2, new PalmerAttackGoal(this, 1.0D, false));
-        this.goalSelector.addGoal(3, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+        this.goalSelector.addGoal(1, new OpenDoorGoal(this, true));
+        this.goalSelector.addGoal(2, new AbsorbGoal(this, STANDARD));
+        this.goalSelector.addGoal(3, new PalmerAttackGoal(this, 1.0D, false));
+        this.goalSelector.addGoal(4, new MoveThroughVillageGoal(this, 1.0, false, 4, () -> true));
+        this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 1.0D));
     }
 
     @Override

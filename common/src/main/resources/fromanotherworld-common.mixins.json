@@ -7,7 +7,6 @@
     "FoxMixin",
     "LivingEntityMixin",
     "TraderLlamaMixin",
-    "VillagerHostilesSensorMixin",
     "WanderingTraderMixin"
   ],
   "client": [

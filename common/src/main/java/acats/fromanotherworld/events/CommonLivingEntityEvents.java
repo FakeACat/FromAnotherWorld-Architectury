@@ -3,11 +3,13 @@ package acats.fromanotherworld.events;
 import acats.fromanotherworld.config.General;
 import acats.fromanotherworld.entity.interfaces.PossibleDisguisedThing;
 import acats.fromanotherworld.entity.projectile.AssimilationLiquidEntity;
+import acats.fromanotherworld.entity.thing.ThingEntity;
 import acats.fromanotherworld.entity.thing.TransitionEntity;
 import acats.fromanotherworld.entity.thing.revealed.ChestSpitterEntity;
 import acats.fromanotherworld.registry.DamageTypeRegistry;
 import acats.fromanotherworld.registry.EntityRegistry;
 import acats.fromanotherworld.registry.ParticleRegistry;
+import acats.fromanotherworld.tags.EntityTags;
 import acats.fromanotherworld.utilities.EntityUtilities;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
@@ -16,6 +18,9 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
+import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -23,11 +28,21 @@ import java.util.List;
 
 public class CommonLivingEntityEvents {
     private static final int REVEAL_COOLDOWN = 12000;
+
+    public static void initGoals(Mob mob, GoalSelector goalSelector){
+        if (!mob.getType().is(EntityTags.NOT_AFRAID_OF_THINGS) &&
+                EntityUtilities.canAssimilate(mob) &&
+                mob instanceof PathfinderMob pathfinderMob){
+            goalSelector.addGoal(0, new AvoidEntityGoal<>(pathfinderMob, ThingEntity.class, 6.0F, 1.0F, 1.2F));
+        }
+    }
+
     public static void serverPlayerEntityDeath(Player playerEntity, DamageSource damageSource){
         if (damageSource.is(DamageTypeRegistry.ASSIMILATION)){
             EntityUtilities.spawnAssimilatedPlayer(playerEntity);
         }
     }
+
     public static void serverEntityDeath(LivingEntity entity, DamageSource damageSource){
         PossibleDisguisedThing thing = ((PossibleDisguisedThing) entity);
         if (thing.isAssimilated()){

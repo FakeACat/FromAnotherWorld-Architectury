@@ -48,13 +48,24 @@ public class TentacleMass {
         private final float baseXRot;
         private final float baseYRot;
         private final float scaleMultiplier;
+        private final float rotDesyncX;
+        private final float rotDesyncY;
+        private final float rotMultX;
+        private final float rotMultY;
         private Tentacle(int segments, float scaleMultiplier){
-            this.baseXRot = level.getRandom().nextFloat() * (float)Math.PI * 2.0F;
-            this.baseYRot = level.getRandom().nextFloat() * (float)Math.PI * 2.0F;
+            this.baseXRot = this.randomRotation();
+            this.baseYRot = this.randomRotation();
+            this.rotDesyncX = this.randomRotation();
+            this.rotDesyncY = this.randomRotation();
+            this.rotMultX = level.getRandom().nextFloat() + 0.5F;
+            this.rotMultY = level.getRandom().nextFloat() + 0.5F;
             for (int i = 0; i < segments; i++){
                 tentacleSegments.add(i, new TentacleSegment());
             }
             this.scaleMultiplier = scaleMultiplier;
+        }
+        private float randomRotation(){
+            return level.getRandom().nextFloat() * (float)Math.PI * 2.0F;
         }
         private void tick(){
             TentacleSegment previous = null;
@@ -74,8 +85,8 @@ public class TentacleMass {
                     segment.prevOffsetZ = segment.offsetZ;
                     segment.prevScale = segment.scale;
 
-                    segment.xRot = previous.xRot + (float)Math.sin(level.getDayTime() / 15.0F) / 5.0F;
-                    segment.yRot = previous.yRot + (float)Math.cos(level.getDayTime() / 8.0F) / 4.0F;
+                    segment.xRot = previous.xRot + (float)Math.sin(this.rotDesyncX + this.rotMultX * level.getDayTime() / 12.0F) / 4.0F;
+                    segment.yRot = previous.yRot + (float)Math.cos(this.rotDesyncY + this.rotMultY * level.getDayTime() / 12.0F) / 4.0F;
                     Vec3 offset = Vec3.directionFromRotation((float)Math.toDegrees(segment.xRot), (float)Math.toDegrees(segment.yRot));
                     segment.scale = previous.scale * scaleMultiplier;
                     segment.offsetX = previous.offsetX + (float)offset.x() * SEGMENT_LENGTH * segment.scale;

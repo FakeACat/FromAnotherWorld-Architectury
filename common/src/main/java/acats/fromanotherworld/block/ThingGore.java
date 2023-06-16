@@ -18,6 +18,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 
 public class ThingGore extends FlammableBlock {
     public static final IntegerProperty STAGE = IntegerProperty.create("stage", 0, 2);
@@ -29,11 +30,11 @@ public class ThingGore extends FlammableBlock {
     }
 
     @Override
-    public SoundType getSoundType(BlockState state) {
+    public @NotNull SoundType getSoundType(BlockState state) {
         return SoundType.WET_GRASS;
     }
 
-    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+    public @NotNull VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return switch (state.getValue(STAGE)) {
             case 1 -> SHAPE_REFORMING;
             case 2 -> SHAPE_READY;
@@ -41,7 +42,7 @@ public class ThingGore extends FlammableBlock {
         };
     }
 
-    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
+    public @NotNull BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
         return !state.canSurvive(world, pos) ? Blocks.AIR.defaultBlockState() : super.updateShape(state, direction, neighborState, world, pos, neighborPos);
     }
 

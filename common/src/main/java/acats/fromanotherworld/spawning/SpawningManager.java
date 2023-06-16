@@ -5,6 +5,7 @@ import acats.fromanotherworld.config.General;
 import acats.fromanotherworld.entity.thing.special.AlienThing;
 import acats.fromanotherworld.registry.EntityRegistry;
 import acats.fromanotherworld.utilities.EntityUtilities;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -73,7 +74,7 @@ public class SpawningManager extends SavedData {
     }
 
     @Override
-    public CompoundTag save(CompoundTag nbt) {
+    public @NotNull CompoundTag save(CompoundTag nbt) {
         nbt.putInt("DaysSinceLastEvent", this.daysSinceLastEvent);
         nbt.putInt("NextEvent", this.nextEvent);
         nbt.putBoolean("HadFirstEvent", this.hadFirstEvent);

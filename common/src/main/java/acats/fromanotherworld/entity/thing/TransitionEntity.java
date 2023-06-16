@@ -36,7 +36,8 @@ public class TransitionEntity extends LivingEntity implements MaybeThing {
     private static final EntityDataAccessor<CompoundTag> FAKE_ENTITY_NBT;
     private static final EntityDataAccessor<Float> WIDTH;
     private static final EntityDataAccessor<Float> HEIGHT;
-    private static final int MAX_AGE = 110;
+    private static final int MAX_AGE = 100;
+    private static final int SPAWN_MOB_AGE = 90;
     public final TentacleMass tentacleMass;
     public TransitionEntity(EntityType<? extends LivingEntity> entityType, Level world) {
         super(entityType, world);
@@ -163,7 +164,7 @@ public class TransitionEntity extends LivingEntity implements MaybeThing {
             this.discard();
             return;
         }
-        if (this.tickCount == 100){
+        if (this.tickCount == SPAWN_MOB_AGE){
             this.becomeResultant();
         }
         if (this.tickCount == MAX_AGE){
@@ -172,16 +173,16 @@ public class TransitionEntity extends LivingEntity implements MaybeThing {
     }
 
     public boolean shouldRenderFakeEntity(){
-        return this.tickCount < 100;
+        return this.tickCount < SPAWN_MOB_AGE;
     }
 
     private void clientTick(){
         tentacleMass.tick();
-        if (this.tickCount < MAX_AGE * 0.25F){
-            tentacleMass.scale = this.tickCount / (MAX_AGE * 0.25F);
+        if (this.tickCount < MAX_AGE * 0.2F){
+            tentacleMass.scale = this.tickCount / (MAX_AGE * 0.2F);
         }
-        else if (this.tickCount > MAX_AGE * 0.75F){
-            tentacleMass.scale = 4.0F - this.tickCount / (MAX_AGE * 0.25F);
+        else if (this.tickCount > MAX_AGE * 0.9F){
+            tentacleMass.scale = 10.0F - this.tickCount / (MAX_AGE * 0.1F);
         }
         else{
             tentacleMass.scale = 1.0F;
@@ -312,6 +313,11 @@ public class TransitionEntity extends LivingEntity implements MaybeThing {
         if (nbt.contains("FakeEntity")){
             this.setFakeEntityNbt(nbt.getCompound("FakeEntity"));
         }
+    }
+
+    @Override
+    public boolean shouldBeSaved() {
+        return this.tickCount < SPAWN_MOB_AGE;
     }
 
     @Override

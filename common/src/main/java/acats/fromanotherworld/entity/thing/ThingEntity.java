@@ -251,7 +251,7 @@ public abstract class ThingEntity extends Monster implements GeoEntity, MaybeThi
                 if (this.canThingFreeze())
                     this.tickFreeze();
 
-                if (this.canGrief && this.onClimbable() && this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING))
+                if (this.canGrief && this.onClimbable())
                     this.grief(1, 1);
 
                 if (this.getTarget() == null){
@@ -263,7 +263,7 @@ public abstract class ThingEntity extends Monster implements GeoEntity, MaybeThi
                 }
                 else{
                     this.timeSinceLastSeenTarget = 0;
-                    if (this.canGrief && !this.isNoAi() && this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
+                    if (this.canGrief && !this.isNoAi()) {
                         this.grief(this.getTarget().getY() < this.getY() - 3 ? -1 : 0, 3);
                     }
                     if (this.canShootNeedles && !this.isNoAi() && this.tickCount % 300 == 0){
@@ -311,6 +311,9 @@ public abstract class ThingEntity extends Monster implements GeoEntity, MaybeThi
     }
 
     public void grief(int yOffset, int chanceDenominator){
+        if (!this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
+            return;
+        }
         int l = Mth.floor(this.getY()) + yOffset;
         int m = Mth.floor(this.getX());
         int n = Mth.floor(this.getZ());

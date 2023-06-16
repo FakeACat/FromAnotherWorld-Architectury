@@ -19,7 +19,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -117,9 +116,7 @@ public class BlairThingEntity extends MinibossThingEntity {
 
             if (bl2) {
                 this.teleportTo(x, g, z);
-                if (this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)){
-                    this.grief(0, 1);
-                }
+                this.grief(0, 1);
             }
         }
 

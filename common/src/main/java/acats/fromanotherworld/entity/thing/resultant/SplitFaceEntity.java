@@ -1,10 +1,7 @@
 package acats.fromanotherworld.entity.thing.resultant;
 
 import acats.fromanotherworld.constants.FAWAnimations;
-import acats.fromanotherworld.entity.goal.AbsorbGoal;
-import acats.fromanotherworld.entity.goal.FleeOnFireGoal;
-import acats.fromanotherworld.entity.goal.StalkGoal;
-import acats.fromanotherworld.entity.goal.ThingAttackGoal;
+import acats.fromanotherworld.entity.goal.*;
 import acats.fromanotherworld.entity.interfaces.StalkerThing;
 import acats.fromanotherworld.registry.EntityRegistry;
 import mod.azure.azurelib.core.animation.AnimatableManager;
@@ -29,7 +26,7 @@ public class SplitFaceEntity extends AbsorberThingEntity implements StalkerThing
         this.addThingTargets(false);
         this.goalSelector.addGoal(0, new FleeOnFireGoal(this, 16.0F, 1.2, 1.5));
         this.goalSelector.addGoal(1, new AbsorbGoal(this, STANDARD));
-        this.goalSelector.addGoal(2, new ThingAttackGoal(this, 2.0D, false));
+        this.goalSelector.addGoal(2, new LeapAttackGoal(this, 2.0D, false, 200, 3.0D, 0.3D, 12.0D));
         this.goalSelector.addGoal(3, new MoveThroughVillageGoal(this, 1.0, false, 4, () -> true));
         this.goalSelector.addGoal(4, new StalkGoal(this));
         this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 1.0D));

@@ -17,7 +17,6 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
@@ -136,8 +135,7 @@ public abstract class AbsorberThingEntity extends ThingEntity implements Tentacl
                 nextThing.setPos(this.position());
                 nextThing.initializeFrom(this);
                 this.level().addFreshEntity(nextThing);
-                if (this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING))
-                    nextThing.grief(0, 1);
+                nextThing.grief(0, 1);
             }
         }
         this.discard();

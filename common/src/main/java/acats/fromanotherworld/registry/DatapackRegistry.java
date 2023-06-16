@@ -8,6 +8,7 @@ public class DatapackRegistry {
         registerCompatDatapack("alexsmobs", "Alex's Mobs");
         registerCompatDatapack("guardvillagers", "Guard Villagers");
         registerCompatDatapack("mca", "Minecraft Comes Alive");
+        registerCompatDatapack("biomemakeover", "Biome Makeover");
     }
     private static void registerCompatDatapack(String modID, String name){
         COMPAT_DATAPACKS.put(modID, name);

@@ -1,13 +1,13 @@
 package acats.fromanotherworld.entity.goal;
 
-import acats.fromanotherworld.entity.thing.resultant.BlairThingEntity;
+import acats.fromanotherworld.entity.thing.resultant.BlairThing;
 import net.minecraft.world.entity.LivingEntity;
 
-import static acats.fromanotherworld.entity.thing.resultant.BlairThingEntity.*;
+import static acats.fromanotherworld.entity.thing.resultant.BlairThing.*;
 
 public class BlairThingAttackGoal extends ThingAttackGoal{
-    BlairThingEntity blairThing;
-    public BlairThingAttackGoal(BlairThingEntity mob, double speed, boolean pauseWhenMobIdle) {
+    BlairThing blairThing;
+    public BlairThingAttackGoal(BlairThing mob, double speed, boolean pauseWhenMobIdle) {
         super(mob, speed, pauseWhenMobIdle);
         this.blairThing = mob;
     }

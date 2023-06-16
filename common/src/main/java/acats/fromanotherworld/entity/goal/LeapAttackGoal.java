@@ -1,16 +1,16 @@
 package acats.fromanotherworld.entity.goal;
 
-import acats.fromanotherworld.entity.thing.ThingEntity;
+import acats.fromanotherworld.entity.thing.Thing;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
 public class LeapAttackGoal extends ThingAttackGoal {
-    protected final ThingEntity mob;
+    protected final Thing mob;
     private final int leapCooldown;
     private final double leapSpeed;
     private final double leapVerticalBonus;
     private final double leapRangeSquared;
-    public LeapAttackGoal(ThingEntity mob, double speed, boolean pauseWhenMobIdle, int leapCooldown, double leapSpeed, double leapVerticalBonus, double leapRange) {
+    public LeapAttackGoal(Thing mob, double speed, boolean pauseWhenMobIdle, int leapCooldown, double leapSpeed, double leapVerticalBonus, double leapRange) {
         super(mob, speed, pauseWhenMobIdle);
         this.mob = mob;
         this.leapCooldown = leapCooldown;

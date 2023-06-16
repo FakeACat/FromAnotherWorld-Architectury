@@ -1,7 +1,7 @@
 package acats.fromanotherworld.entity.misc;
 
-import acats.fromanotherworld.entity.thing.ThingEntity;
-import acats.fromanotherworld.entity.thing.resultant.BloodCrawlerEntity;
+import acats.fromanotherworld.entity.thing.Thing;
+import acats.fromanotherworld.entity.thing.resultant.BloodCrawler;
 import acats.fromanotherworld.registry.EntityRegistry;
 import acats.fromanotherworld.registry.ParticleRegistry;
 import mod.azure.azurelib.animatable.GeoEntity;
@@ -62,7 +62,7 @@ public class StarshipEntity extends Mob implements GeoEntity {
         if (this.onGround()){
             if (!this.level().isClientSide()){
                 this.level().explode(null, this.getX(), this.getY() + 3.0D, this.getZ(), 9, Level.ExplosionInteraction.TNT);
-                ThingEntity thing = EntityRegistry.ALIEN_THING.get().create(this.level());
+                Thing thing = EntityRegistry.ALIEN_THING.get().create(this.level());
                 if (thing != null) {
                     thing.setPos(this.position());
                     this.level().addFreshEntity(thing);
@@ -148,10 +148,10 @@ public class StarshipEntity extends Mob implements GeoEntity {
     @Override
     protected void dropAllDeathLoot(DamageSource source) {
         for (int i = 0; i < 7; i++){
-            BloodCrawlerEntity bloodCrawlerEntity = EntityRegistry.BLOOD_CRAWLER.get().create(this.level());
-            if (bloodCrawlerEntity != null) {
-                bloodCrawlerEntity.setPos(this.position().add(this.getRandom().nextFloat() - 0.5F, 0, this.getRandom().nextFloat() - 0.5F));
-                this.level().addFreshEntity(bloodCrawlerEntity);
+            BloodCrawler bloodCrawler = EntityRegistry.BLOOD_CRAWLER.get().create(this.level());
+            if (bloodCrawler != null) {
+                bloodCrawler.setPos(this.position().add(this.getRandom().nextFloat() - 0.5F, 0, this.getRandom().nextFloat() - 0.5F));
+                this.level().addFreshEntity(bloodCrawler);
             }
         }
         super.dropAllDeathLoot(source);

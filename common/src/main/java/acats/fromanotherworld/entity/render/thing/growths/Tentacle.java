@@ -2,7 +2,7 @@ package acats.fromanotherworld.entity.render.thing.growths;
 
 import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.entity.interfaces.TentacleThing;
-import acats.fromanotherworld.entity.thing.ThingEntity;
+import acats.fromanotherworld.entity.thing.Thing;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -20,7 +20,7 @@ import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
 public class Tentacle {
-    private final ThingEntity tentacler;
+    private final Thing tentacler;
     private final TentacleThing tentacleThing;
     private final Vec3 offsetOnVictim;
     private final int activationProbability;
@@ -33,7 +33,7 @@ public class Tentacle {
     private float victimHeight = 1.0F;
     public Tentacle(TentacleThing tentacleThing, int activationProbability, Vec3 offsetOnVictim){
         this.tentacleThing = tentacleThing;
-        this.tentacler = (ThingEntity) tentacleThing;
+        this.tentacler = (Thing) tentacleThing;
         this.targetPos = tentacler.position();
         this.previousTargetPos = this.targetPos;
         this.lastTargetPos = this.targetPos;

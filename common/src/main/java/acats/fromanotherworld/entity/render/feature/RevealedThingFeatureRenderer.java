@@ -1,7 +1,7 @@
 package acats.fromanotherworld.entity.render.feature;
 
 import acats.fromanotherworld.entity.interfaces.PossibleDisguisedThing;
-import acats.fromanotherworld.entity.model.thing.revealed.SpiderLegsEntityModel;
+import acats.fromanotherworld.entity.model.thing.revealed.SpiderLegsModel;
 import acats.fromanotherworld.entity.texture.ThingOverlayTexture;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -16,11 +16,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 
 public class RevealedThingFeatureRenderer<T extends Entity, M extends EntityModel<T>> extends RenderLayer<T, M> {
-    private final SpiderLegsEntityModel spiderLegsEntityModel;
+    private final SpiderLegsModel spiderLegsModel;
 
     public RevealedThingFeatureRenderer(RenderLayerParent<T, M> context, ModelPart root) {
         super(context);
-        this.spiderLegsEntityModel = new SpiderLegsEntityModel(root);
+        this.spiderLegsModel = new SpiderLegsModel(root);
     }
 
 
@@ -31,8 +31,8 @@ public class RevealedThingFeatureRenderer<T extends Entity, M extends EntityMode
         if (entity instanceof PossibleDisguisedThing e && !entity.isInvisible()){
             if (e.isRevealed() && entity.getBbHeight() <= 1.0F){
                 VertexConsumer v = vertexConsumers.getBuffer(RenderType.entitySolid(ThingOverlayTexture.FLESH_OVERLAY_TEXTURE));
-                this.spiderLegsEntityModel.setupAnim(entity, 0, 0, 0, 0, 0);
-                this.spiderLegsEntityModel.renderToBuffer(matrices, v, light, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+                this.spiderLegsModel.setupAnim(entity, 0, 0, 0, 0, 0);
+                this.spiderLegsModel.renderToBuffer(matrices, v, light, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
             }
 
             renderFleshOverlay(e, this.getParentModel(), this.getTextureLocation(entity), matrices, vertexConsumers, light, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch);

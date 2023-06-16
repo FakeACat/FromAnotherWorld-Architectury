@@ -2,13 +2,13 @@ package acats.fromanotherworld.forge.registry;
 
 import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.entity.model.thing.growths.TentacleSegmentModel;
-import acats.fromanotherworld.entity.model.thing.revealed.SpiderLegsEntityModel;
-import acats.fromanotherworld.entity.render.misc.StarshipEntityRenderer;
+import acats.fromanotherworld.entity.model.thing.revealed.SpiderLegsModel;
+import acats.fromanotherworld.entity.render.misc.StarshipRenderer;
 import acats.fromanotherworld.entity.render.projectile.NeedleEntityRenderer;
 import acats.fromanotherworld.entity.render.thing.TransitionEntityRenderer;
 import acats.fromanotherworld.entity.render.thing.resultant.*;
-import acats.fromanotherworld.entity.render.thing.revealed.ChestSpitterEntityRenderer;
-import acats.fromanotherworld.entity.render.thing.special.AlienThingEntityRenderer;
+import acats.fromanotherworld.entity.render.thing.revealed.ChestSpitterRenderer;
+import acats.fromanotherworld.entity.render.thing.special.AlienThingRenderer;
 import acats.fromanotherworld.registry.EntityRegistry.FAWEntity;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
@@ -34,27 +34,27 @@ public class EntityRegistryForge {
     }
 
     public static void clientRegister(EntityRenderersEvent.RegisterRenderers event){
-        event.registerEntityRenderer(CRAWLER.get(), CrawlerEntityRenderer::new);
-        event.registerEntityRenderer(CHEST_SPITTER.get(), ChestSpitterEntityRenderer::new);
+        event.registerEntityRenderer(CRAWLER.get(), CrawlerRenderer::new);
+        event.registerEntityRenderer(CHEST_SPITTER.get(), ChestSpitterRenderer::new);
         event.registerEntityRenderer(ASSIMILATION_LIQUID.get(), ThrownItemRenderer::new);
-        event.registerEntityRenderer(JULIETTE_THING.get(), JulietteThingEntityRenderer::new);
-        event.registerEntityRenderer(DOGBEAST.get(), DogBeastEntityRenderer::new);
-        event.registerEntityRenderer(BLOOD_CRAWLER.get(), BloodCrawlerEntityRenderer::new);
-        event.registerEntityRenderer(DOGBEAST_SPITTER.get(), DogBeastSpitterEntityRenderer::new);
-        event.registerEntityRenderer(IMPALER.get(), ImpalerEntityRenderer::new);
+        event.registerEntityRenderer(JULIETTE_THING.get(), JulietteThingRenderer::new);
+        event.registerEntityRenderer(DOGBEAST.get(), DogBeastRenderer::new);
+        event.registerEntityRenderer(BLOOD_CRAWLER.get(), BloodCrawlerRenderer::new);
+        event.registerEntityRenderer(DOGBEAST_SPITTER.get(), DogBeastSpitterRenderer::new);
+        event.registerEntityRenderer(IMPALER.get(), ImpalerRenderer::new);
         event.registerEntityRenderer(NEEDLE.get(), NeedleEntityRenderer::new);
-        event.registerEntityRenderer(STARSHIP.get(), StarshipEntityRenderer::new);
-        event.registerEntityRenderer(BEAST.get(), BeastEntityRenderer::new);
-        event.registerEntityRenderer(PALMER_THING.get(), PalmerThingEntityRenderer::new);
-        event.registerEntityRenderer(BLAIR_THING.get(), BlairThingEntityRenderer::new);
-        event.registerEntityRenderer(ALIEN_THING.get(), AlienThingEntityRenderer::new);
-        event.registerEntityRenderer(SPLIT_FACE.get(), SplitFaceEntityRenderer::new);
+        event.registerEntityRenderer(STARSHIP.get(), StarshipRenderer::new);
+        event.registerEntityRenderer(BEAST.get(), BeastRenderer::new);
+        event.registerEntityRenderer(PALMER_THING.get(), PalmerThingRenderer::new);
+        event.registerEntityRenderer(BLAIR_THING.get(), BlairThingRenderer::new);
+        event.registerEntityRenderer(ALIEN_THING.get(), AlienThingRenderer::new);
+        event.registerEntityRenderer(SPLIT_FACE.get(), SplitFaceRenderer::new);
         event.registerEntityRenderer(TRANSITION.get(), TransitionEntityRenderer::new);
     }
 
     public static void clientRegisterLayers(EntityRenderersEvent.RegisterLayerDefinitions event){
         spiderLegsModelLayer = new ModelLayerLocation(new ResourceLocation(FromAnotherWorld.MOD_ID, "spider_legs"), "main");
-        event.registerLayerDefinition(spiderLegsModelLayer, SpiderLegsEntityModel::getTexturedModelData);
+        event.registerLayerDefinition(spiderLegsModelLayer, SpiderLegsModel::getTexturedModelData);
         tentacleSegmentModelLayer = new ModelLayerLocation(new ResourceLocation(FromAnotherWorld.MOD_ID, "tentacle_segment"), "main");
         event.registerLayerDefinition(tentacleSegmentModelLayer, TentacleSegmentModel::createBodyLayer);
     }

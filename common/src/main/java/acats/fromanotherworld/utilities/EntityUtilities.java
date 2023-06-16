@@ -3,8 +3,8 @@ package acats.fromanotherworld.utilities;
 import acats.fromanotherworld.config.Classification;
 import acats.fromanotherworld.entity.interfaces.MaybeThing;
 import acats.fromanotherworld.entity.interfaces.PossibleDisguisedThing;
-import acats.fromanotherworld.entity.thing.ThingEntity;
-import acats.fromanotherworld.entity.thing.resultant.PalmerThingEntity;
+import acats.fromanotherworld.entity.thing.Thing;
+import acats.fromanotherworld.entity.thing.resultant.PalmerThing;
 import acats.fromanotherworld.events.CommonLivingEntityEvents;
 import acats.fromanotherworld.registry.EntityRegistry;
 import acats.fromanotherworld.registry.StatusEffectRegistry;
@@ -123,7 +123,7 @@ public class EntityUtilities {
         for (LivingEntity potentialThing:
                 potentialThings) {
             if (entity.getRandom().nextInt(chance) == 0){
-                if (potentialThing instanceof ThingEntity entity1 && threat != null){
+                if (potentialThing instanceof Thing entity1 && threat != null){
                     entity1.currentThreat = threat;
                     if (entity1.canAttack(threat))
                         entity1.setTarget(threat);
@@ -150,7 +150,7 @@ public class EntityUtilities {
 
     public static void spawnAssimilatedPlayer(Player playerEntity){
         Level world = playerEntity.level();
-        PalmerThingEntity palmerThingEntity = EntityRegistry.PALMER_THING.get().create(world); //placeholder, assimilated player would be very cool
+        PalmerThing palmerThingEntity = EntityRegistry.PALMER_THING.get().create(world); //placeholder, assimilated player would be very cool
         if (palmerThingEntity != null){
             palmerThingEntity.setPos(playerEntity.position());
             palmerThingEntity.setCustomName(playerEntity.getName());

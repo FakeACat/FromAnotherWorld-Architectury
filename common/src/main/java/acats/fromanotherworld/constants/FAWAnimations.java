@@ -1,6 +1,6 @@
 package acats.fromanotherworld.constants;
 
-import acats.fromanotherworld.entity.thing.ThingEntity;
+import acats.fromanotherworld.entity.thing.Thing;
 import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
@@ -20,7 +20,7 @@ public final class FAWAnimations {
     public static final RawAnimation BURROW = RawAnimation.begin().thenPlayAndHold("move.burrow");
     public static final RawAnimation EMERGE = RawAnimation.begin().thenPlayAndHold("move.emerge");
 
-    private static <E extends ThingEntity> void frozen(AnimationState<E> event, E thing){
+    private static <E extends Thing> void frozen(AnimationState<E> event, E thing){
         if (thing.getCold() == 1.0F){
             event.getController().setAnimation(FROZEN);
         }
@@ -29,7 +29,7 @@ public final class FAWAnimations {
         }
     }
 
-    private static <E extends ThingEntity> void movement(AnimationState<E> event, E thing){
+    private static <E extends Thing> void movement(AnimationState<E> event, E thing){
         if (thing.isAggressive()){
             event.getController().setAnimation(CHASE);
         }
@@ -38,11 +38,11 @@ public final class FAWAnimations {
         }
     }
 
-    private static <E extends ThingEntity> void generic(AnimationState<E> event,
-                                                        E thing,
-                                                        BiConsumer<AnimationState<E>, E> frozen,
-                                                        BiConsumer<AnimationState<E>, E> movement,
-                                                        BiConsumer<AnimationState<E>, E> idle){
+    private static <E extends Thing> void generic(AnimationState<E> event,
+                                                  E thing,
+                                                  BiConsumer<AnimationState<E>, E> frozen,
+                                                  BiConsumer<AnimationState<E>, E> movement,
+                                                  BiConsumer<AnimationState<E>, E> idle){
         if (thing.isThingFrozen()){
             frozen.accept(event, thing);
         }
@@ -56,18 +56,18 @@ public final class FAWAnimations {
         }
     }
 
-    public static <E extends ThingEntity> AnimationController<E> genericThing(E thing,
-                                                                              String name,
-                                                                              BiConsumer<AnimationState<E>, E> frozen,
-                                                                              BiConsumer<AnimationState<E>, E> movement,
-                                                                              BiConsumer<AnimationState<E>, E> idle){
+    public static <E extends Thing> AnimationController<E> genericThing(E thing,
+                                                                        String name,
+                                                                        BiConsumer<AnimationState<E>, E> frozen,
+                                                                        BiConsumer<AnimationState<E>, E> movement,
+                                                                        BiConsumer<AnimationState<E>, E> idle){
         return new AnimationController<>(thing, name, 5, (event) -> {
             generic(event, thing, frozen, movement, idle);
             return PlayState.CONTINUE;
         });
     }
 
-    public static <E extends ThingEntity> AnimationController<E> defaultThing(E thing){
+    public static <E extends Thing> AnimationController<E> defaultThing(E thing){
         return genericThing(thing,
                 "DefaultThing",
                 FAWAnimations::frozen,
@@ -75,7 +75,7 @@ public final class FAWAnimations {
                 (event2, thing2) -> event2.getController().setAnimation(IDLE));
     }
 
-    public static <E extends ThingEntity> AnimationController<E> defaultThingNoChase(E thing){
+    public static <E extends Thing> AnimationController<E> defaultThingNoChase(E thing){
         return genericThing(thing,
                 "DefaultThingNoChase",
                 FAWAnimations::frozen,

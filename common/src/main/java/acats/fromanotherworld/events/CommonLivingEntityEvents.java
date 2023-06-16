@@ -3,9 +3,9 @@ package acats.fromanotherworld.events;
 import acats.fromanotherworld.config.General;
 import acats.fromanotherworld.entity.interfaces.PossibleDisguisedThing;
 import acats.fromanotherworld.entity.projectile.AssimilationLiquidEntity;
-import acats.fromanotherworld.entity.thing.ThingEntity;
+import acats.fromanotherworld.entity.thing.Thing;
 import acats.fromanotherworld.entity.thing.TransitionEntity;
-import acats.fromanotherworld.entity.thing.revealed.ChestSpitterEntity;
+import acats.fromanotherworld.entity.thing.revealed.ChestSpitter;
 import acats.fromanotherworld.registry.DamageTypeRegistry;
 import acats.fromanotherworld.registry.EntityRegistry;
 import acats.fromanotherworld.registry.ParticleRegistry;
@@ -33,7 +33,7 @@ public class CommonLivingEntityEvents {
         if (!mob.getType().is(EntityTags.NOT_AFRAID_OF_THINGS) &&
                 EntityUtilities.isAssimilableType(mob) &&
                 mob instanceof PathfinderMob pathfinderMob){
-            goalSelector.addGoal(0, new AvoidEntityGoal<>(pathfinderMob, ThingEntity.class, 6.0F, 1.0F, 1.2F));
+            goalSelector.addGoal(0, new AvoidEntityGoal<>(pathfinderMob, Thing.class, 6.0F, 1.0F, 1.2F));
         }
     }
 
@@ -172,11 +172,11 @@ public class CommonLivingEntityEvents {
         PossibleDisguisedThing thing = ((PossibleDisguisedThing) entity);
         thing.setTimeUntilFinishedRevealing(400);
         entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 400, 6, false, false));
-        ChestSpitterEntity chestSpitterEntity = EntityRegistry.CHEST_SPITTER.get().create(entity.level());
-        if (chestSpitterEntity != null){
-            chestSpitterEntity.setPos(entity.position());
-            chestSpitterEntity.host = entity;
-            entity.level().addFreshEntity(chestSpitterEntity);
+        ChestSpitter chestSpitter = EntityRegistry.CHEST_SPITTER.get().create(entity.level());
+        if (chestSpitter != null){
+            chestSpitter.setPos(entity.position());
+            chestSpitter.host = entity;
+            entity.level().addFreshEntity(chestSpitter);
         }
     }
 

@@ -1,7 +1,7 @@
 package acats.fromanotherworld.block;
 
 
-import acats.fromanotherworld.entity.thing.resultant.BloodCrawlerEntity;
+import acats.fromanotherworld.entity.thing.resultant.BloodCrawler;
 import acats.fromanotherworld.registry.EntityRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -55,10 +55,10 @@ public class ThingGore extends FlammableBlock {
             int stage = state.getValue(STAGE);
             if (stage >= 2){
                 world.destroyBlock(pos, false);
-                BloodCrawlerEntity bloodCrawlerEntity = EntityRegistry.BLOOD_CRAWLER.get().create(world);
-                if (bloodCrawlerEntity != null) {
-                    bloodCrawlerEntity.setPos(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D);
-                    world.addFreshEntity(bloodCrawlerEntity);
+                BloodCrawler bloodCrawler = EntityRegistry.BLOOD_CRAWLER.get().create(world);
+                if (bloodCrawler != null) {
+                    bloodCrawler.setPos(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D);
+                    world.addFreshEntity(bloodCrawler);
                 }
             }
             else{

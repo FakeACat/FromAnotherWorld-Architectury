@@ -1,6 +1,6 @@
 package acats.fromanotherworld.entity.goal;
 
-import acats.fromanotherworld.entity.thing.ThingEntity;
+import acats.fromanotherworld.entity.thing.Thing;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
@@ -10,7 +10,7 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.monster.RangedAttackMob;
 
 public class ThingProjectileAttackGoal extends Goal {
-    private final ThingEntity mob;
+    private final Thing mob;
     private final RangedAttackMob owner;
     @Nullable
     private LivingEntity target;
@@ -28,7 +28,7 @@ public class ThingProjectileAttackGoal extends Goal {
             throw new IllegalArgumentException("ThingProjectileAttackGoal requires Mob implements RangedAttackMob");
         } else {
             this.owner = mob;
-            this.mob = (ThingEntity) mob;
+            this.mob = (Thing) mob;
             this.mobSpeed = mobSpeed;
             this.minIntervalTicks = minIntervalTicks;
             this.maxIntervalTicks = maxIntervalTicks;

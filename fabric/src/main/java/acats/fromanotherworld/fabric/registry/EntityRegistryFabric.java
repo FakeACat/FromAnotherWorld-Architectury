@@ -2,13 +2,13 @@ package acats.fromanotherworld.fabric.registry;
 
 import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.entity.model.thing.growths.TentacleSegmentModel;
-import acats.fromanotherworld.entity.model.thing.revealed.SpiderLegsEntityModel;
-import acats.fromanotherworld.entity.render.misc.StarshipEntityRenderer;
+import acats.fromanotherworld.entity.model.thing.revealed.SpiderLegsModel;
+import acats.fromanotherworld.entity.render.misc.StarshipRenderer;
 import acats.fromanotherworld.entity.render.projectile.NeedleEntityRenderer;
 import acats.fromanotherworld.entity.render.thing.TransitionEntityRenderer;
 import acats.fromanotherworld.entity.render.thing.resultant.*;
-import acats.fromanotherworld.entity.render.thing.revealed.ChestSpitterEntityRenderer;
-import acats.fromanotherworld.entity.render.thing.special.AlienThingEntityRenderer;
+import acats.fromanotherworld.entity.render.thing.revealed.ChestSpitterRenderer;
+import acats.fromanotherworld.entity.render.thing.special.AlienThingRenderer;
 import acats.fromanotherworld.registry.EntityRegistry.FAWEntity;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
@@ -38,25 +38,25 @@ public class EntityRegistryFabric {
 
     public static void clientRegister(){
         spiderLegsModelLayer = new ModelLayerLocation(new ResourceLocation(FromAnotherWorld.MOD_ID, "spider_legs"), "main");
-        EntityModelLayerRegistry.registerModelLayer(spiderLegsModelLayer, SpiderLegsEntityModel::getTexturedModelData);
+        EntityModelLayerRegistry.registerModelLayer(spiderLegsModelLayer, SpiderLegsModel::getTexturedModelData);
         tentacleSegmentModelLayer = new ModelLayerLocation(new ResourceLocation(FromAnotherWorld.MOD_ID, "tentacle_segment"), "main");
         EntityModelLayerRegistry.registerModelLayer(tentacleSegmentModelLayer, TentacleSegmentModel::createBodyLayer);
 
-        EntityRendererRegistry.register(CRAWLER.get(), CrawlerEntityRenderer::new);
-        EntityRendererRegistry.register(CHEST_SPITTER.get(), ChestSpitterEntityRenderer::new);
+        EntityRendererRegistry.register(CRAWLER.get(), CrawlerRenderer::new);
+        EntityRendererRegistry.register(CHEST_SPITTER.get(), ChestSpitterRenderer::new);
         EntityRendererRegistry.register(ASSIMILATION_LIQUID.get(), ThrownItemRenderer::new);
-        EntityRendererRegistry.register(JULIETTE_THING.get(), JulietteThingEntityRenderer::new);
-        EntityRendererRegistry.register(DOGBEAST.get(), DogBeastEntityRenderer::new);
-        EntityRendererRegistry.register(BLOOD_CRAWLER.get(), BloodCrawlerEntityRenderer::new);
-        EntityRendererRegistry.register(DOGBEAST_SPITTER.get(), DogBeastSpitterEntityRenderer::new);
-        EntityRendererRegistry.register(IMPALER.get(), ImpalerEntityRenderer::new);
+        EntityRendererRegistry.register(JULIETTE_THING.get(), JulietteThingRenderer::new);
+        EntityRendererRegistry.register(DOGBEAST.get(), DogBeastRenderer::new);
+        EntityRendererRegistry.register(BLOOD_CRAWLER.get(), BloodCrawlerRenderer::new);
+        EntityRendererRegistry.register(DOGBEAST_SPITTER.get(), DogBeastSpitterRenderer::new);
+        EntityRendererRegistry.register(IMPALER.get(), ImpalerRenderer::new);
         EntityRendererRegistry.register(NEEDLE.get(), NeedleEntityRenderer::new);
-        EntityRendererRegistry.register(STARSHIP.get(), StarshipEntityRenderer::new);
-        EntityRendererRegistry.register(BEAST.get(), BeastEntityRenderer::new);
-        EntityRendererRegistry.register(PALMER_THING.get(), PalmerThingEntityRenderer::new);
-        EntityRendererRegistry.register(BLAIR_THING.get(), BlairThingEntityRenderer::new);
-        EntityRendererRegistry.register(ALIEN_THING.get(), AlienThingEntityRenderer::new);
-        EntityRendererRegistry.register(SPLIT_FACE.get(), SplitFaceEntityRenderer::new);
+        EntityRendererRegistry.register(STARSHIP.get(), StarshipRenderer::new);
+        EntityRendererRegistry.register(BEAST.get(), BeastRenderer::new);
+        EntityRendererRegistry.register(PALMER_THING.get(), PalmerThingRenderer::new);
+        EntityRendererRegistry.register(BLAIR_THING.get(), BlairThingRenderer::new);
+        EntityRendererRegistry.register(ALIEN_THING.get(), AlienThingRenderer::new);
+        EntityRendererRegistry.register(SPLIT_FACE.get(), SplitFaceRenderer::new);
         EntityRendererRegistry.register(TRANSITION.get(), TransitionEntityRenderer::new);
     }
 }

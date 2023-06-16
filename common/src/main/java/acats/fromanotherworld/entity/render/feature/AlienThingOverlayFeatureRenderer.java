@@ -1,6 +1,6 @@
 package acats.fromanotherworld.entity.render.feature;
 
-import acats.fromanotherworld.entity.thing.special.AlienThingEntity;
+import acats.fromanotherworld.entity.thing.special.AlienThing;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import acats.fromanotherworld.entity.texture.ThingOverlayTexture;
@@ -10,7 +10,7 @@ import mod.azure.azurelib.renderer.layer.GeoRenderLayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 
-public class AlienThingOverlayFeatureRenderer<T extends AlienThingEntity> extends GeoRenderLayer<T> {
+public class AlienThingOverlayFeatureRenderer<T extends AlienThing> extends GeoRenderLayer<T> {
     public AlienThingOverlayFeatureRenderer(GeoRenderer<T> entityRendererIn) {
         super(entityRendererIn);
     }

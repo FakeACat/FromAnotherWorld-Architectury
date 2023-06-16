@@ -1,21 +1,21 @@
 package acats.fromanotherworld.entity.goal;
 
 import acats.fromanotherworld.entity.projectile.AssimilationLiquidEntity;
-import acats.fromanotherworld.entity.thing.resultant.BlairThingEntity;
-import acats.fromanotherworld.entity.thing.resultant.BloodCrawlerEntity;
-import acats.fromanotherworld.entity.thing.resultant.CrawlerEntity;
+import acats.fromanotherworld.entity.thing.resultant.BlairThing;
+import acats.fromanotherworld.entity.thing.resultant.BloodCrawler;
+import acats.fromanotherworld.entity.thing.resultant.Crawler;
 import acats.fromanotherworld.registry.EntityRegistry;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.phys.Vec3;
 
 import static acats.fromanotherworld.constants.Variants.JULIETTE;
-import static acats.fromanotherworld.entity.thing.resultant.BlairThingEntity.*;
+import static acats.fromanotherworld.entity.thing.resultant.BlairThing.*;
 
 public class BlairThingSpecialAttacksGoal extends Goal {
 
-    BlairThingEntity mob;
+    BlairThing mob;
 
-    public BlairThingSpecialAttacksGoal(BlairThingEntity mob){
+    public BlairThingSpecialAttacksGoal(BlairThing mob){
         this.mob = mob;
     }
 
@@ -51,15 +51,15 @@ public class BlairThingSpecialAttacksGoal extends Goal {
 
     private void littleRats(){
         if (this.mob.getRandom().nextInt(30) == 0){
-            BloodCrawlerEntity bloodCrawlerEntity = EntityRegistry.BLOOD_CRAWLER.get().create(this.mob.level());
-            if (bloodCrawlerEntity != null) {
-                bloodCrawlerEntity.moveTo(this.mob.getX(), this.mob.getY(), this.mob.getZ(), this.mob.getYRot(), this.mob.getXRot());
-                bloodCrawlerEntity.initializeFrom(this.mob);
-                this.mob.level().addFreshEntity(bloodCrawlerEntity);
+            BloodCrawler bloodCrawler = EntityRegistry.BLOOD_CRAWLER.get().create(this.mob.level());
+            if (bloodCrawler != null) {
+                bloodCrawler.moveTo(this.mob.getX(), this.mob.getY(), this.mob.getZ(), this.mob.getYRot(), this.mob.getXRot());
+                bloodCrawler.initializeFrom(this.mob);
+                this.mob.level().addFreshEntity(bloodCrawler);
             }
         }
         if (this.mob.getRandom().nextInt(120) == 0){
-            CrawlerEntity crawlerEntity = EntityRegistry.CRAWLER.get().create(this.mob.level());
+            Crawler crawlerEntity = EntityRegistry.CRAWLER.get().create(this.mob.level());
             if (crawlerEntity != null) {
                 crawlerEntity.blairSpawned = true;
                 crawlerEntity.setVictimType(JULIETTE);

@@ -1,10 +1,10 @@
 package acats.fromanotherworld.entity.goal;
 
-import acats.fromanotherworld.entity.thing.special.AlienThingEntity;
+import acats.fromanotherworld.entity.thing.special.AlienThing;
 
 public class AlienThingSwimGoal extends ImprovedSwimGoal {
-    AlienThingEntity alien;
-    public AlienThingSwimGoal(AlienThingEntity mob, float speed) {
+    AlienThing alien;
+    public AlienThingSwimGoal(AlienThing mob, float speed) {
         super(mob, speed);
         this.alien = mob;
     }

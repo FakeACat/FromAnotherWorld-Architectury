@@ -2,7 +2,7 @@ package acats.fromanotherworld.spawning;
 
 import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.config.General;
-import acats.fromanotherworld.entity.thing.special.AlienThingEntity;
+import acats.fromanotherworld.entity.thing.special.AlienThing;
 import acats.fromanotherworld.registry.EntityRegistry;
 import acats.fromanotherworld.utilities.EntityUtilities;
 import org.jetbrains.annotations.Nullable;
@@ -41,7 +41,7 @@ public class SpawningManager extends SavedData {
     public void alienThingSpawner(ServerLevel world){
         ServerPlayer player = this.getRandomVictim(world);
         if (player != null && !player.isCreative() && !player.isSpectator() && this.alienThingsToSpawn > 0){
-            AlienThingEntity alien = EntityRegistry.ALIEN_THING.get().create(world);
+            AlienThing alien = EntityRegistry.ALIEN_THING.get().create(world);
             if (alien != null){
                 alien.changeForm(world.getRandom().nextInt(3));
                 alien.tickEmerging();

@@ -1,6 +1,6 @@
 package acats.fromanotherworld.entity.goal;
 
-import acats.fromanotherworld.entity.thing.ThingEntity;
+import acats.fromanotherworld.entity.thing.Thing;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
@@ -10,8 +10,8 @@ import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 
 public class ThingTargetGoal<T extends LivingEntity> extends NearestAttackableTargetGoal<T> {
-    protected final ThingEntity mob;
-    public ThingTargetGoal(ThingEntity mob, Class<T> targetClass, boolean checkVisibility) {
+    protected final Thing mob;
+    public ThingTargetGoal(Thing mob, Class<T> targetClass, boolean checkVisibility) {
         super(mob, targetClass, checkVisibility);
         this.mob = mob;
     }
@@ -21,7 +21,7 @@ public class ThingTargetGoal<T extends LivingEntity> extends NearestAttackableTa
         if (mob == null){
             return super.getFollowDistance();
         }
-        return mob.canHunt ? ThingEntity.HUNTING_RANGE : super.getFollowDistance();
+        return mob.canHunt ? Thing.HUNTING_RANGE : super.getFollowDistance();
     }
 
     @Override
@@ -42,7 +42,7 @@ public class ThingTargetGoal<T extends LivingEntity> extends NearestAttackableTa
 
     protected void findTarget() {
         if (mob.canHunt){
-            LivingEntity livingEntity = this.mob.level().getNearestPlayer(this.mob, ThingEntity.HUNTING_RANGE);
+            LivingEntity livingEntity = this.mob.level().getNearestPlayer(this.mob, Thing.HUNTING_RANGE);
             if (livingEntity != null && mob.canAttack(livingEntity)){
                 this.target = livingEntity;
             }

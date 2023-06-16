@@ -1,7 +1,7 @@
 package acats.fromanotherworld.entity.goal;
 
 import acats.fromanotherworld.entity.interfaces.PossibleDisguisedThing;
-import acats.fromanotherworld.entity.thing.resultant.AbsorberThingEntity;
+import acats.fromanotherworld.entity.thing.resultant.AbsorberThing;
 import acats.fromanotherworld.utilities.EntityUtilities;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,14 +15,14 @@ import net.minecraft.world.level.Level;
 public class AbsorbGoal extends Goal {
     private static final int RANGE = 10;
     private final TargetingConditions absorbPredicate;
-    private final AbsorberThingEntity absorber;
+    private final AbsorberThing absorber;
     private final Level world;
     private final int chance;
     private int timer = 0;
-    public AbsorbGoal(AbsorberThingEntity absorber, Predicate<LivingEntity> absorbable){
+    public AbsorbGoal(AbsorberThing absorber, Predicate<LivingEntity> absorbable){
         this(absorber, absorbable, 800);
     }
-    public AbsorbGoal(AbsorberThingEntity absorber, Predicate<LivingEntity> absorbable, int chance){
+    public AbsorbGoal(AbsorberThing absorber, Predicate<LivingEntity> absorbable, int chance){
         this.absorber = absorber;
         this.world = absorber.level();
         this.chance = chance;
@@ -73,7 +73,7 @@ public class AbsorbGoal extends Goal {
             if (!target1.isAssimilated()){
                 target1.setSupercellConcentration(target1.getSupercellConcentration() + 0.1F);
             }
-            if (this.absorber.getAbsorbProgress() > AbsorberThingEntity.ABSORB_TIME) {
+            if (this.absorber.getAbsorbProgress() > AbsorberThing.ABSORB_TIME) {
                 this.absorber.grow(target);
                 target.discard();
                 this.stop();

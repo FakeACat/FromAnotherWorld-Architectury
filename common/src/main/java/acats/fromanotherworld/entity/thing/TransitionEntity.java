@@ -3,8 +3,8 @@ package acats.fromanotherworld.entity.thing;
 import acats.fromanotherworld.constants.Variants;
 import acats.fromanotherworld.entity.interfaces.MaybeThing;
 import acats.fromanotherworld.entity.render.thing.growths.TentacleMass;
-import acats.fromanotherworld.entity.thing.resultant.BeastEntity;
-import acats.fromanotherworld.entity.thing.resultant.BloodCrawlerEntity;
+import acats.fromanotherworld.entity.thing.resultant.Beast;
+import acats.fromanotherworld.entity.thing.resultant.BloodCrawler;
 import acats.fromanotherworld.registry.EntityRegistry;
 import acats.fromanotherworld.registry.ParticleRegistry;
 import acats.fromanotherworld.registry.SoundRegistry;
@@ -198,7 +198,7 @@ public class TransitionEntity extends LivingEntity implements MaybeThing {
     }
 
     private void becomeResultant(){
-        ThingEntity thing = null;
+        Thing thing = null;
         LivingEntity entity = this.getFakeEntity();
         EntityType<?> type = entity.getType();
         if (type.is(HUMANOIDS)){
@@ -243,7 +243,7 @@ public class TransitionEntity extends LivingEntity implements MaybeThing {
         else if (type.is(VERY_LARGE_QUADRUPEDS)){
             thing = EntityRegistry.BEAST.get().create(entity.level());
             if (thing != null){
-                ((BeastEntity) thing).setTier(0, true);
+                ((Beast) thing).setTier(0, true);
             }
         }
         else{
@@ -259,11 +259,11 @@ public class TransitionEntity extends LivingEntity implements MaybeThing {
 
     private void spawnCrawlers(int crawlers){
         for (int i = 0; i < crawlers; i++){
-            BloodCrawlerEntity bloodCrawlerEntity = EntityRegistry.BLOOD_CRAWLER.get().create(this.level());
-            if (bloodCrawlerEntity != null) {
-                bloodCrawlerEntity.moveTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), this.getXRot());
-                bloodCrawlerEntity.initializeFrom(this);
-                this.level().addFreshEntity(bloodCrawlerEntity);
+            BloodCrawler bloodCrawler = EntityRegistry.BLOOD_CRAWLER.get().create(this.level());
+            if (bloodCrawler != null) {
+                bloodCrawler.moveTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), this.getXRot());
+                bloodCrawler.initializeFrom(this);
+                this.level().addFreshEntity(bloodCrawler);
             }
         }
     }

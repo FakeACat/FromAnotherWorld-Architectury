@@ -1,14 +1,14 @@
 package acats.fromanotherworld.entity.goal;
 
-import acats.fromanotherworld.entity.thing.ThingEntity;
+import acats.fromanotherworld.entity.thing.Thing;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import acats.fromanotherworld.entity.projectile.AssimilationLiquidEntity;
 
 public class ThingAttackGoal extends MeleeAttackGoal {
-    protected final ThingEntity mob;
-    public ThingAttackGoal(ThingEntity mob, double speed, boolean pauseWhenMobIdle) {
+    protected final Thing mob;
+    public ThingAttackGoal(Thing mob, double speed, boolean pauseWhenMobIdle) {
         super(mob, speed, pauseWhenMobIdle);
         this.mob = mob;
     }

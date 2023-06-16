@@ -1,12 +1,12 @@
 package acats.fromanotherworld.entity.interfaces;
 
-import acats.fromanotherworld.entity.thing.ThingEntity;
+import acats.fromanotherworld.entity.thing.Thing;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 
 public interface StalkerThing {
 
-    int HUNTING_RANGE_SQUARED = ThingEntity.HUNTING_RANGE * ThingEntity.HUNTING_RANGE;
+    int HUNTING_RANGE_SQUARED = Thing.HUNTING_RANGE * Thing.HUNTING_RANGE;
 
     Player getStalkTarget();
 
@@ -18,7 +18,7 @@ public interface StalkerThing {
             if (this.isAcceptableStalkTarget(this.getStalkTarget()))
                 return this.getStalkTarget();
 
-            Player stalkTarget = entity.level().getNearestPlayer(entity, ThingEntity.HUNTING_RANGE);
+            Player stalkTarget = entity.level().getNearestPlayer(entity, Thing.HUNTING_RANGE);
 
             if (this.isAcceptableStalkTarget(stalkTarget)) {
                 this.setStalkTarget(stalkTarget);

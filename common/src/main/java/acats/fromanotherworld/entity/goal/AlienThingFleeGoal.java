@@ -1,6 +1,6 @@
 package acats.fromanotherworld.entity.goal;
 
-import acats.fromanotherworld.entity.thing.special.AlienThingEntity;
+import acats.fromanotherworld.entity.thing.special.AlienThing;
 import acats.fromanotherworld.utilities.EntityUtilities;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
@@ -9,9 +9,9 @@ import net.minecraft.world.entity.ai.util.DefaultRandomPos;
 import net.minecraft.world.phys.Vec3;
 
 public class AlienThingFleeGoal extends AvoidEntityGoal<LivingEntity> {
-    private final AlienThingEntity mob;
+    private final AlienThing mob;
     private final TargetingConditions withinRangePredicate;
-    public AlienThingFleeGoal(AlienThingEntity mob) {
+    public AlienThingFleeGoal(AlienThing mob) {
         super(mob, LivingEntity.class, 50, 1.0D, 1.2D);
         this.mob = mob;
         this.withinRangePredicate = TargetingConditions.forCombat().range(this.maxDist).selector(predicateOnAvoidEntity.and(avoidPredicate));

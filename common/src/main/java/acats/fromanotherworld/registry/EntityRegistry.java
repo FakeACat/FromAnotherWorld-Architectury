@@ -4,9 +4,9 @@ import acats.fromanotherworld.entity.misc.StarshipEntity;
 import acats.fromanotherworld.entity.projectile.AssimilationLiquidEntity;
 import acats.fromanotherworld.entity.projectile.NeedleEntity;
 import acats.fromanotherworld.entity.thing.TransitionEntity;
-import acats.fromanotherworld.entity.thing.revealed.ChestSpitterEntity;
+import acats.fromanotherworld.entity.thing.revealed.ChestSpitter;
 import acats.fromanotherworld.entity.thing.resultant.*;
-import acats.fromanotherworld.entity.thing.special.AlienThingEntity;
+import acats.fromanotherworld.entity.thing.special.AlienThing;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -40,65 +40,65 @@ public class EntityRegistry {
     public static final HashMap<String, FAWEntity<? extends LivingEntity>> LIVING_ENTITY_REGISTRY = new HashMap<>();
     public static final HashMap<String, Supplier<AttributeSupplier.Builder>> ATTRIBUTE_REGISTRY = new HashMap<>();
 
-    public static final FAWEntity<CrawlerEntity> CRAWLER = registerLiving(
+    public static final FAWEntity<Crawler> CRAWLER = registerLiving(
             "crawler",
-            EntityType.Builder.of(CrawlerEntity::new, MobCategory.CREATURE).sized(0.6F, 0.75F).clientTrackingRange(TRACK_RANGE_MEDIUM),
-            CrawlerEntity::createCrawlerAttributes
+            EntityType.Builder.of(Crawler::new, MobCategory.CREATURE).sized(0.6F, 0.75F).clientTrackingRange(TRACK_RANGE_MEDIUM),
+            Crawler::createCrawlerAttributes
     );
-    public static final FAWEntity<ChestSpitterEntity> CHEST_SPITTER = registerLiving(
+    public static final FAWEntity<ChestSpitter> CHEST_SPITTER = registerLiving(
             "chest_spitter",
-            EntityType.Builder.of(ChestSpitterEntity::new, MobCategory.CREATURE).sized(1.0F, 0.375F).clientTrackingRange(TRACK_RANGE_MEDIUM),
-            ChestSpitterEntity::createChestSpitterAttributes
+            EntityType.Builder.of(ChestSpitter::new, MobCategory.CREATURE).sized(1.0F, 0.375F).clientTrackingRange(TRACK_RANGE_MEDIUM),
+            ChestSpitter::createChestSpitterAttributes
     );
-    public static final FAWEntity<JulietteThingEntity> JULIETTE_THING = registerLiving(
+    public static final FAWEntity<JulietteThing> JULIETTE_THING = registerLiving(
             "juliette_thing",
-            EntityType.Builder.of(JulietteThingEntity::new, MobCategory.CREATURE).sized(0.6F, 1.8F).clientTrackingRange(TRACK_RANGE_MEDIUM),
-            JulietteThingEntity::createJulietteThingAttributes
+            EntityType.Builder.of(JulietteThing::new, MobCategory.CREATURE).sized(0.6F, 1.8F).clientTrackingRange(TRACK_RANGE_MEDIUM),
+            JulietteThing::createJulietteThingAttributes
     );
-    public static final FAWEntity<DogBeastEntity> DOGBEAST = registerLiving(
+    public static final FAWEntity<DogBeast> DOGBEAST = registerLiving(
             "dogbeast",
-            EntityType.Builder.of(DogBeastEntity::new, MobCategory.CREATURE).sized(0.6F, 0.8F).clientTrackingRange(TRACK_RANGE_MEDIUM),
-            DogBeastEntity::createDogBeastAttributes
+            EntityType.Builder.of(DogBeast::new, MobCategory.CREATURE).sized(0.6F, 0.8F).clientTrackingRange(TRACK_RANGE_MEDIUM),
+            DogBeast::createDogBeastAttributes
     );
-    public static final FAWEntity<BloodCrawlerEntity> BLOOD_CRAWLER = registerLiving(
+    public static final FAWEntity<BloodCrawler> BLOOD_CRAWLER = registerLiving(
             "blood_crawler",
-            EntityType.Builder.of(BloodCrawlerEntity::new, MobCategory.CREATURE).sized(0.45F, 0.45F).clientTrackingRange(TRACK_RANGE_SHORT),
-            BloodCrawlerEntity::createBloodCrawlerAttributes
+            EntityType.Builder.of(BloodCrawler::new, MobCategory.CREATURE).sized(0.45F, 0.45F).clientTrackingRange(TRACK_RANGE_SHORT),
+            BloodCrawler::createBloodCrawlerAttributes
     );
-    public static final FAWEntity<DogBeastSpitterEntity> DOGBEAST_SPITTER = registerLiving(
+    public static final FAWEntity<DogBeastSpitter> DOGBEAST_SPITTER = registerLiving(
             "dogbeast_spitter",
-            EntityType.Builder.of(DogBeastSpitterEntity::new, MobCategory.CREATURE).sized(0.6F, 1.2F).clientTrackingRange(TRACK_RANGE_MEDIUM),
-            DogBeastSpitterEntity::createDogBeastSpitterAttributes
+            EntityType.Builder.of(DogBeastSpitter::new, MobCategory.CREATURE).sized(0.6F, 1.2F).clientTrackingRange(TRACK_RANGE_MEDIUM),
+            DogBeastSpitter::createDogBeastSpitterAttributes
     );
-    public static final FAWEntity<ImpalerEntity> IMPALER = registerLiving(
+    public static final FAWEntity<Impaler> IMPALER = registerLiving(
             "impaler",
-            EntityType.Builder.of(ImpalerEntity::new, MobCategory.CREATURE).sized(0.6F, 0.8F).clientTrackingRange(TRACK_RANGE_MEDIUM),
-            ImpalerEntity::createImpalerAttributes
+            EntityType.Builder.of(Impaler::new, MobCategory.CREATURE).sized(0.6F, 0.8F).clientTrackingRange(TRACK_RANGE_MEDIUM),
+            Impaler::createImpalerAttributes
     );
     public static final FAWEntity<StarshipEntity> STARSHIP = registerLiving(
             "starship",
             EntityType.Builder.of(StarshipEntity::new, MobCategory.MISC).sized(5.0F, 2.0F).clientTrackingRange(TRACK_RANGE_LONG),
             StarshipEntity::createStarshipAttributes
     );
-    public static final FAWEntity<BeastEntity> BEAST = registerLiving(
+    public static final FAWEntity<Beast> BEAST = registerLiving(
             "beast",
-            EntityType.Builder.of(BeastEntity::new, MobCategory.CREATURE).sized(2.5F, 2.5F).clientTrackingRange(TRACK_RANGE_LONG),
-            BeastEntity::createBeastAttributes
+            EntityType.Builder.of(Beast::new, MobCategory.CREATURE).sized(2.5F, 2.5F).clientTrackingRange(TRACK_RANGE_LONG),
+            Beast::createBeastAttributes
     );
-    public static final FAWEntity<PalmerThingEntity> PALMER_THING = registerLiving(
+    public static final FAWEntity<PalmerThing> PALMER_THING = registerLiving(
             "palmer_thing",
-            EntityType.Builder.of(PalmerThingEntity::new, MobCategory.CREATURE).sized(0.6F, 1.8F).clientTrackingRange(TRACK_RANGE_MEDIUM),
-            PalmerThingEntity::createPalmerThingAttributes
+            EntityType.Builder.of(PalmerThing::new, MobCategory.CREATURE).sized(0.6F, 1.8F).clientTrackingRange(TRACK_RANGE_MEDIUM),
+            PalmerThing::createPalmerThingAttributes
     );
-    public static final FAWEntity<BlairThingEntity> BLAIR_THING = registerLiving(
+    public static final FAWEntity<BlairThing> BLAIR_THING = registerLiving(
             "blair_thing",
-            EntityType.Builder.of(BlairThingEntity::new, MobCategory.CREATURE).sized(2.0F, 3.0F).clientTrackingRange(TRACK_RANGE_LONG),
-            BlairThingEntity::createBlairThingAttributes
+            EntityType.Builder.of(BlairThing::new, MobCategory.CREATURE).sized(2.0F, 3.0F).clientTrackingRange(TRACK_RANGE_LONG),
+            BlairThing::createBlairThingAttributes
     );
-    public static final FAWEntity<AlienThingEntity> ALIEN_THING = registerLiving(
+    public static final FAWEntity<AlienThing> ALIEN_THING = registerLiving(
             "alien_thing",
-            EntityType.Builder.of(AlienThingEntity::new, MobCategory.CREATURE).sized(0.6F, 1.8F).clientTrackingRange(TRACK_RANGE_MEDIUM),
-            AlienThingEntity::createAlienThingAttributes
+            EntityType.Builder.of(AlienThing::new, MobCategory.CREATURE).sized(0.6F, 1.8F).clientTrackingRange(TRACK_RANGE_MEDIUM),
+            AlienThing::createAlienThingAttributes
     );
     public static final FAWEntity<AssimilationLiquidEntity> ASSIMILATION_LIQUID = register(
             "assimilation_liquid",
@@ -114,10 +114,10 @@ public class EntityRegistry {
                     .sized(0.25F, 0.25F)
                     .updateInterval(TRACK_RANGE_SHORT)
     );
-    public static final FAWEntity<SplitFaceEntity> SPLIT_FACE = registerLiving(
+    public static final FAWEntity<SplitFace> SPLIT_FACE = registerLiving(
             "split_face",
-            EntityType.Builder.of(SplitFaceEntity::new, MobCategory.CREATURE).sized(0.8F, 1.8F).clientTrackingRange(TRACK_RANGE_MEDIUM),
-            SplitFaceEntity::createSplitFaceAttributes
+            EntityType.Builder.of(SplitFace::new, MobCategory.CREATURE).sized(0.8F, 1.8F).clientTrackingRange(TRACK_RANGE_MEDIUM),
+            SplitFace::createSplitFaceAttributes
     );
 
     public static final FAWEntity<TransitionEntity> TRANSITION = registerLiving(

@@ -4,6 +4,7 @@ import acats.fromanotherworld.entity.goal.AbsorbGoal;
 import acats.fromanotherworld.entity.goal.FleeOnFireGoal;
 import acats.fromanotherworld.entity.goal.ThingProjectileAttackGoal;
 import acats.fromanotherworld.entity.projectile.AssimilationLiquidEntity;
+import acats.fromanotherworld.entity.thing.ResizeableThing;
 import acats.fromanotherworld.registry.EntityRegistry;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animation.AnimatableManager;
@@ -24,7 +25,7 @@ import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
-public class DogBeastSpitter extends AbsorberThing implements RangedAttackMob {
+public class DogBeastSpitter extends ResizeableThing implements RangedAttackMob {
 
     private static final EntityDataAccessor<Boolean> ATTACKING;
 

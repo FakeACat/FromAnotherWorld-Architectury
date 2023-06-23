@@ -1,6 +1,7 @@
 package acats.fromanotherworld.entity.render.thing.resultant;
 
 import acats.fromanotherworld.entity.model.thing.resultant.JulietteThingModel;
+import acats.fromanotherworld.entity.render.thing.AbsorberThingRenderer;
 import acats.fromanotherworld.entity.thing.resultant.JulietteThing;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;

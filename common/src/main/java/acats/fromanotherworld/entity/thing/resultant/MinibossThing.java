@@ -1,6 +1,7 @@
 package acats.fromanotherworld.entity.thing.resultant;
 
 import acats.fromanotherworld.config.General;
+import acats.fromanotherworld.entity.thing.AbsorberThing;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;

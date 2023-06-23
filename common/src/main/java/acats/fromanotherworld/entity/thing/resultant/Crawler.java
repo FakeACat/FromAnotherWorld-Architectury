@@ -3,6 +3,7 @@ package acats.fromanotherworld.entity.thing.resultant;
 import acats.fromanotherworld.entity.goal.AbsorbGoal;
 import acats.fromanotherworld.entity.goal.FleeOnFireGoal;
 import acats.fromanotherworld.entity.goal.ThingAttackGoal;
+import acats.fromanotherworld.entity.thing.AbsorberThing;
 import acats.fromanotherworld.registry.EntityRegistry;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animation.AnimatableManager;

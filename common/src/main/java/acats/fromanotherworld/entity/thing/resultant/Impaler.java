@@ -6,6 +6,7 @@ import acats.fromanotherworld.entity.interfaces.BurstAttackThing;
 import acats.fromanotherworld.entity.goal.ThingAttackGoal;
 import acats.fromanotherworld.entity.goal.ThingProjectileBurstGoal;
 import acats.fromanotherworld.entity.projectile.NeedleEntity;
+import acats.fromanotherworld.entity.thing.ResizeableThing;
 import acats.fromanotherworld.registry.EntityRegistry;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import net.minecraft.nbt.CompoundTag;
@@ -22,7 +23,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
-public class Impaler extends AbsorberThing implements BurstAttackThing {
+public class Impaler extends ResizeableThing implements BurstAttackThing {
 
     private static final EntityDataAccessor<Boolean> BACK_NEEDLES;
     private int backNeedlesRegrow = 0;

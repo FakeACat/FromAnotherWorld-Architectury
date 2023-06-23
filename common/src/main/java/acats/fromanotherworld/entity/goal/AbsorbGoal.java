@@ -1,7 +1,7 @@
 package acats.fromanotherworld.entity.goal;
 
 import acats.fromanotherworld.entity.interfaces.PossibleDisguisedThing;
-import acats.fromanotherworld.entity.thing.resultant.AbsorberThing;
+import acats.fromanotherworld.entity.thing.AbsorberThing;
 import acats.fromanotherworld.utilities.EntityUtilities;
 import org.jetbrains.annotations.Nullable;
 

@@ -1,6 +1,7 @@
 package acats.fromanotherworld.entity.model.thing.resultant;
 
 import acats.fromanotherworld.FromAnotherWorld;
+import acats.fromanotherworld.constants.Variants;
 import acats.fromanotherworld.entity.interfaces.VariableThingModel;
 import acats.fromanotherworld.entity.thing.resultant.Impaler;
 import mod.azure.azurelib.model.GeoModel;
@@ -37,7 +38,7 @@ public class ImpalerModel extends GeoModel<Impaler> implements VariableThingMode
 
     @Override
     public String getVariant(Impaler animatable) {
-        return "impaler";
+        return animatable.getVictimType() == Variants.LLAMA ? "impaler_llama" : "impaler";
     }
 
     @Override

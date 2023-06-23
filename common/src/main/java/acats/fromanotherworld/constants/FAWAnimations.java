@@ -43,6 +43,8 @@ public final class FAWAnimations {
                                                   BiConsumer<AnimationState<E>, E> frozen,
                                                   BiConsumer<AnimationState<E>, E> movement,
                                                   BiConsumer<AnimationState<E>, E> idle){
+
+        event.getController().setAnimationSpeed(thing.animationSpeed(event));
         if (thing.isThingFrozen()){
             frozen.accept(event, thing);
         }
@@ -61,7 +63,7 @@ public final class FAWAnimations {
                                                                         BiConsumer<AnimationState<E>, E> frozen,
                                                                         BiConsumer<AnimationState<E>, E> movement,
                                                                         BiConsumer<AnimationState<E>, E> idle){
-        return new AnimationController<>(thing, name, 5, (event) -> {
+        return new AnimationController<>(thing, name, 0, (event) -> {
             generic(event, thing, frozen, movement, idle);
             return PlayState.CONTINUE;
         });

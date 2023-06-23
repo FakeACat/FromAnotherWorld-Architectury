@@ -1,7 +1,7 @@
 {
 	"format_version": "1.8.0",
 	"animations": {
-		"animation.dogbeast.walk": {
+		"move.walk": {
 			"loop": true,
 			"animation_length": 1.79167,
 			"bones": {
@@ -359,7 +359,7 @@
 				}
 			}
 		},
-		"animation.dogbeast.idle": {
+		"misc.idle": {
 			"loop": true,
 			"animation_length": 4,
 			"bones": {
@@ -481,6 +481,168 @@
 							"vector": [0, 0, 0],
 							"easing": "easeInOutSine"
 						}
+					}
+				},
+				"neck": {
+					"rotation": {
+						"vector": [27.5, 0, 0]
+					}
+				},
+				"lowerJaw": {
+					"rotation": {
+						"vector": [-12.5, 0, 0]
+					}
+				}
+			}
+		},
+		"misc.freezing": {
+			"loop": "hold_on_last_frame",
+			"animation_length": 1,
+			"bones": {
+				"bone1": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"1.0": {
+							"vector": [0, 0, -22.5]
+						}
+					}
+				},
+				"bone2": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"1.0": {
+							"vector": [0, 0, -22.5]
+						}
+					}
+				},
+				"bone3": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"1.0": {
+							"vector": [0, 0, -22.5]
+						}
+					}
+				},
+				"bone4": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"1.0": {
+							"vector": [0, 0, -22.5]
+						}
+					}
+				},
+				"bone5": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"1.0": {
+							"vector": [0, 0, 22.5]
+						}
+					}
+				},
+				"bone6": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"1.0": {
+							"vector": [0, 0, 22.5]
+						}
+					}
+				},
+				"bone7": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"1.0": {
+							"vector": [0, 0, 22.5]
+						}
+					}
+				},
+				"bone8": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"1.0": {
+							"vector": [0, 0, 22.5]
+						}
+					}
+				},
+				"neck": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"1.0": {
+							"vector": [27.5, 0, 0]
+						}
+					}
+				},
+				"lowerJaw": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.25": {
+							"vector": [-12.5, 0, 0]
+						}
+					}
+				}
+			}
+		},
+		"misc.frozen": {
+			"loop": "hold_on_last_frame",
+			"animation_length": 1,
+			"bones": {
+				"bone1": {
+					"rotation": {
+						"vector": [0, 0, -22.5]
+					}
+				},
+				"bone2": {
+					"rotation": {
+						"vector": [0, 0, -22.5]
+					}
+				},
+				"bone3": {
+					"rotation": {
+						"vector": [0, 0, -22.5]
+					}
+				},
+				"bone4": {
+					"rotation": {
+						"vector": [0, 0, -22.5]
+					}
+				},
+				"bone5": {
+					"rotation": {
+						"vector": [0, 0, 22.5]
+					}
+				},
+				"bone6": {
+					"rotation": {
+						"vector": [0, 0, 22.5]
+					}
+				},
+				"bone7": {
+					"rotation": {
+						"vector": [0, 0, 22.5]
+					}
+				},
+				"bone8": {
+					"rotation": {
+						"vector": [0, 0, 22.5]
 					}
 				},
 				"neck": {

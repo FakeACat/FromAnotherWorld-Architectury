@@ -3,6 +3,7 @@ package acats.fromanotherworld.entity.thing.resultant;
 import acats.fromanotherworld.constants.FAWAnimations;
 import acats.fromanotherworld.entity.goal.*;
 import acats.fromanotherworld.entity.interfaces.StalkerThing;
+import acats.fromanotherworld.entity.thing.AbsorberThing;
 import acats.fromanotherworld.registry.EntityRegistry;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import net.minecraft.world.entity.EntityType;

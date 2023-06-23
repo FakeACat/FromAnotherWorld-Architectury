@@ -2,6 +2,7 @@ package acats.fromanotherworld.entity.thing;
 
 import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.config.General;
+import acats.fromanotherworld.constants.Variants;
 import acats.fromanotherworld.entity.goal.ThingTargetGoal;
 import acats.fromanotherworld.entity.interfaces.MaybeThing;
 import acats.fromanotherworld.entity.navigation.ThingNavigation;
@@ -14,6 +15,7 @@ import acats.fromanotherworld.tags.EntityTags;
 import acats.fromanotherworld.utilities.EntityUtilities;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.util.AzureLibUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -27,10 +29,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.monster.Monster;
@@ -45,7 +44,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
-    private static final EntityDataAccessor<Integer> VICTIM_TYPE;
+    private static final EntityDataAccessor<Byte> VICTIM_TYPE;
     private static final EntityDataAccessor<Boolean> HIBERNATING;
     private static final EntityDataAccessor<Float> COLD;
     private static final EntityDataAccessor<Boolean> CLIMBING;
@@ -96,10 +95,10 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
 
     private final AnimatableInstanceCache animatableInstanceCache = AzureLibUtil.createInstanceCache(this);
 
-    public int getVictimType(){
+    public byte getVictimType(){
         return this.entityData.get(VICTIM_TYPE);
     }
-    public void setVictimType(int victimType){
+    public void setVictimType(byte victimType){
         this.entityData.set(VICTIM_TYPE, victimType);
     }
 
@@ -127,7 +126,7 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(VICTIM_TYPE, -1);
+        this.entityData.define(VICTIM_TYPE, Variants.DEFAULT);
         this.entityData.define(HIBERNATING, false);
         this.entityData.define(COLD, 0.0F);
         this.entityData.define(CLIMBING, false);
@@ -510,7 +509,7 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
         this.canGrief = nbt.getBoolean("CanGrief");
         this.canShootNeedles = nbt.getBoolean("CanShootNeedles");
 
-        this.setVictimType(nbt.getInt("VictimType"));
+        this.setVictimType(nbt.getByte("VictimType"));
 
         this.setHibernating(nbt.getBoolean("Hibernating"));
         this.timeSinceLastSeenTarget = nbt.getInt("TimeSinceLastSeenTarget");
@@ -520,6 +519,10 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.animatableInstanceCache;
+    }
+
+    public double animationSpeed(AnimationState<? extends Thing> state){
+        return 1.0D;
     }
 
     @Override
@@ -540,7 +543,7 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
     public abstract Strength getFormStrength();
 
     static {
-        VICTIM_TYPE = SynchedEntityData.defineId(Thing.class, EntityDataSerializers.INT);
+        VICTIM_TYPE = SynchedEntityData.defineId(Thing.class, EntityDataSerializers.BYTE);
         HIBERNATING = SynchedEntityData.defineId(Thing.class, EntityDataSerializers.BOOLEAN);
         COLD = SynchedEntityData.defineId(Thing.class, EntityDataSerializers.FLOAT);
         CLIMBING = SynchedEntityData.defineId(Thing.class, EntityDataSerializers.BOOLEAN);

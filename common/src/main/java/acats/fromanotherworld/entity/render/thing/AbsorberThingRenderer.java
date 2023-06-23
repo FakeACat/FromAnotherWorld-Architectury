@@ -1,8 +1,7 @@
-package acats.fromanotherworld.entity.render.thing.resultant;
+package acats.fromanotherworld.entity.render.thing;
 
 import acats.fromanotherworld.entity.render.thing.growths.Tentacle;
-import acats.fromanotherworld.entity.render.thing.ThingRenderer;
-import acats.fromanotherworld.entity.thing.resultant.AbsorberThing;
+import acats.fromanotherworld.entity.thing.AbsorberThing;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mod.azure.azurelib.model.GeoModel;
 import net.minecraft.client.renderer.MultiBufferSource;

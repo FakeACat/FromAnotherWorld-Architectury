@@ -201,6 +201,7 @@ public class TransitionEntity extends LivingEntity implements MaybeThing {
         Thing thing = null;
         LivingEntity entity = this.getFakeEntity();
         EntityType<?> type = entity.getType();
+        boolean smaller = false;
         if (type.is(HUMANOIDS)){
             switch (chooseStrength()) {
                 case 0 -> {
@@ -223,6 +224,7 @@ public class TransitionEntity extends LivingEntity implements MaybeThing {
                 case 0 -> {
                     thing = EntityRegistry.DOGBEAST_SPITTER.get().create(this.level());
                     spawnCrawlers(3);
+                    smaller = true;
                 }
                 case 1 -> thing = EntityRegistry.DOGBEAST.get().create(this.level());
                 case 2 -> thing = EntityRegistry.IMPALER.get().create(this.level());
@@ -250,6 +252,10 @@ public class TransitionEntity extends LivingEntity implements MaybeThing {
             spawnCrawlers(Mth.ceil(vol() * 4.0F));
         }
         if (thing != null){
+            if (thing instanceof ResizeableThing resizeableThing){
+                float scale = smaller ? 0.7F : 1.0F;
+                resizeableThing.setupScale(this.entityData.get(WIDTH) * scale, this.entityData.get(HEIGHT) * scale);
+            }
             thing.moveTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), this.getXRot());
             thing.initializeFrom(this);
             this.level().addFreshEntity(thing);

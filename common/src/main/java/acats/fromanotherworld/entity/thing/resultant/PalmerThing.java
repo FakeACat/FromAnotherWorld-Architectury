@@ -4,6 +4,7 @@ import acats.fromanotherworld.entity.goal.AbsorbGoal;
 import acats.fromanotherworld.entity.goal.FleeOnFireGoal;
 import acats.fromanotherworld.entity.goal.LeapAttackGoal;
 import acats.fromanotherworld.entity.render.thing.growths.Tentacle;
+import acats.fromanotherworld.entity.thing.AbsorberThing;
 import acats.fromanotherworld.registry.EntityRegistry;
 import acats.fromanotherworld.utilities.EntityUtilities;
 import mod.azure.azurelib.animatable.GeoEntity;

@@ -1,15 +1,14 @@
 package acats.fromanotherworld.entity.thing.resultant;
 
+import acats.fromanotherworld.constants.FAWAnimations;
 import acats.fromanotherworld.entity.goal.AbsorbGoal;
 import acats.fromanotherworld.entity.goal.FleeOnFireGoal;
 import acats.fromanotherworld.entity.goal.ThingAttackGoal;
+import acats.fromanotherworld.entity.thing.ResizeableThing;
+import acats.fromanotherworld.entity.thing.Thing;
 import acats.fromanotherworld.registry.EntityRegistry;
-import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animation.AnimatableManager;
-import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
-import mod.azure.azurelib.core.object.PlayState;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -19,7 +18,7 @@ import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 
-public class DogBeast extends AbsorberThing {
+public class DogBeast extends ResizeableThing {
 
     public DogBeast(EntityType<? extends DogBeast> entityType, Level world) {
         super(entityType, world);
@@ -43,20 +42,6 @@ public class DogBeast extends AbsorberThing {
         return Monster.createMonsterAttributes().add(Attributes.MOVEMENT_SPEED, 0.35D).add(Attributes.ATTACK_DAMAGE, 8.0D).add(Attributes.MAX_HEALTH, 30.0D);
     }
 
-    private <E extends GeoEntity> PlayState predicate(AnimationState<E> event) {
-        if (this.isThingFrozen())
-            return PlayState.STOP;
-        if (event.isMoving() || this.movingClimbing()){
-            event.getController().setAnimationSpeed(2.0D);
-            event.getController().setAnimation(RawAnimation.begin().thenLoop("animation.dogbeast.walk"));
-        }
-        else{
-            event.getController().setAnimationSpeed(1.0D);
-            event.getController().setAnimation(RawAnimation.begin().thenLoop("animation.dogbeast.idle"));
-        }
-        return PlayState.CONTINUE;
-    }
-
     @Override
     public void die(DamageSource source) {
         if (random.nextInt(3) == 0){
@@ -72,7 +57,12 @@ public class DogBeast extends AbsorberThing {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
-        controllerRegistrar.add(new AnimationController<>(this, "controller", 10, this::predicate));
+        controllerRegistrar.add(FAWAnimations.defaultThingNoChase(this));
+    }
+
+    @Override
+    public double animationSpeed(AnimationState<? extends Thing> state) {
+        return state.isMoving() ? super.animationSpeed(state) * 2.0D : super.animationSpeed(state);
     }
 
     @Override

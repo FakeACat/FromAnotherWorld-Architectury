@@ -2,6 +2,7 @@ package acats.fromanotherworld.entity.thing.revealed;
 
 import acats.fromanotherworld.entity.goal.FleeOnFireGoal;
 import acats.fromanotherworld.entity.projectile.AssimilationLiquidEntity;
+import acats.fromanotherworld.entity.render.thing.growths.TentacleMass;
 import acats.fromanotherworld.entity.thing.Thing;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animation.AnimatableManager;
@@ -27,9 +28,12 @@ public class ChestSpitter extends Thing {
     private static final int REVEAL_TIME = 100;
     private static final int ATTACK_TIME = 100;
     public Entity host;
+    public final TentacleMass tentacleMass;
 
     public ChestSpitter(EntityType<? extends ChestSpitter> entityType, Level world) {
         super(entityType, world, false);
+        this.tentacleMass = new TentacleMass(world, 10, 10, 0.0F, 0.85F);
+        this.tentacleMass.rootYOffset = 0.1875F;
     }
 
     @Override
@@ -82,8 +86,17 @@ public class ChestSpitter extends Thing {
     @Override
     public void tick() {
         super.tick();
-
-        if (this.tickCount > REVEAL_TIME + 10 && this.tickCount < REVEAL_TIME + ATTACK_TIME && !this.level().isClientSide() && this.getTarget() != null){
+        int maxAge = 2 * REVEAL_TIME + ATTACK_TIME - 20;
+        if (this.level().isClientSide()){
+            this.tentacleMass.tick();
+            float progress = (float) this.tickCount / maxAge;
+            float progressOffset = progress - 0.5F;
+            float progressOffsetSquared = progressOffset * progressOffset;
+            float invertedScale = 4.0F * progressOffsetSquared;
+            this.tentacleMass.scale = 1.0F - invertedScale;
+            return;
+        }
+        if (this.tickCount > REVEAL_TIME + 10 && this.tickCount < REVEAL_TIME + ATTACK_TIME && this.getTarget() != null){
             AssimilationLiquidEntity assimilationLiquid = new AssimilationLiquidEntity(this.level(), this);
             assimilationLiquid.shootFromRotation(this, this.getXRot(), this.getYRot(), 0.0F, 2.5F, 10.0F);
             double d = 0.5D;
@@ -91,7 +104,7 @@ public class ChestSpitter extends Thing {
             this.level().addFreshEntity(assimilationLiquid);
         }
 
-        if (this.tickCount > 2 * REVEAL_TIME + ATTACK_TIME - 20){
+        if (this.tickCount > maxAge){
             this.discard();
         }
     }

@@ -13,6 +13,7 @@ public final class FAWAnimations {
     public static final RawAnimation FREEZING = RawAnimation.begin().thenPlayXTimes("misc.freezing", 1).thenPlayAndHold("misc.frozen");
     public static final RawAnimation FROZEN = RawAnimation.begin().thenPlayAndHold("misc.frozen");
     public static final RawAnimation SPAWN = RawAnimation.begin().thenPlayXTimes("misc.spawn", 1).thenLoop("misc.idle");
+    public static final RawAnimation SPIT = RawAnimation.begin().thenPlayAndHold("misc.spit");
 
     public static final RawAnimation WALK = RawAnimation.begin().thenLoop("move.walk");
     public static final RawAnimation SWIM = RawAnimation.begin().thenLoop("move.swim");

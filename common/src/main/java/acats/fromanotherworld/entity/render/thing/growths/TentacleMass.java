@@ -75,19 +75,24 @@ public class TentacleMass {
             for (TentacleSegment segment:
                     tentacleSegments) {
 
+                segment.prevXRot = segment.xRot;
+                segment.prevYRot = segment.yRot;
+                segment.prevScale = segment.scale;
+
+                segment.prevOffsetX = segment.offsetX;
+                segment.prevOffsetY = segment.offsetY;
+                segment.prevOffsetZ = segment.offsetZ;
+
                 if (previous == null){
                     segment.xRot = this.baseXRot;
                     segment.yRot = this.baseYRot;
                     segment.scale = scale;
+                    Vec3 offset = Vec3.directionFromRotation((float)Math.toDegrees(segment.xRot), (float)Math.toDegrees(segment.yRot));
+                    segment.offsetX = (float)offset.x() * SEGMENT_LENGTH * segment.scale;
+                    segment.offsetY = (float)offset.y() * SEGMENT_LENGTH * segment.scale;
+                    segment.offsetZ = (float)offset.z() * SEGMENT_LENGTH * segment.scale;
                 }
                 else{
-                    segment.prevXRot = segment.xRot;
-                    segment.prevYRot = segment.yRot;
-                    segment.prevOffsetX = segment.offsetX;
-                    segment.prevOffsetY = segment.offsetY;
-                    segment.prevOffsetZ = segment.offsetZ;
-                    segment.prevScale = segment.scale;
-
                     segment.xRot = previous.xRot + (float)Math.sin(this.rotDesyncX + this.rotMultX * progress / 8.0F) / 4.0F;
                     segment.yRot = previous.yRot + (float)Math.cos(this.rotDesyncY + this.rotMultY * progress / 8.0F) / 4.0F;
                     Vec3 offset = Vec3.directionFromRotation((float)Math.toDegrees(segment.xRot), (float)Math.toDegrees(segment.yRot));

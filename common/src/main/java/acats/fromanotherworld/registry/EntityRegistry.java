@@ -57,7 +57,7 @@ public class EntityRegistry {
     );
     public static final FAWEntity<DogBeast> DOGBEAST = registerLiving(
             "dogbeast",
-            EntityType.Builder.of(DogBeast::new, MobCategory.CREATURE).sized(1.0F, 1.4F).clientTrackingRange(TRACK_RANGE_MEDIUM),
+            EntityType.Builder.of(DogBeast::new, MobCategory.CREATURE).sized(0.9F, 1.4F).clientTrackingRange(TRACK_RANGE_MEDIUM),
             DogBeast::createDogBeastAttributes
     );
     public static final FAWEntity<BloodCrawler> BLOOD_CRAWLER = registerLiving(
@@ -72,7 +72,7 @@ public class EntityRegistry {
     );
     public static final FAWEntity<Impaler> IMPALER = registerLiving(
             "impaler",
-            EntityType.Builder.of(Impaler::new, MobCategory.CREATURE).sized(1.0F, 1.4F).clientTrackingRange(TRACK_RANGE_MEDIUM),
+            EntityType.Builder.of(Impaler::new, MobCategory.CREATURE).sized(0.9F, 1.4F).clientTrackingRange(TRACK_RANGE_MEDIUM),
             Impaler::createImpalerAttributes
     );
     public static final FAWEntity<StarshipEntity> STARSHIP = registerLiving(

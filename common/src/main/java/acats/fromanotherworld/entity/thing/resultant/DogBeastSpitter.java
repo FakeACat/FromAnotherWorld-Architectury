@@ -1,16 +1,14 @@
 package acats.fromanotherworld.entity.thing.resultant;
 
+import acats.fromanotherworld.constants.FAWAnimations;
 import acats.fromanotherworld.entity.goal.AbsorbGoal;
 import acats.fromanotherworld.entity.goal.FleeOnFireGoal;
 import acats.fromanotherworld.entity.goal.ThingProjectileAttackGoal;
 import acats.fromanotherworld.entity.projectile.AssimilationLiquidEntity;
 import acats.fromanotherworld.entity.thing.ResizeableThing;
 import acats.fromanotherworld.registry.EntityRegistry;
-import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.core.animation.AnimationController;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -67,21 +65,6 @@ public class DogBeastSpitter extends ResizeableThing implements RangedAttackMob 
         this.goalSelector.addGoal(3, new WaterAvoidingRandomStrollGoal(this, 1.0D));
     }
 
-    private <E extends GeoEntity> PlayState predicate(AnimationState<E> event) {
-        if (this.isThingFrozen())
-            return PlayState.STOP;
-        if (event.isMoving() || this.movingClimbing()){
-            event.getController().setAnimation(RawAnimation.begin().thenLoop("animation.dogbeast_spitter.crawl"));
-        }
-        else if (this.hasTarget()){
-            event.getController().setAnimation(RawAnimation.begin().thenLoop("animation.dogbeast_spitter.spit"));
-        }
-        else{
-            return PlayState.STOP;
-        }
-        return PlayState.CONTINUE;
-    }
-
     @Override
     public boolean rotateWhenClimbing() {
         return true;
@@ -105,9 +88,20 @@ public class DogBeastSpitter extends ResizeableThing implements RangedAttackMob 
         }
     }
 
+    private AnimationController<DogBeastSpitter> spitController(){
+        return new AnimationController<>(this, "SpitterSpit", 5, (event) -> {
+            if (this.hasTarget() && !event.isMoving()){
+                event.getController().setAnimation(FAWAnimations.SPIT);
+                return PlayState.CONTINUE;
+            }
+            return PlayState.STOP;
+        });
+    }
+
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
-        controllerRegistrar.add(new AnimationController<>(this, "controller", 10, this::predicate));
+        controllerRegistrar.add(FAWAnimations.defaultThingNoChase(this));
+        controllerRegistrar.add(this.spitController());
     }
 
     static {

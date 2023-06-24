@@ -64,7 +64,7 @@ public final class FAWAnimations {
                                                                         BiConsumer<AnimationState<E>, E> frozen,
                                                                         BiConsumer<AnimationState<E>, E> movement,
                                                                         BiConsumer<AnimationState<E>, E> idle){
-        return new AnimationController<>(thing, name, 0, (event) -> {
+        return new AnimationController<>(thing, name, 5, (event) -> {
             generic(event, thing, frozen, movement, idle);
             return PlayState.CONTINUE;
         });

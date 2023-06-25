@@ -39,7 +39,7 @@ public class DogBeastSpitter extends ResizeableThing implements RangedAttackMob 
 
     @Override
     public void grow(LivingEntity otherParent) {
-        this.growInto(EntityRegistry.BEAST.get());
+        this.growInto(EntityRegistry.PROWLER.get());
     }
 
     public void setHasTarget(boolean bl){

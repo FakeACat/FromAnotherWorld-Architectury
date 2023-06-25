@@ -50,6 +50,7 @@ public class EntityRegistryForge {
         event.registerEntityRenderer(ALIEN_THING.get(), AlienThingRenderer::new);
         event.registerEntityRenderer(SPLIT_FACE.get(), SplitFaceRenderer::new);
         event.registerEntityRenderer(TRANSITION.get(), TransitionEntityRenderer::new);
+        event.registerEntityRenderer(PROWLER.get(), ProwlerRenderer::new);
     }
 
     public static void clientRegisterLayers(EntityRenderersEvent.RegisterLayerDefinitions event){

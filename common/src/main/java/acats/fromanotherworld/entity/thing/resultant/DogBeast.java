@@ -82,6 +82,6 @@ public class DogBeast extends ResizeableThing {
 
     @Override
     public void grow(LivingEntity otherParent) {
-        this.growInto(EntityRegistry.BEAST.get());
+        this.growInto(EntityRegistry.PROWLER.get());
     }
 }

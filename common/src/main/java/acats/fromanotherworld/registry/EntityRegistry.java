@@ -126,6 +126,12 @@ public class EntityRegistry {
             TransitionEntity::createTransitionAttributes
     );
 
+    public static final FAWEntity<Prowler> PROWLER = registerLiving(
+            "prowler",
+            EntityType.Builder.of(Prowler::new, MobCategory.CREATURE).sized(0.8F, 1.8F).clientTrackingRange(TRACK_RANGE_MEDIUM),
+            Prowler::createProwlerAttributes
+    );
+
     private static <T extends LivingEntity> FAWEntity<T> registerLiving(String id, EntityType.Builder<T> builder, Supplier<AttributeSupplier.Builder> attributeSupplier){
         ATTRIBUTE_REGISTRY.put(id, attributeSupplier);
         FAWEntity<T> fawEntity = new FAWEntity<>(builder);

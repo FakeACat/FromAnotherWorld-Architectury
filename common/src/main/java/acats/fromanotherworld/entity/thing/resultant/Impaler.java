@@ -107,7 +107,7 @@ public class Impaler extends ResizeableThing implements BurstAttackThing {
 
     @Override
     public void grow(LivingEntity otherParent) {
-        this.growInto(EntityRegistry.BEAST.get());
+        this.growInto(EntityRegistry.PROWLER.get());
     }
 
     @Override

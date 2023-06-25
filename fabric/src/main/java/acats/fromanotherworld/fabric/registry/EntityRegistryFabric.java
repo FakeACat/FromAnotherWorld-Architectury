@@ -58,5 +58,6 @@ public class EntityRegistryFabric {
         EntityRendererRegistry.register(ALIEN_THING.get(), AlienThingRenderer::new);
         EntityRendererRegistry.register(SPLIT_FACE.get(), SplitFaceRenderer::new);
         EntityRendererRegistry.register(TRANSITION.get(), TransitionEntityRenderer::new);
+        EntityRendererRegistry.register(PROWLER.get(), ProwlerRenderer::new);
     }
 }

@@ -14,6 +14,7 @@ public final class FAWAnimations {
     public static final RawAnimation FROZEN = RawAnimation.begin().thenPlayAndHold("misc.frozen");
     public static final RawAnimation SPAWN = RawAnimation.begin().thenPlayXTimes("misc.spawn", 1).thenLoop("misc.idle");
     public static final RawAnimation SPIT = RawAnimation.begin().thenPlayAndHold("misc.spit");
+    public static final RawAnimation ALWAYS_PLAYING = RawAnimation.begin().thenLoop("misc.always_playing");
 
     public static final RawAnimation WALK = RawAnimation.begin().thenLoop("move.walk");
     public static final RawAnimation SWIM = RawAnimation.begin().thenLoop("move.swim");
@@ -84,5 +85,15 @@ public final class FAWAnimations {
                 FAWAnimations::frozen,
                 (event2, thing2) -> event2.getController().setAnimation(WALK),
                 (event2, thing2) -> event2.getController().setAnimation(IDLE));
+    }
+
+    public static <E extends Thing> AnimationController<E> alwaysPlaying(E thing){
+        return new AnimationController<>(thing, "AlwaysPlaying", 0, (event) -> {
+            if (thing.isThingFrozen()){
+                return PlayState.STOP;
+            }
+            event.getController().setAnimation(ALWAYS_PLAYING);
+            return PlayState.CONTINUE;
+        });
     }
 }

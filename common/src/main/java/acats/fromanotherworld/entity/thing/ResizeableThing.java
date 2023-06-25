@@ -5,6 +5,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Pose;
@@ -57,6 +58,10 @@ public abstract class ResizeableThing extends AbsorberThing{
         return (this.entityData.get(WIDTH_MULTIPLIER) * 2 + this.entityData.get(HEIGHT_MULTIPLIER)) / 3.0F;
     }
 
+    public float speedMultiplier(){
+        return (Mth.clamp(1.0F / this.getRelativeSize(), 0.5F, 1.5F) + 4.0F) * 0.2F;
+    }
+
     private void setScale(float scaleWidth, float scaleHeight){
         this.entityData.set(WIDTH_MULTIPLIER, scaleWidth);
         this.entityData.set(HEIGHT_MULTIPLIER, scaleHeight);
@@ -81,7 +86,7 @@ public abstract class ResizeableThing extends AbsorberThing{
         }
         AttributeInstance movementSpeed = this.getAttribute(Attributes.MOVEMENT_SPEED);
         if (movementSpeed != null){
-            movementSpeed.setBaseValue(movementSpeed.getValue() / this.getRelativeSize());
+            movementSpeed.setBaseValue(movementSpeed.getValue() * this.speedMultiplier());
         }
     }
 
@@ -92,7 +97,7 @@ public abstract class ResizeableThing extends AbsorberThing{
 
     @Override
     public double animationSpeed(AnimationState<? extends Thing> state) {
-        return state.isMoving() ? super.animationSpeed(state) / this.getRelativeSize() : super.animationSpeed(state);
+        return state.isMoving() ? super.animationSpeed(state) * this.speedMultiplier() : super.animationSpeed(state);
     }
 
     @Override

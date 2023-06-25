@@ -219,7 +219,10 @@ public class TransitionEntity extends LivingEntity implements MaybeThing {
                     thing.setVictimType(ILLAGER);
             }
         }
-        else if (type.is(QUADRUPEDS) || type.is(LARGE_QUADRUPEDS)){
+        else if (type.is(LARGE_QUADRUPEDS)){
+            thing = EntityRegistry.PROWLER.get().create(this.level());
+        }
+        else if (type.is(QUADRUPEDS)){
             switch (chooseStrength()) {
                 case 0 -> {
                     thing = EntityRegistry.DOGBEAST_SPITTER.get().create(this.level());

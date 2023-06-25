@@ -12,6 +12,7 @@ import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -76,6 +77,15 @@ public class JulietteThing extends AbsorberThing {
             }
         }
         super.die(source);
+    }
+
+    @Override
+    public boolean doHurtTarget(Entity target) {
+        boolean bl = super.doHurtTarget(target);
+        if (target instanceof LivingEntity livingEntity){
+            livingEntity.setDeltaMovement(-livingEntity.getDeltaMovement().x(), livingEntity.getDeltaMovement().y(), -livingEntity.getDeltaMovement().z());
+        }
+        return bl;
     }
 
     @Override

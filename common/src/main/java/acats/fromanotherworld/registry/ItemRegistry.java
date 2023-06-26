@@ -1,6 +1,7 @@
 package acats.fromanotherworld.registry;
 
 import acats.fromanotherworld.item.AssimilationLiquidItem;
+import acats.fromanotherworld.item.FlamingArrowItem;
 import acats.fromanotherworld.item.GoreBottleItem;
 import acats.fromanotherworld.item.ImpostorDetectorItem;
 import java.util.HashMap;
@@ -59,6 +60,7 @@ public class ItemRegistry {
     public static final FAWItem ASSIMILATION_LIQUID = registerItem("assimilation_liquid", () -> new AssimilationLiquidItem(new Item.Properties().stacksTo(64)));
     public static final FAWItem IMPOSTOR_DETECTOR = registerItem("impostor_detector", () -> new ImpostorDetectorItem(new Item.Properties().stacksTo(1)));
     public static final FAWItem GORE_BOTTLE = registerItem("gore_bottle", () -> new GoreBottleItem(new Item.Properties().stacksTo(64)));
+    public static final FAWItem FLAMING_ARROW = registerItem("flaming_arrow", () -> new FlamingArrowItem(new Item.Properties().stacksTo(64)));
 
     private static FAWItem registerItem(String id, Supplier<Item> itemSupplier){
         FAWItem fawItem = new FAWItem(itemSupplier);

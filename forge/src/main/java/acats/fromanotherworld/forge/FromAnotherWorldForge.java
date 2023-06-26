@@ -23,6 +23,7 @@ public class FromAnotherWorldForge {
         ParticleRegistryForge.register(eventBus);
         SoundRegistryForge.register(eventBus);
         StatusEffectRegistryForge.register(eventBus);
+        RecipeRegistryForge.register(eventBus);
 
         Config.load(FMLPaths.CONFIGDIR.get());
 

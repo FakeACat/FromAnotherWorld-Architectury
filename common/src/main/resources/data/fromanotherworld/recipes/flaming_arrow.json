@@ -1,0 +1,16 @@
+{
+  "type": "fromanotherworld:damage_items",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "minecraft:arrow"
+    },
+    {
+      "item": "minecraft:flint_and_steel"
+    }
+  ],
+  "result": {
+    "item": "fromanotherworld:flaming_arrow"
+  },
+  "show_notification": true
+}

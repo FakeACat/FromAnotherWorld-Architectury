@@ -20,6 +20,7 @@ public class FromAnotherWorldFabric implements ModInitializer {
         StatusEffectRegistryFabric.register();
         EventRegistryFabric.register();
         DatapackRegistryFabric.register();
+        RecipeRegistryFabric.register();
 
         Config.load(FabricLoader.getInstance().getConfigDir());
     }

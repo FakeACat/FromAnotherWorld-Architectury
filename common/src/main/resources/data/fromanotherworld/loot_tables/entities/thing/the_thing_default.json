@@ -2,6 +2,7 @@
   "type": "minecraft:entity",
   "pools": [
     {
+      "name": "Thing killed by player",
       "bonus_rolls": 0.0,
       "conditions": [
         {

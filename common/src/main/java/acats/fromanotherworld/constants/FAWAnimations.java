@@ -1,5 +1,6 @@
 package acats.fromanotherworld.constants;
 
+import acats.fromanotherworld.entity.interfaces.Leaper;
 import acats.fromanotherworld.entity.thing.Thing;
 import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.animation.AnimationState;
@@ -21,6 +22,7 @@ public final class FAWAnimations {
     public static final RawAnimation CHASE = RawAnimation.begin().thenLoop("move.chase");
     public static final RawAnimation BURROW = RawAnimation.begin().thenPlayAndHold("move.burrow");
     public static final RawAnimation EMERGE = RawAnimation.begin().thenPlayAndHold("move.emerge");
+    public static final RawAnimation LEAP = RawAnimation.begin().thenPlayAndHold("move.leap");
 
     private static <E extends Thing> void frozen(AnimationState<E> event, E thing){
         if (thing.getCold() == 1.0F){
@@ -60,6 +62,19 @@ public final class FAWAnimations {
         }
     }
 
+    private static <E extends Thing & Leaper> void genericWithLeap(AnimationState<E> state,
+                                                                   E thing,
+                                                                   BiConsumer<AnimationState<E>, E> frozen,
+                                                                   BiConsumer<AnimationState<E>, E> movement,
+                                                                   BiConsumer<AnimationState<E>, E> idle){
+        if (thing.isLeaping()){
+            state.getController().setAnimation(LEAP);
+        }
+        else{
+            generic(state, thing, frozen, movement, idle);
+        }
+    }
+
     public static <E extends Thing> AnimationController<E> genericThing(E thing,
                                                                         String name,
                                                                         BiConsumer<AnimationState<E>, E> frozen,
@@ -95,5 +110,24 @@ public final class FAWAnimations {
             event.getController().setAnimation(ALWAYS_PLAYING);
             return PlayState.CONTINUE;
         });
+    }
+
+    public static <E extends Thing & Leaper> AnimationController<E> genericThingWithLeap(E thing,
+                                                                        String name,
+                                                                        BiConsumer<AnimationState<E>, E> frozen,
+                                                                        BiConsumer<AnimationState<E>, E> movement,
+                                                                        BiConsumer<AnimationState<E>, E> idle){
+        return new AnimationController<>(thing, name, 5, (event) -> {
+            genericWithLeap(event, thing, frozen, movement, idle);
+            return PlayState.CONTINUE;
+        });
+    }
+
+    public static <E extends Thing & Leaper> AnimationController<E> defaultThingNoChaseWithLeap(E thing){
+        return genericThingWithLeap(thing,
+                "DefaultThingNoChaseWithLeap",
+                FAWAnimations::frozen,
+                (event2, thing2) -> event2.getController().setAnimation(WALK),
+                (event2, thing2) -> event2.getController().setAnimation(IDLE));
     }
 }

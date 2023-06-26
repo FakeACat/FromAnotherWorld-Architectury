@@ -656,6 +656,79 @@
 					}
 				}
 			}
+		},
+		"move.leap": {
+			"loop": true,
+			"bones": {
+				"all": {
+					"rotation": {
+						"vector": [-45, 0, 0]
+					},
+					"position": {
+						"vector": [0, 9, -3]
+					}
+				},
+				"neck": {
+					"rotation": {
+						"vector": [45, 0, 0]
+					}
+				},
+				"lowerJaw": {
+					"rotation": {
+						"vector": [12.5, 0, 0]
+					}
+				},
+				"legfr": {
+					"rotation": {
+						"vector": [-42.73421, 15.69986, 16.32495]
+					}
+				},
+				"legfr2": {
+					"rotation": {
+						"vector": [0, 0, -22.5]
+					}
+				},
+				"footfr": {
+					"rotation": {
+						"vector": [22.5, 0, 0]
+					}
+				},
+				"legfl": {
+					"rotation": {
+						"vector": [-42.73421, -15.69986, -16.32495]
+					}
+				},
+				"legfl2": {
+					"rotation": {
+						"vector": [0, 0, 22.5]
+					}
+				},
+				"footfl": {
+					"rotation": {
+						"vector": [22.5, 0, 0]
+					}
+				},
+				"legbl": {
+					"rotation": {
+						"vector": [22.5, 0, 0]
+					}
+				},
+				"footbl": {
+					"rotation": {
+						"vector": [22.5, 0, 0]
+					}
+				},
+				"legbr": {
+					"rotation": {
+						"vector": [22.5, 0, 0]
+					}
+				},
+				"footbr": {
+					"rotation": {
+						"vector": [22.5, 0, 0]
+					}
+				}
+			}
 		}
 	}
 }

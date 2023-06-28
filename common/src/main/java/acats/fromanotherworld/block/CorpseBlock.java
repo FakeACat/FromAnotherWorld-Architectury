@@ -2,21 +2,22 @@ package acats.fromanotherworld.block;
 
 import acats.fromanotherworld.block.entity.CorpseBlockEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.BaseEntityBlock;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class CorpseBlock extends BaseEntityBlock {
     public static final EnumProperty<CorpseType> TYPE = EnumProperty.create("type", CorpseType.class);
+    public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
 
     public CorpseBlock(Properties properties) {
         super(properties);
@@ -30,7 +31,7 @@ public class CorpseBlock extends BaseEntityBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(TYPE);
+        builder.add(TYPE, FACING);
     }
 
     @Override
@@ -48,6 +49,18 @@ public class CorpseBlock extends BaseEntityBlock {
     @Override
     public @NotNull RenderShape getRenderShape(BlockState blockState) {
         return RenderShape.ENTITYBLOCK_ANIMATED;
+    }
+
+    @Override
+    public @NotNull BlockState rotate(BlockState blockState, Rotation rotation) {
+        return blockState.setValue(FACING, rotation.rotate(blockState.getValue(FACING)));
+    }
+
+    @Nullable
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext blockPlaceContext) {
+        Direction direction = blockPlaceContext.getHorizontalDirection().getOpposite();
+        return this.defaultBlockState().setValue(FACING, direction);
     }
 
     public static CorpseType getCorpseType(BlockState state){

@@ -2,6 +2,7 @@ package acats.fromanotherworld.constants;
 
 import acats.fromanotherworld.entity.interfaces.Leaper;
 import acats.fromanotherworld.entity.thing.Thing;
+import mod.azure.azurelib.animatable.GeoBlockEntity;
 import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
@@ -129,5 +130,12 @@ public final class FAWAnimations {
                 FAWAnimations::frozen,
                 (event2, thing2) -> event2.getController().setAnimation(WALK),
                 (event2, thing2) -> event2.getController().setAnimation(IDLE));
+    }
+
+    public static <E extends GeoBlockEntity> AnimationController<E> blockAlwaysPlaying(E blockEntity){
+        return new AnimationController<>(blockEntity, "BlockAlwaysPlaying", 0, (event) -> {
+            event.getController().setAnimation(ALWAYS_PLAYING);
+            return PlayState.CONTINUE;
+        });
     }
 }

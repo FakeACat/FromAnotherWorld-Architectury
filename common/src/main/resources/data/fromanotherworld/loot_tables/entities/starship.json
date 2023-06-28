@@ -2,7 +2,7 @@
   "type": "minecraft:entity",
   "pools": [
     {
-      "name": "Starship destroyed",
+      "name": "fromanotherworld:starship",
       "rolls": 1,
       "entries": [
         {

@@ -1,6 +1,7 @@
 package acats.fromanotherworld.block.entity;
 
 import acats.fromanotherworld.block.CorpseBlock;
+import acats.fromanotherworld.constants.FAWAnimations;
 import acats.fromanotherworld.registry.BlockEntityRegistry;
 import mod.azure.azurelib.animatable.GeoBlockEntity;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
@@ -22,7 +23,7 @@ public class CorpseBlockEntity extends BlockEntity implements GeoBlockEntity {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-
+        controllers.add(FAWAnimations.blockAlwaysPlaying(this));
     }
 
     @Override

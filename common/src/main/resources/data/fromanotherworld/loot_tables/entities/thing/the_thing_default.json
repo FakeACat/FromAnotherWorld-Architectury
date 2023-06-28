@@ -2,7 +2,7 @@
   "type": "minecraft:entity",
   "pools": [
     {
-      "name": "Thing killed by player",
+      "name": "fromanotherworld:the_thing_default",
       "bonus_rolls": 0.0,
       "conditions": [
         {

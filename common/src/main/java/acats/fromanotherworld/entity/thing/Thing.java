@@ -1,6 +1,7 @@
 package acats.fromanotherworld.entity.thing;
 
 import acats.fromanotherworld.FromAnotherWorld;
+import acats.fromanotherworld.block.CorpseBlock;
 import acats.fromanotherworld.config.General;
 import acats.fromanotherworld.constants.Variants;
 import acats.fromanotherworld.entity.goal.ThingTargetGoal;
@@ -386,23 +387,35 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
 
     @Override
     public void die(DamageSource damageSource) {
-        this.onDeathWithoutGoreDrops(damageSource);
-        int size = (int)this.getDimensions(this.getPose()).width / 2 + 1;
-        if (!this.level().isClientSide && this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)){
-            for(int x = (int)getX() - size; x < getX() + size; x++){
-                for(int y = (int)getY(); y < (int)getY() + this.getDimensions(this.getPose()).height; y++){
-                    for(int z = (int)getZ() - size; z < getZ() + size; z++){
-                        if (random.nextInt(2) == 0 && BlockRegistry.THING_GORE.get().defaultBlockState().canSurvive(this.level(), new BlockPos(x, y, z)) && this.level().getBlockState(new BlockPos(x, y, z)).canBeReplaced() && this.level().getBlockState(new BlockPos(x, y, z)).getFluidState().isEmpty()){
-                            this.level().setBlockAndUpdate(new BlockPos(x, y, z), BlockRegistry.THING_GORE.get().defaultBlockState());
-                        }
-                    }
-                }
+        super.die(damageSource);
+        this.attemptPlaceCorpse();
+    }
+
+    public void attemptPlaceCorpse(){
+        if (!this.level().isClientSide() &&
+                this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) &&
+                BlockRegistry.CORPSE.get().defaultBlockState().canSurvive(this.level(), this.blockPosition()) &&
+                this.level().getBlockState(this.blockPosition()).canBeReplaced() &&
+                this.level().getBlockState(this.blockPosition()).getFluidState().isEmpty()){
+
+            CorpseBlock.CorpseType corpseType = this.getSuitableCorpse();
+
+            if (corpseType == null){
+                this.level().setBlockAndUpdate(this.blockPosition(), BlockRegistry.THING_GORE.get().defaultBlockState());
+                return;
             }
+
+            BlockState corpse = BlockRegistry.CORPSE.get().defaultBlockState();
+            CorpseBlock.setCorpseType(corpse, corpseType);
+
+
+            this.level().setBlockAndUpdate(this.blockPosition(), corpse);
         }
     }
 
-    public void onDeathWithoutGoreDrops(DamageSource damageSource){
-        super.die(damageSource);
+    @Nullable
+    public CorpseBlock.CorpseType getSuitableCorpse(){
+        return CorpseBlock.CorpseType.HUMAN_1;
     }
 
     @Override

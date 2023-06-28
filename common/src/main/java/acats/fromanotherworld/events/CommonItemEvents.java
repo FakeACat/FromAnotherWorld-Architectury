@@ -1,6 +1,6 @@
 package acats.fromanotherworld.events;
 
-import acats.fromanotherworld.block.ThingGore;
+import acats.fromanotherworld.block.ThingGoreBlock;
 import acats.fromanotherworld.entity.thing.Thing;
 import acats.fromanotherworld.registry.ItemRegistry;
 import net.minecraft.server.level.ServerPlayer;
@@ -30,7 +30,7 @@ public class CommonItemEvents {
 
     @Nullable
     public static InteractionResult useOnBlock(UseOnContext context){
-        if (context.getItemInHand().getItem() == Items.GLASS_BOTTLE && context.getPlayer() != null && context.getLevel().getBlockState(context.getClickedPos()).getBlock() instanceof ThingGore){
+        if (context.getItemInHand().getItem() == Items.GLASS_BOTTLE && context.getPlayer() != null && context.getLevel().getBlockState(context.getClickedPos()).getBlock() instanceof ThingGoreBlock){
             if (context.getLevel().isClientSide()){
                 context.getLevel().playSound(context.getPlayer(), context.getPlayer().getX(), context.getPlayer().getY(), context.getPlayer().getZ(), SoundEvents.WET_GRASS_STEP, SoundSource.NEUTRAL, 1.0F, 1.0F);
             }

@@ -1,5 +1,6 @@
 package acats.fromanotherworld.fabric;
 
+import acats.fromanotherworld.fabric.registry.BlockEntityRegistryFabric;
 import acats.fromanotherworld.fabric.registry.BlockRegistryFabric;
 import acats.fromanotherworld.fabric.registry.EntityRegistryFabric;
 import acats.fromanotherworld.fabric.registry.ParticleRegistryFabric;
@@ -11,5 +12,6 @@ public class FromAnotherWorldClientFabric implements ClientModInitializer {
         EntityRegistryFabric.clientRegister();
         BlockRegistryFabric.clientRegister();
         ParticleRegistryFabric.clientRegister();
+        BlockEntityRegistryFabric.clientRegister();
     }
 }

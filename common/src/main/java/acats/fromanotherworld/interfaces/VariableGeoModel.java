@@ -1,10 +1,10 @@
-package acats.fromanotherworld.entity.interfaces;
+package acats.fromanotherworld.interfaces;
 
 import acats.fromanotherworld.FromAnotherWorld;
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import net.minecraft.resources.ResourceLocation;
 
-public interface VariableThingModel<T extends GeoAnimatable> {
+public interface VariableGeoModel<T extends GeoAnimatable> {
     String getVariant(T animatable);
     String getPath();
 

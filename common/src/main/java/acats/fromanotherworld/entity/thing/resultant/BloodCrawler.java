@@ -1,9 +1,9 @@
 package acats.fromanotherworld.entity.thing.resultant;
 
+import acats.fromanotherworld.block.CorpseBlock;
 import acats.fromanotherworld.entity.goal.ThingAttackGoal;
 import acats.fromanotherworld.entity.model.thing.resultant.BloodCrawlerModel;
 import acats.fromanotherworld.entity.thing.Thing;
-import acats.fromanotherworld.registry.BlockRegistry;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.core.animation.AnimationController;
@@ -15,7 +15,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -24,9 +23,9 @@ import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
 public class BloodCrawler extends Thing {
 
@@ -100,13 +99,10 @@ public class BloodCrawler extends Thing {
         this.setVariant(nbt.getInt("Variant"));
     }
 
+    @Nullable
     @Override
-    public void die(DamageSource damageSource) {
-        BlockPos p = BlockPos.containing(this.getX(), this.getY(), this.getZ());
-        if (!this.level().isClientSide && this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) && BlockRegistry.THING_GORE.get().defaultBlockState().canSurvive(this.level(), p) && this.level().getBlockState(p).canBeReplaced() && this.level().getBlockState(p).getFluidState().isEmpty()){
-            this.level().setBlockAndUpdate(p, BlockRegistry.THING_GORE.get().defaultBlockState());
-        }
-        super.onDeathWithoutGoreDrops(damageSource);
+    public CorpseBlock.CorpseType getSuitableCorpse() {
+        return null;
     }
 
     static {

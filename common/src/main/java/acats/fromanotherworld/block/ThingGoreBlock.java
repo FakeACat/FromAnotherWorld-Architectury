@@ -20,12 +20,12 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
-public class ThingGore extends FlammableBlock {
+public class ThingGoreBlock extends FlammableBlock {
     public static final IntegerProperty STAGE = IntegerProperty.create("stage", 0, 2);
     protected static final VoxelShape SHAPE_FRESH = Block.box(0.0, 0.0, 0.0, 16.0, 1.0, 16.0);
     protected static final VoxelShape SHAPE_REFORMING = Block.box(2.0, 0.0, 2.0, 14.0, 3.0, 14.0);
     protected static final VoxelShape SHAPE_READY = Block.box(4.0, 0.0, 4.0, 12.0, 6.0, 12.0);
-    public ThingGore(Properties settings) {
+    public ThingGoreBlock(Properties settings) {
         super(settings, 15, 25);
     }
 
@@ -34,6 +34,7 @@ public class ThingGore extends FlammableBlock {
         return SoundType.WET_GRASS;
     }
 
+    @Override
     public @NotNull VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return switch (state.getValue(STAGE)) {
             case 1 -> SHAPE_REFORMING;
@@ -42,10 +43,12 @@ public class ThingGore extends FlammableBlock {
         };
     }
 
+    @Override
     public @NotNull BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
         return !state.canSurvive(world, pos) ? Blocks.AIR.defaultBlockState() : super.updateShape(state, direction, neighborState, world, pos, neighborPos);
     }
 
+    @Override
     public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
         return world.getBlockState(pos.below()).isCollisionShapeFullBlock(world, pos.below());
     }

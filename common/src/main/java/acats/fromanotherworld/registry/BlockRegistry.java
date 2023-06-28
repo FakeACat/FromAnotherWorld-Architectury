@@ -1,6 +1,7 @@
 package acats.fromanotherworld.registry;
 
-import acats.fromanotherworld.block.ThingGore;
+import acats.fromanotherworld.block.CorpseBlock;
+import acats.fromanotherworld.block.ThingGoreBlock;
 import java.util.HashMap;
 import java.util.function.Supplier;
 import net.minecraft.world.level.block.Block;
@@ -22,7 +23,8 @@ public class BlockRegistry {
             return this.block;
         }
     }
-    public static final FAWBlock THING_GORE = registerBlock("thing_gore", () -> new ThingGore(BlockBehaviour.Properties.of().noCollission().noOcclusion().randomTicks()));
+    public static final FAWBlock THING_GORE = registerBlock("thing_gore", () -> new ThingGoreBlock(BlockBehaviour.Properties.of().noCollission().noOcclusion().randomTicks()));
+    public static final FAWBlock CORPSE = registerBlock("corpse", () -> new CorpseBlock(BlockBehaviour.Properties.of().noCollission().noOcclusion().randomTicks()));
 
     private static FAWBlock registerBlock(String id, Supplier<Block> blockSupplier){
         FAWBlock fawBlock = new FAWBlock(blockSupplier);

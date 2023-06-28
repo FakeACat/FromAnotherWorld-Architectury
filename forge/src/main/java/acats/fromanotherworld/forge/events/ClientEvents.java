@@ -1,6 +1,7 @@
 package acats.fromanotherworld.forge.events;
 
 import acats.fromanotherworld.FromAnotherWorld;
+import acats.fromanotherworld.forge.registry.BlockEntityRegistryForge;
 import acats.fromanotherworld.forge.registry.EntityRegistryForge;
 import acats.fromanotherworld.forge.registry.ParticleRegistryForge;
 import net.minecraftforge.api.distmarker.Dist;
@@ -19,6 +20,7 @@ public class ClientEvents {
     @SubscribeEvent
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event){
         EntityRegistryForge.clientRegister(event);
+        BlockEntityRegistryForge.registerClient(event);
     }
 
     @SubscribeEvent

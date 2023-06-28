@@ -2,13 +2,13 @@ package acats.fromanotherworld.entity.model.thing.resultant;
 
 import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.constants.Variants;
-import acats.fromanotherworld.entity.interfaces.VariableThingModel;
+import acats.fromanotherworld.interfaces.VariableGeoModel;
 import acats.fromanotherworld.entity.thing.resultant.Impaler;
 import mod.azure.azurelib.model.GeoModel;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 
-public class ImpalerModel extends GeoModel<Impaler> implements VariableThingModel<Impaler> {
+public class ImpalerModel extends GeoModel<Impaler> implements VariableGeoModel<Impaler> {
     @Override
     public ResourceLocation getModelResource(Impaler animatable) {
         return this.getVariantModelResource(animatable);

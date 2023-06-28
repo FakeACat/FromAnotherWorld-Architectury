@@ -54,4 +54,12 @@ public class LeapAttackGoal extends ThingAttackGoal {
             this.leaper.setLeaping(false);
         }
     }
+
+    @Override
+    public void stop() {
+        if (this.leaper != null){
+            this.leaper.setLeaping(false);
+        }
+        super.stop();
+    }
 }

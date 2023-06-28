@@ -10,13 +10,15 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
+import java.util.function.Supplier;
+
 public class BlockEntityRegistryFabric {
     public static void register(){
         BlockEntityRegistry.BLOCK_ENTITY_REGISTRY.registerAll(BlockEntityRegistryFabric::registerBlockEntity);
     }
 
-    private static void registerBlockEntity(String id, FAWRegistryObject<? extends BlockEntityType<?>> fawRegistryObject){
-        BlockEntityType<?> blockEntityType = fawRegistryObject.build();
+    private static void registerBlockEntity(String id, FAWRegistryObject<? extends BlockEntityType<?>> fawRegistryObject, Supplier<? extends BlockEntityType<?>> builder){
+        BlockEntityType<?> blockEntityType = builder.get();
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, new ResourceLocation(FromAnotherWorld.MOD_ID, id), blockEntityType);
     }
 

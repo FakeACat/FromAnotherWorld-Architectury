@@ -1,13 +1,17 @@
 package acats.fromanotherworld.block;
 
 import acats.fromanotherworld.block.entity.CorpseBlockEntity;
+import acats.fromanotherworld.registry.BlockEntityRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
@@ -61,6 +65,12 @@ public class CorpseBlock extends BaseEntityBlock {
     public BlockState getStateForPlacement(BlockPlaceContext blockPlaceContext) {
         Direction direction = blockPlaceContext.getHorizontalDirection().getOpposite();
         return this.defaultBlockState().setValue(FACING, direction);
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState blockState, BlockEntityType<T> blockEntityType) {
+        return createTickerHelper(blockEntityType, BlockEntityRegistry.CORPSE_BLOCK_ENTITY.get(), CorpseBlockEntity::tick);
     }
 
     public static CorpseType getCorpseType(BlockState state){

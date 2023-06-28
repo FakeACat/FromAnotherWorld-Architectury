@@ -9,10 +9,11 @@ public class FAWRegistryObject<T> {
     private final Supplier<T> supplier;
     private T object;
 
-    public T build(){
+    T build(){
         this.object = supplier.get();
         return this.object;
     }
+
     public T get(){
         return this.object;
     }

@@ -8,6 +8,7 @@ import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.util.AzureLibUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -29,5 +30,9 @@ public class CorpseBlockEntity extends BlockEntity implements GeoBlockEntity {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.animatableInstanceCache;
+    }
+
+    public static void tick(Level level, BlockPos blockPos, BlockState blockState, CorpseBlockEntity blockEntity){
+
     }
 }

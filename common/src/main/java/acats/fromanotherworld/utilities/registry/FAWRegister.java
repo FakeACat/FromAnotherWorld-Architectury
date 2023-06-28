@@ -1,7 +1,8 @@
 package acats.fromanotherworld.utilities.registry;
 
+import org.apache.logging.log4j.util.TriConsumer;
+
 import java.util.HashMap;
-import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 public class FAWRegister<T> {
@@ -14,7 +15,7 @@ public class FAWRegister<T> {
         return fawRegistryObject;
     }
 
-    public final void registerAll(BiConsumer<String, ? super FAWRegistryObject<? extends T>> registerer){
-        map.forEach(registerer);
+    public final void registerAll(TriConsumer<String, ? super FAWRegistryObject<? extends T>, Supplier<? extends T>> registerer){
+        map.forEach((id, registryObject) -> registerer.accept(id, registryObject, registryObject::build));
     }
 }

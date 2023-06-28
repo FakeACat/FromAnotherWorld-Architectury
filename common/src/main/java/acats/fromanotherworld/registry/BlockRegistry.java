@@ -24,7 +24,7 @@ public class BlockRegistry {
         }
     }
     public static final FAWBlock THING_GORE = registerBlock("thing_gore", () -> new ThingGoreBlock(BlockBehaviour.Properties.of().noCollission().noOcclusion().randomTicks()));
-    public static final FAWBlock CORPSE = registerBlock("corpse", () -> new CorpseBlock(BlockBehaviour.Properties.of().noCollission().noOcclusion().randomTicks()));
+    public static final FAWBlock CORPSE = registerBlock("corpse", () -> new CorpseBlock(BlockBehaviour.Properties.of().noCollission().noOcclusion().destroyTime(5.0F)));
 
     private static FAWBlock registerBlock(String id, Supplier<Block> blockSupplier){
         FAWBlock fawBlock = new FAWBlock(blockSupplier);

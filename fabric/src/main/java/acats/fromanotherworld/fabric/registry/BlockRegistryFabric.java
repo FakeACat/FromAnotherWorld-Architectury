@@ -15,17 +15,15 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 
+import java.util.function.Supplier;
+
 public class BlockRegistryFabric {
     public static void register(){
-        BlockRegistry.BLOCK_REGISTRY.forEach(BlockRegistryFabric::registerBlockAndItem);
+        BlockRegistry.BLOCK_REGISTRY.registerAll(BlockRegistryFabric::registerBlockAndItem);
     }
 
-    public static void clientRegister(){
-        BlockRegistry.BLOCK_REGISTRY.forEach((id, fawBlock) -> registerRenderer(fawBlock));
-    }
-
-    private static void registerBlockAndItem(String id, BlockRegistry.FAWBlock fawBlock){
-        Block block = fawBlock.build();
+    private static void registerBlockAndItem(String id, Supplier<? extends Block> blockSupplier){
+        Block block = blockSupplier.get();
         Item item = Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(FromAnotherWorld.MOD_ID, id), new BlockItem(block, new FabricItemSettings()));
         ItemGroupEvents.modifyEntriesEvent(ItemRegistryFabric.GROUP_KEY).register(entries -> entries.accept(item));
         Registry.register(BuiltInRegistries.BLOCK, new ResourceLocation(FromAnotherWorld.MOD_ID, id), block);
@@ -34,7 +32,8 @@ public class BlockRegistryFabric {
             FlammableBlockRegistry.getDefaultInstance().add(block, flammable.burn(), flammable.spread());
         }
     }
-    private static void registerRenderer(BlockRegistry.FAWBlock fawBlock){
-        BlockRenderLayerMap.INSTANCE.putBlock(fawBlock.get(), RenderType.cutout());
+
+    public static void registerClient(){
+        BlockRenderLayerMap.INSTANCE.putBlock(BlockRegistry.TENTACLE.get(), RenderType.cutout()); // note to self - forge does not handle this with code, must be done in the model json
     }
 }

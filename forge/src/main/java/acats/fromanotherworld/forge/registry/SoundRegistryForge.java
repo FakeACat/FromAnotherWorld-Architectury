@@ -12,7 +12,7 @@ public class SoundRegistryForge {
     public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, FromAnotherWorld.MOD_ID);
     public static void register(IEventBus eventBus){
         SoundRegistry.SOUND_REGISTRY.registerAll(
-                (id, registryObject, builder) -> SOUNDS.register(id, builder)
+                SOUNDS::register
         );
         SOUNDS.register(eventBus);
     }

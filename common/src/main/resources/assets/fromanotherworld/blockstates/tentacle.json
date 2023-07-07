@@ -1,0 +1,260 @@
+{
+  "multipart": [
+    {
+      "__comment1__": "This section handles the 2D tendrils",
+
+      "apply": { "model": "fromanotherworld:block/tentacle/tendrils", "x": 90, "y": 180 },
+      "when": { "north": "block|connected_up" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tendrils", "x": 90, "y": 270 },
+      "when": { "east": "block|connected_up" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tendrils", "x": 90 },
+      "when": { "south": "block|connected_up" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tendrils", "x": 90, "y": 90 },
+      "when": { "west": "block|connected_up" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tendrils", "x": 180 },
+      "when": { "above": "block|connected_up" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tendrils" },
+      "when": { "below": "block|connected_up" }
+    },
+    {
+      "__comment2__": "This is the central model that is present on all floor variants",
+
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_floor_centre" },
+      "when": { "surface": "down" }
+    },
+    {
+      "__comment2__": "This section handles the floor segment connections",
+
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_floor_connection" },
+      "when": { "north": "connected|connected_up", "surface": "down" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_floor_connection", "y": 90 },
+      "when": { "east": "connected|connected_up", "surface": "down" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_floor_connection", "y": 180 },
+      "when": { "south": "connected|connected_up", "surface": "down" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_floor_connection", "y": 270 },
+      "when": { "west": "connected|connected_up", "surface": "down" }
+    },
+    {
+      "__comment3__": "These are the central models that are present on all wall variants",
+
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_wall_centre" },
+      "when": { "surface": "north" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_wall_centre", "y": 90 },
+      "when": { "surface": "east" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_wall_centre", "y": 180 },
+      "when": { "surface": "south" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_wall_centre", "y": 270 },
+      "when": { "surface": "west" }
+    },
+    {
+      "__comment4__": "This section handles the wall segment connections",
+
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_wall_connection_down" },
+      "when": { "surface": "north", "below": "connected|connected_up" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_wall_connection_down", "y": 90 },
+      "when": { "surface": "east", "below": "connected|connected_up" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_wall_connection_down", "y": 180 },
+      "when": { "surface": "south", "below": "connected|connected_up" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_wall_connection_down", "y": 270 },
+      "when": { "surface": "west", "below": "connected|connected_up" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_wall_connection_up" },
+      "when": { "surface": "north", "above": "connected|connected_up" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_wall_connection_up", "y": 90 },
+      "when": { "surface": "east", "above": "connected|connected_up" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_wall_connection_up", "y": 180 },
+      "when": { "surface": "south", "above": "connected|connected_up" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_wall_connection_up", "y": 270 },
+      "when": { "surface": "west", "above": "connected|connected_up" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_wall_connection_right" },
+      "when": { "surface": "north", "east": "connected|connected_up" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_wall_connection_right", "y": 90 },
+      "when": { "surface": "east", "south": "connected|connected_up" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_wall_connection_right", "y": 180 },
+      "when": { "surface": "south", "west": "connected|connected_up" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_wall_connection_right", "y": 270 },
+      "when": { "surface": "west", "north": "connected|connected_up" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_wall_connection_left" },
+      "when": { "surface": "north", "west": "connected|connected_up" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_wall_connection_left", "y": 90 },
+      "when": { "surface": "east", "north": "connected|connected_up" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_wall_connection_left", "y": 180 },
+      "when": { "surface": "south", "east": "connected|connected_up" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_wall_connection_left", "y": 270 },
+      "when": { "surface": "west", "south": "connected|connected_up" }
+    },
+    {
+      "__comment5__": "This is the central model that is present on all ceiling variants",
+
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_ceiling_centre" },
+      "when": { "surface": "up" }
+    },
+    {
+      "__comment6__": "This section handles the ceiling segment connections",
+
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_ceiling_connection" },
+      "when": { "north": "connected|connected_up", "surface": "up" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_ceiling_connection", "y": 90 },
+      "when": { "east": "connected|connected_up", "surface": "up" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_ceiling_connection", "y": 180 },
+      "when": { "south": "connected|connected_up", "surface": "up" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_ceiling_connection", "y": 270 },
+      "when": { "west": "connected|connected_up", "surface": "up" }
+    },
+    {
+      "__comment7__": "This section handles the upwards connections",
+
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_floor_connection_up" },
+      "when": { "north": "connected_up", "surface": "down" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_floor_connection_up", "y": 90 },
+      "when": { "east": "connected_up", "surface": "down" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_floor_connection_up", "y": 180 },
+      "when": { "south": "connected_up", "surface": "down" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_floor_connection_up", "y": 270 },
+      "when": { "west": "connected_up", "surface": "down" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_ceiling_connection_up" },
+      "when": { "north": "connected_up", "surface": "up" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_ceiling_connection_up", "y": 90 },
+      "when": { "east": "connected_up", "surface": "up" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_ceiling_connection_up", "y": 180 },
+      "when": { "south": "connected_up", "surface": "up" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_ceiling_connection_up", "y": 270 },
+      "when": { "west": "connected_up", "surface": "up" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_wall_connection_up_up" },
+      "when": { "above": "connected_up", "surface": "north" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_wall_connection_up_right" },
+      "when": { "east": "connected_up", "surface": "north" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_wall_connection_up_down" },
+      "when": { "below": "connected_up", "surface": "north" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_wall_connection_up_left" },
+      "when": { "west": "connected_up", "surface": "north" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_wall_connection_up_up", "y": 90 },
+      "when": { "above": "connected_up", "surface": "east" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_wall_connection_up_right", "y": 90 },
+      "when": { "south": "connected_up", "surface": "east" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_wall_connection_up_down", "y": 90 },
+      "when": { "below": "connected_up", "surface": "east" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_wall_connection_up_left", "y": 90 },
+      "when": { "north": "connected_up", "surface": "east" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_wall_connection_up_up", "y": 180 },
+      "when": { "above": "connected_up", "surface": "south" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_wall_connection_up_right", "y": 180 },
+      "when": { "west": "connected_up", "surface": "south" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_wall_connection_up_down", "y": 180 },
+      "when": { "below": "connected_up", "surface": "south" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_wall_connection_up_left", "y": 180 },
+      "when": { "east": "connected_up", "surface": "south" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_wall_connection_up_up", "y": 270 },
+      "when": { "above": "connected_up", "surface": "west" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_wall_connection_up_right", "y": 270 },
+      "when": { "north": "connected_up", "surface": "west" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_wall_connection_up_down", "y": 270 },
+      "when": { "below": "connected_up", "surface": "west" }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/tentacle/tentacle_wall_connection_up_left", "y": 270 },
+      "when": { "south": "connected_up", "surface": "west" }
+    }
+  ]
+}

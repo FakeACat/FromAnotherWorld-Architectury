@@ -22,8 +22,7 @@ public abstract class FlammableBlock extends Block {
         return this.spread;
     }
 
-    public int getFlammability(BlockState state, BlockGetter level, BlockPos pos, Direction direction)
-    {
+    public int getFlammability(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
         return this.burn();
     }
 
@@ -32,8 +31,7 @@ public abstract class FlammableBlock extends Block {
         return true;
     }
 
-    public int getFireSpreadSpeed(BlockState state, BlockGetter level, BlockPos pos, Direction direction)
-    {
+    public int getFireSpreadSpeed(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
         return this.spread();
     }
 }

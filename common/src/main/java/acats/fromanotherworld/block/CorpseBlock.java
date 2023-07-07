@@ -1,6 +1,7 @@
 package acats.fromanotherworld.block;
 
 import acats.fromanotherworld.block.entity.CorpseBlockEntity;
+import acats.fromanotherworld.block.interfaces.Gore;
 import acats.fromanotherworld.registry.BlockEntityRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -19,7 +20,7 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class CorpseBlock extends BaseEntityBlock {
+public class CorpseBlock extends BaseEntityBlock implements Gore {
     public static final EnumProperty<CorpseType> TYPE = EnumProperty.create("type", CorpseType.class);
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
 
@@ -79,9 +80,10 @@ public class CorpseBlock extends BaseEntityBlock {
     public static void setCorpseType(BlockState state, CorpseType corpseType){
         state.setValue(TYPE, corpseType);
     }
+
     public enum CorpseType implements StringRepresentable {
-        HUMAN_1("human_1", 1),
-        SMALL_1("small_1", 2);
+        HUMAN_1("human_1", 5),
+        SMALL_1("small_1", 3);
 
         private final int size;
         private final String name;
@@ -93,6 +95,9 @@ public class CorpseBlock extends BaseEntityBlock {
         @Override
         public @NotNull String getSerializedName() {
             return this.name;
+        }
+        public int getSize(){
+            return this.size;
         }
     }
 }

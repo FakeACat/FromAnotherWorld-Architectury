@@ -1,0 +1,21 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "fromanotherworld:block/tentacle/tentacle_wall_centre",
+		"particle": "fromanotherworld:block/thing_gore"
+	},
+	"elements": [
+		{
+			"from": [6, 6, 0],
+			"to": [10, 10, 3],
+			"faces": {
+				"north": {"uv": [0, 0, 4, 4], "texture": "#0"},
+				"east": {"uv": [4, 0, 7, 4], "texture": "#0"},
+				"south": {"uv": [0, 4, 4, 8], "texture": "#0"},
+				"west": {"uv": [4, 4, 7, 8], "texture": "#0"},
+				"up": {"uv": [11, 3, 7, 0], "texture": "#0"},
+				"down": {"uv": [11, 3, 7, 6], "texture": "#0"}
+			}
+		}
+	]
+}

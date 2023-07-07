@@ -7,7 +7,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 public class SoundRegistryFabric {
     public static void register(){
         SoundRegistry.SOUND_REGISTRY.registerAll(
-                (id, registryObject, builder) -> Registry.register(BuiltInRegistries.SOUND_EVENT, id, builder.get())
+                (id, builder) -> Registry.register(BuiltInRegistries.SOUND_EVENT, id, builder.get())
         );
     }
 }

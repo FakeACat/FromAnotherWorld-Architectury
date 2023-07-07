@@ -1,5 +1,5 @@
 {
-  "parent": "fromanotherworld:block/thing_gore_reforming",
+  "parent": "fromanotherworld:block/tentacle/tentacle_ceiling_centre",
   "display": {
     "gui": {
       "rotation": [ 30, 225, 0 ],

@@ -10,8 +10,8 @@ public class FromAnotherWorldClientFabric implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         EntityRegistryFabric.clientRegister();
-        BlockRegistryFabric.clientRegister();
         ParticleRegistryFabric.clientRegister();
+        BlockRegistryFabric.registerClient();
         BlockEntityRegistryFabric.clientRegister();
     }
 }

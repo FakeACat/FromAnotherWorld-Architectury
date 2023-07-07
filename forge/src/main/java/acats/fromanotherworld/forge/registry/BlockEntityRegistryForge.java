@@ -3,7 +3,6 @@ package acats.fromanotherworld.forge.registry;
 import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.block.entity.render.CorpseBlockEntityRenderer;
 import acats.fromanotherworld.registry.BlockEntityRegistry;
-import acats.fromanotherworld.utilities.registry.FAWRegistryObject;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -18,7 +17,7 @@ public class BlockEntityRegistryForge {
         BlockEntityRegistry.BLOCK_ENTITY_REGISTRY.registerAll(BlockEntityRegistryForge::registerBlockEntity);
         BLOCK_ENTITIES.register(eventBus);
     }
-    private static void registerBlockEntity(String id, FAWRegistryObject<? extends BlockEntityType<?>> fawRegistryObject, Supplier<? extends BlockEntityType<?>> builder){
+    private static void registerBlockEntity(String id, Supplier<? extends BlockEntityType<?>> builder){
         BLOCK_ENTITIES.register(id, builder);
     }
 

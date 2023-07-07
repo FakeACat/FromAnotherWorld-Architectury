@@ -2,7 +2,6 @@ package acats.fromanotherworld.forge.events;
 
 import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.events.CommonWorldEvents;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -11,9 +10,6 @@ import net.minecraftforge.fml.common.Mod;
 public class WorldEvents {
     @SubscribeEvent
     public static void serverTickEvent(TickEvent.ServerTickEvent event){
-        event.getServer().getAllLevels().forEach(WorldEvents::worldTick);
-    }
-    private static void worldTick(ServerLevel world){
-        CommonWorldEvents.serverWorldTick(world);
+        event.getServer().getAllLevels().forEach(CommonWorldEvents::serverWorldTick);
     }
 }

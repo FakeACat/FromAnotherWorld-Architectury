@@ -1,8 +1,10 @@
 package acats.fromanotherworld.block.entity;
 
 import acats.fromanotherworld.block.CorpseBlock;
+import acats.fromanotherworld.block.interfaces.Gore;
 import acats.fromanotherworld.constants.FAWAnimations;
 import acats.fromanotherworld.registry.BlockEntityRegistry;
+import acats.fromanotherworld.utilities.BlockUtilities;
 import mod.azure.azurelib.animatable.GeoBlockEntity;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
@@ -33,6 +35,12 @@ public class CorpseBlockEntity extends BlockEntity implements GeoBlockEntity {
     }
 
     public static void tick(Level level, BlockPos blockPos, BlockState blockState, CorpseBlockEntity blockEntity){
-
+        if (!level.isClientSide() && level.getDayTime() % 100 == 0 && blockState.getBlock() instanceof Gore gore){
+            int size = CorpseBlock.getCorpseType(blockState).getSize();
+            BlockUtilities.forEachBlockInCubeCentredAt(blockPos, size, blockPos1 -> {
+                if (level.random.nextInt(10) == 0)
+                    gore.spread(level, blockPos1, blockState);
+            });
+        }
     }
 }

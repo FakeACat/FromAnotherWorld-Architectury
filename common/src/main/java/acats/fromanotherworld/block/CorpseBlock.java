@@ -77,8 +77,9 @@ public class CorpseBlock extends BaseEntityBlock implements Gore {
     public static CorpseType getCorpseType(BlockState state){
         return state.getValue(TYPE);
     }
-    public static void setCorpseType(BlockState state, CorpseType corpseType){
-        state.setValue(TYPE, corpseType);
+    public static BlockState setCorpseType(BlockState state, CorpseType corpseType){
+        state = state.setValue(TYPE, corpseType);
+        return state;
     }
 
     public enum CorpseType implements StringRepresentable {

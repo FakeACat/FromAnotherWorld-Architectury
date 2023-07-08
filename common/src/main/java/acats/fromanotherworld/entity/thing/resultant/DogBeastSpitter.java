@@ -1,5 +1,6 @@
 package acats.fromanotherworld.entity.thing.resultant;
 
+import acats.fromanotherworld.block.CorpseBlock;
 import acats.fromanotherworld.constants.FAWAnimations;
 import acats.fromanotherworld.entity.goal.AbsorbGoal;
 import acats.fromanotherworld.entity.goal.FleeOnFireGoal;
@@ -22,6 +23,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
 public class DogBeastSpitter extends ResizeableThing implements RangedAttackMob {
 
@@ -111,5 +113,10 @@ public class DogBeastSpitter extends ResizeableThing implements RangedAttackMob 
     @Override
     public ThingCategory getThingCategory() {
         return ThingCategory.SPLIT;
+    }
+
+    @Override
+    public @Nullable CorpseBlock.CorpseType getSuitableCorpse() {
+        return CorpseBlock.CorpseType.SMALL_1;
     }
 }

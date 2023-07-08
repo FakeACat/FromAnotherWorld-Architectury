@@ -402,16 +402,13 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
                 return;
             }
 
-            BlockState corpse = BlockRegistry.CORPSE.get().defaultBlockState().rotate(Rotation.getRandom(this.getRandom()));
-            CorpseBlock.setCorpseType(corpse, corpseType);
-
-
-            this.level().setBlockAndUpdate(this.blockPosition(), corpse);
+            this.level().setBlockAndUpdate(this.blockPosition(),
+                    CorpseBlock.setCorpseType(BlockRegistry.CORPSE.get()
+                            .defaultBlockState().rotate(Rotation.getRandom(this.getRandom())), corpseType));
         }
     }
 
-    @Nullable
-    public CorpseBlock.CorpseType getSuitableCorpse(){
+    public @Nullable CorpseBlock.CorpseType getSuitableCorpse(){
         return CorpseBlock.CorpseType.HUMAN_1;
     }
 

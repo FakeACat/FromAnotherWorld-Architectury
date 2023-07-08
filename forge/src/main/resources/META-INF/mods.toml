@@ -7,7 +7,7 @@ license = "MIT"
 modId = "fromanotherworld"
 version = "${version}"
 displayName = "From Another World"
-authors = "a cats (code, models, textures), ImpulsiveLass (Palmer Thing model and texture)"
+authors = "a cats (code, models, textures), ImpulsiveLass (Palmer Thing model and texture), techno_theprotogen (Impaler Llama model)"
 description = '''
 adds the thing from the thing
 '''

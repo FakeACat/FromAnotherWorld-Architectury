@@ -109,7 +109,7 @@ public class DogBeastSpitter extends ResizeableThing implements RangedAttackMob 
     }
 
     @Override
-    public Strength getFormStrength() {
-        return Strength.STANDARD_WEAK;
+    public ThingCategory getThingCategory() {
+        return ThingCategory.SPLIT;
     }
 }

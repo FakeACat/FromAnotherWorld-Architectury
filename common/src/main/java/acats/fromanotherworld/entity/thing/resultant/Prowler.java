@@ -44,8 +44,8 @@ public class Prowler extends AbsorberThing {
     }
 
     @Override
-    public Strength getFormStrength() {
-        return Strength.STRONG;
+    public ThingCategory getThingCategory() {
+        return ThingCategory.MERGED;
     }
 
     @Override

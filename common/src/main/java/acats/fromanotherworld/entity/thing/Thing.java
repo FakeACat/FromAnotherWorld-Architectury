@@ -50,15 +50,15 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
     private static final EntityDataAccessor<Boolean> HIBERNATING;
     private static final EntityDataAccessor<Float> COLD;
     private static final EntityDataAccessor<Boolean> CLIMBING;
-    protected Thing(EntityType<? extends Monster> entityType, Level world, boolean canHaveSpecialAbilities) {
+    protected Thing(EntityType<? extends Monster> entityType, Level world) {
         super(entityType, world);
-        this.xpReward = XP_REWARD_LARGE;
+        this.xpReward = this.getThingCategory().getXpReward();
         if (!this.level().isClientSide()){
             if (!entityType.is(EntityTags.THINGS)){
                 FromAnotherWorld.LOGGER.error(this.getEncodeId() + " extends Thing but is not in the things tag!");
             }
 
-            if (canHaveSpecialAbilities){
+            if (this.getThingCategory().canHaveSpecialAbilities()){
                 this.setRareAbilities(General.specialBehaviourRarity);
             }
         }
@@ -78,10 +78,6 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
     @Override
     public float maxUpStep() {
         return 1.5F;
-    }
-
-    protected Thing(EntityType<? extends Monster> entityType, Level world){
-        this(entityType, world, true);
     }
 
     public boolean canSpit;
@@ -186,18 +182,18 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return switch (this.getFormStrength()){
-            case WEAK, STANDARD_WEAK -> SoundRegistry.WEAK_HURT.get();
-            case MINIBOSS -> SoundRegistry.STRONG_HURT.get();
+        return switch (this.getThingCategory()){
+            case FODDER, SPLIT -> SoundRegistry.WEAK_HURT.get();
+            case MINIBOSS, SPECIAL_MINIBOSS -> SoundRegistry.STRONG_HURT.get();
             default -> SoundRegistry.GENERAL_HURT.get();
         };
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return switch (this.getFormStrength()){
-            case WEAK, STANDARD_WEAK -> SoundRegistry.WEAK_DEATH.get();
-            case MINIBOSS -> SoundRegistry.STRONG_DEATH.get();
+        return switch (this.getThingCategory()){
+            case FODDER, SPLIT -> SoundRegistry.WEAK_DEATH.get();
+            case MINIBOSS, SPECIAL_MINIBOSS -> SoundRegistry.STRONG_DEATH.get();
             default -> SoundRegistry.GENERAL_DEATH.get();
         };
     }
@@ -205,27 +201,27 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
     @Nullable
     @Override
     protected SoundEvent getAmbientSound() {
-        return switch (this.getFormStrength()){
-            case WEAK, STANDARD_WEAK -> SoundRegistry.WEAK_AMBIENT.get();
-            case MINIBOSS -> SoundRegistry.STRONG_AMBIENT.get();
+        return switch (this.getThingCategory()){
+            case FODDER, SPLIT -> SoundRegistry.WEAK_AMBIENT.get();
+            case MINIBOSS, SPECIAL_MINIBOSS -> SoundRegistry.STRONG_AMBIENT.get();
             default -> SoundRegistry.GENERAL_AMBIENT.get();
         };
     }
 
     protected SoundEvent getAlertSound(){
-        return switch (this.getFormStrength()){
-            case WEAK, STANDARD_WEAK -> SoundRegistry.WEAK_ALERT.get();
-            case MINIBOSS -> SoundRegistry.STRONG_ALERT.get();
+        return switch (this.getThingCategory()){
+            case FODDER, SPLIT -> SoundRegistry.WEAK_ALERT.get();
+            case MINIBOSS, SPECIAL_MINIBOSS -> SoundRegistry.STRONG_ALERT.get();
             default -> null;
         };
     }
 
     @Override
     public float getVoicePitch() {
-        return switch (this.getFormStrength()){
+        return switch (this.getThingCategory()){
             default -> super.getVoicePitch();
-            case STANDARD_STRONG -> super.getVoicePitch() * 0.8F;
-            case STRONG -> super.getVoicePitch() * 0.6F;
+            case ELITE -> super.getVoicePitch() * 0.8F;
+            case MERGED -> super.getVoicePitch() * 0.6F;
         };
     }
 
@@ -367,7 +363,7 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
     protected float getDamageAfterMagicAbsorb(DamageSource source, float amount) {
         boolean vul1 = EntityUtilities.isVulnerable(this);
         boolean vul2 = source.is(DamageTypeTags.ALWAYS_HURTS_THINGS);
-        return (vul1 || vul2) ? super.getDamageAfterMagicAbsorb(source, amount) : Math.min(super.getDamageAfterMagicAbsorb(source, amount), 1.0F);
+        return (vul1 || vul2) ? super.getDamageAfterMagicAbsorb(source, amount) : super.getDamageAfterMagicAbsorb(source, amount) * this.getThingCategory().getDamageMultiplierWhenNotBurning();
     }
 
     public boolean shouldMergeOnAssimilate() {
@@ -544,17 +540,38 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
         return true;
     }
 
-    public enum Strength {
-        REVEALED,
-        WEAK,
-        STANDARD_WEAK,
-        STANDARD,
-        STANDARD_STRONG,
-        STRONG,
-        MINIBOSS
+    public enum ThingCategory {
+        REVEALED(false, 0.25F, 5),
+        FODDER(false, 1.0F, 3),
+        SPLIT(true, 0.2F, 6),
+        STANDARD(true, 0.2F, 8),
+        ELITE(true, 0.2F, 10),
+        MERGED(true, 0.1F, 15),
+        MINIBOSS(true, 0.05F, 20),
+        SPECIAL_MINIBOSS(false, 0.05F, 25);
+
+        ThingCategory(boolean canHaveSpecialAbilities, float damageMultiplierWhenNotBurning, int xpReward){
+            this.canHaveSpecialAbilities = canHaveSpecialAbilities;
+            this.damageMultiplierWhenNotBurning = damageMultiplierWhenNotBurning;
+            this.xpReward = xpReward;
+        }
+
+        private final boolean canHaveSpecialAbilities;
+        private final float damageMultiplierWhenNotBurning;
+        private final int xpReward;
+
+        public boolean canHaveSpecialAbilities(){
+            return this.canHaveSpecialAbilities;
+        }
+        public float getDamageMultiplierWhenNotBurning(){
+            return this.damageMultiplierWhenNotBurning;
+        }
+        public int getXpReward(){
+            return this.xpReward;
+        }
     }
 
-    public abstract Strength getFormStrength();
+    public abstract ThingCategory getThingCategory();
 
     static {
         VICTIM_TYPE = SynchedEntityData.defineId(Thing.class, EntityDataSerializers.BYTE);

@@ -31,7 +31,7 @@ public class ChestSpitter extends Thing {
     public final TentacleMass tentacleMass;
 
     public ChestSpitter(EntityType<? extends ChestSpitter> entityType, Level world) {
-        super(entityType, world, false);
+        super(entityType, world);
         this.tentacleMass = new TentacleMass(world, 10, 10, 0.0F, 0.85F);
         this.tentacleMass.rootYOffset = 0.1875F;
     }
@@ -137,8 +137,8 @@ public class ChestSpitter extends Thing {
     }
 
     @Override
-    public Strength getFormStrength() {
-        return Strength.REVEALED;
+    public ThingCategory getThingCategory() {
+        return ThingCategory.REVEALED;
     }
 
     static class LookAtTargetGoal extends Goal {

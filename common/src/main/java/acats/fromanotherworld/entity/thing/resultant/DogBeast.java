@@ -78,8 +78,8 @@ public class DogBeast extends ResizeableThing implements Leaper {
     }
 
     @Override
-    public Strength getFormStrength() {
-        return Strength.STANDARD;
+    public ThingCategory getThingCategory() {
+        return ThingCategory.STANDARD;
     }
 
     @Override

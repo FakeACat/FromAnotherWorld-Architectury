@@ -94,8 +94,8 @@ public class JulietteThing extends AbsorberThing {
     }
 
     @Override
-    public Strength getFormStrength() {
-        return Strength.STANDARD;
+    public ThingCategory getThingCategory() {
+        return ThingCategory.STANDARD;
     }
 
     @Override

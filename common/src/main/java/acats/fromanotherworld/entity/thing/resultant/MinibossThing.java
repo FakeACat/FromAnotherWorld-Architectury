@@ -25,7 +25,7 @@ public abstract class MinibossThing extends AbsorberThing {
     private static final EntityDataAccessor<Integer> TIER;
 
     public MinibossThing(EntityType<? extends AbsorberThing> entityType, Level world) {
-        super(entityType, world, true);
+        super(entityType, world);
         this.fixupDimensions();
     }
 
@@ -54,7 +54,7 @@ public abstract class MinibossThing extends AbsorberThing {
             this.setHealth(this.getMaxHealth());
         }
 
-        this.xpReward = tier * XP_REWARD_HUGE;
+        this.xpReward = tier * this.getThingCategory().getXpReward();
     }
 
     public int getTier() {
@@ -103,8 +103,8 @@ public abstract class MinibossThing extends AbsorberThing {
     }
 
     @Override
-    public Strength getFormStrength() {
-        return Strength.MINIBOSS;
+    public ThingCategory getThingCategory() {
+        return ThingCategory.MINIBOSS;
     }
 
     @Override

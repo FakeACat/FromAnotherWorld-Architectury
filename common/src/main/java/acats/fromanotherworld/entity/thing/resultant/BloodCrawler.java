@@ -31,8 +31,7 @@ public class BloodCrawler extends Thing {
 
     private static final EntityDataAccessor<Integer> VARIANT;
     public BloodCrawler(EntityType<? extends BloodCrawler> entityType, Level world) {
-        super(entityType, world, false);
-        this.xpReward = XP_REWARD_SMALL;
+        super(entityType, world);
     }
 
     @Override
@@ -119,7 +118,7 @@ public class BloodCrawler extends Thing {
     }
 
     @Override
-    public Strength getFormStrength() {
-        return Strength.WEAK;
+    public ThingCategory getThingCategory() {
+        return ThingCategory.FODDER;
     }
 }

@@ -163,7 +163,7 @@ public class Impaler extends ResizeableThing implements BurstAttackThing {
     }
 
     @Override
-    public Strength getFormStrength() {
-        return Strength.STANDARD_STRONG;
+    public ThingCategory getThingCategory() {
+        return ThingCategory.ELITE;
     }
 }

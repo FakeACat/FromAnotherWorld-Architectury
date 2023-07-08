@@ -35,17 +35,14 @@ public abstract class AbsorberThing extends Thing implements TentacleThing {
         return this.getBbHeight() * 0.5F;
     }
 
-    protected AbsorberThing(EntityType<? extends AbsorberThing> entityType, Level world, boolean canHaveSpecialAbilities) {
-        super(entityType, world, canHaveSpecialAbilities);
+    protected AbsorberThing(EntityType<? extends AbsorberThing> entityType, Level world) {
+        super(entityType, world);
         absorbTentacles = new ArrayList<>();
         for (int i = 0; i < 25; i++){
             absorbTentacles.add(new Tentacle(this,
                     60,
                     new Vec3(this.getRandom().nextDouble() - 0.5D, this.getRandom().nextDouble(), this.getRandom().nextDouble() - 0.5D)));
         }
-    }
-    protected AbsorberThing(EntityType<? extends AbsorberThing> entityType, Level world){
-        this(entityType, world, true);
     }
 
     @Override

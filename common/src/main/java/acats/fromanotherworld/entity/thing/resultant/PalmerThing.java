@@ -145,8 +145,8 @@ public class PalmerThing extends AbsorberThing {
     }
 
     @Override
-    public Strength getFormStrength() {
-        return Strength.STANDARD_STRONG;
+    public ThingCategory getThingCategory() {
+        return ThingCategory.ELITE;
     }
 
     static {

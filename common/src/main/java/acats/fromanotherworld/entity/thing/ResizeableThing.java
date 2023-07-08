@@ -17,12 +17,9 @@ import org.jetbrains.annotations.NotNull;
 public abstract class ResizeableThing extends AbsorberThing{
     private static final EntityDataAccessor<Float> WIDTH_MULTIPLIER;
     private static final EntityDataAccessor<Float> HEIGHT_MULTIPLIER;
-    public ResizeableThing(EntityType<? extends ResizeableThing> entityType, Level world, boolean canHaveSpecialAbilities) {
-        super(entityType, world, canHaveSpecialAbilities);
-        this.fixupDimensions();
-    }
     public ResizeableThing(EntityType<? extends ResizeableThing> entityType, Level world) {
-        this(entityType, world, true);
+        super(entityType, world);
+        this.fixupDimensions();
     }
 
     @Override

@@ -38,8 +38,7 @@ import java.util.Objects;
 
 public class AlienThing extends Thing implements StalkerThing {
     public AlienThing(EntityType<? extends AlienThing> entityType, Level world) {
-        super(entityType, world, false);
-        this.xpReward = 25;
+        super(entityType, world);
         ((GroundPathNavigation)this.getNavigation()).setCanOpenDoors(true);
     }
 
@@ -407,8 +406,8 @@ public class AlienThing extends Thing implements StalkerThing {
     }
 
     @Override
-    public Strength getFormStrength() {
-        return Strength.MINIBOSS;
+    public ThingCategory getThingCategory() {
+        return ThingCategory.SPECIAL_MINIBOSS;
     }
 
     static {

@@ -18,7 +18,7 @@ import net.minecraft.world.level.Level;
 
 public class SplitFace extends AbsorberThing implements StalkerThing {
     public SplitFace(EntityType<? extends SplitFace> entityType, Level world) {
-        super(entityType, world, true);
+        super(entityType, world);
         this.canGrief = true;
     }
 
@@ -57,8 +57,8 @@ public class SplitFace extends AbsorberThing implements StalkerThing {
     }
 
     @Override
-    public Strength getFormStrength() {
-        return Strength.STRONG;
+    public ThingCategory getThingCategory() {
+        return ThingCategory.MERGED;
     }
 
     @Override

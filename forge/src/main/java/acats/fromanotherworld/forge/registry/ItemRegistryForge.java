@@ -14,6 +14,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.HashMap;
+import java.util.function.Supplier;
 
 public class ItemRegistryForge {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, FromAnotherWorld.MOD_ID);
@@ -25,14 +26,14 @@ public class ItemRegistryForge {
                     .icon(() -> new ItemStack(ItemRegistry.ASSIMILATION_LIQUID.get()))
                     .build());
     public static void register(IEventBus eventBus){
-        ItemRegistry.ITEM_REGISTRY.forEach(ItemRegistryForge::registerItem);
+        ItemRegistry.ITEM_REGISTRY.registerAll(ItemRegistryForge::registerItem);
         ItemRegistry.SPAWN_EGG_REGISTRY.forEach(ItemRegistryForge::registerSpawnEgg);
         ITEMS.register(eventBus);
         TABS.register(eventBus);
     }
 
-    private static void registerItem(String id, ItemRegistry.FAWItem fawItem){
-        ITEMS.register(id, fawItem::build);
+    private static void registerItem(String id, Supplier<? extends Item> itemSupplier){
+        ITEMS.register(id, itemSupplier);
     }
     private static void registerSpawnEgg(String id, ItemRegistry.FAWEgg fawEgg){
         ITEMS.register(id, () -> {

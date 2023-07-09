@@ -82,5 +82,8 @@
 
   "effect.fromanotherworld.slow_assimilation": "Slow Assimilation",
 
-  "fromanotherworld.from_another_world_group": "From Another World"
+  "fromanotherworld.from_another_world_group": "From Another World",
+
+  "fromanotherworld.announcement.defeated": " has been defeated!",
+  "fromanotherworld.announcement.alien_escaped": "Alien Thing has escaped!"
 }

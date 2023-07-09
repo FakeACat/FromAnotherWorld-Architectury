@@ -1,11 +1,13 @@
 package acats.fromanotherworld.entity.thing.special;
 
 import acats.fromanotherworld.entity.goal.*;
+import acats.fromanotherworld.entity.interfaces.ImportantDeathMob;
 import acats.fromanotherworld.entity.interfaces.StalkerThing;
 import acats.fromanotherworld.entity.thing.Thing;
 import acats.fromanotherworld.registry.ParticleRegistry;
 import acats.fromanotherworld.spawning.SpawningManager;
 import acats.fromanotherworld.utilities.EntityUtilities;
+import acats.fromanotherworld.utilities.ServerUtilities;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.core.animation.AnimationController;
@@ -16,12 +18,14 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -36,7 +40,7 @@ import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
 import java.util.Objects;
 
-public class AlienThing extends Thing implements StalkerThing {
+public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob {
     public AlienThing(EntityType<? extends AlienThing> entityType, Level world) {
         super(entityType, world);
         ((GroundPathNavigation)this.getNavigation()).setCanOpenDoors(true);
@@ -126,11 +130,18 @@ public class AlienThing extends Thing implements StalkerThing {
 
     private void leave(){
         if (!this.level().isClientSide()){
+            this.announceEscape();
             SpawningManager spawningManager = SpawningManager.getSpawningManager((ServerLevel) this.level());
             spawningManager.alienThingsToSpawn++;
             spawningManager.setDirty();
             this.discard();
         }
+    }
+
+    private void announceEscape(){
+        ServerUtilities.forAllPlayerNearEntity(this, 30, player ->
+                player.sendSystemMessage(Component.translatable("fromanotherworld.announcement.alien_escaped").withStyle(this.deathMessageStyle()))
+        );
     }
 
     private boolean burrowingOrEmerging(){
@@ -403,6 +414,12 @@ public class AlienThing extends Thing implements StalkerThing {
         this.entityData.set(EMERGING, nbt.getInt("Emerging"));
         this.entityData.set(BURROWING, nbt.getInt("Burrowing"));
         this.bored = nbt.getBoolean("Bored");
+    }
+
+    @Override
+    public void die(DamageSource damageSource) {
+        super.die(damageSource);
+        this.importantDie(damageSource);
     }
 
     @Override

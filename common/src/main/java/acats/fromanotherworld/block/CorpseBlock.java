@@ -84,7 +84,8 @@ public class CorpseBlock extends BaseEntityBlock implements Gore {
 
     public enum CorpseType implements StringRepresentable {
         HUMAN_1("human_1", 5),
-        SMALL_1("small_1", 3);
+        SMALL_1("small_1", 3),
+        MEDIUM_1("medium_1", 5);
 
         private final int size;
         private final String name;

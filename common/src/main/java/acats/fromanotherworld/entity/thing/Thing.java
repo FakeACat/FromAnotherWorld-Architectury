@@ -409,7 +409,7 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
     }
 
     public @Nullable CorpseBlock.CorpseType getSuitableCorpse(){
-        return CorpseBlock.CorpseType.HUMAN_1;
+        return CorpseBlock.CorpseType.MEDIUM_1;
     }
 
     @Override

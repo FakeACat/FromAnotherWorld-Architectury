@@ -1,5 +1,6 @@
 package acats.fromanotherworld.entity.thing.resultant;
 
+import acats.fromanotherworld.block.CorpseBlock;
 import acats.fromanotherworld.entity.goal.AbsorbGoal;
 import acats.fromanotherworld.entity.goal.FleeOnFireGoal;
 import acats.fromanotherworld.entity.goal.LeapAttackGoal;
@@ -29,6 +30,7 @@ import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
 public class PalmerThing extends AbsorberThing {
 
@@ -91,6 +93,11 @@ public class PalmerThing extends AbsorberThing {
             }
         }
         return false;
+    }
+
+    @Override
+    public @Nullable CorpseBlock.CorpseType getSuitableCorpse() {
+        return CorpseBlock.CorpseType.HUMAN_1;
     }
 
     @Override

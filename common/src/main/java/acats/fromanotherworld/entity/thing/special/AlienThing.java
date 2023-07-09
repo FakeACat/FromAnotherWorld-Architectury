@@ -139,7 +139,7 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
     }
 
     private void announceEscape(){
-        ServerUtilities.forAllPlayerNearEntity(this, 30, player ->
+        ServerUtilities.forAllPlayersNearEntity(this, 30, player ->
                 player.sendSystemMessage(Component.translatable("fromanotherworld.announcement.alien_escaped").withStyle(this.deathMessageStyle()))
         );
     }

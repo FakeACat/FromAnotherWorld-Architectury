@@ -22,9 +22,8 @@ public interface Gore {
 
             this.forEachPossibleTentacleLocation(pos, surface, pos2 -> {
                 if (level.getRandom().nextInt(3) == 0)
-                    this.attemptPlaceTentacle(level, pos2, surface);
+                    this.attemptPlaceTentacle(level, pos2, level.getRandom().nextInt(10) == 0 ? Direction.getRandom(level.getRandom()) : surface);
             });
-            this.attemptPlaceTentacle(level, pos.relative(surface.getOpposite()), Direction.getRandom(level.getRandom()));
         }
     }
     default void attemptPlaceTentacle(Level level, BlockPos pos, Direction surface){
@@ -47,7 +46,7 @@ public interface Gore {
     default void forEachPossibleTentacleLocation(BlockPos pos, Direction surface, Consumer<BlockPos> function){
         for (Direction direction:
                 Direction.values()) {
-            if (!direction.equals(surface)) {
+            if (!direction.equals(surface) && !direction.equals(surface.getOpposite())) {
                 BlockPos newPos = pos.relative(direction);
                 function.accept(newPos.relative(surface.getOpposite()));
                 function.accept(newPos);

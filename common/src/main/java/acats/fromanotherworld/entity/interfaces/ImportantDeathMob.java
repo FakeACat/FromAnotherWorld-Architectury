@@ -52,7 +52,7 @@ public interface ImportantDeathMob {
     // Call in die(DamageSource)
     default void importantDie(DamageSource damageSource){
         LivingEntity entity = (LivingEntity) this;
-        ServerUtilities.forAllPlayerNearEntity(entity, this.deathRange(), player -> this.forEachNearbyPlayer(player, damageSource));
+        ServerUtilities.forAllPlayersNearEntity(entity, this.deathRange(), player -> this.forEachNearbyPlayer(player, damageSource));
     }
 
     // You do not need to override this under normal circumstances

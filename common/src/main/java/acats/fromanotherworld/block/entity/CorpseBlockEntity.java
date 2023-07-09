@@ -10,6 +10,7 @@ import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.util.AzureLibUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -38,8 +39,8 @@ public class CorpseBlockEntity extends BlockEntity implements GeoBlockEntity {
         if (!level.isClientSide() && level.getDayTime() % 100 == 0 && blockState.getBlock() instanceof Gore gore){
             int size = CorpseBlock.getCorpseType(blockState).getSize();
             BlockUtilities.forEachBlockInCubeCentredAt(blockPos, size, blockPos1 -> {
-                if (level.random.nextInt(10) == 0)
-                    gore.spread(level, blockPos1, blockState);
+                if (level.random.nextInt(4) == 0)
+                    gore.attemptPlaceTentacle(level, blockPos1, Direction.getRandom(level.getRandom()));
             });
         }
     }

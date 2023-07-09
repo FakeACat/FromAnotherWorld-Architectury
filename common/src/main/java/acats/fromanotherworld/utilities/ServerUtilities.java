@@ -17,7 +17,7 @@ public class ServerUtilities {
                 .ignoreLineOfSight();
     }
 
-    public static void forAllPlayerNearEntity(LivingEntity entity, int range, Consumer<Player> consumer){
+    public static void forAllPlayersNearEntity(LivingEntity entity, int range, Consumer<Player> consumer){
         Level level = entity.level();
         if (!level.isClientSide()){
             Vec3 position = entity.position();

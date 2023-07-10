@@ -538,14 +538,14 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
     }
 
     public enum ThingCategory {
-        REVEALED(false, 0.25F, 5),
-        FODDER(false, 1.0F, 3),
-        SPLIT(true, 0.2F, 6),
-        STANDARD(true, 0.2F, 8),
-        ELITE(true, 0.2F, 10),
-        MERGED(true, 0.1F, 15),
-        MINIBOSS(true, 0.05F, 20),
-        SPECIAL_MINIBOSS(false, 0.05F, 25);
+        REVEALED(false, 0.25F, 10),
+        FODDER(false, 1.0F, 6),
+        SPLIT(true, 0.2F, 12),
+        STANDARD(true, 0.2F, 16),
+        ELITE(true, 0.2F, 20),
+        MERGED(true, 0.1F, 30),
+        MINIBOSS(true, 0.05F, 40),
+        SPECIAL_MINIBOSS(false, 0.05F, 50);
 
         ThingCategory(boolean canHaveSpecialAbilities, float damageMultiplierWhenNotBurning, int xpReward){
             this.canHaveSpecialAbilities = canHaveSpecialAbilities;

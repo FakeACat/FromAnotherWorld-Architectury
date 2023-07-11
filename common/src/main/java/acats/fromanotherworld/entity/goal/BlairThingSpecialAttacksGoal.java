@@ -8,7 +8,7 @@ import acats.fromanotherworld.registry.EntityRegistry;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.phys.Vec3;
 
-import static acats.fromanotherworld.constants.Variants.JULIETTE;
+import static acats.fromanotherworld.constants.VariantID.JULIETTE;
 import static acats.fromanotherworld.entity.thing.resultant.BlairThing.*;
 
 public class BlairThingSpecialAttacksGoal extends Goal {
@@ -62,7 +62,7 @@ public class BlairThingSpecialAttacksGoal extends Goal {
             Crawler crawlerEntity = EntityRegistry.CRAWLER.get().create(this.mob.level());
             if (crawlerEntity != null) {
                 crawlerEntity.blairSpawned = true;
-                crawlerEntity.setVictimType(JULIETTE);
+                crawlerEntity.setVariantID(JULIETTE);
                 crawlerEntity.moveTo(this.mob.getX(), this.mob.getY(), this.mob.getZ(), this.mob.getYRot(), this.mob.getXRot());
                 crawlerEntity.initializeFrom(this.mob);
                 crawlerEntity.setDeltaMovement(this.mob.getTarget().position().add(0, this.mob.getTarget().getBbHeight() / 2, 0).subtract(crawlerEntity.position()).normalize().scale(1.5D).add(new Vec3(this.mob.getRandom().nextInt(40) - 20, this.mob.getRandom().nextInt(40) - 20, this.mob.getRandom().nextInt(40) - 20).scale(0.01f)));

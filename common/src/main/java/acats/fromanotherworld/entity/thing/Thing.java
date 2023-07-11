@@ -3,7 +3,7 @@ package acats.fromanotherworld.entity.thing;
 import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.block.CorpseBlock;
 import acats.fromanotherworld.config.General;
-import acats.fromanotherworld.constants.Variants;
+import acats.fromanotherworld.constants.VariantID;
 import acats.fromanotherworld.entity.goal.ThingTargetGoal;
 import acats.fromanotherworld.entity.interfaces.MaybeThing;
 import acats.fromanotherworld.entity.navigation.ThingNavigation;
@@ -46,7 +46,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
-    private static final EntityDataAccessor<Byte> VICTIM_TYPE;
+    private static final EntityDataAccessor<Byte> VARIANT_ID;
     private static final EntityDataAccessor<Boolean> HIBERNATING;
     private static final EntityDataAccessor<Float> COLD;
     private static final EntityDataAccessor<Boolean> CLIMBING;
@@ -93,11 +93,11 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
 
     private final AnimatableInstanceCache animatableInstanceCache = AzureLibUtil.createInstanceCache(this);
 
-    public byte getVictimType(){
-        return this.entityData.get(VICTIM_TYPE);
+    public byte getVariantID(){
+        return this.entityData.get(VARIANT_ID);
     }
-    public void setVictimType(byte victimType){
-        this.entityData.set(VICTIM_TYPE, victimType);
+    public void setVariantID(byte variantID){
+        this.entityData.set(VARIANT_ID, variantID);
     }
 
     public boolean hibernating(){
@@ -124,7 +124,7 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(VICTIM_TYPE, Variants.DEFAULT);
+        this.entityData.define(VARIANT_ID, VariantID.DEFAULT);
         this.entityData.define(HIBERNATING, false);
         this.entityData.define(COLD, 0.0F);
         this.entityData.define(CLIMBING, false);
@@ -497,7 +497,7 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
         nbt.putBoolean("CanGrief", this.canGrief);
         nbt.putBoolean("CanShootNeedles", this.canShootNeedles);
 
-        nbt.putInt("VictimType", this.getVictimType());
+        nbt.putInt("VariantID", this.getVariantID());
 
         nbt.putBoolean("Hibernating", this.hibernating());
         nbt.putInt("TimeSinceLastSeenTarget", this.timeSinceLastSeenTarget);
@@ -516,7 +516,7 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
         this.canGrief = nbt.getBoolean("CanGrief");
         this.canShootNeedles = nbt.getBoolean("CanShootNeedles");
 
-        this.setVictimType(nbt.getByte("VictimType"));
+        this.setVariantID(nbt.getByte("VariantID"));
 
         this.setHibernating(nbt.getBoolean("Hibernating"));
         this.timeSinceLastSeenTarget = nbt.getInt("TimeSinceLastSeenTarget");
@@ -571,7 +571,7 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
     public abstract ThingCategory getThingCategory();
 
     static {
-        VICTIM_TYPE = SynchedEntityData.defineId(Thing.class, EntityDataSerializers.BYTE);
+        VARIANT_ID = SynchedEntityData.defineId(Thing.class, EntityDataSerializers.BYTE);
         HIBERNATING = SynchedEntityData.defineId(Thing.class, EntityDataSerializers.BOOLEAN);
         COLD = SynchedEntityData.defineId(Thing.class, EntityDataSerializers.FLOAT);
         CLIMBING = SynchedEntityData.defineId(Thing.class, EntityDataSerializers.BOOLEAN);

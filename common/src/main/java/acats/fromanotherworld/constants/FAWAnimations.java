@@ -15,8 +15,10 @@ public final class FAWAnimations {
     public static final RawAnimation FREEZING = RawAnimation.begin().thenPlayXTimes("misc.freezing", 1).thenPlayAndHold("misc.frozen");
     public static final RawAnimation FROZEN = RawAnimation.begin().thenPlayAndHold("misc.frozen");
     public static final RawAnimation SPAWN = RawAnimation.begin().thenPlayXTimes("misc.spawn", 1).thenLoop("misc.idle");
+    @Deprecated
     public static final RawAnimation SPIT = RawAnimation.begin().thenPlayAndHold("misc.spit");
     public static final RawAnimation ALWAYS_PLAYING = RawAnimation.begin().thenLoop("misc.always_playing");
+    public static final RawAnimation HEAD_IDLE = RawAnimation.begin().thenLoop("misc.head_idle");
 
     public static final RawAnimation WALK = RawAnimation.begin().thenLoop("move.walk");
     public static final RawAnimation SWIM = RawAnimation.begin().thenLoop("move.swim");
@@ -24,6 +26,8 @@ public final class FAWAnimations {
     public static final RawAnimation BURROW = RawAnimation.begin().thenPlayAndHold("move.burrow");
     public static final RawAnimation EMERGE = RawAnimation.begin().thenPlayAndHold("move.emerge");
     public static final RawAnimation LEAP = RawAnimation.begin().thenPlayAndHold("move.leap");
+
+    public static final RawAnimation OPEN_MOUTH = RawAnimation.begin().thenPlayAndHold("attack.open_mouth");
 
     private static <E extends Thing> void frozen(AnimationState<E> event, E thing){
         if (thing.getCold() == 1.0F){

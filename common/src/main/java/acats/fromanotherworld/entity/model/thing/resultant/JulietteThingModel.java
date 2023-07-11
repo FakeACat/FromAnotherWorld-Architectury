@@ -6,7 +6,7 @@ import mod.azure.azurelib.model.GeoModel;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 
-import static acats.fromanotherworld.constants.Variants.VILLAGER;
+import static acats.fromanotherworld.constants.VariantID.VILLAGER;
 
 public class JulietteThingModel extends GeoModel<JulietteThing> {
     @Override
@@ -17,7 +17,7 @@ public class JulietteThingModel extends GeoModel<JulietteThing> {
     @Override
     public ResourceLocation getTextureResource(JulietteThing object) {
         String variant = "juliette_thing";
-        if (object.getVictimType() == VILLAGER)
+        if (object.getVariantID() == VILLAGER)
             variant = "juliette_thing_villagertrousers";
         return new ResourceLocation(FromAnotherWorld.MOD_ID, "textures/entity/thing/resultant/juliette_thing/" + variant + ".png");
     }

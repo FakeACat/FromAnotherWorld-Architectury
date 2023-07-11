@@ -1,6 +1,6 @@
 package acats.fromanotherworld.entity.thing;
 
-import acats.fromanotherworld.constants.Variants;
+import acats.fromanotherworld.constants.VariantID;
 import acats.fromanotherworld.entity.interfaces.MaybeThing;
 import acats.fromanotherworld.entity.render.thing.growths.TentacleMass;
 import acats.fromanotherworld.entity.thing.resultant.Beast;
@@ -29,7 +29,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-import static acats.fromanotherworld.constants.Variants.*;
+import static acats.fromanotherworld.constants.VariantID.*;
 import static acats.fromanotherworld.tags.EntityTags.*;
 
 public class TransitionEntity extends LivingEntity implements MaybeThing {
@@ -214,9 +214,9 @@ public class TransitionEntity extends LivingEntity implements MaybeThing {
             }
             if (thing != null){
                 if (type.is(VILLAGERS))
-                    thing.setVictimType(VILLAGER);
+                    thing.setVariantID(VILLAGER);
                 else if (type.is(ILLAGERS))
-                    thing.setVictimType(ILLAGER);
+                    thing.setVariantID(ILLAGER);
             }
         }
         else if (type.is(LARGE_QUADRUPEDS)){
@@ -234,15 +234,15 @@ public class TransitionEntity extends LivingEntity implements MaybeThing {
             }
             if (thing != null){
                 if (type.is(COWS))
-                    thing.setVictimType(COW);
+                    thing.setVariantID(COW);
                 else if (type.is(EntityTags.SHEEP))
-                    thing.setVictimType(Variants.SHEEP);
+                    thing.setVariantID(VariantID.SHEEP);
                 else if (type.is(PIGS))
-                    thing.setVictimType(PIG);
+                    thing.setVariantID(PIG);
                 else if (type.is(HORSES))
-                    thing.setVictimType(HORSE);
+                    thing.setVariantID(HORSE);
                 else if (type.is(LLAMAS))
-                    thing.setVictimType(LLAMA);
+                    thing.setVariantID(LLAMA);
             }
         }
         else if (type.is(VERY_LARGE_QUADRUPEDS)){

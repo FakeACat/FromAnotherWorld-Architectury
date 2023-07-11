@@ -1,6 +1,6 @@
 package acats.fromanotherworld.constants;
 
-public class Variants {
+public class VariantID {
     public static final byte DEFAULT = -1;
     public static final byte VILLAGER = 0;
     public static final byte ILLAGER = 1;
@@ -10,4 +10,5 @@ public class Variants {
     public static final byte PIG = 5;
     public static final byte HORSE = 6;
     public static final byte LLAMA = 7;
+    public static final byte GORE = 8;
 }

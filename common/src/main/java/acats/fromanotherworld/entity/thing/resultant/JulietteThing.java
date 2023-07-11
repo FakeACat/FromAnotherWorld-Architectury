@@ -26,7 +26,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
-import static acats.fromanotherworld.constants.Variants.JULIETTE;
+import static acats.fromanotherworld.constants.VariantID.JULIETTE;
 
 public class JulietteThing extends AbsorberThing {
 
@@ -74,7 +74,7 @@ public class JulietteThing extends AbsorberThing {
             if (crawlerEntity != null) {
                 crawlerEntity.setPos(this.position());
                 crawlerEntity.initializeFrom(this);
-                crawlerEntity.setVictimType(JULIETTE);
+                crawlerEntity.setVariantID(JULIETTE);
                 this.level().addFreshEntity(crawlerEntity);
             }
         }

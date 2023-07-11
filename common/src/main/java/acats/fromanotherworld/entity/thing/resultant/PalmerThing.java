@@ -1,6 +1,8 @@
 package acats.fromanotherworld.entity.thing.resultant;
 
 import acats.fromanotherworld.block.CorpseBlock;
+import acats.fromanotherworld.constants.FAWAnimations;
+import acats.fromanotherworld.constants.VariantID;
 import acats.fromanotherworld.entity.goal.AbsorbGoal;
 import acats.fromanotherworld.entity.goal.FleeOnFireGoal;
 import acats.fromanotherworld.entity.goal.LeapAttackGoal;
@@ -12,7 +14,6 @@ import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -125,28 +126,18 @@ public class PalmerThing extends AbsorberThing {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
-        controllerRegistrar.add(new AnimationController<>(this, "controller", 0, this::predicate));
+        controllerRegistrar.add(FAWAnimations.defaultThing(this));
         controllerRegistrar.add(new AnimationController<>(this, "headController", 10, this::predicateHead));
-    }
-
-    private <E extends GeoEntity> PlayState predicate(AnimationState<E> event) {
-        if (event.isMoving() && !this.isThingFrozen()){
-            event.getController().setAnimation(RawAnimation.begin().thenPlay("animation.palmer_thing.run"));
-        }
-        else{
-            return PlayState.STOP;
-        }
-        return PlayState.CONTINUE;
     }
 
     private <E extends GeoEntity> PlayState predicateHead(AnimationState<E> event) {
         if (this.isThingFrozen())
             return PlayState.STOP;
         if (this.targetGrabbed()){
-            event.getController().setAnimation(RawAnimation.begin().thenPlay("animation.palmer_thing.tentacle"));
+            event.getController().setAnimation(FAWAnimations.OPEN_MOUTH);
         }
         else{
-            event.getController().setAnimation(RawAnimation.begin().thenPlay("animation.palmer_thing.head_idle"));
+            event.getController().setAnimation(FAWAnimations.HEAD_IDLE);
         }
         return PlayState.CONTINUE;
     }
@@ -154,6 +145,11 @@ public class PalmerThing extends AbsorberThing {
     @Override
     public ThingCategory getThingCategory() {
         return ThingCategory.ELITE;
+    }
+
+    @Override
+    public boolean cannotMerge() {
+        return this.getVariantID() == VariantID.GORE;
     }
 
     static {

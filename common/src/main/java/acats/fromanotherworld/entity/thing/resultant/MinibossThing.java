@@ -91,8 +91,12 @@ public abstract class MinibossThing extends AbsorberThing {
         super.onSyncedDataUpdated(data);
     }
 
+    public float scaleFactor(){
+        return 1.0F + 0.25F * (float)this.getTier();
+    }
+
     public @NotNull EntityDimensions getDimensions(Pose pose) {
-        return super.getDimensions(pose).scale(1.0F + 0.25F * (float)this.getTier());
+        return super.getDimensions(pose).scale(this.scaleFactor());
     }
 
     @Nullable

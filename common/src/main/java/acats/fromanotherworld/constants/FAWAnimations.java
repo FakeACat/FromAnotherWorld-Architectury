@@ -28,6 +28,9 @@ public final class FAWAnimations {
     public static final RawAnimation LEAP = RawAnimation.begin().thenPlayAndHold("move.leap");
 
     public static final RawAnimation OPEN_MOUTH = RawAnimation.begin().thenPlayAndHold("attack.open_mouth");
+    public static final RawAnimation CLOSE_MOUTH = RawAnimation.begin().thenPlayAndHold("attack.close_mouth");
+    public static final RawAnimation MELEE = RawAnimation.begin().thenLoop("attack.melee");
+    public static final RawAnimation OPEN_MOUTH_THEN_MELEE = RawAnimation.begin().thenPlayXTimes("attack.open_mouth", 1).thenLoop("attack.melee");
 
     private static <E extends Thing> void frozen(AnimationState<E> event, E thing){
         if (thing.getCold() == 1.0F){

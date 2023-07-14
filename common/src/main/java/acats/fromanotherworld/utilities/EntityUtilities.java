@@ -12,6 +12,7 @@ import acats.fromanotherworld.tags.BlockTags;
 import java.util.List;
 import java.util.Random;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
@@ -170,5 +171,9 @@ public class EntityUtilities {
                 return observer.level().clip(new ClipContext(vec3d, vec3d2, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, observer)).getType() == HitResult.Type.MISS;
             }
         }
+    }
+
+    public static List<LivingEntity> nearbyEntities(Level level, Vec3i pos, int distH, int distV){
+        return level.getEntitiesOfClass(LivingEntity.class, new AABB(pos.getX() - distH, pos.getY() - distV, pos.getZ() - distH, pos.getX() + distH, pos.getY() + distV, pos.getZ() + distH));
     }
 }

@@ -1,11 +1,17 @@
 package acats.fromanotherworld.block;
 
 import acats.fromanotherworld.block.interfaces.Gore;
+import acats.fromanotherworld.entity.thing.Thing;
+import acats.fromanotherworld.registry.BlockRegistry;
+import acats.fromanotherworld.registry.EntityRegistry;
+import acats.fromanotherworld.utilities.EntityUtilities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -49,6 +55,7 @@ public class TentacleBlock extends FleshBlock implements Gore {
     }
     @Override
     public @NotNull BlockState rotate(BlockState blockState, Rotation rotation) {
+        blockState = blockState.setValue(SURFACE, rotation.rotate(blockState.getValue(SURFACE)));
         return switch (rotation) {
             case CLOCKWISE_180 ->
                     blockState.setValue(NORTH, blockState.getValue(SOUTH)).setValue(EAST, blockState.getValue(WEST)).setValue(SOUTH, blockState.getValue(NORTH)).setValue(WEST, blockState.getValue(EAST));
@@ -62,6 +69,7 @@ public class TentacleBlock extends FleshBlock implements Gore {
 
     @Override
     public @NotNull BlockState mirror(BlockState blockState, Mirror mirror) {
+        blockState = blockState.rotate(mirror.getRotation(blockState.getValue(SURFACE)));;
         return switch (mirror) {
             case LEFT_RIGHT ->
                     blockState.setValue(NORTH, blockState.getValue(SOUTH)).setValue(SOUTH, blockState.getValue(NORTH));
@@ -192,8 +200,35 @@ public class TentacleBlock extends FleshBlock implements Gore {
     @Override
     public void tick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource) {
         super.tick(blockState, serverLevel, blockPos, randomSource);
-        if (serverLevel.getRandom().nextInt(3) == 0){
-            this.spread(serverLevel, blockPos, blockState);
+
+        if (!serverLevel.isClientSide()){
+            if (serverLevel.getRandom().nextInt(3) == 0){
+
+                this.spread(serverLevel, blockPos, blockState);
+
+                if (serverLevel.getRandom().nextInt(8) == 0 &&
+                        serverLevel.getBlockState(blockPos.above()).is(BlockRegistry.TENTACLE.get()) &&
+                        serverLevel.getBlockState(blockPos.below()).is(BlockRegistry.TENTACLE.get()) &&
+                        blockState.getValue(SURFACE).getAxis() != Direction.Axis.Y){
+                    serverLevel.setBlockAndUpdate(blockPos, WallPalmerBlock.facing(BlockRegistry.WALL_PALMER.get().defaultBlockState(), blockState.getValue(SURFACE).getOpposite()));
+                }
+            }
+
+            if (blockState.getValue(SURFACE) == Direction.DOWN){
+                int assimilables = EntityUtilities.numAssimilablesInList(EntityUtilities.nearbyEntities(serverLevel, new Vec3i(blockPos.getX(), blockPos.getY(), blockPos.getZ()), 8, 4));
+                if (assimilables > 0){
+                    this.spawnThingFromGore(serverLevel, blockPos);
+                }
+            }
+        }
+    }
+
+    private void spawnThingFromGore(ServerLevel level, BlockPos pos){
+        Thing thing = EntityRegistry.BLOOD_CRAWLER.get().create(level);
+        if (thing != null) {
+            thing.setPos(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D);
+            thing.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), MobSpawnType.NATURAL, null, null);
+            level.addFreshEntity(thing);
         }
     }
 

@@ -1,8 +1,7 @@
 package acats.fromanotherworld.block;
 
 
-import acats.fromanotherworld.entity.thing.resultant.BloodCrawler;
-import acats.fromanotherworld.registry.EntityRegistry;
+import acats.fromanotherworld.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -37,13 +36,8 @@ public class ThingGoreBlock extends FleshBlock {
     public void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
         if (!world.isClientSide()){
             int stage = state.getValue(STAGE);
-            if (stage >= 2){
-                world.destroyBlock(pos, false);
-                BloodCrawler bloodCrawler = EntityRegistry.BLOOD_CRAWLER.get().create(world);
-                if (bloodCrawler != null) {
-                    bloodCrawler.setPos(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D);
-                    world.addFreshEntity(bloodCrawler);
-                }
+            if (stage == 2){
+                world.setBlockAndUpdate(pos, TentacleBlock.correctConnectionStates(world, pos, BlockRegistry.TENTACLE.get().defaultBlockState()));
             }
             else{
                 world.setBlockAndUpdate(pos, state.setValue(STAGE, stage + 1));

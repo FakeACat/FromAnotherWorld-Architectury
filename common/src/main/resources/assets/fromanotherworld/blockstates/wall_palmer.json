@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "fromanotherworld:block/functional_gore/wall_palmer", "y": 180 },
+    "facing=east": { "model": "fromanotherworld:block/functional_gore/wall_palmer", "y": 270 },
+    "facing=south": { "model": "fromanotherworld:block/functional_gore/wall_palmer" },
+    "facing=west": { "model": "fromanotherworld:block/functional_gore/wall_palmer", "y": 90 }
+  }
+}

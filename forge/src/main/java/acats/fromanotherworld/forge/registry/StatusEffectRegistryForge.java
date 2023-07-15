@@ -10,11 +10,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class StatusEffectRegistryForge {
     public static final DeferredRegister<MobEffect> STATUS_EFFECTS = DeferredRegister.create(ForgeRegistries.MOB_EFFECTS, FromAnotherWorld.MOD_ID);
     public static void register(IEventBus eventBus){
-        StatusEffectRegistry.STATUS_EFFECT_REGISTRY.forEach(StatusEffectRegistryForge::registerEffect);
+        StatusEffectRegistry.STATUS_EFFECT_REGISTRY.registerAll(STATUS_EFFECTS::register);
         STATUS_EFFECTS.register(eventBus);
-    }
-
-    private static void registerEffect(String id, StatusEffectRegistry.FAWEffect fawEffect){
-        STATUS_EFFECTS.register(id, fawEffect::build);
     }
 }

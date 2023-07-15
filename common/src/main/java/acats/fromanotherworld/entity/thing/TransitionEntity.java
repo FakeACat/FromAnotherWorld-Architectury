@@ -50,7 +50,7 @@ public class TransitionEntity extends LivingEntity implements MaybeThing {
 
     public static AttributeSupplier.Builder createTransitionAttributes(){
         return Monster.createMonsterAttributes()
-                .add(Attributes.MAX_HEALTH, 10.0D);
+                .add(Attributes.MAX_HEALTH, 20.0D);
     }
 
     @Override
@@ -113,7 +113,7 @@ public class TransitionEntity extends LivingEntity implements MaybeThing {
     protected float getDamageAfterMagicAbsorb(DamageSource source, float amount) {
         boolean vul1 = EntityUtilities.isVulnerable(this);
         boolean vul2 = source.is(DamageTypeTags.ALWAYS_HURTS_THINGS);
-        return (vul1 || vul2) ? super.getDamageAfterMagicAbsorb(source, amount) : Math.min(super.getDamageAfterMagicAbsorb(source, amount), 1.0F);
+        return (vul1 || vul2) ? super.getDamageAfterMagicAbsorb(source, amount) : super.getDamageAfterMagicAbsorb(source, amount) * Thing.ThingCategory.REVEALED.getDamageMultiplierWhenNotBurning();
     }
 
     @Override
@@ -159,6 +159,9 @@ public class TransitionEntity extends LivingEntity implements MaybeThing {
         if (this.level().isClientSide()) {
             this.clientTick();
             return;
+        }
+        if (this.tickCount % 10 == 0 && !EntityUtilities.isVulnerable(this)){
+            this.heal(1.0F);
         }
         if (this.level().getDifficulty() == Difficulty.PEACEFUL){
             this.discard();

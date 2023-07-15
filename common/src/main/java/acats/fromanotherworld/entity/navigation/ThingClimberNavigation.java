@@ -8,11 +8,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.Path;
 import org.jetbrains.annotations.Nullable;
 
-public class ThingNavigation extends GroundPathNavigation {
+public class ThingClimberNavigation extends GroundPathNavigation {
     @Nullable
     private BlockPos targetPos;
 
-    public ThingNavigation(Mob mobEntity, Level world) {
+    public ThingClimberNavigation(Mob mobEntity, Level world) {
         super(mobEntity, world);
         this.setCanWalkOverFences(true);
     }

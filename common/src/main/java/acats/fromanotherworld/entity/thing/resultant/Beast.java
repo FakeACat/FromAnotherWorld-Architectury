@@ -29,6 +29,8 @@ import net.minecraft.world.phys.Vec3;
 public class Beast extends MinibossThing implements RangedAttackMob {
 
     private static final EntityDataAccessor<Boolean> MELEE;
+    private static final int MELEE_ACTIVATION_DIST = 12;
+    private static final int RANGED_ACTIVATION_DIST = 16;
 
     private Goal meleeGoal;
     private Goal rangedGoal;
@@ -44,7 +46,7 @@ public class Beast extends MinibossThing implements RangedAttackMob {
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new AbsorbGoal(this, STANDARD));
         this.meleeGoal = new ThingAttackGoal(this, 1.0D, false);
-        this.rangedGoal = new ThingProjectileAttackGoal(this, 1.0, 5, 5, 16.0F);
+        this.rangedGoal = new ThingProjectileAttackGoal(this, 1.0, 10, 10, 48.0F);
         this.goalSelector.addGoal(2, rangedGoal);
         this.goalSelector.addGoal(3, new WaterAvoidingRandomStrollGoal(this, 1.0D));
     }
@@ -63,18 +65,13 @@ public class Beast extends MinibossThing implements RangedAttackMob {
     }
 
     @Override
+    public boolean canClimb() {
+        return false;
+    }
+
+    @Override
     public float maxUpStep() {
         return 2.0F;
-    }
-
-    @Override
-    public boolean rotateWhenClimbing() {
-        return true;
-    }
-
-    @Override
-    public float offsetWhenClimbing() {
-        return -1.5F;
     }
 
     @Override
@@ -123,12 +120,17 @@ public class Beast extends MinibossThing implements RangedAttackMob {
     }
 
     @Override
-    protected void customServerAiStep() {
-        super.customServerAiStep();
+    public void threeSecondDelayServerTick() {
+        super.threeSecondDelayServerTick();
 
-        if (this.tickCount % 300 == 0)
-            this.toggleMelee();
+        if (this.getTarget() != null){
+            double dist = this.getTarget().distanceToSqr(this);
+            if ((dist > RANGED_ACTIVATION_DIST * RANGED_ACTIVATION_DIST && this.isMelee()) || (dist < MELEE_ACTIVATION_DIST * MELEE_ACTIVATION_DIST && !this.isMelee())){
+                this.toggleMelee();
+            }
+        }
     }
+
     private <E extends GeoEntity> PlayState predicateTentacles(AnimationState<E> event) {
         if (this.isThingFrozen())
             return PlayState.STOP;
@@ -172,6 +174,6 @@ public class Beast extends MinibossThing implements RangedAttackMob {
 
     @Override
     public void performRangedAttack(LivingEntity target, float pullProgress) {
-        ProjectileUtilities.shootFromTo(new AssimilationLiquidEntity(this.level(), this), this, target, 2.0F, new Vec3(1.25D, 0.5D, 0.0D).multiply(this.scaleFactor(), this.scaleFactor(), this.scaleFactor()));
+        ProjectileUtilities.shootFromTo(new AssimilationLiquidEntity(this.level(), this), this, target, 3.0F, new Vec3(1.25D, 0.5D, 0.0D).multiply(this.scaleFactor(), this.scaleFactor(), this.scaleFactor()));
     }
 }

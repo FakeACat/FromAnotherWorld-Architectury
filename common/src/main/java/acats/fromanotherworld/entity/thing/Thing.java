@@ -6,7 +6,7 @@ import acats.fromanotherworld.config.General;
 import acats.fromanotherworld.constants.VariantID;
 import acats.fromanotherworld.entity.goal.ThingTargetGoal;
 import acats.fromanotherworld.entity.interfaces.MaybeThing;
-import acats.fromanotherworld.entity.navigation.ThingNavigation;
+import acats.fromanotherworld.entity.navigation.ThingClimberNavigation;
 import acats.fromanotherworld.entity.projectile.NeedleEntity;
 import acats.fromanotherworld.registry.BlockRegistry;
 import acats.fromanotherworld.registry.SoundRegistry;
@@ -14,6 +14,7 @@ import acats.fromanotherworld.tags.BlockTags;
 import acats.fromanotherworld.tags.DamageTypeTags;
 import acats.fromanotherworld.tags.EntityTags;
 import acats.fromanotherworld.utilities.EntityUtilities;
+import mod.azure.azurelib.ai.pathing.AzureNavigation;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimationState;
@@ -72,7 +73,7 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
 
     @Override
     protected @NotNull PathNavigation createNavigation(Level world) {
-        return new ThingNavigation(this, world);
+        return this.canClimb() ? new ThingClimberNavigation(this, world) : new AzureNavigation(this, world);
     }
 
     @Override
@@ -157,7 +158,7 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
         return true;
     }
 
-    public int timeUntilBored(){
+    public int timeUntilBoredInThreeSeconds(){
         return 100;
     }
 
@@ -241,48 +242,12 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
                     this.climbStamina = 300;
                 }
             }
-            if (this.tickCount % 10 == 0 && !EntityUtilities.isVulnerable(this)){
-                this.heal(1.0F);
-            }
 
-            if (this.tickCount % 60 == 0){
-                if (this.canThingFreeze())
-                    this.tickFreeze();
-
-                if (this.canGrief && this.onClimbable())
-                    this.grief(1, 1);
-
-                if (this.getTarget() == null){
-                    this.timeSinceLastSeenTarget++;
-                    if (timeSinceLastSeenTarget > this.timeUntilBored()){
-                        this.bored();
-                        this.timeSinceLastSeenTarget = 0;
-                    }
+            if (this.tickCount % 10 == 0){
+                this.halfSecondDelayServerTick();
+                if (this.tickCount % 60 == 0){
+                    this.threeSecondDelayServerTick();
                 }
-                else{
-                    this.timeSinceLastSeenTarget = 0;
-                    if (this.canGrief && !this.isNoAi()) {
-                        this.grief(this.getTarget().getY() < this.getY() - 3 ? -1 : 0, 3);
-                    }
-                    if (this.canShootNeedles && !this.isNoAi() && this.tickCount % 300 == 0){
-                        for (int i = 0; i < 50; i++){
-                            NeedleEntity needleEntity = new NeedleEntity(this.level(), this.getX(), this.getRandomY(), this.getZ(), this);
-                            needleEntity.setDeltaMovement(new Vec3((random.nextDouble() - 0.5D) * 5, random.nextDouble() / 2, (random.nextDouble() - 0.5D) * 5));
-                            this.level().addFreshEntity(needleEntity);
-                        }
-                    }
-                }
-            }
-
-            if (this.canShootNeedles && !this.isNoAi() && this.tickCount % 300 == 240){
-                this.playSound(SoundRegistry.STRONG_AMBIENT.get(), 1.0F, 0.4F);
-                this.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 80, 6, false, false));
-            }
-
-            if (this.hibernating()){
-                this.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20, 6, false, false));
-                if (this.getTarget() != null)
-                    this.setHibernating(false);
             }
         }
         else {
@@ -308,6 +273,55 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
         }
     }
 
+    public void halfSecondDelayServerTick(){
+        if (!EntityUtilities.isVulnerable(this)){
+            this.heal(1.0F);
+        }
+
+        boolean bl = this.getTarget() != null;
+
+        if (bl && this.canGrief && !this.isNoAi()) {
+            this.grief(this.getTarget().getY() < this.getY() - 3 ? -1 : 0, 4);
+        }
+
+        if (this.hibernating()){
+            this.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20, 6, false, false));
+            if (bl) {
+                this.setHibernating(false);
+            }
+        }
+    }
+    public void threeSecondDelayServerTick(){
+        if (this.canThingFreeze())
+            this.tickFreeze();
+
+        if (this.canGrief && this.onClimbable())
+            this.grief(1, 3);
+
+        if (this.getTarget() == null){
+            this.timeSinceLastSeenTarget++;
+            if (timeSinceLastSeenTarget > this.timeUntilBoredInThreeSeconds()){
+                this.bored();
+                this.timeSinceLastSeenTarget = 0;
+            }
+        }
+        else{
+            this.timeSinceLastSeenTarget = 0;
+            if (this.canShootNeedles && !this.isNoAi() && this.tickCount % 300 == 0){
+                for (int i = 0; i < 50; i++){
+                    NeedleEntity needleEntity = new NeedleEntity(this.level(), this.getX(), this.getRandomY(), this.getZ(), this);
+                    needleEntity.setDeltaMovement(new Vec3((random.nextDouble() - 0.5D) * 5, random.nextDouble() / 2, (random.nextDouble() - 0.5D) * 5));
+                    this.level().addFreshEntity(needleEntity);
+                }
+            }
+        }
+
+        if (this.canShootNeedles && !this.isNoAi() && this.tickCount % 300 == 240){
+            this.playSound(SoundRegistry.STRONG_AMBIENT.get(), 1.0F, 0.4F);
+            this.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 80, 6, false, false));
+        }
+    }
+
     public void grief(int yOffset, int chanceDenominator){
         if (!this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
             return;
@@ -327,7 +341,7 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
                     BlockPos blockPos = new BlockPos(r, s, t);
                     BlockState blockState = this.level().getBlockState(blockPos);
                     if (EntityUtilities.canThingDestroy(blockState) && random.nextInt(chanceDenominator) == 0) {
-                        this.level().destroyBlock(blockPos, true, this);
+                        this.level().destroyBlock(blockPos, false, this);
                     }
                 }
             }

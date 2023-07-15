@@ -154,7 +154,7 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
     }
 
     @Override
-    public int timeUntilBored() {
+    public int timeUntilBoredInThreeSeconds() {
         return 20;
     }
 

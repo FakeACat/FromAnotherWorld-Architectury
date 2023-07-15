@@ -1,6 +1,5 @@
 {
 	"credit": "Made with Blockbench",
-	"parent": "wall_palmer",
 	"texture_size": [64, 64],
 	"textures": {
 		"0": "fromanotherworld:block/functional_gore/wall_palmer",

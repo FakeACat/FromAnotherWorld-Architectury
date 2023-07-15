@@ -137,7 +137,8 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
 
     @Override
     public boolean canAttack(LivingEntity target) {
-        if (!EntityUtilities.isThing(target) &&
+        if (!target.getType().is(EntityTags.THING_ALLIES) &&
+                !EntityUtilities.isThing(target) &&
                 (target == this.currentThreat ||
                         EntityUtilities.canAssimilate(target) ||
                         target.getType().is(EntityTags.ATTACKABLE_BUT_NOT_ASSIMILABLE))){
@@ -339,6 +340,12 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
+        if (this.isThingFrozen() && source == this.level().damageSources().inWall()){
+            return false;
+        }
+        if (source.getEntity() != null && EntityUtilities.isThingAlly(source.getEntity())){
+            return false;
+        }
         if (!this.level().isClientSide()){
             if (source.getEntity() instanceof LivingEntity e){
                 if (EntityUtilities.isVulnerable(this))
@@ -352,9 +359,6 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
                 if (EntityUtilities.isVulnerable(this))
                     EntityUtilities.angerNearbyThings(10, this, null);
             }
-        }
-        if (this.isThingFrozen() && source == this.level().damageSources().inWall()){
-            return false;
         }
         return super.hurt(source, amount);
     }

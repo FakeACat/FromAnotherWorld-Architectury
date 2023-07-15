@@ -17,7 +17,7 @@ public class DatapackRegistryFabric {
         if (FabricLoader.getInstance().isModLoaded(modID)){
             FromAnotherWorld.LOGGER.info("Attempting to load From Another World compatibility datapack for mod: " + name);
             FabricLoader.getInstance().getModContainer(FromAnotherWorld.MOD_ID).ifPresent(modContainer -> ResourceManagerHelper.registerBuiltinResourcePack(new ResourceLocation(FromAnotherWorld.MOD_ID, "compat_" + modID),
-                    modContainer, Component.literal("Assimilated " + name), ResourcePackActivationType.DEFAULT_ENABLED));
+                    modContainer, Component.literal(name), ResourcePackActivationType.DEFAULT_ENABLED));
         }
     }
 }

@@ -22,6 +22,7 @@ public class EntityTags {
     public static final TagKey<EntityType<?>> HORSES = entityTag("horses");
     public static final TagKey<EntityType<?>> LLAMAS = entityTag("llamas");
     public static final TagKey<EntityType<?>> NOT_AFRAID_OF_THINGS = entityTag("not_afraid_of_things");
+    public static final TagKey<EntityType<?>> THING_ALLIES = entityTag("thing_allies");
 
     private static TagKey<EntityType<?>> entityTag(String id){
         return TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(FromAnotherWorld.MOD_ID, id));

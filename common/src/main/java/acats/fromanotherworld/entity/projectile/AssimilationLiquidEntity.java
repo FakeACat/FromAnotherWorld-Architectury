@@ -13,6 +13,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
+import org.jetbrains.annotations.NotNull;
 
 public class AssimilationLiquidEntity extends ThrowableItemProjectile {
 
@@ -28,7 +29,7 @@ public class AssimilationLiquidEntity extends ThrowableItemProjectile {
         super(EntityRegistry.ASSIMILATION_LIQUID.get(), x, y, z, world);
     }
     @Override
-    protected Item getDefaultItem() {
+    protected @NotNull Item getDefaultItem() {
         return ItemRegistry.ASSIMILATION_LIQUID.get();
     }
 
@@ -40,7 +41,7 @@ public class AssimilationLiquidEntity extends ThrowableItemProjectile {
             if (EntityUtilities.assimilate(e)){
                 this.discard();
             }
-            else if (!EntityUtilities.isThing(e) && this.getOwner() != null){
+            else if (!EntityUtilities.isThingAlly(e) && this.getOwner() != null){
                 e.hurt(this.level().damageSources().mobProjectile(this, (LivingEntity) this.getOwner()), 3.0F);
                 this.discard();
             }

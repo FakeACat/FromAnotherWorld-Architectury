@@ -23,7 +23,7 @@ public class DatapackRegistryForge {
         if (ModList.get().isLoaded(modID)){
             FromAnotherWorld.LOGGER.info("Attempting to load From Another World compatibility datapack for mod: " + name);
             Path resourcePath = ModList.get().getModFileById(FromAnotherWorld.MOD_ID).getFile().findResource("resourcepacks/compat_" + modID);
-            Pack pack = Pack.readMetaAndCreate("builtin/compat_" + modID, Component.literal("Assimilated " + name), false,
+            Pack pack = Pack.readMetaAndCreate("builtin/compat_" + modID, Component.literal(name), false,
             (path) -> new PathPackResources(path, false, resourcePath), PackType.SERVER_DATA, Pack.Position.BOTTOM, PackSource.BUILT_IN);
             event.addRepositorySource((packConsumer) -> packConsumer.accept(pack));
         }

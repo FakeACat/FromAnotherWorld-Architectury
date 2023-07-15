@@ -1,0 +1,6 @@
+{
+  "pack": {
+    "description": "Prevents Things from receiving friendly fire damage from Sculk Horde mobs",
+    "pack_format": 15
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "pack": {
+    "description": "Prevents Things from receiving friendly fire damage from Spore mobs",
+    "pack_format": 15
+  }
+}

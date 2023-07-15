@@ -10,6 +10,7 @@ import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
+import org.jetbrains.annotations.NotNull;
 
 public class NeedleEntity extends AbstractArrow {
 
@@ -30,7 +31,7 @@ public class NeedleEntity extends AbstractArrow {
     protected void onHitEntity(EntityHitResult entityHitResult) {
         if (!this.level().isClientSide()){
             Entity e = entityHitResult.getEntity();
-            if (!EntityUtilities.assimilate(e) && !EntityUtilities.isThing(e)){
+            if (!EntityUtilities.assimilate(e) && !EntityUtilities.isThingAlly(e)){
                 e.hurt(this.level().damageSources().mobProjectile(this, (LivingEntity) this.getOwner()), 12.0F);
                 this.discard();
             }
@@ -38,7 +39,7 @@ public class NeedleEntity extends AbstractArrow {
     }
 
     @Override
-    protected ItemStack getPickupItem() {
+    protected @NotNull ItemStack getPickupItem() {
         return ItemRegistry.ASSIMILATION_LIQUID.get().getDefaultInstance();
     }
 }

@@ -11,6 +11,7 @@ import acats.fromanotherworld.registry.StatusEffectRegistry;
 import acats.fromanotherworld.tags.BlockTags;
 import java.util.List;
 import java.util.Random;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.util.Mth;
@@ -175,5 +176,9 @@ public class EntityUtilities {
 
     public static List<LivingEntity> nearbyEntities(Level level, Vec3i pos, int distH, int distV){
         return level.getEntitiesOfClass(LivingEntity.class, new AABB(pos.getX() - distH, pos.getY() - distV, pos.getZ() - distH, pos.getX() + distH, pos.getY() + distV, pos.getZ() + distH));
+    }
+
+    public static boolean isThingAlly(Entity e){
+        return e.getType().is(THING_ALLIES) || isThing(e);
     }
 }

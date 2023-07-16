@@ -1,7 +1,7 @@
 package acats.fromanotherworld.spawning;
 
 import acats.fromanotherworld.FromAnotherWorld;
-import acats.fromanotherworld.config.General;
+import acats.fromanotherworld.config.Config;
 import acats.fromanotherworld.entity.thing.special.AlienThing;
 import acats.fromanotherworld.registry.EntityRegistry;
 import acats.fromanotherworld.utilities.EntityUtilities;
@@ -18,7 +18,7 @@ import net.minecraft.world.level.saveddata.SavedData;
 
 public class SpawningManager extends SavedData {
     private int daysSinceLastEvent;
-    private int nextEvent = General.firstEventDay;
+    private int nextEvent = Config.eventConfig.firstEventDay.get();
     private boolean hadFirstEvent = false;
     public int alienThingsToSpawn = 0;
 
@@ -28,7 +28,7 @@ public class SpawningManager extends SavedData {
         if (this.daysSinceLastEvent >= this.nextEvent && world.dimensionTypeId() == BuiltinDimensionTypes.OVERWORLD && player != null){
             event(world, player);
             this.daysSinceLastEvent = 0;
-            this.nextEvent = world.random.nextInt(1 + General.maxDaysBetweenEvents - General.minDaysBetweenEvents) + General.minDaysBetweenEvents;
+            this.nextEvent = world.random.nextInt(1 + Config.eventConfig.maxCooldown.get() - Config.eventConfig.minCooldown.get()) + Config.eventConfig.minCooldown.get();
         }
         this.setDirty();
     }

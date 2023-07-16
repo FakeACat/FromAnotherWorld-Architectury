@@ -1,6 +1,6 @@
 package acats.fromanotherworld.utilities;
 
-import acats.fromanotherworld.config.Classification;
+import acats.fromanotherworld.config.Config;
 import acats.fromanotherworld.entity.interfaces.MaybeThing;
 import acats.fromanotherworld.entity.interfaces.PossibleDisguisedThing;
 import acats.fromanotherworld.entity.thing.Thing;
@@ -14,6 +14,8 @@ import java.util.Random;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
@@ -144,7 +146,8 @@ public class EntityUtilities {
     public static boolean isVulnerable(LivingEntity entity){
         for (MobEffectInstance statusEffectInstance:
                 entity.getActiveEffects()) {
-            if (Classification.isRegenPreventative(statusEffectInstance))
+            ResourceLocation id = BuiltInRegistries.MOB_EFFECT.getKey(statusEffectInstance.getEffect());
+            if (id != null && Config.effectConfig.regenCancelling.contains(id.toString()))
                 return true;
         }
         return entity.isOnFire();

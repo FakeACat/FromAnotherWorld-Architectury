@@ -1,6 +1,6 @@
 package acats.fromanotherworld.events;
 
-import acats.fromanotherworld.config.General;
+import acats.fromanotherworld.config.Config;
 import acats.fromanotherworld.entity.interfaces.PossibleDisguisedThing;
 import acats.fromanotherworld.entity.projectile.AssimilationLiquidEntity;
 import acats.fromanotherworld.entity.thing.Thing;
@@ -82,7 +82,7 @@ public class CommonLivingEntityEvents {
                     thing.setAssimilated(true);
                     if (entity instanceof Mob mobEntity)
                         mobEntity.setTarget(null);
-                    setRareAbilities(entity, General.specialBehaviourRarity);
+                    setRareAbilities(entity, Config.difficultyConfig.specialBehaviourRarity.get());
                     thing.setSupercellConcentration(0);
                 }
                 if (thing.getSupercellConcentration() >= 1.0F){

@@ -12,6 +12,8 @@ public class FromAnotherWorldFabric implements ModInitializer {
     public void onInitialize() {
         FromAnotherWorld.init();
 
+        Config.load(FabricLoader.getInstance().getConfigDir());
+
         EntityRegistryFabric.register();
         ItemRegistryFabric.register();
         BlockRegistryFabric.register();
@@ -22,7 +24,5 @@ public class FromAnotherWorldFabric implements ModInitializer {
         DatapackRegistryFabric.register();
         RecipeRegistryFabric.register();
         BlockEntityRegistryFabric.register();
-
-        Config.load(FabricLoader.getInstance().getConfigDir());
     }
 }

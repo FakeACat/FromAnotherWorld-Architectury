@@ -14,6 +14,9 @@ public class FromAnotherWorldForge {
     public FromAnotherWorldForge() {
         FromAnotherWorld.init();
 
+
+        Config.load(FMLPaths.CONFIGDIR.get());
+
         final IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
         MinecraftForge.EVENT_BUS.register(eventBus);
 
@@ -25,8 +28,6 @@ public class FromAnotherWorldForge {
         StatusEffectRegistryForge.register(eventBus);
         RecipeRegistryForge.register(eventBus);
         BlockEntityRegistryForge.register(eventBus);
-
-        Config.load(FMLPaths.CONFIGDIR.get());
 
         eventBus.addListener(DatapackRegistryForge::register);
     }

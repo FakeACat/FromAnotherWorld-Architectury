@@ -2,7 +2,7 @@ package acats.fromanotherworld.entity.thing;
 
 import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.block.CorpseBlock;
-import acats.fromanotherworld.config.General;
+import acats.fromanotherworld.config.Config;
 import acats.fromanotherworld.constants.VariantID;
 import acats.fromanotherworld.entity.goal.ThingTargetGoal;
 import acats.fromanotherworld.entity.interfaces.MaybeThing;
@@ -20,6 +20,7 @@ import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.util.AzureLibUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -60,7 +61,7 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
             }
 
             if (this.getThingCategory().canHaveSpecialAbilities()){
-                this.setRareAbilities(General.specialBehaviourRarity);
+                this.setRareAbilities(Config.difficultyConfig.specialBehaviourRarity.get());
             }
         }
     }
@@ -378,6 +379,15 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
     }
 
     @Override
+    public boolean canBeAffected(MobEffectInstance mobEffectInstance) {
+        ResourceLocation id = BuiltInRegistries.MOB_EFFECT.getKey(mobEffectInstance.getEffect());
+        if (id != null && Config.effectConfig.thingImmune.contains(id.toString())){
+            return false;
+        }
+        return super.canBeAffected(mobEffectInstance);
+    }
+
+    @Override
     protected float getDamageAfterMagicAbsorb(DamageSource source, float amount) {
         boolean vul1 = EntityUtilities.isVulnerable(this);
         boolean vul2 = source.is(DamageTypeTags.ALWAYS_HURTS_THINGS);
@@ -403,7 +413,9 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
     @Override
     public void die(DamageSource damageSource) {
         super.die(damageSource);
-        this.attemptPlaceCorpse();
+        if (Config.goreConfig.enabled.get()) {
+            this.attemptPlaceCorpse();
+        }
     }
 
     public void attemptPlaceCorpse(){

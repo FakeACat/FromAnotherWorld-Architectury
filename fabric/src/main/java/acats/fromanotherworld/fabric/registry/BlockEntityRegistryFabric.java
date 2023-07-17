@@ -1,9 +1,7 @@
 package acats.fromanotherworld.fabric.registry;
 
 import acats.fromanotherworld.FromAnotherWorld;
-import acats.fromanotherworld.block.entity.render.CorpseBlockEntityRenderer;
 import acats.fromanotherworld.registry.BlockEntityRegistry;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -19,9 +17,5 @@ public class BlockEntityRegistryFabric {
     private static void registerBlockEntity(String id, Supplier<? extends BlockEntityType<?>> builder){
         BlockEntityType<?> blockEntityType = builder.get();
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, new ResourceLocation(FromAnotherWorld.MOD_ID, id), blockEntityType);
-    }
-
-    public static void clientRegister(){
-        BlockEntityRenderers.register(BlockEntityRegistry.CORPSE_BLOCK_ENTITY.get(), (blockEntityRendererProvider) -> new CorpseBlockEntityRenderer());
     }
 }

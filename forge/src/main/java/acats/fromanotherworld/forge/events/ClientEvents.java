@@ -1,9 +1,9 @@
 package acats.fromanotherworld.forge.events;
 
 import acats.fromanotherworld.FromAnotherWorld;
-import acats.fromanotherworld.forge.registry.BlockEntityRegistryForge;
 import acats.fromanotherworld.forge.registry.EntityRegistryForge;
 import acats.fromanotherworld.forge.registry.ParticleRegistryForge;
+import acats.fromanotherworld.forge.registry.client.BlockEntityRegistryClientForge;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
@@ -20,7 +20,7 @@ public class ClientEvents {
     @SubscribeEvent
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event){
         EntityRegistryForge.clientRegister(event);
-        BlockEntityRegistryForge.registerClient(event);
+        BlockEntityRegistryClientForge.registerClient(event);
     }
 
     @SubscribeEvent

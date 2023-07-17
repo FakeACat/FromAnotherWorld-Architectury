@@ -1,5 +1,6 @@
 package acats.fromanotherworld.entity.thing;
 
+import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.constants.VariantID;
 import acats.fromanotherworld.entity.interfaces.MaybeThing;
 import acats.fromanotherworld.entity.render.thing.growths.TentacleMass;
@@ -138,6 +139,8 @@ public class TransitionEntity extends LivingEntity implements MaybeThing {
             EntityType.create(this.getFakeEntityNbt(), this.level()).ifPresent(entity -> this.fakeEntity = (LivingEntity) entity);
             if (this.fakeEntity == null){
                 this.fakeEntity = new Pig(EntityType.PIG, this.level());
+                FromAnotherWorld.LOGGER.error("Transition entity has a null fake entity!");
+                this.discard();
             }
         }
         return this.fakeEntity;

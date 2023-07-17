@@ -12,6 +12,7 @@ public class Config {
     public static final EventConfig eventConfig = new EventConfig();
     public static final DifficultyConfig difficultyConfig = new DifficultyConfig();
     public static final EffectConfig effectConfig = new EffectConfig();
+    public static final SpawningConfig spawningConfig = new SpawningConfig();
 
     public static void load(Path modLoaderSpecificPath){
         path = modLoaderSpecificPath;
@@ -22,6 +23,7 @@ public class Config {
         eventConfig.load();
         difficultyConfig.load();
         effectConfig.load();
+        spawningConfig.load();
     }
 
     public static File getFolder() {

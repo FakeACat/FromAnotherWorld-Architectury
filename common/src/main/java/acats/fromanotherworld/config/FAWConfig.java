@@ -1,6 +1,7 @@
 package acats.fromanotherworld.config;
 
 import com.google.gson.*;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -53,7 +54,9 @@ public abstract class FAWConfig {
     }
 
     private static void addDescription(JsonObject object, FAWConfigProperty<?> property) {
-        object.addProperty(property.getName() + "_description", property.description);
+        if (property.description != null) {
+            object.addProperty(property.getName() + "_description", property.description);
+        }
     }
 
     private void setValues() {
@@ -89,10 +92,10 @@ public abstract class FAWConfig {
 
     abstract class FAWConfigProperty<T> {
         private final String name;
-        private final String description;
+        private final @Nullable String description;
         private T value;
 
-        private FAWConfigProperty(String name, String description, T defaultValue) {
+        private FAWConfigProperty(String name, @Nullable String description, T defaultValue) {
             this.name = name;
             this.description = description;
             this.value = defaultValue;
@@ -129,7 +132,7 @@ public abstract class FAWConfig {
 
     public class FAWConfigIntegerProperty extends FAWConfigProperty<Integer> {
 
-        FAWConfigIntegerProperty(String name, String description, Integer defaultValue) {
+        FAWConfigIntegerProperty(String name, @Nullable String description, Integer defaultValue) {
             super(name, description, defaultValue);
         }
 
@@ -146,7 +149,7 @@ public abstract class FAWConfig {
 
     public class FAWConfigBooleanProperty extends FAWConfigProperty<Boolean> {
 
-        FAWConfigBooleanProperty(String name, String description, Boolean defaultValue) {
+        FAWConfigBooleanProperty(String name, @Nullable String description, Boolean defaultValue) {
             super(name, description, defaultValue);
         }
 
@@ -163,7 +166,7 @@ public abstract class FAWConfig {
 
     public class FAWConfigArrayProperty extends FAWConfigProperty<String[]> {
 
-        public FAWConfigArrayProperty(String name, String description, String[] defaultValue) {
+        public FAWConfigArrayProperty(String name, @Nullable String description, String[] defaultValue) {
             super(name, description, defaultValue);
         }
 

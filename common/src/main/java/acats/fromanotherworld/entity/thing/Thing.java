@@ -14,6 +14,7 @@ import acats.fromanotherworld.tags.BlockTags;
 import acats.fromanotherworld.tags.DamageTypeTags;
 import acats.fromanotherworld.tags.EntityTags;
 import acats.fromanotherworld.utilities.EntityUtilities;
+import acats.fromanotherworld.utilities.ServerUtilities;
 import mod.azure.azurelib.ai.pathing.AzureNavigation;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
@@ -29,6 +30,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -39,6 +41,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
@@ -517,6 +520,10 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
     protected void jumpFromGround() {
         if (!this.hibernating())
             super.jumpFromGround();
+    }
+
+    public static boolean checkThingSpawnRules(EntityType<? extends Monster> entityType, ServerLevelAccessor serverLevelAccessor, MobSpawnType mobSpawnType, BlockPos blockPos, RandomSource randomSource){
+        return ServerUtilities.getDayReal(serverLevelAccessor) >= Config.spawningConfig.firstSpawningDay.get() && Monster.checkMonsterSpawnRules(entityType, serverLevelAccessor, mobSpawnType, blockPos, randomSource);
     }
 
     @Override

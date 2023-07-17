@@ -13,5 +13,6 @@ public class FromAnotherWorld {
         AzureLib.initialize();
         ItemRegistry.register();
         DatapackRegistry.register();
+        SpawnEntryRegistry.register();
     }
 }

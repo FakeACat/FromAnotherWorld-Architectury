@@ -19,7 +19,7 @@ public class EventConfig extends FAWConfig {
 
     public final FAWConfigIntegerProperty firstEventDay = new FAWConfigIntegerProperty(
             "first_event_day",
-            "The first day that an invasion event will happen (this option treats the first day in a world as day 1, unlike the vanilla F3 screen).",
+            "The first day that an invasion event will happen. This option treats the first day in a world as day 1, unlike the vanilla F3 screen.",
             1
     );
 

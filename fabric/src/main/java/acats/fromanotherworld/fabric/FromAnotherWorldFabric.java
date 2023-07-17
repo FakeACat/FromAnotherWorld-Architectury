@@ -10,9 +10,9 @@ public class FromAnotherWorldFabric implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        FromAnotherWorld.init();
-
         Config.load(FabricLoader.getInstance().getConfigDir());
+
+        FromAnotherWorld.init();
 
         EntityRegistryFabric.register();
         ItemRegistryFabric.register();
@@ -24,5 +24,6 @@ public class FromAnotherWorldFabric implements ModInitializer {
         DatapackRegistryFabric.register();
         RecipeRegistryFabric.register();
         BlockEntityRegistryFabric.register();
+        SpawnEntryRegistryFabric.register();
     }
 }

@@ -4,6 +4,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
@@ -30,5 +31,9 @@ public class ServerUtilities {
                             position.y() + range,
                             position.z() + range)).forEach(consumer);
         }
+    }
+
+    public static int getDayReal(ServerLevelAccessor accessor){
+        return (int)Math.ceil(accessor.dayTime() / 24000.0D);
     }
 }

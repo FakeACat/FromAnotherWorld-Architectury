@@ -575,7 +575,7 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
     }
 
     @Override
-    public boolean isThing() {
+    public boolean faw$isThing() {
         return true;
     }
 

@@ -70,8 +70,8 @@ public class AbsorbGoal extends Goal {
             this.timer = 0;
             this.absorber.setAbsorbProgress(this.absorber.getAbsorbProgress() + 1);
             PossibleDisguisedThing target1 = (PossibleDisguisedThing) target;
-            if (!target1.isAssimilated()){
-                target1.setSupercellConcentration(target1.getSupercellConcentration() + 0.1F);
+            if (!target1.faw$isAssimilated()){
+                target1.faw$setSupercellConcentration(target1.faw$getSupercellConcentration() + 0.1F);
             }
             if (this.absorber.getAbsorbProgress() > AbsorberThing.ABSORB_TIME) {
                 this.absorber.grow(target);

@@ -45,7 +45,7 @@ public class CommonLivingEntityEvents {
 
     public static void serverEntityDeath(LivingEntity entity, DamageSource damageSource){
         PossibleDisguisedThing thing = ((PossibleDisguisedThing) entity);
-        if (thing.isAssimilated()){
+        if (thing.faw$isAssimilated()){
             EntityUtilities.angerNearbyThings(2, entity, damageSource.getEntity() instanceof LivingEntity e ? e : null);
             becomeResultant(entity);
         }
@@ -53,39 +53,39 @@ public class CommonLivingEntityEvents {
 
     public static void tick(LivingEntity entity){
         PossibleDisguisedThing thing = ((PossibleDisguisedThing) entity);
-        if (thing.isAssimilated()){
+        if (thing.faw$isAssimilated()){
             if (entity.level().getDifficulty() == Difficulty.PEACEFUL){
                 entity.discard();
                 return;
             }
-            if (!thing.isSleeper()){
-                if (thing.getRevealTimer() <= REVEAL_COOLDOWN){
-                    thing.setRevealTimer(thing.getRevealTimer() + 1);
+            if (!thing.faw$isSleeper()){
+                if (thing.faw$getRevealTimer() <= REVEAL_COOLDOWN){
+                    thing.faw$setRevealTimer(thing.faw$getRevealTimer() + 1);
                 }
-                if (thing.getRevealTimer() > REVEAL_COOLDOWN && entity.getRandom().nextInt(60) == 0){
+                if (thing.faw$getRevealTimer() > REVEAL_COOLDOWN && entity.getRandom().nextInt(60) == 0){
                     tryReveal(entity);
                 }
                 if (entity.getRandom().nextInt(9000) == 0){
                     tryBecomeResultant(entity);
                 }
-                thing.setRevealed(Math.max(thing.getRevealed() - 1, 0));
+                thing.faw$setRevealed(Math.max(thing.faw$getRevealed() - 1, 0));
             }
         }
         else{
-            if (thing.getSupercellConcentration() > 0){
+            if (thing.faw$getSupercellConcentration() > 0){
                 if (entity.level().getDifficulty() == Difficulty.PEACEFUL){
                     entity.discard();
                     return;
                 }
-                thing.setSupercellConcentration(thing.getSupercellConcentration() * 1.005F);
-                if (thing.getSupercellConcentration() >= 100){
-                    thing.setAssimilated(true);
+                thing.faw$setSupercellConcentration(thing.faw$getSupercellConcentration() * 1.005F);
+                if (thing.faw$getSupercellConcentration() >= 100){
+                    thing.faw$setAssimilated(true);
                     if (entity instanceof Mob mobEntity)
                         mobEntity.setTarget(null);
                     setRareAbilities(entity, Config.difficultyConfig.specialBehaviourRarity.get());
-                    thing.setSupercellConcentration(0);
+                    thing.faw$setSupercellConcentration(0);
                 }
-                if (thing.getSupercellConcentration() >= 1.0F){
+                if (thing.faw$getSupercellConcentration() >= 1.0F){
                     if (!entity.level().isClientSide() && !EntityUtilities.isVulnerable(entity)){
                         entity.heal(1.0F);
                     }
@@ -97,8 +97,8 @@ public class CommonLivingEntityEvents {
 
     public static void tickMovement(LivingEntity entity){
         PossibleDisguisedThing thing = ((PossibleDisguisedThing) entity);
-        if (entity.level().isClientSide() && thing.getSupercellConcentration() >= 1.0F){
-            for(int i = 0; i < thing.getSupercellConcentration() / 10; ++i) {
+        if (entity.level().isClientSide() && thing.faw$getSupercellConcentration() >= 1.0F){
+            for(int i = 0; i < thing.faw$getSupercellConcentration() / 10; ++i) {
                 entity.level().addParticle(ParticleRegistry.THING_GORE, entity.getRandomX(0.6D), entity.getRandomY(), entity.getRandomZ(0.6D), 0, 0, 0);
             }
         }
@@ -106,21 +106,21 @@ public class CommonLivingEntityEvents {
 
     public static boolean canTarget(LivingEntity entity, LivingEntity target){
         PossibleDisguisedThing thing = ((PossibleDisguisedThing) entity);
-        if (!thing.isAssimilated())
+        if (!thing.faw$isAssimilated())
             return true;
         return !EntityUtilities.isThing(target);
     }
 
     public static void pushAway(LivingEntity entity, Entity other){
         PossibleDisguisedThing thing = ((PossibleDisguisedThing) entity);
-        if (thing.isAssimilated() && entity.getRandom().nextInt(6000) == 0){
+        if (thing.faw$isAssimilated() && entity.getRandom().nextInt(6000) == 0){
             EntityUtilities.assimilate(other, 0.01F);
         }
     }
 
     public static void damage(LivingEntity entity, DamageSource damageSource){
         PossibleDisguisedThing thing = ((PossibleDisguisedThing) entity);
-        if (thing.isSleeper() && damageSource.getEntity() instanceof Player player && !entity.level().isClientSide()){
+        if (thing.faw$isSleeper() && damageSource.getEntity() instanceof Player player && !entity.level().isClientSide()){
             EntityUtilities.angerNearbyThings(1, entity, player);
             for (int i = 0; i < 20; i++){
                 AssimilationLiquidEntity assimilationLiquid = new AssimilationLiquidEntity(entity.level(), entity.getX(), entity.getY(), entity.getZ());
@@ -134,7 +134,7 @@ public class CommonLivingEntityEvents {
 
     private static void setRareAbilities(LivingEntity entity, int chanceDenominator){
         PossibleDisguisedThing thing = ((PossibleDisguisedThing) entity);
-        thing.setSleeper(entity.getRandom().nextInt(chanceDenominator) == 0);
+        thing.faw$setSleeper(entity.getRandom().nextInt(chanceDenominator) == 0);
     }
 
 
@@ -153,7 +153,7 @@ public class CommonLivingEntityEvents {
             int things = EntityUtilities.numThingsInList(nearbyEntities);
             if (assimilables > 0 && assimilables < (2 + things * 3)){
                 reveal(entity);
-                thing.setRevealTimer(0);
+                thing.faw$setRevealTimer(0);
             }
         }
     }
@@ -170,7 +170,7 @@ public class CommonLivingEntityEvents {
 
     private static void reveal(LivingEntity entity){
         PossibleDisguisedThing thing = ((PossibleDisguisedThing) entity);
-        thing.setTimeUntilFinishedRevealing(400);
+        thing.faw$setTimeUntilFinishedRevealing(400);
         entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 400, 6, false, false));
         ChestSpitter chestSpitter = EntityRegistry.CHEST_SPITTER.get().create(entity.level());
         if (chestSpitter != null){

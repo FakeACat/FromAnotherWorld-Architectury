@@ -24,7 +24,7 @@ public abstract class AbsorberThing extends Thing implements TentacleThing {
 
     public static final Predicate<LivingEntity> STANDARD = (livingEntity) ->
             (livingEntity.getType().is(EntityTags.HUMANOIDS) || livingEntity.getType().is(EntityTags.QUADRUPEDS)) &&
-                    !((PossibleDisguisedThing) livingEntity).isAssimilated();
+                    !((PossibleDisguisedThing) livingEntity).faw$isAssimilated();
 
     private static final EntityDataAccessor<Integer> ABSORB_PROGRESS;
     private static final EntityDataAccessor<Integer> ABSORB_TARGET_ID;

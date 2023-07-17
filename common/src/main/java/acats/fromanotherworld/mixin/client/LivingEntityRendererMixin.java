@@ -27,7 +27,7 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
 
     @Inject(at = @At("HEAD"), method = "isShaking", cancellable = true)
     private void isShaking(T entity, CallbackInfoReturnable<Boolean> cir){
-        if (((PossibleDisguisedThing) entity).getSupercellConcentration() >= 1.0F){
+        if (((PossibleDisguisedThing) entity).faw$getSupercellConcentration() >= 1.0F){
             cir.setReturnValue(true);
         }
     }

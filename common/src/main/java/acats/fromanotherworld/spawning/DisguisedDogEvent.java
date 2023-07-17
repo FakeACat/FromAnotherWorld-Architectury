@@ -15,7 +15,7 @@ public class DisguisedDogEvent extends AbstractThingMobEvent {
     void setMobs() {
         Wolf wolfEntity = EntityType.WOLF.create(world);
         if (wolfEntity != null){
-            ((PossibleDisguisedThing) wolfEntity).setAssimilated(true);
+            ((PossibleDisguisedThing) wolfEntity).faw$setAssimilated(true);
             this.addToSpawns(wolfEntity);
         }
     }

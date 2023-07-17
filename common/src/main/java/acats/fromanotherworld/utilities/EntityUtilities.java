@@ -35,7 +35,7 @@ import static acats.fromanotherworld.tags.EntityTags.*;
 
 public class EntityUtilities {
     public static boolean isThing(Entity e){
-        return e instanceof MaybeThing maybeThing && maybeThing.isThing();
+        return e instanceof MaybeThing maybeThing && maybeThing.faw$isThing();
     }
     public static boolean assimilate(Entity e){
         return assimilate(e, 1.0F);
@@ -55,7 +55,7 @@ public class EntityUtilities {
         }
         if (canAssimilate(e)){
             PossibleDisguisedThing thing = (PossibleDisguisedThing) e;
-            thing.setSupercellConcentration(thing.getSupercellConcentration() + supercellConcentration);
+            thing.faw$setSupercellConcentration(thing.faw$getSupercellConcentration() + supercellConcentration);
             if (e instanceof Mob e2){
                 e2.setPersistenceRequired();
             }
@@ -79,7 +79,7 @@ public class EntityUtilities {
         int t = 0;
         for (LivingEntity e:
                 list) {
-            if (((MaybeThing) e).isDistinctThing()){
+            if (((MaybeThing) e).faw$isDistinctThing()){
                 t++;
             }
         }
@@ -132,7 +132,7 @@ public class EntityUtilities {
                     if (entity1.canAttack(threat))
                         entity1.setTarget(threat);
                 }
-                else if (!potentialThing.equals(entity) && potentialThing.getRemovalReason() == null && potentialThing instanceof PossibleDisguisedThing possibleDisguisedThing && possibleDisguisedThing.isAssimilated() && !possibleDisguisedThing.isRevealed() && !possibleDisguisedThing.isSleeper()){
+                else if (!potentialThing.equals(entity) && potentialThing.getRemovalReason() == null && potentialThing instanceof PossibleDisguisedThing possibleDisguisedThing && possibleDisguisedThing.faw$isAssimilated() && !possibleDisguisedThing.faw$isRevealed() && !possibleDisguisedThing.faw$isSleeper()){
                     CommonLivingEntityEvents.becomeResultant(potentialThing);
                 }
             }

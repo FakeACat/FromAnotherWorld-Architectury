@@ -29,7 +29,7 @@ public class RevealedThingFeatureRenderer<T extends Entity, M extends EntityMode
     public void render(PoseStack matrices, MultiBufferSource vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
 
         if (entity instanceof PossibleDisguisedThing e && !entity.isInvisible()){
-            if (e.isRevealed() && entity.getBbHeight() <= 1.0F){
+            if (e.faw$isRevealed() && entity.getBbHeight() <= 1.0F){
                 VertexConsumer v = vertexConsumers.getBuffer(RenderType.entitySolid(ThingOverlayTexture.FLESH_OVERLAY_TEXTURE));
                 this.spiderLegsModel.setupAnim(entity, 0, 0, 0, 0, 0);
                 this.spiderLegsModel.renderToBuffer(matrices, v, light, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
@@ -40,18 +40,18 @@ public class RevealedThingFeatureRenderer<T extends Entity, M extends EntityMode
     }
 
     public static <T extends Entity> void renderFleshOverlay(PossibleDisguisedThing e, EntityModel<T> model, ResourceLocation texture, PoseStack matrices, MultiBufferSource vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch){
-        if (e.isRevealed() || e.getSupercellConcentration() >= 1.0F){
+        if (e.faw$isRevealed() || e.faw$getSupercellConcentration() >= 1.0F){
             float progress;
-            if (e.isRevealed()){
-                if (e.getTimeUntilFinishedRevealing() < e.getRevealMaximum()){
-                    progress = (float)e.getTimeUntilFinishedRevealing() / e.getRevealMaximum();
+            if (e.faw$isRevealed()){
+                if (e.faw$getTimeUntilFinishedRevealing() < e.faw$getRevealMaximum()){
+                    progress = (float)e.faw$getTimeUntilFinishedRevealing() / e.faw$getRevealMaximum();
                 }
                 else{
-                    progress = 2 - (float)e.getTimeUntilFinishedRevealing() / e.getRevealMaximum();
+                    progress = 2 - (float)e.faw$getTimeUntilFinishedRevealing() / e.faw$getRevealMaximum();
                 }
             }
             else{
-                progress = 1.0F - (1.0F - e.getSupercellConcentration() / 50) * (1.0F - e.getSupercellConcentration() / 50);
+                progress = 1.0F - (1.0F - e.faw$getSupercellConcentration() / 50) * (1.0F - e.faw$getSupercellConcentration() / 50);
             }
             matrices.pushPose();
             model.prepareMobModel(entity, limbAngle, limbDistance, tickDelta);

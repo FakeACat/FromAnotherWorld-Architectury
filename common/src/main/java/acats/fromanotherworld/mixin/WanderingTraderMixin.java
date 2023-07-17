@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class WanderingTraderMixin implements PossibleDisguisedThing {
     @Inject(at = @At("HEAD"), method = "maybeDespawn", cancellable = true)
     private void maybeDespawn(CallbackInfo ci){
-        if (this.isAssimilated())
+        if (this.faw$isAssimilated())
             ci.cancel();
     }
 }

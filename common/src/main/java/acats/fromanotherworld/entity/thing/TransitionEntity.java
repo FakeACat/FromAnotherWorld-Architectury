@@ -349,7 +349,7 @@ public class TransitionEntity extends LivingEntity implements MaybeThing {
     }
 
     @Override
-    public boolean isThing() {
+    public boolean faw$isThing() {
         return true;
     }
 }

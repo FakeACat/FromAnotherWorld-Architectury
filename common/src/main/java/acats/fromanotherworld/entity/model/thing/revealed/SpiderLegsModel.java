@@ -143,7 +143,7 @@ public class SpiderLegsModel extends EntityModel<Entity> {
     @Override
     public void setupAnim(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         PossibleDisguisedThing thing = (PossibleDisguisedThing) entity;
-        float p = Mth.clamp(10.0F * (1.0F - Math.abs((float)thing.getRevealMaximum() - (float)thing.getTimeUntilFinishedRevealing()) / (float)thing.getRevealMaximum()), 0, 1);
+        float p = Mth.clamp(10.0F * (1.0F - Math.abs((float)thing.faw$getRevealMaximum() - (float)thing.faw$getTimeUntilFinishedRevealing()) / (float)thing.faw$getRevealMaximum()), 0, 1);
 
         float rotation = Mth.lerp(p, -(float)Math.PI / 2, 0.7854F);
         float rotation2 = Mth.lerp(p, -(float)Math.PI, -1.1781F);

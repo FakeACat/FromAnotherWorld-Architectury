@@ -1,21 +1,21 @@
 package acats.fromanotherworld.entity.interfaces;
 
 public interface PossibleDisguisedThing {
-    int getTimeUntilFinishedRevealing();
-    void setTimeUntilFinishedRevealing(int t);
-    int getRevealMaximum();
-    float getSupercellConcentration();
-    void setSupercellConcentration(float i);
-    boolean isAssimilated();
-    void setAssimilated(boolean assimilated);
-    boolean isSleeper();
-    void setSleeper(boolean sleeper);
-    int getRevealTimer();
-    void setRevealTimer(int revealTimer);
-    int getRevealed();
-    void setRevealed(int t);
-    void setRevealedMax(int i);
-    default boolean isRevealed(){
-        return getTimeUntilFinishedRevealing() > 0;
+    int faw$getTimeUntilFinishedRevealing();
+    void faw$setTimeUntilFinishedRevealing(int t);
+    int faw$getRevealMaximum();
+    float faw$getSupercellConcentration();
+    void faw$setSupercellConcentration(float i);
+    boolean faw$isAssimilated();
+    void faw$setAssimilated(boolean assimilated);
+    boolean faw$isSleeper();
+    void faw$setSleeper(boolean sleeper);
+    int faw$getRevealTimer();
+    void faw$setRevealTimer(int revealTimer);
+    int faw$getRevealed();
+    void faw$setRevealed(int t);
+    void faw$setRevealedMax(int i);
+    default boolean faw$isRevealed(){
+        return faw$getTimeUntilFinishedRevealing() > 0;
     }
 }

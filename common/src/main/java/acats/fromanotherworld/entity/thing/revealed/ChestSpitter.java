@@ -127,7 +127,7 @@ public class ChestSpitter extends Thing {
     }
 
     @Override
-    public boolean isDistinctThing() {
+    public boolean faw$isDistinctThing() {
         return false;
     }
 

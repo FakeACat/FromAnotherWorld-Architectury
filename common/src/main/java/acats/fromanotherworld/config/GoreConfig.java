@@ -8,7 +8,7 @@ public class GoreConfig extends FAWConfig {
 
     @Override
     int version() {
-        return 0;
+        return 1;
     }
 
     public final FAWConfigBooleanProperty enabled = new FAWConfigBooleanProperty(
@@ -17,10 +17,17 @@ public class GoreConfig extends FAWConfig {
             true
     );
 
+    public final FAWConfigIntegerProperty wallPalmerChance = new FAWConfigIntegerProperty(
+            "wall_palmer_chance",
+            "1 in this number chance for any wall tentacle block with sufficient support to instead be a wall palmer",
+            10
+    );
+
     @Override
     FAWConfigProperty<?>[] properties() {
         return new FAWConfigProperty[]{
-                enabled
+                this.enabled,
+                this.wallPalmerChance
         };
     }
 }

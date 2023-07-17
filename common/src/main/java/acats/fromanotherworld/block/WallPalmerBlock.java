@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class WallPalmerBlock extends FleshBlock implements Gore {
@@ -46,11 +47,11 @@ public class WallPalmerBlock extends FleshBlock implements Gore {
         return blockState.isFaceSturdy(getter, pos.relative(side), side.getOpposite());
     }
 
-    public BlockState rotate(BlockState blockState, Rotation rotation) {
+    public @NotNull BlockState rotate(BlockState blockState, Rotation rotation) {
         return blockState.setValue(FACING, rotation.rotate(blockState.getValue(FACING)));
     }
 
-    public BlockState mirror(BlockState blockState, Mirror mirror) {
+    public @NotNull BlockState mirror(BlockState blockState, Mirror mirror) {
         return blockState.rotate(mirror.getRotation(blockState.getValue(FACING)));
     }
 
@@ -67,7 +68,7 @@ public class WallPalmerBlock extends FleshBlock implements Gore {
     public void tick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource) {
         super.tick(blockState, serverLevel, blockPos, randomSource);
 
-        if (serverLevel.getRandom().nextInt(2) == 0 && serverLevel.hasNearbyAlivePlayer(blockPos.getX(), blockPos.getY(), blockPos.getZ(), 16)){
+        if (serverLevel.getNearestPlayer(blockPos.getX(), blockPos.getY(), blockPos.getZ(), 16, true) != null){
             serverLevel.destroyBlock(blockPos, false);
             Thing thing = EntityRegistry.PALMER_THING.get().create(serverLevel);
             if (thing != null) {

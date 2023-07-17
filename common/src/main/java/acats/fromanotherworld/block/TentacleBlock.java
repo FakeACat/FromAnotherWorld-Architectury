@@ -2,7 +2,6 @@ package acats.fromanotherworld.block;
 
 import acats.fromanotherworld.block.interfaces.Gore;
 import acats.fromanotherworld.entity.thing.Thing;
-import acats.fromanotherworld.registry.BlockRegistry;
 import acats.fromanotherworld.registry.EntityRegistry;
 import acats.fromanotherworld.utilities.EntityUtilities;
 import net.minecraft.core.BlockPos;
@@ -69,7 +68,7 @@ public class TentacleBlock extends FleshBlock implements Gore {
 
     @Override
     public @NotNull BlockState mirror(BlockState blockState, Mirror mirror) {
-        blockState = blockState.rotate(mirror.getRotation(blockState.getValue(SURFACE)));;
+        blockState = blockState.rotate(mirror.getRotation(blockState.getValue(SURFACE)));
         return switch (mirror) {
             case LEFT_RIGHT ->
                     blockState.setValue(NORTH, blockState.getValue(SOUTH)).setValue(SOUTH, blockState.getValue(NORTH));
@@ -203,15 +202,7 @@ public class TentacleBlock extends FleshBlock implements Gore {
 
         if (!serverLevel.isClientSide()){
             if (serverLevel.getRandom().nextInt(3) == 0){
-
                 this.spread(serverLevel, blockPos, blockState);
-
-                if (serverLevel.getRandom().nextInt(8) == 0 &&
-                        serverLevel.getBlockState(blockPos.above()).is(BlockRegistry.TENTACLE.get()) &&
-                        serverLevel.getBlockState(blockPos.below()).is(BlockRegistry.TENTACLE.get()) &&
-                        blockState.getValue(SURFACE).getAxis() != Direction.Axis.Y){
-                    serverLevel.setBlockAndUpdate(blockPos, WallPalmerBlock.facing(BlockRegistry.WALL_PALMER.get().defaultBlockState(), blockState.getValue(SURFACE).getOpposite()));
-                }
             }
 
             if (blockState.getValue(SURFACE) == Direction.DOWN){

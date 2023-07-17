@@ -1,6 +1,8 @@
 package acats.fromanotherworld.block.interfaces;
 
 import acats.fromanotherworld.block.TentacleBlock;
+import acats.fromanotherworld.block.WallPalmerBlock;
+import acats.fromanotherworld.config.Config;
 import acats.fromanotherworld.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -40,6 +42,14 @@ public interface Gore {
         });
 
         if (ref.connectedTentacles < 2 && level.getBlockState(pos).canBeReplaced() && level.getBlockState(pos).getFluidState().isEmpty() && state.canSurvive(level, pos)){
+            if (level.getRandom().nextInt(Config.goreConfig.wallPalmerChance.get()) == 0 &&
+                    surface.getAxis() != Direction.Axis.Y &&
+                    level.getBlockState(pos.above().relative(surface)).isFaceSturdy(level, pos.above().relative(surface), surface.getOpposite()) &&
+                    level.getBlockState(pos.below().relative(surface)).isFaceSturdy(level, pos.below().relative(surface), surface.getOpposite())){
+
+                level.setBlockAndUpdate(pos, WallPalmerBlock.facing(BlockRegistry.WALL_PALMER.get().defaultBlockState(), surface.getOpposite()));
+                return;
+            }
             level.setBlockAndUpdate(pos, state);
         }
     }

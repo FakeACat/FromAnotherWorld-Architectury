@@ -1,5 +1,6 @@
 package acats.fromanotherworld.entity.thing.resultant;
 
+import acats.fromanotherworld.config.Config;
 import acats.fromanotherworld.entity.goal.AbsorbGoal;
 import acats.fromanotherworld.entity.goal.BlairThingAttackGoal;
 import acats.fromanotherworld.entity.goal.BlairThingSpecialAttacksGoal;
@@ -39,7 +40,7 @@ public class BlairThing extends MinibossThing {
     @Override
     protected void registerGoals() {
         this.addThingTargets(false);
-        this.goalSelector.addGoal(0, new AbsorbGoal(this, STANDARD));
+        this.goalSelector.addGoal(0, new AbsorbGoal(this, STANDARD, Config.difficultyConfig.blairThingMergeChance.get()));
         this.goalSelector.addGoal(1, new BlairThingSpecialAttacksGoal(this));
         this.goalSelector.addGoal(2, new BlairThingAttackGoal(this, 1.0D, false));
     }

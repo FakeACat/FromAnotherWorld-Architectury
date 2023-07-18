@@ -1,5 +1,6 @@
 package acats.fromanotherworld.entity.thing.resultant;
 
+import acats.fromanotherworld.config.Config;
 import acats.fromanotherworld.constants.FAWAnimations;
 import acats.fromanotherworld.entity.goal.*;
 import acats.fromanotherworld.entity.interfaces.StalkerThing;
@@ -26,7 +27,7 @@ public class SplitFace extends AbsorberThing implements StalkerThing {
     protected void registerGoals() {
         this.addThingTargets(false);
         this.goalSelector.addGoal(0, new FleeOnFireGoal(this, 16.0F, 1.2, 1.5));
-        this.goalSelector.addGoal(1, new AbsorbGoal(this, STANDARD));
+        this.goalSelector.addGoal(1, new AbsorbGoal(this, STANDARD, Config.difficultyConfig.splitFaceMergeChance.get()));
         this.goalSelector.addGoal(2, new LeapAttackGoal(this, 2.0D, false, 200, 3.0D, 0.3D, 12.0D));
         this.goalSelector.addGoal(3, new MoveThroughVillageGoal(this, 1.0, false, 4, () -> true));
         this.goalSelector.addGoal(4, new StalkGoal(this));

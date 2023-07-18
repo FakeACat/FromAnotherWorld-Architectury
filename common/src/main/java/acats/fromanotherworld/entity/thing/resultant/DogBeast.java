@@ -1,5 +1,6 @@
 package acats.fromanotherworld.entity.thing.resultant;
 
+import acats.fromanotherworld.config.Config;
 import acats.fromanotherworld.constants.FAWAnimations;
 import acats.fromanotherworld.entity.goal.AbsorbGoal;
 import acats.fromanotherworld.entity.goal.FleeOnFireGoal;
@@ -34,7 +35,7 @@ public class DogBeast extends ResizeableThing implements Leaper {
     protected void registerGoals() {
         this.addThingTargets(false);
         this.goalSelector.addGoal(0, new FleeOnFireGoal(this, 16.0F, 1.0, 1.2));
-        this.goalSelector.addGoal(1, new AbsorbGoal(this, STANDARD));
+        this.goalSelector.addGoal(1, new AbsorbGoal(this, STANDARD, Config.difficultyConfig.dogBeastMergeChance.get()));
         this.goalSelector.addGoal(2, new LeapAttackGoal(this, 1.0D, false, 120, 1.5D, 0.5D, 5.0D));
         this.goalSelector.addGoal(3, new WaterAvoidingRandomStrollGoal(this, 1.0D));
     }

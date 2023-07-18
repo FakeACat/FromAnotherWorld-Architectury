@@ -8,7 +8,7 @@ public class DifficultyConfig extends FAWConfig {
 
     @Override
     int version() {
-        return 0;
+        return 1;
     }
 
     public final FAWConfigIntegerProperty specialBehaviourRarity = new FAWConfigIntegerProperty(
@@ -23,11 +23,73 @@ public class DifficultyConfig extends FAWConfig {
             3
     );
 
+    public final FAWConfigIntegerProperty crawlerMergeChance = new FAWConfigIntegerProperty(
+            "crawler_merge_chance",
+            "1 in this number chance every tick to attempt to merge",
+            800
+    );
+    public final FAWConfigIntegerProperty julietteThingMergeChance = new FAWConfigIntegerProperty(
+            "juliette_thing_merge_chance",
+            null,
+            800
+    );
+    public final FAWConfigIntegerProperty palmerThingMergeChance = new FAWConfigIntegerProperty(
+            "palmer_thing_merge_chance",
+            null,
+            800
+    );
+    public final FAWConfigIntegerProperty splitFaceMergeChance = new FAWConfigIntegerProperty(
+            "split_face_merge_chance",
+            null,
+            800
+    );
+    public final FAWConfigIntegerProperty blairThingMergeChance = new FAWConfigIntegerProperty(
+            "blair_thing_merge_chance",
+            null,
+            800
+    );
+
+    public final FAWConfigIntegerProperty dogBeastSpitterMergeChance = new FAWConfigIntegerProperty(
+            "dogbeast_spitter_merge_chance",
+            null,
+            800
+    );
+    public final FAWConfigIntegerProperty dogBeastMergeChance = new FAWConfigIntegerProperty(
+            "dogbeast_merge_chance",
+            null,
+            800
+    );
+    public final FAWConfigIntegerProperty impalerMergeChance = new FAWConfigIntegerProperty(
+            "impaler_merge_chance",
+            null,
+            800
+    );
+    public final FAWConfigIntegerProperty prowlerMergeChance = new FAWConfigIntegerProperty(
+            "prowler_merge_chance",
+            null,
+            1600
+    );
+    public final FAWConfigIntegerProperty beastMergeChance = new FAWConfigIntegerProperty(
+            "beast_merge_chance",
+            null,
+            800
+    );
+
     @Override
     FAWConfigProperty<?>[] properties() {
         return new FAWConfigProperty[]{
                 this.specialBehaviourRarity,
-                this.maxMinibossTier
+                this.maxMinibossTier,
+                this.crawlerMergeChance,
+                this.julietteThingMergeChance,
+                this.palmerThingMergeChance,
+                this.splitFaceMergeChance,
+                this.blairThingMergeChance,
+                this.dogBeastSpitterMergeChance,
+                this.dogBeastMergeChance,
+                this.impalerMergeChance,
+                this.prowlerMergeChance,
+                this.beastMergeChance
         };
     }
 }

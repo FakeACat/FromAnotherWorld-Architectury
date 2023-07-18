@@ -19,9 +19,6 @@ public class AbsorbGoal extends Goal {
     private final Level world;
     private final int chance;
     private int timer = 0;
-    public AbsorbGoal(AbsorberThing absorber, Predicate<LivingEntity> absorbable){
-        this(absorber, absorbable, 800);
-    }
     public AbsorbGoal(AbsorberThing absorber, Predicate<LivingEntity> absorbable, int chance){
         this.absorber = absorber;
         this.world = absorber.level();

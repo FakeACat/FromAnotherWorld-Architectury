@@ -55,7 +55,7 @@ public class Impaler extends ResizeableThing implements BurstAttackThing {
     protected void registerGoals() {
         this.addThingTargets(false);
         this.goalSelector.addGoal(0, new ThingProjectileBurstGoal(this, 16.0F, 30));
-        this.goalSelector.addGoal(1, new AbsorbGoal(this, STANDARD, Config.difficultyConfig.impalerMergeChance.get()));
+        this.goalSelector.addGoal(1, new AbsorbGoal(this, STANDARD, Config.DIFFICULTY_CONFIG.impalerMergeChance.get()));
         this.goalSelector.addGoal(2, new ThingAttackGoal(this, 1.0D, false));
         this.goalSelector.addGoal(3, new WaterAvoidingRandomStrollGoal(this, 1.0D));
     }

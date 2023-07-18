@@ -1,5 +1,6 @@
 package acats.fromanotherworld.entity.thing.special;
 
+import acats.fromanotherworld.config.Config;
 import acats.fromanotherworld.entity.goal.*;
 import acats.fromanotherworld.entity.interfaces.ImportantDeathMob;
 import acats.fromanotherworld.entity.interfaces.StalkerThing;
@@ -8,6 +9,7 @@ import acats.fromanotherworld.registry.ParticleRegistry;
 import acats.fromanotherworld.spawning.SpawningManager;
 import acats.fromanotherworld.utilities.EntityUtilities;
 import acats.fromanotherworld.utilities.ServerUtilities;
+import acats.fromanotherworld.utilities.chunkloading.FAWChunkLoader;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.core.animation.AnimationController;
@@ -172,11 +174,11 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
     protected void customServerAiStep() {
         if (!this.level().isClientSide()){
             if (!this.isThingFrozen()){
-                Player player = this.level().getNearestPlayer(this, -1.0F);
-                if (player == null || player.distanceToSqr(this) > 16384){
-                    this.leave();
-                    return;
-                }
+                //Player player = this.level().getNearestPlayer(this, -1.0F);
+                //if (player == null || player.distanceToSqr(this) > 16384){
+                //    this.leave();
+                //    return;
+                //}
                 switchTimer++;
                 if (switchTimer > 1800){
                     this.switchTimer = 0;
@@ -208,6 +210,14 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
                 this.tickSwitch();
         }
         super.customServerAiStep();
+    }
+
+    @Override
+    public void threeSecondDelayServerTick() {
+        super.threeSecondDelayServerTick();
+        if (this.tickCount % 240 == 0 && Config.WORLD_CONFIG.alienChunkLoading.get()) {
+            FAWChunkLoader.create((ServerLevel) this.level(), (int) this.getX(), (int) this.getZ(), 3, 2);
+        }
     }
 
     @Override
@@ -336,18 +346,19 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
             if (this.isThingFrozen()){
                 event.getController().setAnimation(RawAnimation.begin().thenPlay(this.currentAnimation() + ".idle"));
                 event.getController().setAnimationSpeed(0.0D);
-                return PlayState.CONTINUE;
-            }
-            event.getController().setAnimationSpeed(this.getForm() == 2 && event.isMoving() ? 2.0D : 1.0D);
-            if (this.isUnderWater()){
-                event.getController().setAnimation(RawAnimation.begin().thenPlay(this.currentAnimation() + ".swim"));
             }
             else{
-                if (event.isMoving() || (this.rotateWhenClimbing() && this.movingClimbing())){
-                    event.getController().setAnimation(RawAnimation.begin().thenPlay(this.currentAnimation() + ".walk"));
+                event.getController().setAnimationSpeed(this.getForm() == 2 && event.isMoving() ? 2.0D : 1.0D);
+                if (this.isUnderWater()){
+                    event.getController().setAnimation(RawAnimation.begin().thenPlay(this.currentAnimation() + ".swim"));
                 }
                 else{
-                    event.getController().setAnimation(RawAnimation.begin().thenPlay(this.currentAnimation() + ".idle"));
+                    if (event.isMoving() || (this.rotateWhenClimbing() && this.movingClimbing())){
+                        event.getController().setAnimation(RawAnimation.begin().thenPlay(this.currentAnimation() + ".walk"));
+                    }
+                    else{
+                        event.getController().setAnimation(RawAnimation.begin().thenPlay(this.currentAnimation() + ".idle"));
+                    }
                 }
             }
         }

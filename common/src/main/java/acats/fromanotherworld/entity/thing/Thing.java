@@ -65,7 +65,7 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
             }
 
             if (this.getThingCategory().canHaveSpecialAbilities()){
-                this.setRareAbilities(Config.difficultyConfig.specialBehaviourRarity.get());
+                this.setRareAbilities(Config.DIFFICULTY_CONFIG.specialBehaviourRarity.get());
             }
         }
     }
@@ -389,7 +389,7 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
     @Override
     public boolean canBeAffected(MobEffectInstance mobEffectInstance) {
         ResourceLocation id = BuiltInRegistries.MOB_EFFECT.getKey(mobEffectInstance.getEffect());
-        if (id != null && Config.effectConfig.thingImmune.contains(id.toString())){
+        if (id != null && Config.EFFECT_CONFIG.thingImmune.contains(id.toString())){
             return false;
         }
         return super.canBeAffected(mobEffectInstance);
@@ -421,7 +421,7 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
     @Override
     public void die(DamageSource damageSource) {
         super.die(damageSource);
-        if (Config.goreConfig.enabled.get()) {
+        if (Config.GORE_CONFIG.enabled.get()) {
             this.attemptPlaceCorpse();
         }
     }
@@ -528,7 +528,7 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
     }
 
     public static boolean checkThingSpawnRules(EntityType<? extends Monster> entityType, ServerLevelAccessor serverLevelAccessor, MobSpawnType mobSpawnType, BlockPos blockPos, RandomSource randomSource){
-        return ServerUtilities.getDayReal(serverLevelAccessor) >= Config.spawningConfig.firstSpawningDay.get() && Monster.checkMonsterSpawnRules(entityType, serverLevelAccessor, mobSpawnType, blockPos, randomSource);
+        return ServerUtilities.getDayReal(serverLevelAccessor) >= Config.SPAWNING_CONFIG.firstSpawningDay.get() && Monster.checkMonsterSpawnRules(entityType, serverLevelAccessor, mobSpawnType, blockPos, randomSource);
     }
 
     @Override

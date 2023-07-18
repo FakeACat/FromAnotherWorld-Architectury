@@ -118,7 +118,7 @@ public abstract class MinibossThing extends AbsorberThing {
 
     @Override
     public boolean cannotMerge() {
-        return this.getTier() >= Config.difficultyConfig.maxMinibossTier.get();
+        return this.getTier() >= Config.DIFFICULTY_CONFIG.maxMinibossTier.get();
     }
 
     static {

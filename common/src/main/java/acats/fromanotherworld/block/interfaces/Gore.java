@@ -42,7 +42,7 @@ public interface Gore {
         });
 
         if (ref.connectedTentacles < 2 && level.getBlockState(pos).canBeReplaced() && level.getBlockState(pos).getFluidState().isEmpty() && state.canSurvive(level, pos)){
-            if (level.getRandom().nextInt(Config.goreConfig.wallPalmerChance.get()) == 0 &&
+            if (level.getRandom().nextInt(Config.GORE_CONFIG.wallPalmerChance.get()) == 0 &&
                     surface.getAxis() != Direction.Axis.Y &&
                     level.getBlockState(pos.above()).getCollisionShape(level, pos.above()).isEmpty() &&
                     level.getBlockState(pos.below()).getCollisionShape(level, pos.below()).isEmpty() &&

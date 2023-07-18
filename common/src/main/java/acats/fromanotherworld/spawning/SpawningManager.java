@@ -18,7 +18,7 @@ import net.minecraft.world.level.saveddata.SavedData;
 
 public class SpawningManager extends SavedData {
     private int daysSinceLastEvent;
-    private int nextEvent = Config.eventConfig.firstEventDay.get();
+    private int nextEvent = Config.EVENT_CONFIG.firstEventDay.get();
     private boolean hadFirstEvent = false;
     public int alienThingsToSpawn = 0;
 
@@ -28,7 +28,7 @@ public class SpawningManager extends SavedData {
         if (this.daysSinceLastEvent >= this.nextEvent && world.dimensionTypeId() == BuiltinDimensionTypes.OVERWORLD && player != null){
             event(world, player);
             this.daysSinceLastEvent = 0;
-            this.nextEvent = world.random.nextInt(1 + Config.eventConfig.maxCooldown.get() - Config.eventConfig.minCooldown.get()) + Config.eventConfig.minCooldown.get();
+            this.nextEvent = world.random.nextInt(1 + Config.EVENT_CONFIG.maxCooldown.get() - Config.EVENT_CONFIG.minCooldown.get()) + Config.EVENT_CONFIG.minCooldown.get();
         }
         this.setDirty();
     }

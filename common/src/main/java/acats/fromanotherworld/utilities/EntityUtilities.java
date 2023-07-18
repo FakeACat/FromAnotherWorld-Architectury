@@ -147,7 +147,7 @@ public class EntityUtilities {
         for (MobEffectInstance statusEffectInstance:
                 entity.getActiveEffects()) {
             ResourceLocation id = BuiltInRegistries.MOB_EFFECT.getKey(statusEffectInstance.getEffect());
-            if (id != null && Config.effectConfig.regenCancelling.contains(id.toString()))
+            if (id != null && Config.EFFECT_CONFIG.regenCancelling.contains(id.toString()))
                 return true;
         }
         return entity.isOnFire();

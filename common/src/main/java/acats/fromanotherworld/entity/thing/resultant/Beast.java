@@ -45,7 +45,7 @@ public class Beast extends MinibossThing implements RangedAttackMob {
     protected void registerGoals() {
         this.addThingTargets(false);
         this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(1, new AbsorbGoal(this, STANDARD, Config.difficultyConfig.beastMergeChance.get()));
+        this.goalSelector.addGoal(1, new AbsorbGoal(this, STANDARD, Config.DIFFICULTY_CONFIG.beastMergeChance.get()));
         this.meleeGoal = new ThingAttackGoal(this, 1.0D, false);
         this.rangedGoal = new ThingProjectileAttackGoal(this, 1.0, 10, 10, 48.0F);
         this.goalSelector.addGoal(2, rangedGoal);

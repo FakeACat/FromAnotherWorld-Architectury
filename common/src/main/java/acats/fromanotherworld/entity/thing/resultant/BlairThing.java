@@ -40,7 +40,7 @@ public class BlairThing extends MinibossThing {
     @Override
     protected void registerGoals() {
         this.addThingTargets(false);
-        this.goalSelector.addGoal(0, new AbsorbGoal(this, STANDARD, Config.difficultyConfig.blairThingMergeChance.get()));
+        this.goalSelector.addGoal(0, new AbsorbGoal(this, STANDARD, Config.DIFFICULTY_CONFIG.blairThingMergeChance.get()));
         this.goalSelector.addGoal(1, new BlairThingSpecialAttacksGoal(this));
         this.goalSelector.addGoal(2, new BlairThingAttackGoal(this, 1.0D, false));
     }

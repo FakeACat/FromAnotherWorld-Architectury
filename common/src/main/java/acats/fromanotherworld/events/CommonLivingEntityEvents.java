@@ -82,7 +82,7 @@ public class CommonLivingEntityEvents {
                     thing.faw$setAssimilated(true);
                     if (entity instanceof Mob mobEntity)
                         mobEntity.setTarget(null);
-                    setRareAbilities(entity, Config.difficultyConfig.specialBehaviourRarity.get());
+                    setRareAbilities(entity, Config.DIFFICULTY_CONFIG.specialBehaviourRarity.get());
                     thing.faw$setSupercellConcentration(0);
                 }
                 if (thing.faw$getSupercellConcentration() >= 1.0F){

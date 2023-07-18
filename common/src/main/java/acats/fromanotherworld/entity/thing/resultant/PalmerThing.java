@@ -58,7 +58,7 @@ public class PalmerThing extends AbsorberThing {
         this.addThingTargets(false);
         this.goalSelector.addGoal(0, new FleeOnFireGoal(this, 16.0F, 1.2, 1.5));
         this.goalSelector.addGoal(1, new OpenDoorGoal(this, true));
-        this.goalSelector.addGoal(2, new AbsorbGoal(this, STANDARD, Config.difficultyConfig.palmerThingMergeChance.get()));
+        this.goalSelector.addGoal(2, new AbsorbGoal(this, STANDARD, Config.DIFFICULTY_CONFIG.palmerThingMergeChance.get()));
         this.goalSelector.addGoal(3, new LeapAttackGoal(this, 1.0D, false, 120, 2.0D, 0.2D, 10.0D));
         this.goalSelector.addGoal(4, new MoveThroughVillageGoal(this, 1.0, false, 4, () -> true));
         this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 1.0D));

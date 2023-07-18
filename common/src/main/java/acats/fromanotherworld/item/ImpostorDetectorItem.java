@@ -3,6 +3,9 @@ package acats.fromanotherworld.item;
 import acats.fromanotherworld.spawning.SpawningManager;
 import acats.fromanotherworld.utilities.EntityUtilities;
 import java.util.List;
+
+import acats.fromanotherworld.utilities.chunkloading.FAWChunkLoader;
+import acats.fromanotherworld.utilities.chunkloading.FAWChunkLoaders;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -17,6 +20,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
+import org.jetbrains.annotations.NotNull;
 
 public class ImpostorDetectorItem extends Item {
     public ImpostorDetectorItem(Properties settings) {
@@ -24,7 +28,7 @@ public class ImpostorDetectorItem extends Item {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
+    public @NotNull InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
         boolean count = user.isShiftKeyDown();
 
         if (count){
@@ -34,6 +38,16 @@ public class ImpostorDetectorItem extends Item {
                 SpawningManager spawningManager = SpawningManager.getSpawningManager((ServerLevel) world);
                 user.sendSystemMessage(Component.literal(things + " Things"));
                 user.sendSystemMessage(Component.literal(spawningManager.alienThingsToSpawn + " Alien Things waiting to spawn"));
+                int i = 0;
+                for (FAWChunkLoader l:
+                        FAWChunkLoaders.getChunkLoaders(((ServerLevel) world)).activeLoaders) {
+                    user.sendSystemMessage(Component.literal("Chunk Loader " + i + ":"));
+                    user.sendSystemMessage(Component.literal(" -Central Chunk X: " + l.chunkCentreX));
+                    user.sendSystemMessage(Component.literal(" -Central Chunk Z: " + l.chunkCentreZ));
+                    user.sendSystemMessage(Component.literal(" -Radius: " + l.radius + " chunks"));
+                    user.sendSystemMessage(Component.literal(" -Minutes until deletion: " + l.ticksUntilRemoval));
+                    i++;
+                }
             }
         }
         else{

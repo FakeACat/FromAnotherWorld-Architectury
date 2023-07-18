@@ -26,7 +26,7 @@ public class Prowler extends AbsorberThing {
         this.addThingTargets(false);
         this.goalSelector.addGoal(0, new FleeOnFireGoal(this, 16.0F, 1.2, 1.5));
         this.goalSelector.addGoal(1, new SpitJetGoal(this, 120, 40, 30, 20, new Vec3(1.1D, -0.3D, 0.05D)));
-        this.goalSelector.addGoal(2, new AbsorbGoal(this, STANDARD, Config.difficultyConfig.prowlerMergeChance.get()));
+        this.goalSelector.addGoal(2, new AbsorbGoal(this, STANDARD, Config.DIFFICULTY_CONFIG.prowlerMergeChance.get()));
         this.goalSelector.addGoal(3, new ThingAttackGoal(this, 1.0D, false));
         this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1.0D));
     }

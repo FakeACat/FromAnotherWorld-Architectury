@@ -17,7 +17,7 @@ import java.util.function.Supplier;
 public class SpawnEntryRegistry {
     public static ArrayList<FAWSpawnEntry<?>> entries = new ArrayList<>();
     public static void register(){
-        SpawningConfig config = Config.spawningConfig;
+        SpawningConfig config = Config.SPAWNING_CONFIG;
         if (config.enabled.get()){
             for (SpawningConfig.Entry<?> entry:
                  config.entries) {

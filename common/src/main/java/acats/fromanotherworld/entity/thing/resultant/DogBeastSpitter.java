@@ -63,7 +63,7 @@ public class DogBeastSpitter extends ResizeableThing implements RangedAttackMob 
     protected void registerGoals() {
         this.addThingTargets(false);
         this.goalSelector.addGoal(0, new FleeOnFireGoal(this, 16.0F, 1.2, 1.5));
-        this.goalSelector.addGoal(1, new AbsorbGoal(this, STANDARD, Config.difficultyConfig.dogBeastSpitterMergeChance.get()));
+        this.goalSelector.addGoal(1, new AbsorbGoal(this, STANDARD, Config.DIFFICULTY_CONFIG.dogBeastSpitterMergeChance.get()));
         this.goalSelector.addGoal(2, new ThingProjectileAttackGoal(this, 1.0, 40, 80, 10.0F));
         this.goalSelector.addGoal(3, new WaterAvoidingRandomStrollGoal(this, 1.0D));
     }

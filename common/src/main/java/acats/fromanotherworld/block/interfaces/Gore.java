@@ -44,6 +44,8 @@ public interface Gore {
         if (ref.connectedTentacles < 2 && level.getBlockState(pos).canBeReplaced() && level.getBlockState(pos).getFluidState().isEmpty() && state.canSurvive(level, pos)){
             if (level.getRandom().nextInt(Config.goreConfig.wallPalmerChance.get()) == 0 &&
                     surface.getAxis() != Direction.Axis.Y &&
+                    level.getBlockState(pos.above()).getCollisionShape(level, pos.above()).isEmpty() &&
+                    level.getBlockState(pos.below()).getCollisionShape(level, pos.below()).isEmpty() &&
                     level.getBlockState(pos.above().relative(surface)).isFaceSturdy(level, pos.above().relative(surface), surface.getOpposite()) &&
                     level.getBlockState(pos.below().relative(surface)).isFaceSturdy(level, pos.below().relative(surface), surface.getOpposite())){
 

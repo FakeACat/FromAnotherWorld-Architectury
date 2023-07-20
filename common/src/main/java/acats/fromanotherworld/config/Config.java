@@ -14,6 +14,7 @@ public class Config {
     public static final EffectConfig EFFECT_CONFIG = new EffectConfig();
     public static final SpawningConfig SPAWNING_CONFIG = new SpawningConfig();
     public static final WorldConfig WORLD_CONFIG = new WorldConfig();
+    public static final CompatibilityConfig COMPATIBILITY_CONFIG = new CompatibilityConfig();
 
     public static void load(Path modLoaderSpecificPath){
         path = modLoaderSpecificPath;
@@ -26,6 +27,7 @@ public class Config {
         EFFECT_CONFIG.load();
         SPAWNING_CONFIG.load();
         WORLD_CONFIG.load();
+        COMPATIBILITY_CONFIG.load();
     }
 
     public static File getFolder() {

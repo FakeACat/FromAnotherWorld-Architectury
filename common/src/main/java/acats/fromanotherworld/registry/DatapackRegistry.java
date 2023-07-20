@@ -1,5 +1,7 @@
 package acats.fromanotherworld.registry;
 
+import acats.fromanotherworld.config.Config;
+
 import java.util.HashMap;
 
 public class DatapackRegistry {
@@ -9,8 +11,12 @@ public class DatapackRegistry {
         registerCompatDatapack("guardvillagers", "Assimilated Guard Villagers");
         registerCompatDatapack("mca", "Assimilated Minecraft Comes Alive");
         registerCompatDatapack("biomemakeover", "Assimilated Biome Makeover");
-        registerCompatDatapack("spore", "Spore: Fungal Infection Alliance");
-        registerCompatDatapack("sculkhorde", "Sculk Horde Alliance");
+        if (Config.COMPATIBILITY_CONFIG.sporeAllies.get()) {
+            registerCompatDatapack("spore", "Spore: Fungal Infection Alliance");
+        }
+        if (Config.COMPATIBILITY_CONFIG.sculkAllies.get()) {
+            registerCompatDatapack("sculkhorde", "Sculk Horde Alliance");
+        }
     }
     private static void registerCompatDatapack(String modID, String name){
         COMPAT_DATAPACKS.put(modID, name);

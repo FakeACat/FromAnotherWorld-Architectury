@@ -5,6 +5,7 @@ import acats.fromanotherworld.config.Config;
 import acats.fromanotherworld.entity.thing.special.AlienThing;
 import acats.fromanotherworld.registry.EntityRegistry;
 import acats.fromanotherworld.utilities.EntityUtilities;
+import net.minecraft.world.entity.MobSpawnType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,6 +46,7 @@ public class SpawningManager extends SavedData {
             AlienThing alien = EntityRegistry.ALIEN_THING.get().create(world);
             if (alien != null){
                 alien.changeForm(world.getRandom().nextInt(3));
+                alien.finalizeSpawn(world, world.getCurrentDifficultyAt(player.blockPosition()), MobSpawnType.NATURAL, null, null);
                 alien.tickEmerging();
                 if (EntityUtilities.spawnOnEntityImproved(alien, world, player, 10, 20, 10, 20)){
                     this.alienThingsToSpawn--;

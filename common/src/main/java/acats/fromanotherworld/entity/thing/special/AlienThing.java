@@ -8,7 +8,6 @@ import acats.fromanotherworld.entity.thing.Thing;
 import acats.fromanotherworld.registry.ParticleRegistry;
 import acats.fromanotherworld.spawning.SpawningManager;
 import acats.fromanotherworld.utilities.EntityUtilities;
-import acats.fromanotherworld.utilities.ServerUtilities;
 import acats.fromanotherworld.utilities.chunkloading.FAWChunkLoader;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animation.AnimatableManager;
@@ -20,15 +19,17 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.OpenDoorGoal;
@@ -37,9 +38,12 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Objects;
 
 public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob {
@@ -90,6 +94,14 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
         Objects.requireNonNull(this.getAttribute(Attributes.ATTACK_DAMAGE)).setBaseValue(damage);
         Objects.requireNonNull(this.getAttribute(Attributes.KNOCKBACK_RESISTANCE)).setBaseValue(kbResist);
     }
+
+    @Nullable
+    @Override
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor serverLevelAccessor, DifficultyInstance difficultyInstance, MobSpawnType mobSpawnType, @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag compoundTag) {
+        this.createChunkLoader();
+        return super.finalizeSpawn(serverLevelAccessor, difficultyInstance, mobSpawnType, spawnGroupData, compoundTag);
+    }
+
     private void setForm(int form){
         this.entityData.set(FORM, form);
     }
@@ -132,18 +144,11 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
 
     private void leave(){
         if (!this.level().isClientSide()){
-            this.announceEscape();
             SpawningManager spawningManager = SpawningManager.getSpawningManager((ServerLevel) this.level());
             spawningManager.alienThingsToSpawn++;
             spawningManager.setDirty();
             this.discard();
         }
-    }
-
-    private void announceEscape(){
-        ServerUtilities.forAllPlayersNearEntity(this, 30, player ->
-                player.sendSystemMessage(Component.translatable("fromanotherworld.announcement.alien_escaped").withStyle(this.deathMessageStyle()))
-        );
     }
 
     private boolean burrowingOrEmerging(){
@@ -174,11 +179,6 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
     protected void customServerAiStep() {
         if (!this.level().isClientSide()){
             if (!this.isThingFrozen()){
-                //Player player = this.level().getNearestPlayer(this, -1.0F);
-                //if (player == null || player.distanceToSqr(this) > 16384){
-                //    this.leave();
-                //    return;
-                //}
                 switchTimer++;
                 if (switchTimer > 1800){
                     this.switchTimer = 0;
@@ -215,8 +215,14 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
     @Override
     public void threeSecondDelayServerTick() {
         super.threeSecondDelayServerTick();
-        if (this.tickCount % 240 == 0 && Config.WORLD_CONFIG.alienChunkLoading.get()) {
-            FAWChunkLoader.create((ServerLevel) this.level(), (int) this.getX(), (int) this.getZ(), 3, 2);
+        if (this.tickCount % 300 == 0) {
+            this.createChunkLoader();
+        }
+    }
+
+    private void createChunkLoader() {
+        if (Config.WORLD_CONFIG.alienChunkLoading.get()) {
+            FAWChunkLoader.create((ServerLevel) this.level(), (int) this.getX(), (int) this.getZ(), 5, 2);
         }
     }
 
@@ -260,6 +266,14 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
             }
         }
         super.aiStep();
+    }
+
+    @Override
+    public boolean hurt(DamageSource source, float amount) {
+        if (this.burrowingOrEmerging()) {
+            return false;
+        }
+        return super.hurt(source, amount);
     }
 
     private void initiateSwitch(){

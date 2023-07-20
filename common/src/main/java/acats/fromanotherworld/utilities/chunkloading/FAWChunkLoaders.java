@@ -66,8 +66,10 @@ public class FAWChunkLoaders extends SavedData {
                 markedForRemoval.add(l);
             }
         }
-        this.activeLoaders.removeAll(markedForRemoval);
-        this.setDirty();
+        if (this.activeLoaders.removeAll(markedForRemoval)){
+            this.loadUp(level);
+            this.setDirty();
+        }
     }
 
     public void loadUp(ServerLevel level){

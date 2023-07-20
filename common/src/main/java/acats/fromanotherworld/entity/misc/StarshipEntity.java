@@ -24,9 +24,11 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import org.jetbrains.annotations.Nullable;
 
 public class StarshipEntity extends Mob implements GeoEntity {
@@ -65,6 +67,7 @@ public class StarshipEntity extends Mob implements GeoEntity {
                 Thing thing = EntityRegistry.ALIEN_THING.get().create(this.level());
                 if (thing != null) {
                     thing.setPos(this.position());
+                    thing.finalizeSpawn((ServerLevelAccessor) this.level(), this.level().getCurrentDifficultyAt(this.blockPosition()), MobSpawnType.EVENT, null, null);
                     this.level().addFreshEntity(thing);
                 }
                 this.setReleasedContents(true);

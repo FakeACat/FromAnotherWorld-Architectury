@@ -48,6 +48,7 @@ public class ImpostorDetectorItem extends Item {
                     user.sendSystemMessage(Component.literal(" -Minutes until deletion: " + l.ticksUntilRemoval));
                     i++;
                 }
+                user.sendSystemMessage(Component.literal(((ServerLevel) world).getForcedChunks().size() + " chunks forced"));
             }
         }
         else{

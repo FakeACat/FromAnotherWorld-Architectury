@@ -51,9 +51,9 @@ public class FAWChunkLoader {
         for (int x = this.chunkCentreX - this.radius; x <= this.chunkCentreX + this.radius; x++) {
             for (int z = this.chunkCentreZ - this.radius; z <= this.chunkCentreZ + this.radius; z++) {
                 level.setChunkForced(x, z, bl);
-                if (bl) {
-                    level.startTickingChunk(level.getChunk(x, z));
-                }
+                //if (bl) {
+                //    level.startTickingChunk(level.getChunk(x, z));
+                //}
             }
         }
     }

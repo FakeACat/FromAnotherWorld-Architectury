@@ -22,8 +22,4 @@ public class CommonWorldEvents {
             FAWChunkLoaders.getChunkLoaders(world).tick(world);
         }
     }
-
-    public static void serverLevelLoad(ServerLevel level){
-        FAWChunkLoaders.getChunkLoaders(level).loadUp(level);
-    }
 }

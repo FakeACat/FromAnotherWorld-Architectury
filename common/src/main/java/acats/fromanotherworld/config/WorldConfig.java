@@ -13,7 +13,7 @@ public class WorldConfig extends FAWConfig {
 
     public final FAWConfigBooleanProperty alienChunkLoading = new FAWConfigBooleanProperty(
             "alien_thing_chunk_loading",
-            "Should the Alien Thing be able to keep chunks around it loaded?",
+            "Should the Alien Thing be able to keep chunks around it loaded? May cause issues with other mods that load chunks",
             true
     );
 

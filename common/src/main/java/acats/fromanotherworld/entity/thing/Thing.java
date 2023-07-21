@@ -6,7 +6,7 @@ import acats.fromanotherworld.config.Config;
 import acats.fromanotherworld.constants.VariantID;
 import acats.fromanotherworld.entity.goal.ThingTargetGoal;
 import acats.fromanotherworld.entity.interfaces.MaybeThing;
-import acats.fromanotherworld.entity.navigation.ThingClimberNavigation;
+import acats.fromanotherworld.entity.navigation.ThingNavigation;
 import acats.fromanotherworld.entity.projectile.NeedleEntity;
 import acats.fromanotherworld.registry.BlockRegistry;
 import acats.fromanotherworld.registry.SoundRegistry;
@@ -15,7 +15,6 @@ import acats.fromanotherworld.tags.DamageTypeTags;
 import acats.fromanotherworld.tags.EntityTags;
 import acats.fromanotherworld.utilities.EntityUtilities;
 import acats.fromanotherworld.utilities.ServerUtilities;
-import mod.azure.azurelib.ai.pathing.AzureNavigation;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimationState;
@@ -56,6 +55,7 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
     private static final EntityDataAccessor<Boolean> HIBERNATING;
     private static final EntityDataAccessor<Float> COLD;
     private static final EntityDataAccessor<Boolean> CLIMBING;
+    private static final EntityDataAccessor<Boolean> ON_CEILING;
     protected Thing(EntityType<? extends Monster> entityType, Level world) {
         super(entityType, world);
         this.xpReward = this.getThingCategory().getXpReward();
@@ -78,7 +78,7 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
 
     @Override
     protected @NotNull PathNavigation createNavigation(Level world) {
-        return this.canClimb() ? new ThingClimberNavigation(this, world) : new AzureNavigation(this, world);
+        return new ThingNavigation(this, world);
     }
 
     @Override
@@ -94,7 +94,7 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
     public LivingEntity currentThreat;
     private int timeSinceLastSeenTarget = 0;
     private int alertSoundCooldown = 0;
-    private int climbStamina = 300;
+    private boolean stopClimbing = false;
 
 
     private final AnimatableInstanceCache animatableInstanceCache = AzureLibUtil.createInstanceCache(this);
@@ -127,6 +127,13 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
         this.entityData.set(CLIMBING, climbingWall);
     }
 
+    public boolean isOnCeiling(){
+        return this.entityData.get(ON_CEILING);
+    }
+    public void setOnCeiling(boolean onCeiling){
+        this.entityData.set(ON_CEILING, onCeiling);
+    }
+
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
@@ -134,6 +141,7 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
         this.entityData.define(HIBERNATING, false);
         this.entityData.define(COLD, 0.0F);
         this.entityData.define(CLIMBING, false);
+        this.entityData.define(ON_CEILING, false);
     }
 
     @Override
@@ -188,7 +196,7 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
     public float climbRotateProgress = 0.0F;
     public float nextClimbRotateProgress = 0.0F;
     public boolean movingClimbing(){
-        return this.onClimbable() && !this.isColliding(this.blockPosition(), this.level().getBlockState(this.blockPosition().above()));
+        return this.onClimbable() && !this.isOnCeiling();
     }
 
     @Override
@@ -241,15 +249,7 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
         super.tick();
         if (!this.level().isClientSide()){
             if (this.canClimb()){
-                if (--this.climbStamina > 0) {
-                    this.setClimbingWall(this.horizontalCollision);
-                }
-                else{
-                    this.setClimbingWall(false);
-                }
-                if (this.onGround()) {
-                    this.climbStamina = 300;
-                }
+                this.tickClimb();
             }
 
             if (this.tickCount % 10 == 0){
@@ -261,14 +261,7 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
         }
         else {
             if (this.rotateWhenClimbing()){
-                if (this.onClimbable()) {
-                    this.climbRotateProgress = this.nextClimbRotateProgress;
-                    this.nextClimbRotateProgress = Math.min(this.climbRotateProgress + 0.05F, 1.0F);
-                }
-                else {
-                    this.climbRotateProgress = this.nextClimbRotateProgress;
-                    this.nextClimbRotateProgress = Math.max(this.climbRotateProgress - 0.1F, 0.0F);
-                }
+                this.tickClimbRotation();
             }
         }
         if (this.getAlertSound() != null){
@@ -279,6 +272,34 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
                 alertSoundCooldown = 6000;
                 this.playSound(this.getAlertSound(), this.getSoundVolume(), this.getVoicePitch());
             }
+        }
+    }
+
+    private void tickClimb() {
+        boolean bl = this.verticalCollision && !this.verticalCollisionBelow;
+        this.setOnCeiling(bl);
+        if (!this.stopClimbing) {
+            this.setClimbingWall(this.horizontalCollision);
+            if (bl && this.canGrief) {
+                this.grief(1, 3);
+            }
+        }
+        else{
+            this.setClimbingWall(false);
+        }
+        if (this.onGround()) {
+            this.stopClimbing = false;
+        }
+    }
+
+    private void tickClimbRotation() {
+        if (this.onClimbable()) {
+            this.climbRotateProgress = this.nextClimbRotateProgress;
+            this.nextClimbRotateProgress = Math.min(this.climbRotateProgress + 0.05F, 1.0F);
+        }
+        else {
+            this.climbRotateProgress = this.nextClimbRotateProgress;
+            this.nextClimbRotateProgress = Math.max(this.climbRotateProgress - 0.1F, 0.0F);
         }
     }
 
@@ -303,9 +324,6 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
     public void threeSecondDelayServerTick(){
         if (this.canThingFreeze())
             this.tickFreeze();
-
-        if (this.canGrief && this.onClimbable())
-            this.grief(1, 3);
 
         if (this.getTarget() == null){
             this.timeSinceLastSeenTarget++;
@@ -617,5 +635,6 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
         HIBERNATING = SynchedEntityData.defineId(Thing.class, EntityDataSerializers.BOOLEAN);
         COLD = SynchedEntityData.defineId(Thing.class, EntityDataSerializers.FLOAT);
         CLIMBING = SynchedEntityData.defineId(Thing.class, EntityDataSerializers.BOOLEAN);
+        ON_CEILING = SynchedEntityData.defineId(Thing.class, EntityDataSerializers.BOOLEAN);
     }
 }

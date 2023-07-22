@@ -1,5 +1,8 @@
 {
   "values": [
-    "#minecraft:wither_immune"
+    "#minecraft:wither_immune",
+    "#minecraft:shulker_boxes",
+    "minecraft:chest",
+    "minecraft:barrel"
   ]
 }

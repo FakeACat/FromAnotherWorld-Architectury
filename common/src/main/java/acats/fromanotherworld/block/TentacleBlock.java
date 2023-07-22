@@ -205,7 +205,7 @@ public class TentacleBlock extends FleshBlock implements Gore {
                 this.spread(serverLevel, blockPos, blockState);
             }
 
-            if (blockState.getValue(SURFACE) == Direction.DOWN){
+            if (blockState.getValue(SURFACE) == Direction.DOWN && serverLevel.getRandom().nextInt(5) == 0){
                 int assimilables = EntityUtilities.numAssimilablesInList(EntityUtilities.nearbyEntities(serverLevel, new Vec3i(blockPos.getX(), blockPos.getY(), blockPos.getZ()), 8, 4));
                 if (assimilables > 0){
                     this.spawnThingFromGore(serverLevel, blockPos);

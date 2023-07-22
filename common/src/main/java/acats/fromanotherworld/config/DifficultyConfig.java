@@ -74,6 +74,11 @@ public class DifficultyConfig extends FAWConfig {
             null,
             800
     );
+    public final FAWConfigBooleanProperty burrowing = new FAWConfigBooleanProperty(
+            "burrowing",
+            "Most Things should be able to burrow if they cannot reach where they are trying to pathfind to",
+            false
+    );
 
     @Override
     FAWConfigProperty<?>[] properties() {
@@ -89,7 +94,8 @@ public class DifficultyConfig extends FAWConfig {
                 this.dogBeastMergeChance,
                 this.impalerMergeChance,
                 this.prowlerMergeChance,
-                this.beastMergeChance
+                this.beastMergeChance,
+                this.burrowing
         };
     }
 }

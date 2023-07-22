@@ -16,15 +16,12 @@ import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.BlockParticleOption;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
@@ -40,8 +37,6 @@ import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -119,14 +114,13 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
         return 1.0F - (1.0F - this.getSwitchProgress() / 50.0F) * (1.0F - this.getSwitchProgress() / 50.0F);
     }
 
-    private static final int EMERGE_TIME_TICKS = 50;
     private static final float ANIMATION_SPEED_MULTIPLIER = 2.0F;
     private boolean isEmerging(){
         return this.entityData.get(EMERGING) > 0;
     }
     public void tickEmerging(){
         int emerging = this.entityData.get(EMERGING);
-        if (emerging > EMERGE_TIME_TICKS)
+        if (emerging > EMERGE_TIME)
             emerging = -1;
         this.entityData.set(EMERGING, emerging + 1);
     }
@@ -135,7 +129,7 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
     }
     private void tickBurrowing(){
         int burrowing = this.entityData.get(BURROWING);
-        if (burrowing > EMERGE_TIME_TICKS) {
+        if (burrowing > EMERGE_TIME) {
             this.leave();
             return;
         }
@@ -228,7 +222,7 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
 
     @Override
     public boolean canClimb() {
-        return !this.fleeing;
+        return super.canClimb() && !this.fleeing;
     }
 
     @Override
@@ -254,16 +248,7 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
             }
         }
         if (this.burrowingOrEmerging()){
-            RandomSource random = this.getRandom();
-            BlockState blockState = this.getBlockStateOn();
-            if (blockState.getRenderShape() != RenderShape.INVISIBLE) {
-                for(int i = 0; i < 30; ++i) {
-                    double d = this.getX() + (double)Mth.randomBetween(random, -0.7F, 0.7F);
-                    double e = this.getY();
-                    double f = this.getZ() + (double)Mth.randomBetween(random, -0.7F, 0.7F);
-                    this.level().addParticle(new BlockParticleOption(ParticleTypes.BLOCK, blockState), d, e, f, 0.0, 0.0, 0.0);
-                }
-            }
+            this.digParticles();
         }
         super.aiStep();
     }
@@ -347,9 +332,9 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
     }
 
     private <E extends GeoEntity> PlayState predicate(AnimationState<E> event) {
-        if (this.burrowingOrEmerging()){
+        if (this.burrowingOrEmerging() || this.isThingBurrowing() || this.isThingEmerging()){
             event.getController().setAnimationSpeed(ANIMATION_SPEED_MULTIPLIER);
-            if (this.isBurrowing()){
+            if (this.isBurrowing() || this.isThingBurrowing()){
                 event.getController().setAnimation(RawAnimation.begin().thenPlay(this.currentAnimation() + ".burrow"));
             }
             else{
@@ -450,6 +435,16 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
     @Override
     public ThingCategory getThingCategory() {
         return ThingCategory.SPECIAL_MINIBOSS;
+    }
+
+    @Override
+    public BurrowType getBurrowType() {
+        return BurrowType.CAN_BURROW;
+    }
+
+    @Override
+    public float getBurrowDepth() {
+        return 0.0F;
     }
 
     static {

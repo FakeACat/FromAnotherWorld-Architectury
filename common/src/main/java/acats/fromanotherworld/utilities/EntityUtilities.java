@@ -9,6 +9,7 @@ import acats.fromanotherworld.events.CommonLivingEntityEvents;
 import acats.fromanotherworld.registry.EntityRegistry;
 import acats.fromanotherworld.registry.StatusEffectRegistry;
 import acats.fromanotherworld.tags.BlockTags;
+
 import java.util.List;
 import java.util.Random;
 
@@ -30,6 +31,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 import static acats.fromanotherworld.tags.EntityTags.*;
 
@@ -183,5 +185,16 @@ public class EntityUtilities {
 
     public static boolean isThingAlly(Entity e){
         return e.getType().is(THING_ALLIES) || isThing(e);
+    }
+
+    public static boolean couldEntityFit(Entity entity, double x, double y, double z) {
+        float w = entity.getBbWidth() / 2;
+        float h = entity.getBbHeight();
+        for (VoxelShape voxelShape : entity.level().getBlockCollisions(entity, new AABB(x - w, y, z - w, x + w, y + h, z + w))) {
+            if (!voxelShape.isEmpty()) {
+                return false;
+            }
+        }
+        return true;
     }
 }

@@ -20,6 +20,8 @@ import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.util.AzureLibUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -43,6 +45,7 @@ import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -55,7 +58,11 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
     private static final EntityDataAccessor<Boolean> HIBERNATING;
     private static final EntityDataAccessor<Float> COLD;
     private static final EntityDataAccessor<Boolean> CLIMBING;
-    private static final EntityDataAccessor<Boolean> ON_CEILING;
+    private static final EntityDataAccessor<Integer> BURROW_PROGRESS;
+    public static final int BURROW_TIME = 50;
+    public static final int UNDERGROUND_TIME = 60;
+    public static final int EMERGE_TIME = 50;
+    private static final int BURROW_COOLDOWN = 600;
     protected Thing(EntityType<? extends Monster> entityType, Level world) {
         super(entityType, world);
         this.xpReward = this.getThingCategory().getXpReward();
@@ -121,18 +128,28 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
     }
 
     public boolean isClimbingWall(){
-        return this.entityData.get(CLIMBING);
+        return this.entityData.get(CLIMBING) && this.canClimb();
     }
     public void setClimbingWall(boolean climbingWall){
         this.entityData.set(CLIMBING, climbingWall);
     }
 
-    public boolean isOnCeiling(){
-        return this.entityData.get(ON_CEILING);
+    public int getBurrowProgress() {
+        return this.entityData.get(BURROW_PROGRESS);
     }
-    public void setOnCeiling(boolean onCeiling){
-        this.entityData.set(ON_CEILING, onCeiling);
+    public void setBurrowProgress(int burrowProgress) {
+        this.entityData.set(BURROW_PROGRESS, burrowProgress);
     }
+    public boolean isThingBurrowing() {
+        return this.getBurrowProgress() != 0 && this.getBurrowProgress() < BURROW_TIME;
+    }
+    public boolean isThingUnderground() {
+        return this.getBurrowProgress() >= BURROW_TIME && this.getBurrowProgress() <= BURROW_TIME + UNDERGROUND_TIME;
+    }
+    public boolean isThingEmerging() {
+        return this.getBurrowProgress() > BURROW_TIME + UNDERGROUND_TIME;
+    }
+    private int burrowCooldown = 0;
 
     @Override
     protected void defineSynchedData() {
@@ -141,7 +158,7 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
         this.entityData.define(HIBERNATING, false);
         this.entityData.define(COLD, 0.0F);
         this.entityData.define(CLIMBING, false);
-        this.entityData.define(ON_CEILING, false);
+        this.entityData.define(BURROW_PROGRESS, 0);
     }
 
     @Override
@@ -196,7 +213,7 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
     public float climbRotateProgress = 0.0F;
     public float nextClimbRotateProgress = 0.0F;
     public boolean movingClimbing(){
-        return this.onClimbable() && !this.isOnCeiling();
+        return this.onClimbable();
     }
 
     @Override
@@ -248,10 +265,21 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
     public void tick() {
         super.tick();
         if (!this.level().isClientSide()){
+            if (this.burrowCooldown > 0) {
+                burrowCooldown--;
+            }
+            if (this.getBurrowProgress() > 0){
+                this.setBurrowProgress(this.getBurrowProgress() + 1);
+                if (this.getBurrowProgress() == BURROW_TIME + UNDERGROUND_TIME / 2) {
+                    this.randomTeleport(this.burrowX + 0.5D, this.burrowY, this.burrowZ + 0.5D, false);
+                }
+                if (this.getBurrowProgress() == BURROW_TIME + UNDERGROUND_TIME + EMERGE_TIME) {
+                    this.setBurrowProgress(0);
+                }
+            }
             if (this.canClimb()){
                 this.tickClimb();
             }
-
             if (this.tickCount % 10 == 0){
                 this.halfSecondDelayServerTick();
                 if (this.tickCount % 60 == 0){
@@ -260,6 +288,9 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
             }
         }
         else {
+            if (this.isThingBurrowing() || this.isThingEmerging()) {
+                this.digParticles();
+            }
             if (this.rotateWhenClimbing()){
                 this.tickClimbRotation();
             }
@@ -276,18 +307,21 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
     }
 
     private void tickClimb() {
-        boolean bl = this.verticalCollision && !this.verticalCollisionBelow;
-        this.setOnCeiling(bl);
         if (!this.stopClimbing) {
             this.setClimbingWall(this.horizontalCollision);
-            if (bl && this.canGrief) {
-                this.grief(1, 3);
+            if (this.verticalCollision && !this.verticalCollisionBelow) {
+                if (this.canGrief) {
+                    this.grief(1, 3);
+                }
+                else {
+                    this.stopClimbing = true;
+                }
             }
         }
         else{
             this.setClimbingWall(false);
         }
-        if (this.onGround()) {
+        if (this.onGround() && this.getRandom().nextInt(60) == 0) {
             this.stopClimbing = false;
         }
     }
@@ -375,13 +409,51 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
         }
     }
 
+    public void digParticles() {
+        RandomSource random = this.getRandom();
+        BlockState blockState = this.getBlockStateOn();
+        if (blockState.getRenderShape() != RenderShape.INVISIBLE) {
+            for(int i = 0; i < 30; ++i) {
+                double d = this.getX() + (double)Mth.randomBetween(random, -0.7F, 0.7F);
+                double e = this.getY();
+                double f = this.getZ() + (double)Mth.randomBetween(random, -0.7F, 0.7F);
+                this.level().addParticle(new BlockParticleOption(ParticleTypes.BLOCK, blockState), d, e, f, 0.0, 0.0, 0.0);
+            }
+        }
+    }
+
     public void bored(){
 
     }
 
+    private int burrowX = 0;
+    private int burrowY = 0;
+    private int burrowZ = 0;
+
+    public void burrowTo(int x, int y, int z) {
+        if (this.canBurrow() && this.onGround() && EntityUtilities.couldEntityFit(this, x + 0.5D, y, z + 0.5D) && this.burrowCooldown == 0) {
+            this.burrowX = x;
+            this.burrowY = y;
+            this.burrowZ = z;
+            this.setBurrowProgress(1);
+            this.getNavigation().stop();
+            this.setDeltaMovement(0.0D, 0.0D, 0.0D);
+            this.burrowCooldown = BURROW_COOLDOWN;
+        }
+    }
+
+    public boolean canBurrow() {
+        return true;
+    }
+
+    @Override
+    public boolean isInvisible() {
+        return super.isInvisible() || this.isThingUnderground();
+    }
+
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        if (this.isThingFrozen() && source == this.level().damageSources().inWall()){
+        if (this.getBurrowProgress() > 0 || (this.isThingFrozen() && source == this.level().damageSources().inWall())){
             return false;
         }
         if (source.getEntity() != null && EntityUtilities.isThingAlly(source.getEntity())){
@@ -536,7 +608,7 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
 
     @Override
     public boolean isNoAi() {
-        return super.isNoAi() || this.isThingFrozen();
+        return super.isNoAi() || this.isThingFrozen() || this.getBurrowProgress() > 0;
     }
 
     @Override
@@ -597,6 +669,20 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
         return true;
     }
 
+    public enum BurrowType {
+        CANNOT_BURROW,
+        REQUIRES_TUNNEL,
+        CAN_BURROW
+    }
+
+    public BurrowType getBurrowType() {
+        return Config.DIFFICULTY_CONFIG.burrowing.get() ? BurrowType.CAN_BURROW : BurrowType.REQUIRES_TUNNEL;
+    }
+
+    public float getBurrowDepth() {
+        return this.getBbHeight() + 0.5F;
+    }
+
     public enum ThingCategory {
         REVEALED(false, 0.25F, 10),
         FODDER(false, 1.0F, 6),
@@ -635,6 +721,6 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
         HIBERNATING = SynchedEntityData.defineId(Thing.class, EntityDataSerializers.BOOLEAN);
         COLD = SynchedEntityData.defineId(Thing.class, EntityDataSerializers.FLOAT);
         CLIMBING = SynchedEntityData.defineId(Thing.class, EntityDataSerializers.BOOLEAN);
-        ON_CEILING = SynchedEntityData.defineId(Thing.class, EntityDataSerializers.BOOLEAN);
+        BURROW_PROGRESS = SynchedEntityData.defineId(Thing.class, EntityDataSerializers.INT);
     }
 }

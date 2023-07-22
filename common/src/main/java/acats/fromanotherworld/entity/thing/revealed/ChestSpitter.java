@@ -141,6 +141,11 @@ public class ChestSpitter extends Thing {
         return ThingCategory.REVEALED;
     }
 
+    @Override
+    public BurrowType getBurrowType() {
+        return BurrowType.CANNOT_BURROW;
+    }
+
     static class LookAtTargetGoal extends Goal {
         private final ChestSpitter spitter;
 

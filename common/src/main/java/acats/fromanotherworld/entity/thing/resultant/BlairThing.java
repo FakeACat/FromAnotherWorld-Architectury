@@ -240,6 +240,11 @@ public class BlairThing extends MinibossThing {
         controllerRegistrar.add(new AnimationController<>(this, "attackController", 0, this::predicate2));
     }
 
+    @Override
+    public BurrowType getBurrowType() {
+        return BurrowType.CANNOT_BURROW;
+    }
+
     static {
         MOVE_COOLDOWN = SynchedEntityData.defineId(BlairThing.class, EntityDataSerializers.INT);
         ATTACK = SynchedEntityData.defineId(BlairThing.class, EntityDataSerializers.INT);

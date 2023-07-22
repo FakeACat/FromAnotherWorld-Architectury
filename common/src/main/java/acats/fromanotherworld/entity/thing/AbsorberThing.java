@@ -52,11 +52,17 @@ public abstract class AbsorberThing extends Thing implements TentacleThing {
         this.entityData.define(ABSORB_TARGET_ID, 0);
     }
 
+    public boolean absorbing() {
+        LivingEntity absorbTarget = this.getAbsorbTarget();
+        return absorbTarget != null && this.getAbsorbProgress() > 0 && absorbTarget.isAlive();
+    }
+
     @Override
     public void tick() {
         super.tick();
         LivingEntity absorbTarget = this.getAbsorbTarget();
-        if (absorbTarget != null && this.getAbsorbProgress() > 0 && absorbTarget.isAlive()){
+        if (this.absorbing()){
+            assert absorbTarget != null;
             this.tickAbsorb(absorbTarget);
         }
         else if (this.level().isClientSide()){
@@ -135,6 +141,11 @@ public abstract class AbsorberThing extends Thing implements TentacleThing {
             }
         }
         this.discard();
+    }
+
+    @Override
+    public boolean canBurrow() {
+        return !this.absorbing();
     }
 
     static {

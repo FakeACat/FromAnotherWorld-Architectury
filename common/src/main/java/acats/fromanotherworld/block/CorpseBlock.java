@@ -82,6 +82,11 @@ public class CorpseBlock extends BaseEntityBlock implements Gore {
         return state;
     }
 
+    @Override
+    public boolean connectsHorizontally(BlockState blockState, Direction surface) {
+        return surface == Direction.DOWN;
+    }
+
     public enum CorpseType implements StringRepresentable {
         HUMAN_1("human_1", 5),
         SMALL_1("small_1", 3),

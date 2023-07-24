@@ -1,14 +1,17 @@
 package acats.fromanotherworld.mixin;
 
+import acats.fromanotherworld.entity.interfaces.CoordinatedThing;
 import acats.fromanotherworld.entity.interfaces.MaybeThing;
 import acats.fromanotherworld.entity.interfaces.PossibleDisguisedThing;
 import acats.fromanotherworld.events.CommonLivingEntityEvents;
+import acats.fromanotherworld.memory.ThingBaseOfOperations;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -16,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin implements PossibleDisguisedThing, MaybeThing {
+public abstract class LivingEntityMixin implements PossibleDisguisedThing, MaybeThing, CoordinatedThing {
     @Unique
     private SynchedEntityData dataTracker(){
         return ((LivingEntity) (Object) this).getEntityData();
@@ -33,6 +36,8 @@ public abstract class LivingEntityMixin implements PossibleDisguisedThing, Maybe
     private boolean assimilated;
     @Unique
     private boolean sleeper;
+    @Unique
+    private ThingBaseOfOperations base = null;
 
     @Inject(at = @At("HEAD"), method = "addAdditionalSaveData")
     private void addAdditionalSaveData(CompoundTag nbt, CallbackInfo ci){
@@ -149,6 +154,16 @@ public abstract class LivingEntityMixin implements PossibleDisguisedThing, Maybe
     @Override
     public boolean faw$isThing() {
         return this.faw$isAssimilated();
+    }
+
+    @Override
+    public @Nullable ThingBaseOfOperations faw$getBase() {
+        return this.base;
+    }
+
+    @Override
+    public void faw$setBase(@Nullable ThingBaseOfOperations base) {
+        this.base = base;
     }
 
     static{

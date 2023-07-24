@@ -121,6 +121,11 @@ public abstract class MinibossThing extends AbsorberThing {
         return this.getTier() >= Config.DIFFICULTY_CONFIG.maxMinibossTier.get();
     }
 
+    @Override
+    public boolean canDisguise() {
+        return super.canDisguise() && this.getTier() == 0;
+    }
+
     static {
         TIER = SynchedEntityData.defineId(MinibossThing.class, EntityDataSerializers.INT);
     }

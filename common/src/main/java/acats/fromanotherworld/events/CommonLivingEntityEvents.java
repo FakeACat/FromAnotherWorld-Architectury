@@ -1,11 +1,13 @@
 package acats.fromanotherworld.events;
 
 import acats.fromanotherworld.config.Config;
+import acats.fromanotherworld.entity.interfaces.CoordinatedThing;
 import acats.fromanotherworld.entity.interfaces.PossibleDisguisedThing;
 import acats.fromanotherworld.entity.projectile.AssimilationLiquidEntity;
 import acats.fromanotherworld.entity.thing.Thing;
 import acats.fromanotherworld.entity.thing.TransitionEntity;
 import acats.fromanotherworld.entity.thing.revealed.ChestSpitter;
+import acats.fromanotherworld.memory.Aggression;
 import acats.fromanotherworld.registry.DamageTypeRegistry;
 import acats.fromanotherworld.registry.EntityRegistry;
 import acats.fromanotherworld.registry.ParticleRegistry;
@@ -25,6 +27,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import java.util.List;
+import java.util.Objects;
 
 public class CommonLivingEntityEvents {
     private static final int REVEAL_COOLDOWN = 12000;
@@ -46,7 +49,13 @@ public class CommonLivingEntityEvents {
     public static void serverEntityDeath(LivingEntity entity, DamageSource damageSource){
         PossibleDisguisedThing thing = ((PossibleDisguisedThing) entity);
         if (thing.faw$isAssimilated()){
-            EntityUtilities.angerNearbyThings(2, entity, damageSource.getEntity() instanceof LivingEntity e ? e : null);
+            Aggression aggression = ((CoordinatedThing) entity).faw$getAggression();
+            if (aggression != Aggression.HIDING) {
+                EntityUtilities.angerNearbyThings(aggression == Aggression.AGGRESSIVE ? 1 : 3, entity, damageSource.getEntity() instanceof LivingEntity e ? e : null);
+            }
+            if (((CoordinatedThing) entity).faw$hasBase()) {
+                Objects.requireNonNull(((CoordinatedThing) entity).faw$getDirector()).threaten();
+            }
             becomeResultant(entity);
         }
     }
@@ -58,6 +67,10 @@ public class CommonLivingEntityEvents {
                 entity.discard();
                 return;
             }
+            CoordinatedThing coordinatedThing = ((CoordinatedThing) entity);
+            if (entity.getRandom().nextInt(60) == 0) {
+                coordinatedThing.faw$updateBase();
+            }
             if (!thing.faw$isSleeper()){
                 if (thing.faw$getRevealTimer() <= REVEAL_COOLDOWN){
                     thing.faw$setRevealTimer(thing.faw$getRevealTimer() + 1);
@@ -65,7 +78,7 @@ public class CommonLivingEntityEvents {
                 if (thing.faw$getRevealTimer() > REVEAL_COOLDOWN && entity.getRandom().nextInt(60) == 0){
                     tryReveal(entity);
                 }
-                if (entity.getRandom().nextInt(9000) == 0){
+                if (coordinatedThing.faw$getAggression() != Aggression.HIDING && entity.getRandom().nextInt(coordinatedThing.faw$getAggression() == Aggression.AGGRESSIVE ? 900 : 9000) == 0){
                     tryBecomeResultant(entity);
                 }
                 thing.faw$setRevealed(Math.max(thing.faw$getRevealed() - 1, 0));
@@ -121,7 +134,9 @@ public class CommonLivingEntityEvents {
     public static void damage(LivingEntity entity, DamageSource damageSource){
         PossibleDisguisedThing thing = ((PossibleDisguisedThing) entity);
         if (thing.faw$isSleeper() && damageSource.getEntity() instanceof Player player && !entity.level().isClientSide()){
-            EntityUtilities.angerNearbyThings(1, entity, player);
+            if (((CoordinatedThing) entity).faw$getAggression() != Aggression.HIDING) {
+                EntityUtilities.angerNearbyThings(1, entity, player);
+            }
             for (int i = 0; i < 20; i++){
                 AssimilationLiquidEntity assimilationLiquid = new AssimilationLiquidEntity(entity.level(), entity.getX(), entity.getY(), entity.getZ());
                 assimilationLiquid.setDeltaMovement(new Vec3(entity.getRandom().nextDouble() - 0.5f, entity.getRandom().nextDouble(), entity.getRandom().nextDouble() - 0.5f));
@@ -159,11 +174,18 @@ public class CommonLivingEntityEvents {
     }
 
     private static void tryBecomeResultant(LivingEntity entity){
+        if (entity.level().isClientSide()) {
+            return;
+        }
+        if (((CoordinatedThing) entity).faw$getAggression() == Aggression.AGGRESSIVE || entity.level().getRandom().nextInt(7) == 0) {
+            becomeResultant(entity);
+            return;
+        }
         int entityCheckDist = 16;
         List<LivingEntity> nearbyEntities = entity.level().getEntitiesOfClass(LivingEntity.class, new AABB(entity.getX() - entityCheckDist, entity.getY() - entityCheckDist, entity.getZ() - entityCheckDist, entity.getX() + entityCheckDist, entity.getY() + entityCheckDist, entity.getZ() + entityCheckDist));
         int assimilables = EntityUtilities.numAssimilablesInList(nearbyEntities);
         int things = EntityUtilities.numThingsInList(nearbyEntities);
-        if (!entity.level().isClientSide() && (entity.getRandom().nextInt(20) == 0 || (things > 4 && assimilables <= 1))){
+        if (things > 4 && assimilables <= 1){
             becomeResultant(entity);
         }
     }

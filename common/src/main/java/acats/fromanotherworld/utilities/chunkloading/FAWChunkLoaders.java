@@ -16,7 +16,7 @@ public class FAWChunkLoaders extends SavedData {
         int i = 0;
         for (FAWChunkLoader l:
              this.activeLoaders) {
-            loaders = l.save(loaders, i);
+            loaders = l.toNBT(loaders, i);
             i++;
         }
         compoundTag.put("FAWChunkLoaders", loaders);

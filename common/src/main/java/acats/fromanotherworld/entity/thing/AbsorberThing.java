@@ -148,6 +148,11 @@ public abstract class AbsorberThing extends Thing implements TentacleThing {
         return !this.absorbing();
     }
 
+    @Override
+    public boolean canDisguise() {
+        return super.canDisguise() && !this.absorbing();
+    }
+
     static {
         ABSORB_PROGRESS = SynchedEntityData.defineId(AbsorberThing.class, EntityDataSerializers.INT);
         ABSORB_TARGET_ID = SynchedEntityData.defineId(AbsorberThing.class, EntityDataSerializers.INT);

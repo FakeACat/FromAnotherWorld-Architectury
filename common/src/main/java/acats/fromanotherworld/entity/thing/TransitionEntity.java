@@ -30,6 +30,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.UUID;
+
 import static acats.fromanotherworld.constants.VariantID.*;
 import static acats.fromanotherworld.tags.EntityTags.*;
 
@@ -86,9 +88,11 @@ public class TransitionEntity extends LivingEntity implements MaybeThing {
             fakeEntityNbt.putShort("HurtTime", (short) 0);
             fakeEntityNbt.putInt("HurtByTimestamp", 0);
             fakeEntityNbt.putShort("DeathTime", (short) 0);
+            fakeEntityNbt.putUUID("UUID", UUID.randomUUID());
             transitionEntity.setFakeEntityNbt(fakeEntityNbt);
             transitionEntity.absMoveTo(entity.getX(), entity.getY(), entity.getZ(), entity.getYRot(), entity.getXRot());
             transitionEntity.setSize(entity.getBbWidth(), entity.getBbHeight());
+            transitionEntity.setCustomName(entity.getCustomName());
             entity.level().addFreshEntity(transitionEntity);
         }
     }
@@ -265,11 +269,12 @@ public class TransitionEntity extends LivingEntity implements MaybeThing {
                 float scale = smaller ? 0.7F : 1.0F;
                 resizeableThing.setupScale(this.entityData.get(WIDTH) * scale, this.entityData.get(HEIGHT) * scale);
             }
+            thing.setCustomName(this.getCustomName());
             thing.moveTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), this.getXRot());
             thing.initializeFrom(this);
+            thing.setVictim(this.getFakeEntityNbt());
             this.level().addFreshEntity(thing);
         }
-        EntityUtilities.angerNearbyThings(2, this, null);
     }
 
     private void spawnCrawlers(int crawlers){

@@ -73,6 +73,11 @@ public class BloodCrawler extends Thing {
     }
 
     @Override
+    public boolean deathsCountForDirector() {
+        return false;
+    }
+
+    @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(VARIANT, random.nextInt(2));

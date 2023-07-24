@@ -1,6 +1,7 @@
 package acats.fromanotherworld.events;
 
 import acats.fromanotherworld.config.Config;
+import acats.fromanotherworld.memory.GlobalThingMemory;
 import acats.fromanotherworld.spawning.SpawningManager;
 import acats.fromanotherworld.utilities.chunkloading.FAWChunkLoaders;
 import net.minecraft.server.level.ServerLevel;
@@ -18,8 +19,9 @@ public class CommonWorldEvents {
             spawningManager.alienThingSpawner(world);
         }
 
-        if (world.getDayTime() % 1200 == 0){
+        if (world.getGameTime() % 1200 == 0){
             FAWChunkLoaders.getChunkLoaders(world).tick(world);
+            GlobalThingMemory.getGlobalThingMemory(world).tick();
         }
     }
 }

@@ -5,10 +5,14 @@ import acats.fromanotherworld.block.CorpseBlock;
 import acats.fromanotherworld.config.Config;
 import acats.fromanotherworld.constants.VariantID;
 import acats.fromanotherworld.entity.goal.ThingTargetGoal;
+import acats.fromanotherworld.entity.interfaces.CoordinatedThing;
 import acats.fromanotherworld.entity.interfaces.MaybeThing;
 import acats.fromanotherworld.entity.navigation.ThingNavigation;
 import acats.fromanotherworld.entity.projectile.NeedleEntity;
+import acats.fromanotherworld.memory.Aggression;
+import acats.fromanotherworld.memory.ThingBaseOfOperations;
 import acats.fromanotherworld.registry.BlockRegistry;
+import acats.fromanotherworld.registry.ParticleRegistry;
 import acats.fromanotherworld.registry.SoundRegistry;
 import acats.fromanotherworld.tags.BlockTags;
 import acats.fromanotherworld.tags.DamageTypeTags;
@@ -33,6 +37,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -53,12 +58,17 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
+
+public abstract class Thing extends Monster implements GeoEntity, MaybeThing, CoordinatedThing {
     private static final EntityDataAccessor<Byte> VARIANT_ID;
     private static final EntityDataAccessor<Boolean> HIBERNATING;
     private static final EntityDataAccessor<Float> COLD;
     private static final EntityDataAccessor<Boolean> CLIMBING;
     private static final EntityDataAccessor<Integer> BURROW_PROGRESS;
+    private static final EntityDataAccessor<Byte> DISGUISE_PROGRESS;
     public static final int BURROW_TIME = 50;
     public static final int UNDERGROUND_TIME = 60;
     public static final int EMERGE_TIME = 50;
@@ -83,6 +93,13 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
         }
     }
 
+    @Nullable
+    @Override
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor serverLevelAccessor, DifficultyInstance difficultyInstance, MobSpawnType mobSpawnType, @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag compoundTag) {
+        this.faw$updateBase();
+        return super.finalizeSpawn(serverLevelAccessor, difficultyInstance, mobSpawnType, spawnGroupData, compoundTag);
+    }
+
     @Override
     protected @NotNull PathNavigation createNavigation(Level world) {
         return new ThingNavigation(this, world);
@@ -102,6 +119,7 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
     private int timeSinceLastSeenTarget = 0;
     private int alertSoundCooldown = 0;
     private boolean stopClimbing = false;
+    private CompoundTag victim = null;
 
 
     private final AnimatableInstanceCache animatableInstanceCache = AzureLibUtil.createInstanceCache(this);
@@ -151,6 +169,18 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
     }
     private int burrowCooldown = 0;
 
+    public void setVictim(CompoundTag tag) {
+        this.victim = tag;
+        this.victim.putUUID("UUID", UUID.randomUUID());
+    }
+
+    public byte getDisguiseProgress() {
+        return this.entityData.get(DISGUISE_PROGRESS);
+    }
+    public void setDisguiseProgress(byte disguiseProgress) {
+        this.entityData.set(DISGUISE_PROGRESS, disguiseProgress);
+    }
+
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
@@ -159,6 +189,7 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
         this.entityData.define(COLD, 0.0F);
         this.entityData.define(CLIMBING, false);
         this.entityData.define(BURROW_PROGRESS, 0);
+        this.entityData.define(DISGUISE_PROGRESS, (byte) 0);
     }
 
     @Override
@@ -264,7 +295,13 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
     @Override
     public void tick() {
         super.tick();
-        if (!this.level().isClientSide()){
+        if (!this.level().isClientSide()) {
+            if (this.getDisguiseProgress() > 0) {
+                this.setDisguiseProgress((byte) (this.getDisguiseProgress() + 1));
+                if (this.getDisguiseProgress() == 60) {
+                    this.disguise();
+                }
+            }
             if (this.burrowCooldown > 0) {
                 burrowCooldown--;
             }
@@ -288,6 +325,11 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
             }
         }
         else {
+            if (this.getDisguiseProgress() > 0) {
+                for (int i = 0; i < this.getDisguiseProgress() / 3; i++) {
+                    this.level().addParticle(ParticleRegistry.THING_GORE, this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D), 0, 0, 0);
+                }
+            }
             if (this.isThingBurrowing() || this.isThingEmerging()) {
                 this.digParticles();
             }
@@ -355,7 +397,11 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
             }
         }
     }
+
     public void threeSecondDelayServerTick(){
+
+        this.faw$updateBase();
+
         if (this.canThingFreeze())
             this.tickFreeze();
 
@@ -381,6 +427,49 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
             this.playSound(SoundRegistry.STRONG_AMBIENT.get(), 1.0F, 0.4F);
             this.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 80, 6, false, false));
         }
+    }
+
+    public boolean canDisguise() {
+        return this.faw$getAggression() == Aggression.HIDING &&
+                this.victim != null &&
+                !this.isThingFrozen() &&
+                !this.isThingEmerging() &&
+                !this.isThingUnderground() &&
+                !this.isThingBurrowing();
+    }
+
+    private void disguise() {
+        if (!this.level().isClientSide()) {
+            Optional<Entity> optionalEntity = EntityType.create(this.victim, this.level());
+            @Nullable LivingEntity victimEntity = (LivingEntity) optionalEntity.orElse(null);
+            if (victimEntity != null) {
+                victimEntity.setHealth(victimEntity.getMaxHealth());
+                victimEntity.setRemainingFireTicks(this.getRemainingFireTicks());
+                victimEntity.removeAllEffects();
+                victimEntity.setPos(this.position());
+                victimEntity.setXRot(this.getXRot());
+                victimEntity.setYBodyRot(this.yBodyRot);
+                victimEntity.setYHeadRot(this.yHeadRot);
+                if (this.level().addFreshEntity(victimEntity)) {
+                    this.discard();
+                }
+                else {
+                    this.setDisguiseProgress((byte) 0);
+                }
+            }
+        }
+    }
+
+    private @Nullable ThingBaseOfOperations base = null;
+
+    @Override
+    public @Nullable ThingBaseOfOperations faw$getBase() {
+        return this.base;
+    }
+
+    @Override
+    public void faw$setBase(@Nullable ThingBaseOfOperations base) {
+        this.base = base;
     }
 
     public void grief(int yOffset, int chanceDenominator){
@@ -423,7 +512,9 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
     }
 
     public void bored(){
-
+        if (this.canDisguise()) {
+            this.setDisguiseProgress((byte) 1);
+        }
     }
 
     private int burrowX = 0;
@@ -461,7 +552,7 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
         }
         if (!this.level().isClientSide()){
             if (source.getEntity() instanceof LivingEntity e){
-                if (EntityUtilities.isVulnerable(this))
+                if (EntityUtilities.isVulnerable(this) && this.faw$getAggression() != Aggression.HIDING)
                     EntityUtilities.angerNearbyThings(10, this, e);
                 this.currentThreat = e;
                 if (this.canAttack(e)){
@@ -469,7 +560,7 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
                 }
             }
             else{
-                if (EntityUtilities.isVulnerable(this))
+                if (EntityUtilities.isVulnerable(this) && this.faw$getAggression() != Aggression.HIDING)
                     EntityUtilities.angerNearbyThings(10, this, null);
             }
         }
@@ -496,6 +587,10 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
         return false;
     }
 
+    public boolean deathsCountForDirector() {
+        return true;
+    }
+
     @Override
     public boolean doHurtTarget(Entity target) {
         if (EntityUtilities.assimilate(target, this.shouldMergeOnAssimilate() ? 10 : 1)){
@@ -513,6 +608,9 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
         super.die(damageSource);
         if (Config.GORE_CONFIG.enabled.get()) {
             this.attemptPlaceCorpse();
+        }
+        if (this.deathsCountForDirector() && this.faw$getDirector() != null) {
+            Objects.requireNonNull(this.faw$getDirector()).threaten();
         }
     }
 
@@ -638,6 +736,10 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
         if (this.isNoAi()) {
             nbt.putBoolean("NoAI", super.isNoAi());
         }
+
+        if (this.victim != null) {
+            nbt.put("Victim", this.victim);
+        }
     }
 
     @Override
@@ -653,6 +755,10 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
         this.setHibernating(nbt.getBoolean("Hibernating"));
         this.timeSinceLastSeenTarget = nbt.getInt("TimeSinceLastSeenTarget");
         this.setCold(nbt.getFloat("Cold"));
+
+        if (nbt.contains("Victim")) {
+            this.victim = nbt.getCompound("Victim");
+        }
     }
 
     @Override
@@ -722,5 +828,6 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing {
         COLD = SynchedEntityData.defineId(Thing.class, EntityDataSerializers.FLOAT);
         CLIMBING = SynchedEntityData.defineId(Thing.class, EntityDataSerializers.BOOLEAN);
         BURROW_PROGRESS = SynchedEntityData.defineId(Thing.class, EntityDataSerializers.INT);
+        DISGUISE_PROGRESS = SynchedEntityData.defineId(Thing.class, EntityDataSerializers.BYTE);
     }
 }

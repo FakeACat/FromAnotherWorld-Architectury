@@ -73,6 +73,7 @@ public class Crawler extends AbsorberThing {
 
     @Override
     public void bored() {
+        super.bored();
         this.setHibernating(true);
     }
 

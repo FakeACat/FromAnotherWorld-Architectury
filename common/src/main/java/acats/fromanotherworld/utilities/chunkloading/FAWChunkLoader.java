@@ -11,7 +11,7 @@ public class FAWChunkLoader {
         this.ticksUntilRemoval = ticksUntilRemoval;
     }
 
-    CompoundTag save(CompoundTag compoundTag, int num){
+    CompoundTag toNBT(CompoundTag compoundTag, int num){
         CompoundTag loaderTag = new CompoundTag();
         loaderTag.putInt("ChunkCentreX", this.chunkCentreX);
         loaderTag.putInt("ChunkCentreZ", this.chunkCentreZ);

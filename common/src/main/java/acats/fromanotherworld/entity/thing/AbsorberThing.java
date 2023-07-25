@@ -145,7 +145,7 @@ public abstract class AbsorberThing extends Thing implements TentacleThing {
 
     @Override
     public boolean canBurrow() {
-        return !this.absorbing();
+        return super.canBurrow() && !this.absorbing();
     }
 
     @Override

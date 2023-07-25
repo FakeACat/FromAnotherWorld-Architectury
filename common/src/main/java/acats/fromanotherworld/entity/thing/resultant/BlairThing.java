@@ -97,6 +97,7 @@ public class BlairThing extends MinibossThing {
         super.customServerAiStep();
     }
 
+    @SuppressWarnings("deprecation")
     private void teleport2(double x, double y, double z) {
         double g = y;
         BlockPos blockPos = BlockPos.containing(x, y, z);
@@ -238,11 +239,6 @@ public class BlairThing extends MinibossThing {
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "controller", 0, this::predicate));
         controllerRegistrar.add(new AnimationController<>(this, "attackController", 0, this::predicate2));
-    }
-
-    @Override
-    public BurrowType getBurrowType() {
-        return BurrowType.CANNOT_BURROW;
     }
 
     static {

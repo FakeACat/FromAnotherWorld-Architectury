@@ -26,16 +26,17 @@ public class ThingRenderer<T extends Thing> extends GeoEntityRenderer<T> {
 
     @Override
     public void preRender(PoseStack poseStack, T animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        if (!isReRender && animatable.getBurrowDepth() != 0.0F) {
+        if (!isReRender && animatable.getBurrowDepth() != 0.0F && animatable.getBurrowProgress() > 0) {
+            float burrowProgress = Mth.lerp(partialTick, animatable.prevClientBurrowProgress, animatable.clientBurrowProgress);
             float f = 0.0F;
             if (animatable.isThingBurrowing()) {
-                f = (float) animatable.getBurrowProgress() / Thing.BURROW_TIME;
+                f = burrowProgress / Thing.BURROW_TIME;
             }
             else if (animatable.isThingUnderground()) {
                 f = 1.0F;
             }
             else if (animatable.isThingEmerging()) {
-                f = 1.0F - (float) (animatable.getBurrowProgress() - Thing.BURROW_TIME - Thing.UNDERGROUND_TIME) / Thing.EMERGE_TIME;
+                f = 1.0F - (burrowProgress - Thing.BURROW_TIME - Thing.UNDERGROUND_TIME) / Thing.EMERGE_TIME;
             }
             poseStack.translate(0.0F, animatable.getBurrowDepth() * -f, 0.0F);
         }

@@ -69,4 +69,9 @@ public class Prowler extends AbsorberThing {
     public float offsetWhenClimbing() {
         return -0.5F;
     }
+
+    @Override
+    public BurrowType getBurrowType() {
+        return BurrowType.CANNOT_BURROW;
+    }
 }

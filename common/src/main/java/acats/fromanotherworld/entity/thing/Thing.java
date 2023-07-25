@@ -17,6 +17,7 @@ import acats.fromanotherworld.registry.SoundRegistry;
 import acats.fromanotherworld.tags.BlockTags;
 import acats.fromanotherworld.tags.DamageTypeTags;
 import acats.fromanotherworld.tags.EntityTags;
+import acats.fromanotherworld.utilities.BlockUtilities;
 import acats.fromanotherworld.utilities.EntityUtilities;
 import acats.fromanotherworld.utilities.ServerUtilities;
 import mod.azure.azurelib.animatable.GeoEntity;
@@ -54,6 +55,8 @@ import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -292,6 +295,9 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing, Co
         };
     }
 
+    public int prevClientBurrowProgress = 0;
+    public int clientBurrowProgress = 0;
+
     @Override
     public void tick() {
         super.tick();
@@ -332,6 +338,8 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing, Co
             }
             if (this.isThingBurrowing() || this.isThingEmerging()) {
                 this.digParticles();
+                this.prevClientBurrowProgress = this.clientBurrowProgress;
+                this.clientBurrowProgress = this.getBurrowProgress();
             }
             if (this.rotateWhenClimbing()){
                 this.tickClimbRotation();
@@ -472,30 +480,8 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing, Co
         this.base = base;
     }
 
-    public void grief(int yOffset, int chanceDenominator){
-        if (!this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
-            return;
-        }
-        int l = Mth.floor(this.getY()) + yOffset;
-        int m = Mth.floor(this.getX());
-        int n = Mth.floor(this.getZ());
-
-        int size = Mth.floor(1 + this.getDimensions(this.getPose()).width / 2);
-
-        for(int o = -size; o <= size; ++o) {
-            for(int p = -size; p <= size; ++p) {
-                for(int q = 0; q <= size + 2; ++q) {
-                    int r = m + o;
-                    int s = l + q;
-                    int t = n + p;
-                    BlockPos blockPos = new BlockPos(r, s, t);
-                    BlockState blockState = this.level().getBlockState(blockPos);
-                    if (EntityUtilities.canThingDestroy(blockState) && random.nextInt(chanceDenominator) == 0) {
-                        this.level().destroyBlock(blockPos, false, this);
-                    }
-                }
-            }
-        }
+    public void grief(int yOffset, int chanceDenominator) {
+        BlockUtilities.grief(this.level(), Mth.floor(1 + this.getDimensions(this.getPose()).width / 2), Mth.floor(this.getX()), Mth.floor(this.getY()) + yOffset, Mth.floor(this.getZ()), this, chanceDenominator);
     }
 
     public void digParticles() {
@@ -522,7 +508,7 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing, Co
     private int burrowZ = 0;
 
     public void burrowTo(int x, int y, int z) {
-        if (this.canBurrow() && this.onGround() && EntityUtilities.couldEntityFit(this, x + 0.5D, y, z + 0.5D) && this.burrowCooldown == 0) {
+        if (this.canBurrow() && this.onGround() && EntityUtilities.couldEntityFit(this, x + 0.5D, y, z + 0.5D)) {
             this.burrowX = x;
             this.burrowY = y;
             this.burrowZ = z;
@@ -534,7 +520,7 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing, Co
     }
 
     public boolean canBurrow() {
-        return true;
+        return this.burrowCooldown == 0;
     }
 
     @Override
@@ -618,19 +604,22 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing, Co
         if (!this.level().isClientSide() &&
                 this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) &&
                 BlockRegistry.CORPSE.get().defaultBlockState().canSurvive(this.level(), this.blockPosition()) &&
-                this.level().getBlockState(this.blockPosition()).canBeReplaced() &&
-                this.level().getBlockState(this.blockPosition()).getFluidState().isEmpty()){
+                this.level().getBlockState(this.blockPosition()).canBeReplaced()){
+
+            FluidState fluidState = this.level().getBlockState(this.blockPosition()).getFluidState();
 
             CorpseBlock.CorpseType corpseType = this.getSuitableCorpse();
 
-            if (corpseType == null){
+            if (fluidState.isEmpty() && corpseType == null){
                 this.level().setBlockAndUpdate(this.blockPosition(), BlockRegistry.THING_GORE.get().defaultBlockState());
                 return;
             }
 
-            this.level().setBlockAndUpdate(this.blockPosition(),
-                    CorpseBlock.setCorpseType(BlockRegistry.CORPSE.get()
-                            .defaultBlockState().rotate(Rotation.getRandom(this.getRandom())), corpseType));
+            if (fluidState.isEmpty() || fluidState.is(Fluids.WATER)) {
+                this.level().setBlockAndUpdate(this.blockPosition(),
+                        CorpseBlock.setCorpseType(BlockRegistry.CORPSE.get()
+                                .defaultBlockState().rotate(Rotation.getRandom(this.getRandom())), corpseType).setValue(CorpseBlock.WATERLOGGED, fluidState.is(Fluids.WATER)));
+            }
         }
     }
 

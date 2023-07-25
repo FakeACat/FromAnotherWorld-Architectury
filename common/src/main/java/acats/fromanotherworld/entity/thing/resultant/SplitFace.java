@@ -83,4 +83,9 @@ public class SplitFace extends AbsorberThing implements StalkerThing {
     public void setStalkTarget(Player stalkTarget) {
         this.stalkTarget = stalkTarget;
     }
+
+    @Override
+    public BurrowType getBurrowType() {
+        return BurrowType.CANNOT_BURROW;
+    }
 }

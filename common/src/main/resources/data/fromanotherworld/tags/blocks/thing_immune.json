@@ -3,6 +3,11 @@
     "#minecraft:wither_immune",
     "#minecraft:shulker_boxes",
     "minecraft:chest",
-    "minecraft:barrel"
+    "minecraft:barrel",
+    "fromanotherworld:thing_gore",
+    "fromanotherworld:corpse",
+    "fromanotherworld:tentacle",
+    "fromanotherworld:wall_palmer",
+    "fromanotherworld:tunnel"
   ]
 }

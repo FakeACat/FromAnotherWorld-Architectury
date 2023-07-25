@@ -1,11 +1,14 @@
 package acats.fromanotherworld.entity.navigation;
 
 import acats.fromanotherworld.entity.thing.Thing;
+import acats.fromanotherworld.registry.BlockRegistry;
+import acats.fromanotherworld.utilities.BlockUtilities;
 import mod.azure.azurelib.ai.pathing.AzureNavigation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.game.DebugPackets;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.Vec3;
@@ -40,13 +43,24 @@ public class ThingNavigation extends AzureNavigation {
         return super.moveTo(entity, d);
     }
 
+    private int desiredX;
+    private int desiredY;
+    private int desiredZ;
+    private boolean foundExit;
+
     @Override
     public void tick() {
-        if (this.thing.getBurrowType() == Thing.BurrowType.CAN_BURROW &&
-                this.path != null &&
-                this.thing.getRandom().nextInt(4) == 0 &&
-                !this.path.canReach()) {
-            this.thing.burrowTo(this.path.getTarget().getX(), this.path.getTarget().getY(), this.path.getTarget().getZ());
+        if (this.path != null && !this.path.canReach()) {
+            if (this.thing.getBurrowType() == Thing.BurrowType.REQUIRES_TUNNEL && this.thing.canBurrow()) {
+                this.foundExit = false;
+                BlockUtilities.forEachBlockInCubeCentredAt(new BlockPos(this.path.getTarget().getX(), this.path.getTarget().getY(), this.path.getTarget().getZ()), 3, this::findExitTunnel);
+                if (this.foundExit) {
+                    BlockUtilities.forEachBlockInCubeCentredAt(this.thing.blockPosition(), (int) this.thing.getAttributeValue(Attributes.FOLLOW_RANGE) / 2, this::tryUseTunnel);
+                }
+            }
+            else if (this.thing.getRandom().nextInt(4) == 0 && this.thing.getBurrowType() == Thing.BurrowType.CAN_BURROW) {
+                this.thing.burrowTo(this.path.getTarget().getX(), this.path.getTarget().getY(), this.path.getTarget().getZ());
+            }
         }
 
         // Modified version of tick() in AzureNavigation with a fix for entities spinning
@@ -64,6 +78,35 @@ public class ThingNavigation extends AzureNavigation {
         }
         if (this.getTargetPos() != null) {
             this.mob.getLookControl().setLookAt(this.getTargetPos().getX(), this.getTargetPos().getY(), this.getTargetPos().getZ());
+        }
+    }
+
+    private void findExitTunnel(BlockPos pos) {
+        if (!this.level.getBlockState(pos).is(BlockRegistry.TUNNEL_BLOCK.get())) {
+            return;
+        }
+
+        this.foundExit = true;
+        this.desiredX = pos.getX();
+        this.desiredY = pos.getY();
+        this.desiredZ = pos.getZ();
+    }
+
+    private void tryUseTunnel(BlockPos pos) {
+        if (!this.level.getBlockState(pos).is(BlockRegistry.TUNNEL_BLOCK.get())) {
+            return;
+        }
+
+        if (this.thing.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) < 2.25) {
+            this.thing.randomTeleport(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, false);
+            this.thing.burrowTo(this.desiredX, this.desiredY, this.desiredZ);
+        }
+
+        Path path1 = this.createPath(pos, 1);
+
+        if (path1 != null && path1.canReach()) {
+            this.path = path1;
+            this.thing.getMoveControl().setWantedPosition(path1.getTarget().getX(), path1.getTarget().getY(), path1.getTarget().getZ(), this.speedModifier);
         }
     }
 

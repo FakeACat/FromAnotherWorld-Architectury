@@ -24,6 +24,7 @@ import java.util.Objects;
 public abstract class MinibossThing extends AbsorberThing {
     private static final EntityDataAccessor<Integer> TIER;
 
+    @SuppressWarnings("deprecation")
     public MinibossThing(EntityType<? extends AbsorberThing> entityType, Level world) {
         super(entityType, world);
         this.fixupDimensions();
@@ -124,6 +125,11 @@ public abstract class MinibossThing extends AbsorberThing {
     @Override
     public boolean canDisguise() {
         return super.canDisguise() && this.getTier() == 0;
+    }
+
+    @Override
+    public BurrowType getBurrowType() {
+        return BurrowType.CANNOT_BURROW;
     }
 
     static {

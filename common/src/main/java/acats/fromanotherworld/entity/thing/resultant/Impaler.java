@@ -3,6 +3,7 @@ package acats.fromanotherworld.entity.thing.resultant;
 import acats.fromanotherworld.config.Config;
 import acats.fromanotherworld.constants.FAWAnimations;
 import acats.fromanotherworld.entity.goal.AbsorbGoal;
+import acats.fromanotherworld.entity.goal.DirectedWanderGoal;
 import acats.fromanotherworld.entity.interfaces.BurstAttackThing;
 import acats.fromanotherworld.entity.goal.ThingAttackGoal;
 import acats.fromanotherworld.entity.goal.ThingProjectileBurstGoal;
@@ -19,7 +20,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -57,7 +57,7 @@ public class Impaler extends ResizeableThing implements BurstAttackThing {
         this.goalSelector.addGoal(0, new ThingProjectileBurstGoal(this, 16.0F, 30));
         this.goalSelector.addGoal(1, new AbsorbGoal(this, STANDARD, Config.DIFFICULTY_CONFIG.impalerMergeChance.get()));
         this.goalSelector.addGoal(2, new ThingAttackGoal(this, 1.0D, false));
-        this.goalSelector.addGoal(3, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+        this.goalSelector.addGoal(3, new DirectedWanderGoal(this, 1.0D));
     }
 
     @Override

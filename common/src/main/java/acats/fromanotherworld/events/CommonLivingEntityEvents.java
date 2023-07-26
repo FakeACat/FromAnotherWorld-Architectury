@@ -8,6 +8,7 @@ import acats.fromanotherworld.entity.thing.Thing;
 import acats.fromanotherworld.entity.thing.TransitionEntity;
 import acats.fromanotherworld.entity.thing.revealed.ChestSpitter;
 import acats.fromanotherworld.memory.Aggression;
+import acats.fromanotherworld.memory.ThingBaseOfOperations;
 import acats.fromanotherworld.registry.DamageTypeRegistry;
 import acats.fromanotherworld.registry.EntityRegistry;
 import acats.fromanotherworld.registry.ParticleRegistry;
@@ -27,11 +28,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import java.util.List;
-import java.util.Objects;
 
 public class CommonLivingEntityEvents {
-    private static final int REVEAL_COOLDOWN = 12000;
-
     public static void initGoals(Mob mob, GoalSelector goalSelector){
         if (!mob.getType().is(EntityTags.NOT_AFRAID_OF_THINGS) &&
                 EntityUtilities.isAssimilableType(mob) &&
@@ -53,11 +51,22 @@ public class CommonLivingEntityEvents {
             if (aggression != Aggression.HIDING) {
                 EntityUtilities.angerNearbyThings(aggression == Aggression.AGGRESSIVE ? 1 : 3, entity, damageSource.getEntity() instanceof LivingEntity e ? e : null);
             }
-            if (((CoordinatedThing) entity).faw$hasBase()) {
-                Objects.requireNonNull(((CoordinatedThing) entity).faw$getDirector()).threaten();
-            }
+            ((CoordinatedThing) entity).faw$getDirector().ifPresent(ThingBaseOfOperations.AIDirector::threaten);
             becomeResultant(entity);
         }
+    }
+
+    private static int revealCooldown(CoordinatedThing coordinatedThing) {
+        int value = 12000;
+        value *= coordinatedThing.faw$getHunger().revealCooldownMultiplier;
+        return value;
+    }
+
+    private static int resultantChance(CoordinatedThing coordinatedThing) {
+        int value = 9000;
+        value *= coordinatedThing.faw$getHunger().transformChanceMultiplier;
+        value *= coordinatedThing.faw$getAggression().transformChanceMultiplier;
+        return value;
     }
 
     public static void tick(LivingEntity entity){
@@ -72,13 +81,13 @@ public class CommonLivingEntityEvents {
                 coordinatedThing.faw$updateBase();
             }
             if (!thing.faw$isSleeper()){
-                if (thing.faw$getRevealTimer() <= REVEAL_COOLDOWN){
+                if (thing.faw$getRevealTimer() <= revealCooldown(coordinatedThing)){
                     thing.faw$setRevealTimer(thing.faw$getRevealTimer() + 1);
                 }
-                if (thing.faw$getRevealTimer() > REVEAL_COOLDOWN && entity.getRandom().nextInt(60) == 0){
+                if (thing.faw$getRevealTimer() > revealCooldown(coordinatedThing) && entity.getRandom().nextInt(60) == 0){
                     tryReveal(entity);
                 }
-                if (coordinatedThing.faw$getAggression() != Aggression.HIDING && entity.getRandom().nextInt(coordinatedThing.faw$getAggression() == Aggression.AGGRESSIVE ? 900 : 9000) == 0){
+                if (entity.getRandom().nextInt(resultantChance(coordinatedThing)) == 0) {
                     tryBecomeResultant(entity);
                 }
                 thing.faw$setRevealed(Math.max(thing.faw$getRevealed() - 1, 0));
@@ -93,10 +102,8 @@ public class CommonLivingEntityEvents {
                 thing.faw$setSupercellConcentration(thing.faw$getSupercellConcentration() * 1.005F);
                 if (thing.faw$getSupercellConcentration() >= 100){
                     thing.faw$setAssimilated(true);
-                    if (entity instanceof Mob mobEntity)
-                        mobEntity.setTarget(null);
-                    setRareAbilities(entity, Config.DIFFICULTY_CONFIG.specialBehaviourRarity.get());
                     thing.faw$setSupercellConcentration(0);
+                    onAssimilation(entity);
                 }
                 if (thing.faw$getSupercellConcentration() >= 1.0F){
                     if (!entity.level().isClientSide() && !EntityUtilities.isVulnerable(entity)){
@@ -106,6 +113,17 @@ public class CommonLivingEntityEvents {
                 }
             }
         }
+    }
+
+    private static void onAssimilation(LivingEntity entity) {
+        if (entity instanceof Mob mobEntity)
+            mobEntity.setTarget(null);
+
+        setRareAbilities(entity, Config.DIFFICULTY_CONFIG.specialBehaviourRarity.get());
+
+        CoordinatedThing coordinatedThing = ((CoordinatedThing) entity);
+        coordinatedThing.faw$updateBase();
+        coordinatedThing.faw$getDirector().ifPresent(ThingBaseOfOperations.AIDirector::successfulAssimilation);
     }
 
     public static void tickMovement(LivingEntity entity){

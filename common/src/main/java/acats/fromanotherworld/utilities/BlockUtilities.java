@@ -1,10 +1,14 @@
 package acats.fromanotherworld.utilities;
 
+import acats.fromanotherworld.block.TunnelBlock;
+import acats.fromanotherworld.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluids;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
@@ -38,6 +42,17 @@ public class BlockUtilities {
                     }
                 }
             }
+        }
+    }
+
+    public static void tryPlaceTunnelAt(Level level, BlockPos blockPos) {
+        if ((level.getFluidState(blockPos).isEmpty() ||
+                level.getFluidState(blockPos).is(Fluids.WATER)) &&
+                (level.getBlockState(blockPos).canBeReplaced() || level.getBlockState(blockPos).is(BlockRegistry.TENTACLE.get())) &&
+                level.getBlockState(blockPos.below()).isFaceSturdy(level, blockPos.below(), Direction.UP)) {
+            level.setBlockAndUpdate(blockPos, BlockRegistry.TUNNEL_BLOCK.get().defaultBlockState()
+                    .setValue(TunnelBlock.WATERLOGGED, level.getFluidState(blockPos).is(Fluids.WATER))
+            );
         }
     }
 }

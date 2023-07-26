@@ -5,6 +5,7 @@ import acats.fromanotherworld.config.Config;
 import acats.fromanotherworld.constants.FAWAnimations;
 import acats.fromanotherworld.constants.VariantID;
 import acats.fromanotherworld.entity.goal.AbsorbGoal;
+import acats.fromanotherworld.entity.goal.DirectedWanderGoal;
 import acats.fromanotherworld.entity.goal.FleeOnFireGoal;
 import acats.fromanotherworld.entity.goal.LeapAttackGoal;
 import acats.fromanotherworld.entity.render.thing.growths.Tentacle;
@@ -28,7 +29,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.MoveThroughVillageGoal;
 import net.minecraft.world.entity.ai.goal.OpenDoorGoal;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
@@ -61,7 +61,7 @@ public class PalmerThing extends AbsorberThing {
         this.goalSelector.addGoal(2, new AbsorbGoal(this, STANDARD, Config.DIFFICULTY_CONFIG.palmerThingMergeChance.get()));
         this.goalSelector.addGoal(3, new LeapAttackGoal(this, 1.0D, false, 120, 2.0D, 0.2D, 10.0D));
         this.goalSelector.addGoal(4, new MoveThroughVillageGoal(this, 1.0, false, 4, () -> true));
-        this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+        this.goalSelector.addGoal(5, new DirectedWanderGoal(this, 1.0D));
     }
 
     @Override

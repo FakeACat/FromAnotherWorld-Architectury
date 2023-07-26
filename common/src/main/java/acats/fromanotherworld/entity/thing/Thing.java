@@ -61,7 +61,6 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -471,8 +470,8 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing, Co
     private @Nullable ThingBaseOfOperations base = null;
 
     @Override
-    public @Nullable ThingBaseOfOperations faw$getBase() {
-        return this.base;
+    public Optional<ThingBaseOfOperations> faw$getBase() {
+        return Optional.ofNullable(this.base);
     }
 
     @Override
@@ -595,8 +594,8 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing, Co
         if (Config.GORE_CONFIG.enabled.get()) {
             this.attemptPlaceCorpse();
         }
-        if (this.deathsCountForDirector() && this.faw$getDirector() != null) {
-            Objects.requireNonNull(this.faw$getDirector()).threaten();
+        if (this.deathsCountForDirector()) {
+            this.faw$getDirector().ifPresent(ThingBaseOfOperations.AIDirector::threaten);
         }
     }
 

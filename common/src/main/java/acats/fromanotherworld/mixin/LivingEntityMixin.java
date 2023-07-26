@@ -18,6 +18,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.Optional;
+
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin implements PossibleDisguisedThing, MaybeThing, CoordinatedThing {
     @Unique
@@ -157,8 +159,8 @@ public abstract class LivingEntityMixin implements PossibleDisguisedThing, Maybe
     }
 
     @Override
-    public @Nullable ThingBaseOfOperations faw$getBase() {
-        return this.base;
+    public Optional<ThingBaseOfOperations> faw$getBase() {
+        return Optional.ofNullable(this.base);
     }
 
     @Override

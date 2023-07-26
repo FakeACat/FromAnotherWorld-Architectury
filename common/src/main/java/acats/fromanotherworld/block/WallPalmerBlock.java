@@ -3,6 +3,7 @@ package acats.fromanotherworld.block;
 import acats.fromanotherworld.block.interfaces.Gore;
 import acats.fromanotherworld.constants.VariantID;
 import acats.fromanotherworld.entity.thing.Thing;
+import acats.fromanotherworld.memory.GlobalThingMemory;
 import acats.fromanotherworld.registry.EntityRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -19,6 +20,7 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@SuppressWarnings("deprecation")
 public class WallPalmerBlock extends FleshBlock implements Gore {
     public static final DirectionProperty FACING;
     public WallPalmerBlock(Properties settings) {
@@ -69,14 +71,28 @@ public class WallPalmerBlock extends FleshBlock implements Gore {
         super.tick(blockState, serverLevel, blockPos, randomSource);
 
         if (serverLevel.getNearestPlayer(blockPos.getX(), blockPos.getY(), blockPos.getZ(), 16, true) != null){
-            serverLevel.destroyBlock(blockPos, false);
-            Thing thing = EntityRegistry.PALMER_THING.get().create(serverLevel);
-            if (thing != null) {
-                thing.setVariantID(VariantID.GORE);
-                thing.setPos(blockPos.getX() + 0.5D, blockPos.getY() - 1.0D, blockPos.getZ() + 0.5D);
-                thing.finalizeSpawn(serverLevel, serverLevel.getCurrentDifficultyAt(blockPos), MobSpawnType.NATURAL, null, null);
-                serverLevel.addFreshEntity(thing);
-            }
+            this.activate(serverLevel, blockPos);
+            return;
+        }
+
+        if (serverLevel.getRandom().nextInt(12) == 0) {
+            GlobalThingMemory globalThingMemory = GlobalThingMemory.getGlobalThingMemory(serverLevel);
+            globalThingMemory.closestBase(blockPos.getX(), blockPos.getY(), blockPos.getZ()).ifPresent(thingBaseOfOperations -> {
+                if (thingBaseOfOperations.director.getHunger().activateHibernating) {
+                    this.activate(serverLevel, blockPos);
+                }
+            });
+        }
+    }
+
+    private void activate(ServerLevel serverLevel, BlockPos blockPos) {
+        serverLevel.destroyBlock(blockPos, false);
+        Thing thing = EntityRegistry.PALMER_THING.get().create(serverLevel);
+        if (thing != null) {
+            thing.setVariantID(VariantID.GORE);
+            thing.setPos(blockPos.getX() + 0.5D, blockPos.getY() - 1.0D, blockPos.getZ() + 0.5D);
+            thing.finalizeSpawn(serverLevel, serverLevel.getCurrentDifficultyAt(blockPos), MobSpawnType.NATURAL, null, null);
+            serverLevel.addFreshEntity(thing);
         }
     }
 

@@ -3,6 +3,7 @@ package acats.fromanotherworld.entity.thing.resultant;
 import acats.fromanotherworld.config.Config;
 import acats.fromanotherworld.constants.FAWAnimations;
 import acats.fromanotherworld.entity.goal.AbsorbGoal;
+import acats.fromanotherworld.entity.goal.DirectedWanderGoal;
 import acats.fromanotherworld.entity.goal.ThingAttackGoal;
 import acats.fromanotherworld.entity.goal.ThingProjectileAttackGoal;
 import acats.fromanotherworld.entity.projectile.AssimilationLiquidEntity;
@@ -22,7 +23,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -49,7 +49,7 @@ public class Beast extends MinibossThing implements RangedAttackMob {
         this.meleeGoal = new ThingAttackGoal(this, 1.0D, false);
         this.rangedGoal = new ThingProjectileAttackGoal(this, 1.0, 10, 10, 48.0F);
         this.goalSelector.addGoal(2, rangedGoal);
-        this.goalSelector.addGoal(3, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+        this.goalSelector.addGoal(3, new DirectedWanderGoal(this, 1.0D));
     }
 
     private void updateGoals(){

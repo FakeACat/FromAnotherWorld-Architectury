@@ -10,7 +10,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -28,7 +27,7 @@ public class Prowler extends AbsorberThing {
         this.goalSelector.addGoal(1, new SpitJetGoal(this, 120, 40, 30, 20, new Vec3(1.1D, -0.3D, 0.05D)));
         this.goalSelector.addGoal(2, new AbsorbGoal(this, STANDARD, Config.DIFFICULTY_CONFIG.prowlerMergeChance.get()));
         this.goalSelector.addGoal(3, new ThingAttackGoal(this, 1.0D, false));
-        this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+        this.goalSelector.addGoal(4, new DirectedWanderGoal(this, 1.0D));
     }
 
     public static AttributeSupplier.Builder createProwlerAttributes(){

@@ -64,12 +64,15 @@ public class ThingBaseOfOperations {
 
     public class AIDirector {
         private int threatLevel = 0;
+        private int assimilationSuccess = 0;
         private void setFromNBT(CompoundTag tag) {
             this.threatLevel = tag.getInt("ThreatLevel");
+            this.assimilationSuccess = tag.getInt("AssimilationSuccess");
         }
         private CompoundTag toNBT() {
             CompoundTag tag = new CompoundTag();
             tag.putInt("ThreatLevel", this.threatLevel);
+            tag.putInt("AssimilationSuccess", this.assimilationSuccess);
             return tag;
         }
 
@@ -83,8 +86,26 @@ public class ThingBaseOfOperations {
             return Aggression.AGGRESSIVE;
         }
 
+        public Hunger getHunger() {
+            if (this.assimilationSuccess == 0) {
+                return Hunger.VERY_HUNGRY;
+            }
+            else if (this.assimilationSuccess < 5) {
+                return Hunger.HUNGRY;
+            }
+            else if (this.assimilationSuccess > 14) {
+                return Hunger.SATISFIED;
+            }
+            return Hunger.NORMAL;
+        }
+
         public void threaten() {
             this.threatLevel++;
+            memory.setDirty();
+        }
+
+        public void successfulAssimilation() {
+            this.assimilationSuccess++;
             memory.setDirty();
         }
 
@@ -92,6 +113,9 @@ public class ThingBaseOfOperations {
             if (this.threatLevel > 0 && memory.level.getRandom().nextInt(8) == 0) {
                 this.threatLevel--;
                 memory.setDirty();
+            }
+            if (memory.level.getRandom().nextInt(2) == 0) {
+                this.assimilationSuccess = Math.max(0, (int) (this.assimilationSuccess * 0.95F) - 1);
             }
         }
     }

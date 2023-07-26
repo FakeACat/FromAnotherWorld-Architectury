@@ -1,6 +1,7 @@
 package acats.fromanotherworld.entity.thing.resultant;
 
 import acats.fromanotherworld.block.CorpseBlock;
+import acats.fromanotherworld.entity.goal.DirectedWanderGoal;
 import acats.fromanotherworld.entity.goal.ThingAttackGoal;
 import acats.fromanotherworld.entity.model.thing.resultant.BloodCrawlerModel;
 import acats.fromanotherworld.entity.thing.Thing;
@@ -19,7 +20,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
-import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
@@ -40,7 +40,7 @@ public class BloodCrawler extends Thing {
         this.goalSelector.addGoal(0, new AvoidEntityGoal<>(this, Player.class, 16.0F, 1.0, 1.2));
         this.goalSelector.addGoal(0, new AvoidEntityGoal<>(this, IronGolem.class, 16.0F, 1.0, 1.2));
         this.goalSelector.addGoal(1, new ThingAttackGoal(this, 1.0D, false));
-        this.goalSelector.addGoal(2, new RandomStrollGoal(this, 1.0D, 1));
+        this.goalSelector.addGoal(2, new DirectedWanderGoal(this, 1.0D));
     }
 
     private <E extends GeoEntity> PlayState predicate(AnimationState<E> event) {

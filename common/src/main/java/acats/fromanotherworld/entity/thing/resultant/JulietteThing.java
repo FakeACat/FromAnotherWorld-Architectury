@@ -3,6 +3,7 @@ package acats.fromanotherworld.entity.thing.resultant;
 import acats.fromanotherworld.block.CorpseBlock;
 import acats.fromanotherworld.config.Config;
 import acats.fromanotherworld.entity.goal.AbsorbGoal;
+import acats.fromanotherworld.entity.goal.DirectedWanderGoal;
 import acats.fromanotherworld.entity.goal.FleeOnFireGoal;
 import acats.fromanotherworld.entity.goal.ThingAttackGoal;
 import acats.fromanotherworld.entity.thing.AbsorberThing;
@@ -21,7 +22,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.MoveThroughVillageGoal;
 import net.minecraft.world.entity.ai.goal.OpenDoorGoal;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
@@ -44,7 +44,7 @@ public class JulietteThing extends AbsorberThing {
         this.goalSelector.addGoal(2, new AbsorbGoal(this, STANDARD, Config.DIFFICULTY_CONFIG.julietteThingMergeChance.get()));
         this.goalSelector.addGoal(3, new ThingAttackGoal(this, 1.0D, false));
         this.goalSelector.addGoal(4, new MoveThroughVillageGoal(this, 1.0, false, 4, () -> true));
-        this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+        this.goalSelector.addGoal(5, new DirectedWanderGoal(this, 1.0D));
     }
 
     public static AttributeSupplier.Builder createJulietteThingAttributes(){

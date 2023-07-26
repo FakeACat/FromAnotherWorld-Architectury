@@ -1,5 +1,6 @@
 package acats.fromanotherworld.item;
 
+import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.memory.GlobalThingMemory;
 import acats.fromanotherworld.memory.ThingBaseOfOperations;
 import acats.fromanotherworld.spawning.SpawningManager;
@@ -101,8 +102,11 @@ public class ImpostorDetectorItem extends Item {
             msg(user, " -Y: " + b.getY());
             msg(user, " -Z: " + b.getZ());
             msg(user, " -Size: " + b.getSize());
-            msg(user, " -Director:");
-            msg(user, "  -Aggression: " + b.director.getAggression());
+            if (FromAnotherWorld.mlDep.inDevEnv()) {
+                msg(user, " -Director:");
+                msg(user, "  -Aggression: " + b.director.getAggression());
+                msg(user, "  -Hunger: " + b.director.getHunger());
+            }
             i++;
         }
         user.sendSystemMessage(Component.literal(i + " thing bases"));

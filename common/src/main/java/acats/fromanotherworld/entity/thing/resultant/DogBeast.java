@@ -3,6 +3,7 @@ package acats.fromanotherworld.entity.thing.resultant;
 import acats.fromanotherworld.config.Config;
 import acats.fromanotherworld.constants.FAWAnimations;
 import acats.fromanotherworld.entity.goal.AbsorbGoal;
+import acats.fromanotherworld.entity.goal.DirectedWanderGoal;
 import acats.fromanotherworld.entity.goal.FleeOnFireGoal;
 import acats.fromanotherworld.entity.goal.LeapAttackGoal;
 import acats.fromanotherworld.entity.interfaces.Leaper;
@@ -19,7 +20,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 
@@ -37,7 +37,7 @@ public class DogBeast extends ResizeableThing implements Leaper {
         this.goalSelector.addGoal(0, new FleeOnFireGoal(this, 16.0F, 1.0, 1.2));
         this.goalSelector.addGoal(1, new AbsorbGoal(this, STANDARD, Config.DIFFICULTY_CONFIG.dogBeastMergeChance.get()));
         this.goalSelector.addGoal(2, new LeapAttackGoal(this, 1.0D, false, 120, 1.5D, 0.5D, 5.0D));
-        this.goalSelector.addGoal(3, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+        this.goalSelector.addGoal(3, new DirectedWanderGoal(this, 1.0D));
     }
 
     @Override

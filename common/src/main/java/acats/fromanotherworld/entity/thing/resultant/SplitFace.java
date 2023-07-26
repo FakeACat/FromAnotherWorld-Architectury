@@ -12,7 +12,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.MoveThroughVillageGoal;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -31,7 +30,7 @@ public class SplitFace extends AbsorberThing implements StalkerThing {
         this.goalSelector.addGoal(2, new LeapAttackGoal(this, 2.0D, false, 200, 3.0D, 0.3D, 12.0D));
         this.goalSelector.addGoal(3, new MoveThroughVillageGoal(this, 1.0, false, 4, () -> true));
         this.goalSelector.addGoal(4, new StalkGoal(this));
-        this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+        this.goalSelector.addGoal(5, new DirectedWanderGoal(this, 1.0D));
     }
 
     public static AttributeSupplier.Builder createSplitFaceAttributes(){

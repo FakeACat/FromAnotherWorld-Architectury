@@ -231,6 +231,11 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
     }
 
     @Override
+    public boolean canBurrow() {
+        return super.canBurrow() && this.getSwitchProgress() == 0;
+    }
+
+    @Override
     public void bored() {
         this.escape();
         this.bored = true;

@@ -47,6 +47,7 @@ public class ThingNavigation extends AzureNavigation {
     private int desiredY;
     private int desiredZ;
     private boolean foundExit;
+    private float exitDistSq;
 
     @Override
     public void tick() {
@@ -55,7 +56,12 @@ public class ThingNavigation extends AzureNavigation {
                 this.foundExit = false;
                 BlockUtilities.forEachBlockInCubeCentredAt(new BlockPos(this.path.getTarget().getX(), this.path.getTarget().getY(), this.path.getTarget().getZ()), 3, this::findExitTunnel);
                 if (this.foundExit) {
+                    this.exitDistSq = Float.MAX_VALUE;
                     BlockUtilities.forEachBlockInCubeCentredAt(this.thing.blockPosition(), (int) this.thing.getAttributeValue(Attributes.FOLLOW_RANGE) / 2, this::tryUseTunnel);
+                }
+                else if (this.thing.getRandom().nextInt(160) == 0) {
+                    BlockUtilities.tryPlaceTunnelAt(this.thing.level(), this.thing.blockPosition());
+                    BlockUtilities.tryPlaceTunnelAt(this.thing.level(), new BlockPos(this.path.getTarget().getX(), this.path.getTarget().getY(), this.path.getTarget().getZ()));
                 }
             }
             else if (this.thing.getRandom().nextInt(4) == 0 && this.thing.getBurrowType() == Thing.BurrowType.CAN_BURROW) {
@@ -97,7 +103,13 @@ public class ThingNavigation extends AzureNavigation {
             return;
         }
 
-        if (this.thing.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) < 2.25) {
+        float sq = (float) this.thing.distanceToSqr(pos.getX(), pos.getY(), pos.getZ());
+        if (this.exitDistSq <= sq) {
+            return;
+        }
+        this.exitDistSq = sq;
+
+        if (this.exitDistSq < 2.25) {
             this.thing.randomTeleport(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, false);
             this.thing.burrowTo(this.desiredX, this.desiredY, this.desiredZ);
         }

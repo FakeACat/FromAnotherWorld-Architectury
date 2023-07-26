@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class GlobalThingMemory extends SavedData {
     private final ArrayList<ThingBaseOfOperations> bases = new ArrayList<>();
@@ -67,7 +68,7 @@ public class GlobalThingMemory extends SavedData {
         return this.bases;
     }
 
-    public @Nullable ThingBaseOfOperations closestBase(int x, int y, int z) {
+    public Optional<ThingBaseOfOperations> closestBase(int x, int y, int z) {
         ThingBaseOfOperations closest = null;
         for (ThingBaseOfOperations base:
              this.bases) {
@@ -75,7 +76,7 @@ public class GlobalThingMemory extends SavedData {
                 closest = base;
             }
         }
-        return closest;
+        return Optional.ofNullable(closest);
     }
 
     public long closestBaseDistSq(int x, int y, int z) {

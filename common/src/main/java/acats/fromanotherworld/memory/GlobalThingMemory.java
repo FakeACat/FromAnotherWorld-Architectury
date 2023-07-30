@@ -12,6 +12,8 @@ import java.util.Optional;
 
 public class GlobalThingMemory extends SavedData {
     private final ArrayList<ThingBaseOfOperations> bases = new ArrayList<>();
+    public static final int BASE_RADIUS = 500;
+    public static final int BASE_RADIUS_SQUARED = BASE_RADIUS * BASE_RADIUS;
     final ServerLevel level;
     private GlobalThingMemory(ServerLevel level) {
         this.level = level;
@@ -72,7 +74,8 @@ public class GlobalThingMemory extends SavedData {
         ThingBaseOfOperations closest = null;
         for (ThingBaseOfOperations base:
              this.bases) {
-            if (closest == null || base.sqDist(x, y, z) < closest.sqDist(x, y, z)) {
+            long d = base.sqDist(x, y, z);
+            if (d < BASE_RADIUS_SQUARED && (closest == null || d < closest.sqDist(x, y, z))) {
                 closest = base;
             }
         }
@@ -92,7 +95,7 @@ public class GlobalThingMemory extends SavedData {
     }
 
     public @Nullable ThingBaseOfOperations tryCreateBase(int x, int y, int z) {
-        if (closestBaseDistSq(x, y, z) > 250000) {
+        if (closestBaseDistSq(x, y, z) > BASE_RADIUS_SQUARED) {
             ThingBaseOfOperations base = new ThingBaseOfOperations(x, y, z, this);
             this.bases.add(base);
             this.setDirty();

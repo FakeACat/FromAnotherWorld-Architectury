@@ -8,7 +8,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.game.DebugPackets;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.Vec3;
@@ -54,14 +53,32 @@ public class ThingNavigation extends AzureNavigation {
         if (this.path != null && !this.path.canReach()) {
             if (this.thing.getBurrowType() == Thing.BurrowType.REQUIRES_TUNNEL && this.thing.canBurrow()) {
                 this.foundExit = false;
-                BlockUtilities.forEachBlockInCubeCentredAt(new BlockPos(this.path.getTarget().getX(), this.path.getTarget().getY(), this.path.getTarget().getZ()), 3, this::findExitTunnel);
+                BlockUtilities.getClosestBlock(new BlockPos(this.path.getTarget().getX(), this.path.getTarget().getY(), this.path.getTarget().getZ()), 8, blockPos -> {
+                    if (this.thing.level().getBlockState(blockPos).is(BlockRegistry.TUNNEL_BLOCK.get())) {
+
+                        this.foundExit = true;
+
+                        this.desiredX = blockPos.getX();
+                        this.desiredY = blockPos.getY();
+                        this.desiredZ = blockPos.getZ();
+
+                        return true;
+                    }
+                    return false;
+                });
                 if (this.foundExit) {
                     this.exitDistSq = Float.MAX_VALUE;
-                    BlockUtilities.forEachBlockInCubeCentredAt(this.thing.blockPosition(), (int) this.thing.getAttributeValue(Attributes.FOLLOW_RANGE) / 2, this::tryUseTunnel);
+                    BlockUtilities.forEachBlockInCubeCentredAt(this.thing.blockPosition(), 8, this::tryUseTunnel);
                 }
-                else if (this.thing.getRandom().nextInt(160) == 0) {
-                    BlockUtilities.tryPlaceTunnelAt(this.thing.level(), this.thing.blockPosition());
-                    BlockUtilities.tryPlaceTunnelAt(this.thing.level(), new BlockPos(this.path.getTarget().getX(), this.path.getTarget().getY(), this.path.getTarget().getZ()));
+                else if (this.thing.getRandom().nextInt(1280) == 0) {
+                    if (BlockUtilities.getClosestBlock(this.thing.blockPosition(), 8, blockPos -> this.thing.level().getBlockState(blockPos).is(BlockRegistry.TUNNEL_BLOCK.get())).isEmpty()) {
+                        BlockUtilities.tryPlaceTunnelAt(this.thing.level(), this.thing.blockPosition());
+                    }
+
+                    BlockPos targetBP = new BlockPos(this.path.getTarget().getX(), this.path.getTarget().getY(), this.path.getTarget().getZ());
+                    if (BlockUtilities.getClosestBlock(targetBP, 8, blockPos -> this.thing.level().getBlockState(blockPos).is(BlockRegistry.TUNNEL_BLOCK.get())).isEmpty()) {
+                        BlockUtilities.tryPlaceTunnelAt(this.thing.level(), targetBP);
+                    }
                 }
             }
             else if (this.thing.getRandom().nextInt(4) == 0 && this.thing.getBurrowType() == Thing.BurrowType.CAN_BURROW) {
@@ -85,17 +102,6 @@ public class ThingNavigation extends AzureNavigation {
         if (this.getTargetPos() != null) {
             this.mob.getLookControl().setLookAt(this.getTargetPos().getX(), this.getTargetPos().getY(), this.getTargetPos().getZ());
         }
-    }
-
-    private void findExitTunnel(BlockPos pos) {
-        if (!this.level.getBlockState(pos).is(BlockRegistry.TUNNEL_BLOCK.get())) {
-            return;
-        }
-
-        this.foundExit = true;
-        this.desiredX = pos.getX();
-        this.desiredY = pos.getY();
-        this.desiredZ = pos.getZ();
     }
 
     private void tryUseTunnel(BlockPos pos) {

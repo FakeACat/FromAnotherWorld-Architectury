@@ -75,13 +75,14 @@ public class WallPalmerBlock extends FleshBlock implements Gore {
             return;
         }
 
-        if (serverLevel.getRandom().nextInt(12) == 0) {
+        if (serverLevel.getRandom().nextInt(16) == 0) {
             GlobalThingMemory globalThingMemory = GlobalThingMemory.getGlobalThingMemory(serverLevel);
-            globalThingMemory.closestBase(blockPos.getX(), blockPos.getY(), blockPos.getZ()).ifPresent(thingBaseOfOperations -> {
-                if (thingBaseOfOperations.director.getHunger().activateHibernating) {
-                    this.activate(serverLevel, blockPos);
-                }
-            });
+            globalThingMemory.closestBase(blockPos.getX(), blockPos.getY(), blockPos.getZ()).ifPresentOrElse(
+                    thingBaseOfOperations -> {
+                        if (thingBaseOfOperations.director.getHunger().activateHibernating) {
+                            this.activate(serverLevel, blockPos);
+                        }},
+                    () -> this.activate(serverLevel, blockPos));
         }
     }
 

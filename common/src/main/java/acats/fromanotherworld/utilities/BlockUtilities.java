@@ -4,6 +4,7 @@ import acats.fromanotherworld.block.TunnelBlock;
 import acats.fromanotherworld.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
@@ -11,7 +12,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 public class BlockUtilities {
     public static void forEachBlockInCubeCentredAt(BlockPos centre, int radius, Consumer<BlockPos> function){
@@ -22,6 +25,29 @@ public class BlockUtilities {
                 centre.getX() + radius,
                 centre.getY() + radius,
                 centre.getZ() + radius).forEach(function);
+    }
+
+    public static Optional<BlockPos> getClosestBlock(BlockPos centre, int radius, Predicate<BlockPos> predicate) {
+        var ref = new Object() {
+            BlockPos pos = null;
+            int distSq = Integer.MAX_VALUE;
+        };
+
+        BlockPos.betweenClosedStream(
+                centre.getX() - radius,
+                centre.getY() - radius,
+                centre.getZ() - radius,
+                centre.getX() + radius,
+                centre.getY() + radius,
+                centre.getZ() + radius).forEach(blockPos -> {
+                    int d2 = (int) blockPos.distSqr(new Vec3i(centre.getX(), centre.getY(), centre.getZ()));
+                    if (d2 < ref.distSq && predicate.test(blockPos)) {
+                        ref.pos = blockPos;
+                        ref.distSq = d2;
+                    }
+        });
+
+        return Optional.ofNullable(ref.pos);
     }
 
     public static void grief(Level level, int size, int x, int y, int z, @Nullable Entity entity, int chanceDenominator) {

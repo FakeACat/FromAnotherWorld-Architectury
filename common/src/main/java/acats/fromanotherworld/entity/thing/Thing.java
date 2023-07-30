@@ -750,6 +750,11 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing, Co
     }
 
     @Override
+    protected boolean canRide(Entity entity) {
+        return false;
+    }
+
+    @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.animatableInstanceCache;
     }

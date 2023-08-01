@@ -1,5 +1,7 @@
 package acats.fromanotherworld.config;
 
+import acats.fromanotherworld.constants.TimeInTicks;
+
 public class GoreConfig extends FAWConfig {
     @Override
     String name() {
@@ -19,15 +21,22 @@ public class GoreConfig extends FAWConfig {
 
     public final FAWConfigIntegerProperty wallPalmerChance = new FAWConfigIntegerProperty(
             "wall_palmer_chance",
-            "1 in this number chance for any wall tentacle block with sufficient support to instead be a wall palmer",
+            "1 in this number chance for any wall tentacle block with sufficient support to instead be a wall palmer.",
             10
+    );
+
+    public final FAWConfigIntegerProperty tunnelGoreTime = new FAWConfigIntegerProperty(
+            "tunnel_gore_time",
+            "Minimum age of a tunnel block in ticks required for it to start spreading gore blocks\nSet to negative to disable.",
+            TimeInTicks.HOUR
     );
 
     @Override
     FAWConfigProperty<?>[] properties() {
         return new FAWConfigProperty[]{
                 this.enabled,
-                this.wallPalmerChance
+                this.wallPalmerChance,
+                this.tunnelGoreTime
         };
     }
 }

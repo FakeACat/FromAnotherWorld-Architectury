@@ -1,5 +1,6 @@
 package acats.fromanotherworld.config;
 
+import acats.fromanotherworld.FromAnotherWorld;
 import com.google.gson.*;
 import org.jetbrains.annotations.Nullable;
 
@@ -8,9 +9,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public abstract class FAWConfig {
+    private static final int GLOBAL_VERSION = 1;
     abstract String name();
     abstract int version();
     abstract FAWConfigProperty<?>[] properties();
+
+    private int actualVersion() {
+        return this.version() + GLOBAL_VERSION;
+    }
 
     private final FAWConfigBooleanProperty autoRegenOutdated = new FAWConfigBooleanProperty(
             "auto_regen_outdated",
@@ -19,15 +25,15 @@ public abstract class FAWConfig {
     private final FAWConfigIntegerProperty version = new FAWConfigIntegerProperty(
             "version",
             "Config version number used for " + autoRegenOutdated.getName() + ". Do not modify.",
-            this.version());
+            this.actualVersion());
 
     public void load(){
         if (this.getFile().exists()){
             this.autoRegenOutdated.set();
             if (this.autoRegenOutdated.get()){
                 this.version.set();
-                if (this.version.get() < this.version()){
-                    this.version.set(this.version());
+                if (this.version.get() < this.actualVersion()){
+                    this.version.set(this.actualVersion());
                     this.genFile(false);
                 }
             }
@@ -49,14 +55,16 @@ public abstract class FAWConfig {
     }
 
     private static void addProperty(JsonObject object, FAWConfigProperty<?> property) {
-        addDescription(object, property);
-        property.addTo(object);
-    }
-
-    private static void addDescription(JsonObject object, FAWConfigProperty<?> property) {
+        JsonObject obj = new JsonObject();
         if (property.description != null) {
-            object.addProperty(property.getName() + "_description", property.description);
+            String[] descriptionLines = property.description.split("\n");
+            for (int i = 0; i < descriptionLines.length; i++) {
+                String numer = descriptionLines.length > 1 ? String.valueOf(i + 1) : "";
+                obj.addProperty("description" + numer, descriptionLines[i]);
+            }
         }
+        property.addTo(obj);
+        object.add(property.getName(), obj);
     }
 
     private void setValues() {
@@ -67,7 +75,7 @@ public abstract class FAWConfig {
     }
 
     private File getFile(){
-        return new File(Config.getFolder(), name() + ".json");
+        return new File(Config.getFolder(), this.name() + ".json");
     }
 
     private void genFile(boolean create) {
@@ -76,9 +84,11 @@ public abstract class FAWConfig {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         if (create){
             try {
-                getFile().createNewFile();
+                if (!getFile().createNewFile()) {
+                    FromAnotherWorld.LOGGER.error("Unable to create config file " + this.name());
+                }
             } catch (IOException e) {
-                e.printStackTrace();
+                FromAnotherWorld.LOGGER.error("IOException while attempting to generate config file " + this.name() + ": " + e.getMessage());
             }
         }
         try {
@@ -86,7 +96,7 @@ public abstract class FAWConfig {
             fileWriter.write(gson.toJson(cfg));
             fileWriter.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            FromAnotherWorld.LOGGER.error("Failed writing to config file " + this.name() + ": " + e.getMessage());
         }
     }
 
@@ -108,12 +118,14 @@ public abstract class FAWConfig {
         void set(){
             try {
                 Reader reader = new FileReader(getFile());
-                JsonElement jsonElement = new Gson().fromJson(reader, JsonObject.class).get(this.name);
+                JsonElement jsonElement = new Gson().fromJson(reader, JsonObject.class)
+                        .getAsJsonObject(this.name)
+                        .get("value");
                 if (jsonElement != null){
                     this.value = this.getFrom(jsonElement);
                 }
             } catch (FileNotFoundException e) {
-                e.printStackTrace();
+                FromAnotherWorld.LOGGER.error("FileNotFoundException while trying to read " + this.getName() + " from config file " + name() + ": " + e.getMessage());
             }
         }
 
@@ -143,7 +155,7 @@ public abstract class FAWConfig {
 
         @Override
         void addTo(JsonObject object) {
-            object.addProperty(this.getName(), this.get());
+            object.addProperty("value", this.get());
         }
     }
 
@@ -160,7 +172,7 @@ public abstract class FAWConfig {
 
         @Override
         void addTo(JsonObject object) {
-            object.addProperty(this.getName(), this.get());
+            object.addProperty("value", this.get());
         }
     }
 
@@ -200,7 +212,7 @@ public abstract class FAWConfig {
 
         @Override
         void addTo(JsonObject object) {
-            object.add(this.getName(), toJsonArray(this.get()));
+            object.add("value", toJsonArray(this.get()));
         }
 
         public boolean contains(String s){

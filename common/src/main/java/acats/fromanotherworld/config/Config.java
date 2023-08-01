@@ -19,7 +19,9 @@ public class Config {
     public static void load(Path modLoaderSpecificPath){
         path = modLoaderSpecificPath;
         if (!getFolder().exists()){
-            getFolder().mkdirs();
+            if (!getFolder().mkdirs()) {
+                FromAnotherWorld.LOGGER.error("Unable to create config directory for From Another World");
+            }
         }
         GORE_CONFIG.load();
         EVENT_CONFIG.load();

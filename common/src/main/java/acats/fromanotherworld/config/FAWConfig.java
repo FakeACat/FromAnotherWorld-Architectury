@@ -24,7 +24,7 @@ public abstract class FAWConfig {
             true);
     private final FAWConfigIntegerProperty version = new FAWConfigIntegerProperty(
             "version",
-            "Config version number used for " + autoRegenOutdated.getName() + ". Do not modify.",
+            "Config version number used for " + autoRegenOutdated.getName() + ".\nDo not modify.",
             this.actualVersion());
 
     public void load(){

@@ -25,7 +25,7 @@ public class DifficultyConfig extends FAWConfig {
 
     public final FAWConfigIntegerProperty crawlerMergeChance = new FAWConfigIntegerProperty(
             "crawler_merge_chance",
-            "1 in this number chance every tick to attempt to merge",
+            "1 in this number chance every tick to attempt to merge.",
             800
     );
     public final FAWConfigIntegerProperty julietteThingMergeChance = new FAWConfigIntegerProperty(
@@ -76,7 +76,7 @@ public class DifficultyConfig extends FAWConfig {
     );
     public final FAWConfigBooleanProperty burrowing = new FAWConfigBooleanProperty(
             "burrowing",
-            "Most Things should be able to burrow if they cannot reach where they are trying to pathfind to",
+            "Most Things should be able to burrow if they cannot reach where they are trying to pathfind to.",
             false
     );
 

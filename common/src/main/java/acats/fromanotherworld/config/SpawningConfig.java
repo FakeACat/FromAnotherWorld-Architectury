@@ -31,13 +31,13 @@ public class SpawningConfig extends FAWConfig {
 
     public final FAWConfigBooleanProperty enabled = new FAWConfigBooleanProperty(
             "enabled",
-            "Should Things spawn like vanilla mobs? Not recommended for the intended experience.",
+            "Should Things spawn like vanilla mobs?\nNot recommended for the intended experience.",
             false
     );
 
     public final FAWConfigIntegerProperty firstSpawningDay = new FAWConfigIntegerProperty(
             "first_spawning_day",
-            "The first day that Things can start spawning naturally. This option treats the first day in a world as day 1, unlike the vanilla F3 screen.",
+            "The first day that Things can start spawning naturally.\nThis option treats the first day in a world as day 1, unlike the vanilla F3 screen.",
             2
     );
 

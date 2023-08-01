@@ -13,13 +13,13 @@ public class CompatibilityConfig extends FAWConfig {
 
     public final FAWConfigBooleanProperty sporeAllies = new FAWConfigBooleanProperty(
             "spore_allies",
-            "Things never fight Fungal Infection mobs",
+            "Things never fight Fungal Infection mobs?",
             true
     );
 
     public final FAWConfigBooleanProperty sculkAllies = new FAWConfigBooleanProperty(
             "sculk_allies",
-            "Things never fight Sculk Horde mobs",
+            "Things never fight Sculk Horde mobs?",
             true
     );
 

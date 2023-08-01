@@ -13,7 +13,7 @@ public class EffectConfig extends FAWConfig {
 
     public final FAWConfigArrayProperty regenCancelling = new FAWConfigArrayProperty(
             "regen_cancelling",
-            "Effects that prevent Things from resisting damage and healing",
+            "Effects that prevent Things from resisting damage and healing.",
             new String[]{
                     "gigeresque:acid",
                     "minecraft:wither"
@@ -22,7 +22,7 @@ public class EffectConfig extends FAWConfig {
 
     public final FAWConfigArrayProperty thingImmune = new FAWConfigArrayProperty(
             "thing_immune",
-            "Effects that cannot be applied to Things",
+            "Effects that cannot be applied to Things.",
             new String[]{
                     "minecraft:poison",
                     "spore:*"

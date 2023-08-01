@@ -8,6 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.game.DebugPackets;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.Vec3;
@@ -50,10 +51,10 @@ public class ThingNavigation extends AzureNavigation {
 
     @Override
     public void tick() {
-        if (this.path != null && !this.path.canReach()) {
-            if (this.thing.getBurrowType() == Thing.BurrowType.REQUIRES_TUNNEL && this.thing.canBurrow()) {
+        if (this.path != null && !this.path.canReach() && this.thing.canBurrow()) {
+            if (this.thing.getBurrowType() == Thing.BurrowType.REQUIRES_TUNNEL) {
                 this.foundExit = false;
-                BlockUtilities.getClosestBlock(new BlockPos(this.path.getTarget().getX(), this.path.getTarget().getY(), this.path.getTarget().getZ()), 8, blockPos -> {
+                BlockUtilities.getClosestBlock(this.path.getTarget(), 8, blockPos -> {
                     if (this.thing.level().getBlockState(blockPos).is(BlockRegistry.TUNNEL_BLOCK.get())) {
 
                         this.foundExit = true;
@@ -70,14 +71,13 @@ public class ThingNavigation extends AzureNavigation {
                     this.exitDistSq = Float.MAX_VALUE;
                     BlockUtilities.forEachBlockInCubeCentredAt(this.thing.blockPosition(), 8, this::tryUseTunnel);
                 }
-                else if (this.thing.getRandom().nextInt(1280) == 0) {
+                else if (this.thing.getRandom().nextInt(1280) == 0 && this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
                     if (BlockUtilities.getClosestBlock(this.thing.blockPosition(), 8, blockPos -> this.thing.level().getBlockState(blockPos).is(BlockRegistry.TUNNEL_BLOCK.get())).isEmpty()) {
                         BlockUtilities.tryPlaceTunnelAt(this.thing.level(), this.thing.blockPosition());
                     }
 
-                    BlockPos targetBP = new BlockPos(this.path.getTarget().getX(), this.path.getTarget().getY(), this.path.getTarget().getZ());
-                    if (BlockUtilities.getClosestBlock(targetBP, 8, blockPos -> this.thing.level().getBlockState(blockPos).is(BlockRegistry.TUNNEL_BLOCK.get())).isEmpty()) {
-                        BlockUtilities.tryPlaceTunnelAt(this.thing.level(), targetBP);
+                    if (BlockUtilities.getClosestBlock(this.path.getTarget(), 8, blockPos -> this.thing.level().getBlockState(blockPos).is(BlockRegistry.TUNNEL_BLOCK.get())).isEmpty()) {
+                        BlockUtilities.tryPlaceTunnelAt(this.thing.level(), this.path.getTarget());
                     }
                 }
             }
@@ -106,6 +106,10 @@ public class ThingNavigation extends AzureNavigation {
 
     private void tryUseTunnel(BlockPos pos) {
         if (!this.level.getBlockState(pos).is(BlockRegistry.TUNNEL_BLOCK.get())) {
+            return;
+        }
+
+        if (pos.equals(new BlockPos(this.desiredX, this.desiredY, this.desiredZ))) {
             return;
         }
 

@@ -1,7 +1,9 @@
 package acats.fromanotherworld.block.entity;
 
 import acats.fromanotherworld.block.TunnelBlock;
+import acats.fromanotherworld.block.interfaces.Gore;
 import acats.fromanotherworld.constants.FAWAnimations;
+import acats.fromanotherworld.constants.TimeInTicks;
 import acats.fromanotherworld.registry.BlockEntityRegistry;
 import acats.fromanotherworld.registry.BlockRegistry;
 import acats.fromanotherworld.utilities.BlockUtilities;
@@ -12,6 +14,7 @@ import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.util.AzureLibUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -42,19 +45,28 @@ public class TunnelBlockEntity extends BlockEntity implements GeoBlockEntity {
         return this.animatableInstanceCache;
     }
 
-    private int age;
+    private long age;
 
     public void deactivate() {
-        if (this.level != null) {
-            this.age = 0;
-            this.level.setBlockAndUpdate(this.getBlockPos(), BlockRegistry.TUNNEL_BLOCK.get().defaultBlockState().setValue(TunnelBlock.TENTACLE_STATE, TunnelBlock.TentacleState.RETREATING));
+        if (this.level != null && this.getBlockState().getValue(TunnelBlock.TENTACLE_STATE) == TunnelBlock.TentacleState.ACTIVE) {
+            this.age = -60;
+            this.level.setBlockAndUpdate(
+                    this.getBlockPos(),
+                    BlockRegistry.TUNNEL_BLOCK.get()
+                            .defaultBlockState()
+                            .setValue(TunnelBlock.TENTACLE_STATE, TunnelBlock.TentacleState.RETREATING)
+                            .setValue(TunnelBlock.WATERLOGGED, this.getBlockState().getValue(TunnelBlock.WATERLOGGED)));
         }
     }
 
     public static void tick(Level level, BlockPos blockPos, BlockState blockState, TunnelBlockEntity blockEntity) {
+        if (level.isClientSide()) {
+            return;
+        }
+
         blockEntity.age++;
-        if (blockEntity.age % 20 == 0) {
-            if (blockState.getValue(TunnelBlock.TENTACLE_STATE) == TunnelBlock.TentacleState.RETREATING) {
+        if (blockEntity.age % TimeInTicks.SECOND == 0) {
+            if (blockEntity.age == 0 && blockState.getValue(TunnelBlock.TENTACLE_STATE) == TunnelBlock.TentacleState.RETREATING) {
                 level.destroyBlock(blockPos, false);
                 return;
             }
@@ -63,6 +75,21 @@ public class TunnelBlockEntity extends BlockEntity implements GeoBlockEntity {
             if (blockState.getValue(TunnelBlock.TENTACLE_STATE) == TunnelBlock.TentacleState.EMERGING) {
                 level.setBlockAndUpdate(blockPos, BlockRegistry.TUNNEL_BLOCK.get().defaultBlockState().setValue(TunnelBlock.TENTACLE_STATE, TunnelBlock.TentacleState.ACTIVE).setValue(TunnelBlock.WATERLOGGED, blockState.getValue(TunnelBlock.WATERLOGGED)));
             }
+
+            if (blockEntity.age > TimeInTicks.HOUR && level.getRandom().nextInt(300) == 0) {
+                Gore gore = (Gore) blockState.getBlock();
+                gore.spread(level, blockPos, blockState);
+            }
         }
+    }
+
+    @Override
+    protected void saveAdditional(CompoundTag compoundTag) {
+        compoundTag.putLong("Age", this.age);
+    }
+
+    @Override
+    public void load(CompoundTag compoundTag) {
+        this.age = compoundTag.getLong("Age");
     }
 }

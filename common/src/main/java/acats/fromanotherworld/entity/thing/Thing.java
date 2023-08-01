@@ -2,6 +2,7 @@ package acats.fromanotherworld.entity.thing;
 
 import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.block.CorpseBlock;
+import acats.fromanotherworld.block.entity.TunnelBlockEntity;
 import acats.fromanotherworld.config.Config;
 import acats.fromanotherworld.constants.VariantID;
 import acats.fromanotherworld.entity.goal.ThingTargetGoal;
@@ -53,6 +54,7 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.material.FluidState;
@@ -312,8 +314,10 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing, Co
             }
             if (this.getBurrowProgress() > 0){
                 this.setBurrowProgress(this.getBurrowProgress() + 1);
-                if (this.getBurrowProgress() == BURROW_TIME + UNDERGROUND_TIME / 2) {
-                    this.randomTeleport(this.burrowX + 0.5D, this.burrowY, this.burrowZ + 0.5D, false);
+                if (this.getBurrowProgress() == BURROW_TIME + UNDERGROUND_TIME / 2 &&
+                        this.randomTeleport(this.burrowX + 0.5D, this.burrowY, this.burrowZ + 0.5D, false) &&
+                        this.getBurrowType() == BurrowType.REQUIRES_TUNNEL) {
+                    this.lastTunnelExit = new BlockPos(this.burrowX, this.burrowY, this.burrowZ);
                 }
                 if (this.getBurrowProgress() == BURROW_TIME + UNDERGROUND_TIME + EMERGE_TIME) {
                     this.setBurrowProgress(0);
@@ -596,6 +600,16 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing, Co
         }
         if (this.deathsCountForDirector()) {
             this.faw$getDirector().ifPresent(ThingBaseOfOperations.AIDirector::threaten);
+
+            if (this.lastTunnelExit != null && this.level().getRandom().nextInt(8) == 0) {
+                BlockEntity blockEntity = this.level().getBlockEntity(this.lastTunnelExit);
+                if (blockEntity instanceof TunnelBlockEntity tunnelBlockEntity) {
+                    tunnelBlockEntity.deactivate();
+                }
+                else {
+                    this.lastTunnelExit = null;
+                }
+            }
         }
     }
 
@@ -707,6 +721,8 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing, Co
         return ServerUtilities.getDayReal(serverLevelAccessor) >= Config.SPAWNING_CONFIG.firstSpawningDay.get() && Monster.checkMonsterSpawnRules(entityType, serverLevelAccessor, mobSpawnType, blockPos, randomSource);
     }
 
+    private @Nullable BlockPos lastTunnelExit = null;
+
     @Override
     public void addAdditionalSaveData(CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
@@ -728,6 +744,12 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing, Co
         if (this.victim != null) {
             nbt.put("Victim", this.victim);
         }
+
+        if (this.getBurrowType() == BurrowType.REQUIRES_TUNNEL && this.lastTunnelExit != null) {
+            nbt.putInt("LastTunnelExitX", this.lastTunnelExit.getX());
+            nbt.putInt("LastTunnelExitY", this.lastTunnelExit.getY());
+            nbt.putInt("LastTunnelExitZ", this.lastTunnelExit.getZ());
+        }
     }
 
     @Override
@@ -746,6 +768,10 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing, Co
 
         if (nbt.contains("Victim")) {
             this.victim = nbt.getCompound("Victim");
+        }
+
+        if (this.getBurrowType() == BurrowType.REQUIRES_TUNNEL) {
+            this.lastTunnelExit = new BlockPos(nbt.getInt("LastTunnelExitX"), nbt.getInt("LastTunnelExitY"), nbt.getInt("LastTunnelExitZ"));
         }
     }
 

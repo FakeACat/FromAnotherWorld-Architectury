@@ -1,5 +1,6 @@
 {
 	"credit": "Made with Blockbench",
+	"ambientocclusion": false,
 	"textures": {
 		"0": "fromanotherworld:block/tentacle/tentacle_ceiling_centre",
 		"particle": "fromanotherworld:block/thing_gore"

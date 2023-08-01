@@ -118,11 +118,9 @@ public abstract class FAWConfig {
         void set(){
             try {
                 Reader reader = new FileReader(getFile());
-                JsonElement jsonElement = new Gson().fromJson(reader, JsonObject.class)
-                        .getAsJsonObject(this.name)
-                        .get("value");
-                if (jsonElement != null){
-                    this.value = this.getFrom(jsonElement);
+                JsonObject jsonObject = new Gson().fromJson(reader, JsonObject.class).getAsJsonObject(this.name);
+                if (jsonObject != null){
+                    this.value = this.getFrom(jsonObject);
                 }
             } catch (FileNotFoundException e) {
                 FromAnotherWorld.LOGGER.error("FileNotFoundException while trying to read " + this.getName() + " from config file " + name() + ": " + e.getMessage());
@@ -137,7 +135,7 @@ public abstract class FAWConfig {
             return this.name;
         }
 
-        abstract T getFrom(JsonElement element);
+        abstract T getFrom(JsonObject object);
 
         abstract void addTo(JsonObject object);
     }
@@ -149,8 +147,8 @@ public abstract class FAWConfig {
         }
 
         @Override
-        Integer getFrom(JsonElement element) {
-            return element.getAsInt();
+        Integer getFrom(JsonObject object) {
+            return object.get("value").getAsInt();
         }
 
         @Override
@@ -166,8 +164,8 @@ public abstract class FAWConfig {
         }
 
         @Override
-        Boolean getFrom(JsonElement element) {
-            return element.getAsBoolean();
+        Boolean getFrom(JsonObject object) {
+            return object.get("value").getAsBoolean();
         }
 
         @Override
@@ -194,8 +192,8 @@ public abstract class FAWConfig {
         }
 
         @Override
-        String[] getFrom(JsonElement element) {
-            JsonArray jsonArray = element.getAsJsonArray();
+        String[] getFrom(JsonObject object) {
+            JsonArray jsonArray = object.get("value").getAsJsonArray();
             ArrayList<String> strings = new ArrayList<>();
             for (JsonElement e:
                  jsonArray) {
@@ -217,6 +215,48 @@ public abstract class FAWConfig {
 
         public boolean contains(String s){
             return Arrays.asList(this.get()).contains(s) || this.mods.contains(s.split(":")[0]);
+        }
+    }
+
+    public class FAWConfigSpawnEntryProperty extends FAWConfigProperty<Boolean> {
+
+        public FAWConfigSpawnEntryProperty(String name, @Nullable String description, boolean defaultEnabled, int defaultWeight, int defaultMin, int defaultMax) {
+            super(name, description, defaultEnabled);
+            this.weight = defaultWeight;
+            this.min = defaultMin;
+            this.max = defaultMax;
+        }
+
+        private int weight;
+        private int min;
+        private int max;
+
+        public int getWeight() {
+            return this.weight;
+        }
+
+        public int getMin() {
+            return this.min;
+        }
+
+        public int getMax() {
+            return this.max;
+        }
+
+        @Override
+        Boolean getFrom(JsonObject object) {
+            this.weight = object.get("spawn_weight").getAsInt();
+            this.min = object.get("minimum_group_size").getAsInt();
+            this.max = object.get("maximum_group_size").getAsInt();
+            return object.get("enabled").getAsBoolean();
+        }
+
+        @Override
+        void addTo(JsonObject object) {
+            object.addProperty("enabled", this.get());
+            object.addProperty("spawn_weight", this.getWeight());
+            object.addProperty("minimum_group_size", this.getMin());
+            object.addProperty("maximum_group_size", this.getMax());
         }
     }
 }

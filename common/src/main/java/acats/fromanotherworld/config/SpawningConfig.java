@@ -6,7 +6,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Monster;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Supplier;
 
 public class SpawningConfig extends FAWConfig {
@@ -64,27 +63,24 @@ public class SpawningConfig extends FAWConfig {
         ArrayList<FAWConfigProperty<?>> list = Lists.newArrayList(this.enabled, this.firstSpawningDay);
         for (Entry<?> e:
              entries) {
-            list.addAll(List.of(e.all()));
+            list.add(e.configProperty);
         }
         return list.toArray(new FAWConfigProperty[0]);
     }
 
     public class Entry<T extends Monster> {
         public final Supplier<EntityType<T>> supplier;
-        public final FAWConfigBooleanProperty enabled;
-        public final FAWConfigIntegerProperty weight;
-        public final FAWConfigIntegerProperty min;
-        public final FAWConfigIntegerProperty max;
+        public final FAWConfigSpawnEntryProperty configProperty;
         public Entry(Supplier<EntityType<T>> supplier, boolean enabledByDefault, String name, int weight, int min, int max){
             this.supplier = supplier;
-            this.enabled = new FAWConfigBooleanProperty(name + "_spawning_enabled", null, enabledByDefault);
-            this.weight = new FAWConfigIntegerProperty(name + "_spawn_weight", null, weight);
-            this.min = new FAWConfigIntegerProperty(name + "_min_group_size", null, min);
-            this.max = new FAWConfigIntegerProperty(name + "_max_group_size", null, max);
-        }
-
-        FAWConfigProperty<?>[] all(){
-            return new FAWConfigProperty[] { enabled, weight, min, max };
+            this.configProperty = new FAWConfigSpawnEntryProperty(
+                    name,
+                    null,
+                    enabledByDefault,
+                    weight,
+                    min,
+                    max
+            );
         }
     }
 }

@@ -1,6 +1,7 @@
 package acats.fromanotherworld.registry;
 
 import acats.fromanotherworld.config.Config;
+import acats.fromanotherworld.config.FAWConfig;
 import acats.fromanotherworld.config.SpawningConfig;
 import acats.fromanotherworld.entity.thing.Thing;
 import acats.fromanotherworld.tags.BiomeTags;
@@ -21,8 +22,9 @@ public class SpawnEntryRegistry {
         if (config.enabled.get()){
             for (SpawningConfig.Entry<?> entry:
                  config.entries) {
-                if (entry.enabled.get() && entry.weight.get() > 0 && entry.max.get() > 0){
-                    addThing(entry.supplier, entry.weight.get(), entry.min.get(), entry.max.get());
+                FAWConfig.FAWConfigSpawnEntryProperty property = entry.configProperty;
+                if (property.get() && property.getWeight() > 0 && property.getMax() > 0){
+                    addThing(entry.supplier, property.getWeight(), property.getMin(), property.getMax());
                 }
             }
         }

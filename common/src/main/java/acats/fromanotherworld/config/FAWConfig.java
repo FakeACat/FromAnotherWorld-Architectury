@@ -14,6 +14,10 @@ public abstract class FAWConfig {
     abstract int version();
     abstract FAWConfigProperty<?>[] properties();
 
+    private String quotedName() {
+        return '"' + this.name() + '"';
+    }
+
     private int actualVersion() {
         return this.version() + GLOBAL_VERSION;
     }
@@ -28,20 +32,35 @@ public abstract class FAWConfig {
             this.actualVersion());
 
     public void load(){
-        if (this.getFile().exists()){
-            this.autoRegenOutdated.set();
-            if (this.autoRegenOutdated.get()){
-                this.version.set();
-                if (this.version.get() < this.actualVersion()){
+        JsonObject cfgJson = null;
+        if (this.getFile().exists()) {
+            try {
+                Reader reader = new FileReader(getFile());
+                cfgJson = new Gson().fromJson(reader, JsonObject.class);
+            }
+            catch (FileNotFoundException e) {
+                FromAnotherWorld.LOGGER.error("FileNotFoundException while trying to read config file " + this.quotedName() + ": " + e.getMessage());
+            }
+            catch (JsonSyntaxException e) {
+                FromAnotherWorld.LOGGER.error("Invalid syntax in config file " + this.quotedName() + ": " + e.getMessage());
+            }
+
+            this.autoRegenOutdated.set(cfgJson);
+            if (this.autoRegenOutdated.get()) {
+                this.version.set(cfgJson);
+                if (this.version.get() < this.actualVersion() || !this.version.isLoaded()) {
+                    FromAnotherWorld.LOGGER.info("Config file " + this.quotedName() + " is outdated or invalid. Regenerating.");
                     this.version.set(this.actualVersion());
                     this.genFile(false);
                 }
             }
         }
-        else{
+        else {
+            FromAnotherWorld.LOGGER.info("Config file " + this.quotedName() + " does not exist. Generating.");
             this.genFile(true);
         }
-        this.setValues();
+
+        this.setValues(cfgJson);
     }
 
     private void addProperties(JsonObject object) {
@@ -67,10 +86,10 @@ public abstract class FAWConfig {
         object.add(property.getName(), obj);
     }
 
-    private void setValues() {
+    private void setValues(JsonObject cfg) {
         for (FAWConfigProperty<?> property:
                 this.properties()) {
-            property.set();
+            property.set(cfg);
         }
     }
 
@@ -85,10 +104,10 @@ public abstract class FAWConfig {
         if (create){
             try {
                 if (!getFile().createNewFile()) {
-                    FromAnotherWorld.LOGGER.error("Unable to create config file " + this.name());
+                    FromAnotherWorld.LOGGER.error("Unable to create config file " + this.quotedName());
                 }
             } catch (IOException e) {
-                FromAnotherWorld.LOGGER.error("IOException while attempting to generate config file " + this.name() + ": " + e.getMessage());
+                FromAnotherWorld.LOGGER.error("IOException while attempting to generate config file " + this.quotedName() + ": " + e.getMessage());
             }
         }
         try {
@@ -96,7 +115,7 @@ public abstract class FAWConfig {
             fileWriter.write(gson.toJson(cfg));
             fileWriter.close();
         } catch (IOException e) {
-            FromAnotherWorld.LOGGER.error("Failed writing to config file " + this.name() + ": " + e.getMessage());
+            FromAnotherWorld.LOGGER.error("Failed writing to config file " + this.quotedName() + ": " + e.getMessage());
         }
     }
 
@@ -104,26 +123,35 @@ public abstract class FAWConfig {
         private final String name;
         private final @Nullable String description;
         private T value;
+        private boolean loaded;
 
         private FAWConfigProperty(String name, @Nullable String description, T defaultValue) {
             this.name = name;
             this.description = description;
             this.value = defaultValue;
+            this.loaded = false;
         }
 
         public T get(){
             return this.value;
         }
 
-        void set(){
-            try {
-                Reader reader = new FileReader(getFile());
-                JsonObject jsonObject = new Gson().fromJson(reader, JsonObject.class).getAsJsonObject(this.name);
-                if (jsonObject != null){
+        void set(@Nullable JsonObject cfg) {
+            if (cfg == null) {
+                return;
+            }
+
+            if (cfg.get(this.name) instanceof JsonObject jsonObject) {
+                try {
                     this.value = this.getFrom(jsonObject);
                 }
-            } catch (FileNotFoundException e) {
-                FromAnotherWorld.LOGGER.error("FileNotFoundException while trying to read " + this.getName() + " from config file " + name() + ": " + e.getMessage());
+                catch (NullPointerException e) {
+                    FromAnotherWorld.LOGGER.warn("Missing value for " + '"' + this.getName() + '"' + " in config file " + quotedName() + ". Using default value. It is recommended to delete this config file to regenerate the option.");
+                }
+                this.loaded = true;
+            }
+            else {
+                FromAnotherWorld.LOGGER.warn("Missing " + '"' + this.getName() + '"' + " in config file " + quotedName() + ". Using default value. It is recommended to delete this config file to regenerate the option.");
             }
         }
 
@@ -138,6 +166,10 @@ public abstract class FAWConfig {
         abstract T getFrom(JsonObject object);
 
         abstract void addTo(JsonObject object);
+
+        public boolean isLoaded() {
+            return this.loaded;
+        }
     }
 
     public class FAWConfigIntegerProperty extends FAWConfigProperty<Integer> {

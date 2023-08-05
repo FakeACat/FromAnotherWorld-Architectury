@@ -1,5 +1,6 @@
 package acats.fromanotherworld.block;
 
+import acats.fromanotherworld.utilities.BlockUtilities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.LevelAccessor;
@@ -9,6 +10,7 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings("deprecation")
 public abstract class FleshBlock extends FlammableBlock {
     public FleshBlock(Properties settings) {
         super(settings, 15, 50);
@@ -26,6 +28,6 @@ public abstract class FleshBlock extends FlammableBlock {
 
     @Override
     public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
-        return world.getBlockState(pos.below()).isCollisionShapeFullBlock(world, pos.below());
+        return BlockUtilities.isOnAcceptableSurface(world, pos, Direction.DOWN);
     }
 }

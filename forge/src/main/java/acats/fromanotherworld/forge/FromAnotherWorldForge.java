@@ -4,7 +4,7 @@ import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.config.Config;
 import acats.fromanotherworld.forge.biomemodifiers.FAWBiomeModifier;
 import acats.fromanotherworld.forge.registry.*;
-import acats.fromanotherworld.utilities.ModLoaderDependant;
+import acats.fromanotherworld.utilities.interfaces.ModLoaderDependant;
 import com.mojang.serialization.Codec;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.world.BiomeModifier;

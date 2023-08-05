@@ -1,4 +1,4 @@
-package acats.fromanotherworld.utilities;
+package acats.fromanotherworld.utilities.interfaces.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.context.BlockPlaceContext;

@@ -14,6 +14,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings("deprecation")
 public class ThingGoreBlock extends FleshBlock {
     public static final IntegerProperty STAGE = IntegerProperty.create("stage", 0, 2);
     protected static final VoxelShape SHAPE_FRESH = Block.box(0.0, 0.0, 0.0, 16.0, 1.0, 16.0);

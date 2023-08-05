@@ -3,7 +3,7 @@ package acats.fromanotherworld.fabric;
 import acats.fromanotherworld.FromAnotherWorld;
 import acats.fromanotherworld.config.Config;
 import acats.fromanotherworld.fabric.registry.*;
-import acats.fromanotherworld.utilities.ModLoaderDependant;
+import acats.fromanotherworld.utilities.interfaces.ModLoaderDependant;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 

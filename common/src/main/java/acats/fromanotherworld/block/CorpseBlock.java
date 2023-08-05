@@ -3,7 +3,7 @@ package acats.fromanotherworld.block;
 import acats.fromanotherworld.block.entity.CorpseBlockEntity;
 import acats.fromanotherworld.block.interfaces.Gore;
 import acats.fromanotherworld.registry.BlockEntityRegistry;
-import acats.fromanotherworld.utilities.FAWWaterloggable;
+import acats.fromanotherworld.utilities.interfaces.block.FAWWaterloggable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.StringRepresentable;

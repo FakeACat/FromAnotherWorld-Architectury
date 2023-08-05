@@ -40,7 +40,7 @@ public class CorpseBlockEntity extends BlockEntity implements GeoBlockEntity {
             int size = CorpseBlock.getCorpseType(blockState).getSize();
             BlockUtilities.forEachBlockInCubeCentredAt(blockPos, size, blockPos1 -> {
                 if (level.random.nextInt(4) == 0)
-                    gore.attemptPlaceTentacle(level, blockPos1, Direction.getRandom(level.getRandom()));
+                    gore.attemptPlaceUndergroundGrowth(level, blockPos1, Direction.getRandom(level.getRandom()));
             });
         }
     }

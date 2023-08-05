@@ -3,6 +3,7 @@ package acats.fromanotherworld.block;
 import acats.fromanotherworld.block.interfaces.Gore;
 import acats.fromanotherworld.entity.thing.Thing;
 import acats.fromanotherworld.registry.EntityRegistry;
+import acats.fromanotherworld.utilities.BlockUtilities;
 import acats.fromanotherworld.utilities.EntityUtilities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -29,6 +30,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
 
+@SuppressWarnings("deprecation")
 public class TentacleBlock extends FleshBlock implements Gore {
     protected static final VoxelShape SHAPE_N = Block.box(0.0, 0.0, 0.0, 16.0, 16.0, 3.0);
     protected static final VoxelShape SHAPE_E = Block.box(13.0, 0.0, 0.0, 16.0, 16.0, 16.0);
@@ -92,12 +94,7 @@ public class TentacleBlock extends FleshBlock implements Gore {
 
     @Override
     public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
-        return this.isOnAcceptableSurface(world, pos, state.getValue(SURFACE));
-    }
-
-    private boolean isOnAcceptableSurface(BlockGetter getter, BlockPos pos, Direction side){
-        BlockState blockState = getter.getBlockState(pos.relative(side));
-        return blockState.isFaceSturdy(getter, pos.relative(side), side.getOpposite());
+        return BlockUtilities.isOnAcceptableSurface(world, pos, state.getValue(SURFACE));
     }
 
     @Nullable
@@ -224,11 +221,11 @@ public class TentacleBlock extends FleshBlock implements Gore {
     }
 
     @Override
-    public Direction surface(BlockState blockState) {
+    public Direction surface(Level level, BlockState blockState) {
         return blockState.getValue(SURFACE);
     }
 
-    private enum TentacleSide implements StringRepresentable {
+    public enum TentacleSide implements StringRepresentable {
         NONE("none"),
         BLOCK("block"),
         CONNECTED_UP("connected_up"),

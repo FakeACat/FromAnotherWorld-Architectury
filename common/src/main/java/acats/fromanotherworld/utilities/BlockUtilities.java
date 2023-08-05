@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -80,5 +81,12 @@ public class BlockUtilities {
                     .setValue(TunnelBlock.WATERLOGGED, level.getFluidState(blockPos).is(Fluids.WATER))
             );
         }
+    }
+
+
+
+    public static boolean isOnAcceptableSurface(BlockGetter getter, BlockPos pos, Direction side){
+        BlockState blockState = getter.getBlockState(pos.relative(side));
+        return blockState.isFaceSturdy(getter, pos.relative(side), side.getOpposite());
     }
 }

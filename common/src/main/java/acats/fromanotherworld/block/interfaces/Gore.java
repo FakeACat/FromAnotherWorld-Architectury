@@ -1,12 +1,15 @@
 package acats.fromanotherworld.block.interfaces;
 
+import acats.fromanotherworld.block.DisguisedTendrilsBlock;
 import acats.fromanotherworld.block.TentacleBlock;
 import acats.fromanotherworld.block.WallPalmerBlock;
 import acats.fromanotherworld.config.Config;
 import acats.fromanotherworld.registry.BlockRegistry;
+import acats.fromanotherworld.utilities.BlockUtilities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.function.Consumer;
@@ -15,20 +18,53 @@ public interface Gore {
     default boolean connectsHorizontally(BlockState blockState, Direction surface){
         return true;
     }
-    default Direction surface(BlockState blockState){
+    default Direction surface(Level level, BlockState blockState){
         return Direction.DOWN;
+    }
+    default boolean isUnderground(Level level, BlockPos pos) {
+        return level.getBrightness(LightLayer.SKY, pos) == 0;
     }
     default void spread(Level level, BlockPos pos, BlockState blockState){
         if (!level.isClientSide()){
-            Direction surface = surface(blockState);
-
-            this.forEachPossibleTentacleLocation(pos, surface, pos2 -> {
-                if (level.getRandom().nextInt(3) == 0)
-                    this.attemptPlaceTentacle(level, pos2, level.getRandom().nextInt(10) == 0 ? Direction.getRandom(level.getRandom()) : surface);
-            });
+            if (this.isUnderground(level, pos)) {
+                this.spreadUnderground(level, pos, blockState);
+            }
+            else {
+                this.spreadSurface(level, pos, blockState);
+            }
         }
     }
-    default void attemptPlaceTentacle(Level level, BlockPos pos, Direction surface){
+
+    default void spreadSurface(Level level, BlockPos pos, BlockState blockState) {
+        BlockUtilities.forEachBlockInCubeCentredAt(pos, 1, blockPos -> {
+            if (level.getRandom().nextInt(3) == 0) {
+                this.attemptPlaceSurfaceGrowth(level, blockPos);
+            }
+        });
+    }
+
+    default void attemptPlaceSurfaceGrowth(Level level, BlockPos pos) {
+        if (!level.getBlockState(pos).canBeReplaced() || !level.getBlockState(pos).getFluidState().isEmpty()) {
+            return;
+        }
+
+        BlockState state = DisguisedTendrilsBlock.correctStateAt(BlockRegistry.DISGUISED_TENDRILS.get().defaultBlockState(), level, pos);
+        if (state.canSurvive(level, pos)) {
+            level.setBlockAndUpdate(pos, state);
+        }
+    }
+
+    default void spreadUnderground(Level level, BlockPos pos, BlockState blockState) {
+        Direction surface = surface(level, blockState);
+
+        this.forEachPossibleTentacleLocation(pos, surface, pos2 -> {
+            if (level.getRandom().nextInt(3) == 0) {
+                this.attemptPlaceUndergroundGrowth(level, pos2, level.getRandom().nextInt(10) == 0 ? Direction.getRandom(level.getRandom()) : surface);
+            }
+        });
+    }
+
+    default void attemptPlaceUndergroundGrowth(Level level, BlockPos pos, Direction surface){
         BlockState state = TentacleBlock.correctConnectionStates(level, pos, BlockRegistry.TENTACLE.get().defaultBlockState().setValue(TentacleBlock.SURFACE, surface));
 
         var ref = new Object() {

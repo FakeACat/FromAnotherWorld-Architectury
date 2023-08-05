@@ -1,0 +1,28 @@
+{
+  "multipart": [
+    {
+      "apply": { "model": "fromanotherworld:block/disguised_tendrils", "x": 90, "y": 180 },
+      "when": { "north": true }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/disguised_tendrils", "x": 90, "y": 270 },
+      "when": { "east": true }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/disguised_tendrils", "x": 90 },
+      "when": { "south": true }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/disguised_tendrils", "x": 90, "y": 90 },
+      "when": { "west": true }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/disguised_tendrils", "x": 180 },
+      "when": { "up": true }
+    },
+    {
+      "apply": { "model": "fromanotherworld:block/disguised_tendrils" },
+      "when": { "down": true }
+    }
+  ]
+}

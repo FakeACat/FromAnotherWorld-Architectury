@@ -30,4 +30,8 @@ public class BlockRegistry {
             "tunnel",
             () -> new TunnelBlock(BlockBehaviour.Properties.of().noCollission().noOcclusion().destroyTime(5.0F))
     );
+    public static final FAWRegistryObject<DisguisedTendrilsBlock> DISGUISED_TENDRILS = BLOCK_REGISTRY.register(
+            "disguised_tendrils",
+            () -> new DisguisedTendrilsBlock(BlockBehaviour.Properties.of().noCollission().noOcclusion().instabreak().randomTicks().ignitedByLava())
+    );
 }

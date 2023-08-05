@@ -1,7 +1,7 @@
 package acats.fromanotherworld;
 
 import acats.fromanotherworld.registry.*;
-import acats.fromanotherworld.utilities.ModLoaderDependant;
+import acats.fromanotherworld.utilities.interfaces.ModLoaderDependant;
 import mod.azure.azurelib.AzureLib;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

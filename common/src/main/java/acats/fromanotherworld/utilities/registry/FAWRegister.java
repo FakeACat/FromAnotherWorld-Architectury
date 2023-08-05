@@ -21,4 +21,8 @@ public class FAWRegister<T> {
     public final void forEach(BiConsumer<String, Supplier<? extends T>> action){
         map.forEach((id, registryObject) -> action.accept(id, registryObject::get));
     }
+
+    public final T get(String id) {
+        return this.map.get(id).get();
+    }
 }

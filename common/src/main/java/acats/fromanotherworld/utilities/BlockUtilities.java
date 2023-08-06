@@ -63,8 +63,7 @@ public class BlockUtilities {
                     int s = y + q;
                     int t = z + p;
                     BlockPos blockPos = new BlockPos(r, s, t);
-                    BlockState blockState = level.getBlockState(blockPos);
-                    if (EntityUtilities.canThingDestroy(blockState) && level.getRandom().nextInt(chanceDenominator) == 0) {
+                    if (EntityUtilities.canThingDestroy(blockPos, level) && level.getRandom().nextInt(chanceDenominator) == 0) {
                         level.destroyBlock(blockPos, false, entity);
                     }
                 }

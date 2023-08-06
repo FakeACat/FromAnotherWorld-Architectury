@@ -141,8 +141,21 @@ public class EntityUtilities {
         }
     }
 
-    public static boolean canThingDestroy(BlockState block){
-        return !block.isAir() && !block.is(BlockTags.THING_IMMUNE) && block.getFluidState().isEmpty();
+    public static boolean canThingDestroy(BlockPos blockPos, Level level){
+        float maxHardness = Config.DIFFICULTY_CONFIG.maxGriefingHardness.get();
+
+        if (maxHardness < 0) {
+            return false;
+        }
+
+        BlockState blockState = level.getBlockState(blockPos);
+        float hardness = blockState.getDestroySpeed(level, blockPos);
+
+        if (hardness < 0 || hardness > maxHardness) {
+            return false;
+        }
+
+        return !blockState.isAir() && !blockState.is(BlockTags.THING_IMMUNE) && blockState.getFluidState().isEmpty();
     }
 
     public static boolean isVulnerable(LivingEntity entity){

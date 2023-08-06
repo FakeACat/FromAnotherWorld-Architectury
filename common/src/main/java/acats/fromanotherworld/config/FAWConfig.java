@@ -125,7 +125,7 @@ public abstract class FAWConfig {
         private T value;
         private boolean loaded;
 
-        private FAWConfigProperty(String name, @Nullable String description, T defaultValue) {
+        public FAWConfigProperty(String name, @Nullable String description, T defaultValue) {
             this.name = name;
             this.description = description;
             this.value = defaultValue;
@@ -181,6 +181,23 @@ public abstract class FAWConfig {
         @Override
         Integer getFrom(JsonObject object) {
             return object.get("value").getAsInt();
+        }
+
+        @Override
+        void addTo(JsonObject object) {
+            object.addProperty("value", this.get());
+        }
+    }
+
+    public class FAWConfigFloatProperty extends FAWConfigProperty<Float> {
+
+        public FAWConfigFloatProperty(String name, @Nullable String description, Float defaultValue) {
+            super(name, description, defaultValue);
+        }
+
+        @Override
+        Float getFrom(JsonObject object) {
+            return object.get("value").getAsFloat();
         }
 
         @Override

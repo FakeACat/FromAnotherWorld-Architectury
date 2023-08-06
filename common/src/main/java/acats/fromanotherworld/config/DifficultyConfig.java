@@ -79,6 +79,11 @@ public class DifficultyConfig extends FAWConfig {
             "Most Things should be able to burrow if they cannot reach where they are trying to pathfind to.",
             false
     );
+    public final FAWConfigFloatProperty maxGriefingHardness = new FAWConfigFloatProperty(
+            "maxGriefingHardness",
+            "The maximum hardness that Things can break. Set to a negative value to disable all Thing block breaking.\nBlocks with negative hardness values can never be broken.\nTo blacklist specific blocks, add to the thing_immune tag using a data pack.",
+            49.0F
+    );
 
     @Override
     FAWConfigProperty<?>[] properties() {
@@ -95,7 +100,8 @@ public class DifficultyConfig extends FAWConfig {
                 this.impalerMergeChance,
                 this.prowlerMergeChance,
                 this.beastMergeChance,
-                this.burrowing
+                this.burrowing,
+                this.maxGriefingHardness
         };
     }
 }

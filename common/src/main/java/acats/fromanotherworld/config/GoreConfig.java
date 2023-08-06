@@ -27,7 +27,7 @@ public class GoreConfig extends FAWConfig {
 
     public final FAWConfigIntegerProperty tunnelGoreTime = new FAWConfigIntegerProperty(
             "tunnel_gore_time",
-            "Minimum age of a tunnel block in ticks required for it to start spreading gore blocks.\nSet to negative to disable.",
+            "Minimum age of a tunnel block in ticks required for it to start spreading gore blocks.\nSet to a negative value to disable.",
             TimeInTicks.HOUR
     );
 

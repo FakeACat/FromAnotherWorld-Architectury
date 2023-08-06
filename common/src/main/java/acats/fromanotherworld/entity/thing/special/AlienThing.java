@@ -242,7 +242,7 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
     }
 
     private boolean breakOrPlaceable(BlockPos pos){
-        return EntityUtilities.canThingDestroy(this.level().getBlockState(pos)) || this.level().getBlockState(pos).isAir();
+        return EntityUtilities.canThingDestroy(pos, this.level()) || this.level().getBlockState(pos).isAir();
     }
 
     @Override

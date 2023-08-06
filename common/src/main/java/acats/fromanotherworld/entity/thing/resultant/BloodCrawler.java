@@ -1,6 +1,7 @@
 package acats.fromanotherworld.entity.thing.resultant;
 
 import acats.fromanotherworld.block.CorpseBlock;
+import acats.fromanotherworld.config.Config;
 import acats.fromanotherworld.entity.goal.DirectedWanderGoal;
 import acats.fromanotherworld.entity.goal.ThingAttackGoal;
 import acats.fromanotherworld.entity.model.thing.resultant.BloodCrawlerModel;
@@ -125,5 +126,10 @@ public class BloodCrawler extends Thing {
     @Override
     public ThingCategory getThingCategory() {
         return ThingCategory.FODDER;
+    }
+
+    @Override
+    public BurrowType getBurrowType() {
+        return Config.DIFFICULTY_CONFIG.burrowing.get() ? BurrowType.CAN_BURROW : BurrowType.CANNOT_BURROW;
     }
 }

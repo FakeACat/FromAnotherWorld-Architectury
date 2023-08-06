@@ -3,7 +3,7 @@ package acats.fromanotherworld.block;
 import acats.fromanotherworld.block.entity.CorpseBlockEntity;
 import acats.fromanotherworld.block.interfaces.Gore;
 import acats.fromanotherworld.registry.BlockEntityRegistry;
-import acats.fromanotherworld.utilities.interfaces.block.FAWWaterloggable;
+import acats.fromanotherworld.utilities.interfaces.block.Waterloggable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.StringRepresentable;
@@ -26,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("deprecation")
-public class CorpseBlock extends BaseEntityBlock implements Gore, FAWWaterloggable {
+public class CorpseBlock extends BaseEntityBlock implements Gore, Waterloggable {
     public static final EnumProperty<CorpseType> TYPE = EnumProperty.create("type", CorpseType.class);
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     public static final BooleanProperty WATERLOGGED;

@@ -2,9 +2,12 @@ package acats.fromanotherworld.registry;
 
 import acats.fromanotherworld.block.*;
 
+import acats.fromanotherworld.mixin.FireBlockInvoker;
+import acats.fromanotherworld.utilities.interfaces.block.Flammable;
 import acats.fromanotherworld.utilities.registry.FAWRegister;
 import acats.fromanotherworld.utilities.registry.FAWRegistryObject;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
 public class BlockRegistry {
@@ -34,4 +37,15 @@ public class BlockRegistry {
             "disguised_tendrils",
             () -> new DisguisedTendrilsBlock(BlockBehaviour.Properties.of().noCollission().noOcclusion().instabreak().randomTicks().ignitedByLava())
     );
+
+    public static void setFlammableBlocks() {
+        FireBlockInvoker invoker = (FireBlockInvoker) Blocks.FIRE;
+
+        BLOCK_REGISTRY.forEach((id, sup) -> {
+            Block block = sup.get();
+            if (block instanceof Flammable f) {
+                invoker.invokeSetFlammable(block, f.fireSpread(), f.flammability());
+            }
+        });
+    }
 }

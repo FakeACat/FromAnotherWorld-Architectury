@@ -621,23 +621,22 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing, Co
 
             FluidState fluidState = this.level().getBlockState(this.blockPosition()).getFluidState();
 
-            CorpseBlock.CorpseType corpseType = this.getSuitableCorpse();
-
-            if (fluidState.isEmpty() && corpseType == null){
-                this.level().setBlockAndUpdate(this.blockPosition(), BlockRegistry.THING_GORE.get().defaultBlockState());
-                return;
-            }
-
-            if (fluidState.isEmpty() || fluidState.is(Fluids.WATER)) {
-                this.level().setBlockAndUpdate(this.blockPosition(),
-                        CorpseBlock.setCorpseType(BlockRegistry.CORPSE.get()
-                                .defaultBlockState().rotate(Rotation.getRandom(this.getRandom())), corpseType).setValue(CorpseBlock.WATERLOGGED, fluidState.is(Fluids.WATER)));
-            }
+            this.getSuitableCorpse().ifPresentOrElse(corpseType -> {
+                if (fluidState.isEmpty() || fluidState.is(Fluids.WATER)) {
+                    this.level().setBlockAndUpdate(this.blockPosition(),
+                            CorpseBlock.setCorpseType(BlockRegistry.CORPSE.get()
+                                    .defaultBlockState().rotate(Rotation.getRandom(this.getRandom())), corpseType).setValue(CorpseBlock.WATERLOGGED, fluidState.is(Fluids.WATER)));
+                }
+            }, () -> {
+                if (fluidState.isEmpty()) {
+                    this.level().setBlockAndUpdate(this.blockPosition(), BlockRegistry.THING_GORE.get().defaultBlockState());
+                }
+            });
         }
     }
 
-    public @Nullable CorpseBlock.CorpseType getSuitableCorpse(){
-        return CorpseBlock.CorpseType.MEDIUM_1;
+    public Optional<CorpseBlock.CorpseType> getSuitableCorpse(){
+        return Optional.of(CorpseBlock.CorpseType.MEDIUM_1);
     }
 
     @Override

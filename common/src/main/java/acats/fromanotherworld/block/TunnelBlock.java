@@ -3,7 +3,7 @@ package acats.fromanotherworld.block;
 import acats.fromanotherworld.block.entity.TunnelBlockEntity;
 import acats.fromanotherworld.block.interfaces.Gore;
 import acats.fromanotherworld.registry.BlockEntityRegistry;
-import acats.fromanotherworld.utilities.interfaces.block.FAWWaterloggable;
+import acats.fromanotherworld.utilities.interfaces.block.Waterloggable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.StringRepresentable;
@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("deprecation")
-public class TunnelBlock extends BaseEntityBlock implements FAWWaterloggable, Gore {
+public class TunnelBlock extends BaseEntityBlock implements Waterloggable, Gore {
     private static final VoxelShape shape = Block.box(0, 0, 0, 16, 4, 16);
     public static final EnumProperty<TentacleState> TENTACLE_STATE;
     public static final BooleanProperty WATERLOGGED;

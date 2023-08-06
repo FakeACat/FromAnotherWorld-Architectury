@@ -24,7 +24,8 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 public class DogBeastSpitter extends ResizeableThing implements RangedAttackMob {
 
@@ -117,7 +118,7 @@ public class DogBeastSpitter extends ResizeableThing implements RangedAttackMob 
     }
 
     @Override
-    public @Nullable CorpseBlock.CorpseType getSuitableCorpse() {
-        return CorpseBlock.CorpseType.SMALL_1;
+    public Optional<CorpseBlock.CorpseType> getSuitableCorpse() {
+        return Optional.of(CorpseBlock.CorpseType.SMALL_1);
     }
 }

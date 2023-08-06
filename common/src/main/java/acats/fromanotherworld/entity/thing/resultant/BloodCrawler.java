@@ -25,7 +25,8 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 public class BloodCrawler extends Thing {
 
@@ -103,10 +104,9 @@ public class BloodCrawler extends Thing {
         this.setVariant(nbt.getInt("Variant"));
     }
 
-    @Nullable
     @Override
-    public CorpseBlock.CorpseType getSuitableCorpse() {
-        return null;
+    public Optional<CorpseBlock.CorpseType> getSuitableCorpse() {
+        return Optional.empty();
     }
 
     static {

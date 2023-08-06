@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 
-public interface FAWWaterloggable extends SimpleWaterloggedBlock {
+public interface Waterloggable extends SimpleWaterloggedBlock {
 
     BooleanProperty getWaterloggedProperty();
 

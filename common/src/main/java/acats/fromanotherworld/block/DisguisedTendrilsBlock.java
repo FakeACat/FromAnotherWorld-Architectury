@@ -59,7 +59,7 @@ public class DisguisedTendrilsBlock extends FleshBlock implements Gore, CustomCo
         }
 
         if (blockState.getValue(DOWN)) {
-            voxelShape = DOWN_AABB;
+            voxelShape = Shapes.or(voxelShape, DOWN_AABB);
         }
 
         if (blockState.getValue(NORTH)) {

@@ -21,7 +21,8 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 public class Crawler extends AbsorberThing {
 
@@ -88,8 +89,8 @@ public class Crawler extends AbsorberThing {
     }
 
     @Override
-    public @Nullable CorpseBlock.CorpseType getSuitableCorpse() {
-        return CorpseBlock.CorpseType.SMALL_1;
+    public Optional<CorpseBlock.CorpseType> getSuitableCorpse() {
+        return Optional.of(CorpseBlock.CorpseType.SMALL_1);
     }
 
     public boolean blairSpawned;

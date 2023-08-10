@@ -19,10 +19,10 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "acats.fromanotherworld.fabric.FromAnotherWorldFabric"
+      "mod.acats.fromanotherworld.fabric.FromAnotherWorldFabric"
     ],
     "client": [
-      "acats.fromanotherworld.fabric.FromAnotherWorldClientFabric"
+      "mod.acats.fromanotherworld.fabric.FromAnotherWorldClientFabric"
     ]
   },
   "mixins": [

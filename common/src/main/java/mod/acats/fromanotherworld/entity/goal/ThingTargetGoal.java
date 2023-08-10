@@ -7,6 +7,7 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class ThingTargetGoal<T extends LivingEntity> extends NearestAttackableTargetGoal<T> {
@@ -33,7 +34,7 @@ public class ThingTargetGoal<T extends LivingEntity> extends NearestAttackableTa
     }
 
     @Override
-    protected AABB getTargetSearchArea(double distance) {
+    protected @NotNull AABB getTargetSearchArea(double distance) {
         if (mob.canHunt){
             return this.mob.getBoundingBox().inflate(distance, distance / 2, distance);
         }

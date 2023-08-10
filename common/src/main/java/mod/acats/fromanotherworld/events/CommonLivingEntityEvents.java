@@ -58,14 +58,14 @@ public class CommonLivingEntityEvents {
 
     private static int revealCooldown(CoordinatedThing coordinatedThing) {
         int value = 12000;
-        value *= coordinatedThing.faw$getHunger().revealCooldownMultiplier;
+        value = (int) ((float) value * coordinatedThing.faw$getHunger().revealCooldownMultiplier);
         return value;
     }
 
     private static int resultantChance(CoordinatedThing coordinatedThing) {
         int value = 9000;
-        value *= coordinatedThing.faw$getHunger().transformChanceMultiplier;
-        value *= coordinatedThing.faw$getAggression().transformChanceMultiplier;
+        value = (int) ((float) value * coordinatedThing.faw$getHunger().transformChanceMultiplier);
+        value = (int) ((float) value * coordinatedThing.faw$getAggression().transformChanceMultiplier);
         return value;
     }
 

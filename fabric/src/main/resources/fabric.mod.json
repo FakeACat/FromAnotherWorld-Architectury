@@ -33,6 +33,7 @@
     "java": ">=17",
     "fabric": "*",
     "minecraft": ">=1.20.1",
-    "azurelib": ">=1.0.15"
+    "azurelib": ">=1.0.15",
+    "fromanotherlibrary": ">=1.0.0"
   }
 }

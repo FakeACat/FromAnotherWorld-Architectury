@@ -33,3 +33,10 @@ mandatory = true
 versionRange="[1.0.15,)"
 ordering = "NONE"
 side = "BOTH"
+
+[[dependencies.fromanotherworld]]
+modId = "fromanotherlibrary"
+mandatory = true
+versionRange="[1.0.0,)"
+ordering = "NONE"
+side = "BOTH"

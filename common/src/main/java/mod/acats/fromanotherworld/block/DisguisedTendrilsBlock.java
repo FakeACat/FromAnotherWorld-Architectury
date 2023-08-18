@@ -1,8 +1,8 @@
 package mod.acats.fromanotherworld.block;
 
+import mod.acats.fromanotherlibrary.utilities.block.Colourable;
 import mod.acats.fromanotherworld.block.interfaces.Gore;
 import mod.acats.fromanotherworld.utilities.BlockUtilities;
-import mod.acats.fromanotherworld.utilities.interfaces.block.CustomColourProviderBlock;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.core.BlockPos;
@@ -28,7 +28,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("deprecation")
-public class DisguisedTendrilsBlock extends FleshBlock implements Gore, CustomColourProviderBlock {
+public class DisguisedTendrilsBlock extends FleshBlock implements Gore, Colourable {
     private static final BooleanProperty NORTH;
     private static final BooleanProperty EAST;
     private static final BooleanProperty SOUTH;

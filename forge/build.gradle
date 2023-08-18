@@ -36,6 +36,8 @@ dependencies {
     forge "net.minecraftforge:forge:${rootProject.minecraft_version}-${rootProject.forge_version}"
     modImplementation "mod.azure.azurelib:azurelib-forge-${rootProject.minecraft_version}:${rootProject.azurelib_version_forge}"
 
+    modImplementation files(new File(rootDir.parentFile, "/FromAnotherLibrary/forge/build/libs/FromAnotherLibrary-forge-${rootProject.minecraft_version}-${rootProject.fromanotherlibrary_version}.jar"))
+
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
 }

@@ -1,7 +1,6 @@
 package mod.acats.fromanotherworld.forge.events;
 
 import mod.acats.fromanotherworld.FromAnotherWorld;
-import mod.acats.fromanotherworld.registry.BlockRegistry;
 import mod.acats.fromanotherworld.registry.SpawnEntryRegistry;
 import mod.acats.fromanotherworld.utilities.registry.FAWSpawnEntry;
 import net.minecraft.world.entity.Mob;
@@ -18,8 +17,6 @@ public class MiscCommonEvents {
             for (FAWSpawnEntry<?> e: SpawnEntryRegistry.entries) {
                 add(e);
             }
-
-            BlockRegistry.setFlammableBlocks();
         });
     }
 

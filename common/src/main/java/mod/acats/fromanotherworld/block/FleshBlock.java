@@ -1,7 +1,7 @@
 package mod.acats.fromanotherworld.block;
 
+import mod.acats.fromanotherlibrary.utilities.block.Flammable;
 import mod.acats.fromanotherworld.utilities.BlockUtilities;
-import mod.acats.fromanotherworld.utilities.interfaces.block.Flammable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.LevelAccessor;

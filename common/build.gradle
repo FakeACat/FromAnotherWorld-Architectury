@@ -15,6 +15,8 @@ repositories{
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
     modImplementation "mod.azure.azurelib:azurelib-fabric-${rootProject.minecraft_version}:${rootProject.azurelib_version_fabric}"
+
+    modImplementation files(new File(rootDir.parentFile, "/FromAnotherLibrary/fabric/build/libs/FromAnotherLibrary-fabric-${rootProject.minecraft_version}-${rootProject.fromanotherlibrary_version}.jar"))
 }
 
 publishing {

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
+@Deprecated
 public class FAWRegister<T> {
     public FAWRegister(){
     }

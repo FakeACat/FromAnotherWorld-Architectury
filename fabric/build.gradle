@@ -31,6 +31,8 @@ dependencies {
     modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}+${rootProject.minecraft_version}"
     modImplementation "mod.azure.azurelib:azurelib-fabric-${rootProject.minecraft_version}:${rootProject.azurelib_version_fabric}"
 
+    modImplementation files(new File(rootDir.parentFile, "/FromAnotherLibrary/fabric/build/libs/FromAnotherLibrary-fabric-${rootProject.minecraft_version}-${rootProject.fromanotherlibrary_version}.jar"))
+
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
 }

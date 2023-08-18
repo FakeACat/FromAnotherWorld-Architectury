@@ -1,6 +1,6 @@
 package mod.acats.fromanotherworld.item;
 
-import mod.acats.fromanotherworld.FromAnotherWorld;
+import mod.acats.fromanotherlibrary.platform.ModLoaderSpecific;
 import mod.acats.fromanotherworld.memory.GlobalThingMemory;
 import mod.acats.fromanotherworld.memory.ThingBaseOfOperations;
 import mod.acats.fromanotherworld.spawning.SpawningManager;
@@ -102,7 +102,7 @@ public class ImpostorDetectorItem extends Item {
             msg(user, " -Y: " + b.getY());
             msg(user, " -Z: " + b.getZ());
             msg(user, " -Size: " + b.getSize());
-            if (FromAnotherWorld.mlDep.inDevEnv()) {
+            if (ModLoaderSpecific.INSTANCE.isInDev()) {
                 msg(user, " -Director:");
                 msg(user, "  -Aggression: " + b.director.getAggression());
                 msg(user, "  -Hunger: " + b.director.getHunger());

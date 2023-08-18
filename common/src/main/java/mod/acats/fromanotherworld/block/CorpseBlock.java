@@ -1,9 +1,9 @@
 package mod.acats.fromanotherworld.block;
 
+import mod.acats.fromanotherlibrary.utilities.block.Waterloggable;
 import mod.acats.fromanotherworld.block.entity.CorpseBlockEntity;
 import mod.acats.fromanotherworld.block.interfaces.Gore;
 import mod.acats.fromanotherworld.registry.BlockEntityRegistry;
-import mod.acats.fromanotherworld.utilities.interfaces.block.Waterloggable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.StringRepresentable;

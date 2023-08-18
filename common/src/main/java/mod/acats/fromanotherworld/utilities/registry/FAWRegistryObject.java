@@ -2,6 +2,7 @@ package mod.acats.fromanotherworld.utilities.registry;
 
 import java.util.function.Supplier;
 
+@Deprecated
 public class FAWRegistryObject<T> {
     public FAWRegistryObject(Supplier<T> supplier){
         this.supplier = supplier;

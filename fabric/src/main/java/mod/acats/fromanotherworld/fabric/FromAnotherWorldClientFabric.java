@@ -2,7 +2,6 @@ package mod.acats.fromanotherworld.fabric;
 
 import mod.acats.fromanotherlibrary.registry.client.ClientRegistryFabric;
 import mod.acats.fromanotherworld.FromAnotherWorld;
-import mod.acats.fromanotherworld.fabric.registry.EntityRegistryFabric;
 import mod.acats.fromanotherworld.fabric.registry.ParticleRegistryFabric;
 import mod.acats.fromanotherworld.registry.BlockRegistry;
 import net.fabricmc.api.ClientModInitializer;
@@ -12,7 +11,6 @@ import net.minecraft.client.renderer.RenderType;
 public class FromAnotherWorldClientFabric implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        EntityRegistryFabric.clientRegister();
         ParticleRegistryFabric.clientRegister();
         ClientRegistryFabric.registerClient(new FromAnotherWorld());
 

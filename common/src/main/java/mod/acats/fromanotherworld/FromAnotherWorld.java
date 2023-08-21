@@ -1,20 +1,24 @@
 package mod.acats.fromanotherworld;
 
 import mod.acats.fromanotherlibrary.registry.CommonMod;
-import mod.acats.fromanotherlibrary.registry.Register;
+import mod.acats.fromanotherlibrary.registry.FALRegister;
 import mod.acats.fromanotherlibrary.registry.TabPopulator;
 import mod.acats.fromanotherlibrary.registry.client.ClientMod;
-import mod.acats.fromanotherworld.registry.BlockRegistry;
-import mod.acats.fromanotherworld.registry.DatapackRegistry;
-import mod.acats.fromanotherworld.registry.ItemRegistry;
-import mod.acats.fromanotherworld.registry.SpawnEntryRegistry;
+import mod.acats.fromanotherworld.registry.*;
 import mod.azure.azurelib.AzureLib;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 public class FromAnotherWorld implements CommonMod {
 
@@ -36,27 +40,42 @@ public class FromAnotherWorld implements CommonMod {
     }
 
     @Override
-    public @Nullable Register<Item> getItemRegister() {
-        return ItemRegistry.ITEM_REGISTRY;
+    public Optional<FALRegister<Item>> getItemRegister() {
+        return Optional.of(ItemRegistry.ITEM_REGISTRY);
     }
 
     @Override
-    public @Nullable Register<CreativeModeTab> getTabRegister() {
-        return ItemRegistry.TAB_REGISTRY;
+    public Optional<FALRegister<CreativeModeTab>> getTabRegister() {
+        return Optional.of(ItemRegistry.TAB_REGISTRY);
     }
 
     @Override
-    public @Nullable TabPopulator getTabPopulator() {
-        return ItemRegistry.TAB_POPULATOR;
+    public Optional<TabPopulator> getTabPopulator() {
+        return Optional.of(ItemRegistry.TAB_POPULATOR);
     }
 
     @Override
-    public @Nullable Register<Block> getBlockRegister() {
-        return BlockRegistry.BLOCK_REGISTRY;
+    public Optional<FALRegister<Block>> getBlockRegister() {
+        return Optional.of(BlockRegistry.BLOCK_REGISTRY);
     }
 
     @Override
-    public @Nullable ClientMod getClientMod() {
-        return new FromAnotherWorldClient();
+    public Optional<FALRegister<BlockEntityType<?>>> getBlockEntityRegister() {
+        return Optional.of(BlockEntityRegistry.BLOCK_ENTITY_REGISTRY);
+    }
+
+    @Override
+    public Optional<FALRegister<EntityType<?>>> getEntityRegister() {
+        return Optional.of(EntityRegistry.ENTITY_REGISTRY);
+    }
+
+    @Override
+    public Optional<HashMap<EntityType<? extends LivingEntity>, Supplier<AttributeSupplier.Builder>>> getEntityAttributeRegister() {
+        return Optional.of(EntityRegistry.getAttributes());
+    }
+
+    @Override
+    public Optional<ClientMod> getClientMod() {
+        return Optional.of(new FromAnotherWorldClient());
     }
 }

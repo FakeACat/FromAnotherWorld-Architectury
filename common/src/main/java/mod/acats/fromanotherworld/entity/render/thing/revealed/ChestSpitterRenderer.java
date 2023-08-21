@@ -13,7 +13,7 @@ public class ChestSpitterRenderer extends ThingRenderer<ChestSpitter> {
     private final TentacleSegmentModel tentacleSegmentModel;
     public ChestSpitterRenderer(EntityRendererProvider.Context ctx) {
         super(ctx, new ChestSpitterModel());
-        this.tentacleSegmentModel = new TentacleSegmentModel(ctx.getModelSet().bakeLayer(EntityRegistry.tentacleSegmentModelLayer));
+        this.tentacleSegmentModel = new TentacleSegmentModel(ctx.getModelSet().bakeLayer(EntityRegistry.TENTACLE_SEGMENT_MODEL_LAYER));
         this.shadowRadius = 0.0F;
     }
 

@@ -16,7 +16,7 @@ public class TransitionEntityRenderer extends EntityRenderer<TransitionEntity> {
     private final TentacleSegmentModel tentacleSegmentModel;
     public TransitionEntityRenderer(EntityRendererProvider.Context ctx) {
         super(ctx);
-        this.tentacleSegmentModel = new TentacleSegmentModel(ctx.getModelSet().bakeLayer(EntityRegistry.tentacleSegmentModelLayer));
+        this.tentacleSegmentModel = new TentacleSegmentModel(ctx.getModelSet().bakeLayer(EntityRegistry.TENTACLE_SEGMENT_MODEL_LAYER));
     }
 
     @Override

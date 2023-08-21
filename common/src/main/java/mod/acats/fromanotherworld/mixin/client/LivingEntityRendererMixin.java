@@ -34,6 +34,6 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void init(EntityRendererProvider.Context ctx, M model, float shadowRadius, CallbackInfo ci){
-        this.addLayer(new RevealedThingFeatureRenderer<>(this, ctx.getModelSet().bakeLayer(EntityRegistry.spiderLegsModelLayer)));
+        this.addLayer(new RevealedThingFeatureRenderer<>(this, ctx.getModelSet().bakeLayer(EntityRegistry.SPIDER_LEGS_MODEL_LAYER)));
     }
 }

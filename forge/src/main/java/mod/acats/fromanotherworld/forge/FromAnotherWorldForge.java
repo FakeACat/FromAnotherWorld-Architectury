@@ -24,12 +24,10 @@ public class FromAnotherWorldForge {
         final IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
         MinecraftForge.EVENT_BUS.register(eventBus);
 
-        EntityRegistryForge.register(eventBus);
         ParticleRegistryForge.register(eventBus);
         SoundRegistryForge.register(eventBus);
         StatusEffectRegistryForge.register(eventBus);
         RecipeRegistryForge.register(eventBus);
-        BlockEntityRegistryForge.register(eventBus);
         final DeferredRegister<Codec<? extends BiomeModifier>> biomeModifiers = DeferredRegister.create(ForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, FromAnotherWorld.MOD_ID);
         biomeModifiers.register(eventBus);
         biomeModifiers.register("thing_spawns", FAWBiomeModifier::makeCodec);

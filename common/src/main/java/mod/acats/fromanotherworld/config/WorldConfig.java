@@ -1,25 +1,27 @@
 package mod.acats.fromanotherworld.config;
 
-public class WorldConfig extends FAWConfig {
+import mod.acats.fromanotherlibrary.config.FALConfig;
+
+public class WorldConfig extends FALConfig {
     @Override
-    String name() {
+    protected String name() {
         return "world";
     }
 
     @Override
-    int version() {
+    protected int version() {
         return 0;
     }
 
-    public final FAWConfigBooleanProperty alienChunkLoading = new FAWConfigBooleanProperty(
+    public final FALConfigBooleanProperty alienChunkLoading = new FALConfigBooleanProperty(
             "alien_thing_chunk_loading",
             "Should the Alien Thing be able to keep chunks around it loaded?\nMay cause issues with other mods that load chunks.",
             true
     );
 
     @Override
-    FAWConfigProperty<?>[] properties() {
-        return new FAWConfigProperty[] {
+    protected FALConfigProperty<?>[] properties() {
+        return new FALConfigProperty[] {
                 this.alienChunkLoading
         };
     }

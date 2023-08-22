@@ -1,5 +1,6 @@
 package mod.acats.fromanotherworld.config;
 
+import mod.acats.fromanotherlibrary.config.FALConfig;
 import mod.acats.fromanotherworld.registry.EntityRegistry;
 import com.google.common.collect.Lists;
 import net.minecraft.world.entity.EntityType;
@@ -8,14 +9,14 @@ import net.minecraft.world.entity.monster.Monster;
 import java.util.ArrayList;
 import java.util.function.Supplier;
 
-public class SpawningConfig extends FAWConfig {
+public class SpawningConfig extends FALConfig {
     @Override
-    String name() {
+    protected String name() {
         return "spawning";
     }
 
     @Override
-    int version() {
+    protected int version() {
         return 0;
     }
 
@@ -29,20 +30,20 @@ public class SpawningConfig extends FAWConfig {
         entries.add(entry);
     }
 
-    public final FAWConfigBooleanProperty enabled = new FAWConfigBooleanProperty(
+    public final FALConfigBooleanProperty enabled = new FALConfigBooleanProperty(
             "enabled",
             "Should Things spawn like vanilla mobs?\nNot recommended for the intended experience.",
             false
     );
 
-    public final FAWConfigIntegerProperty firstSpawningDay = new FAWConfigIntegerProperty(
+    public final FALConfigIntegerProperty firstSpawningDay = new FALConfigIntegerProperty(
             "first_spawning_day",
             "The first day that Things can start spawning naturally.\nThis option treats the first day in a world as day 1, unlike the vanilla F3 screen.",
             2
     );
 
     @Override
-    FAWConfigProperty<?>[] properties() {
+    protected FALConfigProperty<?>[] properties() {
 
         create(EntityRegistry.BLOOD_CRAWLER::get, "blood_crawler", 10, 3, 5);
 
@@ -60,20 +61,20 @@ public class SpawningConfig extends FAWConfig {
 
         create(EntityRegistry.ALIEN_THING::get, "alien_thing", 1, 1, 1, false);
 
-        ArrayList<FAWConfigProperty<?>> list = Lists.newArrayList(this.enabled, this.firstSpawningDay);
+        ArrayList<FALConfigProperty<?>> list = Lists.newArrayList(this.enabled, this.firstSpawningDay);
         for (Entry<?> e:
              entries) {
             list.add(e.configProperty);
         }
-        return list.toArray(new FAWConfigProperty[0]);
+        return list.toArray(new FALConfigProperty[0]);
     }
 
     public class Entry<T extends Monster> {
         public final Supplier<EntityType<T>> supplier;
-        public final FAWConfigSpawnEntryProperty configProperty;
+        public final FALConfigSpawnEntryProperty configProperty;
         public Entry(Supplier<EntityType<T>> supplier, boolean enabledByDefault, String name, int weight, int min, int max){
             this.supplier = supplier;
-            this.configProperty = new FAWConfigSpawnEntryProperty(
+            this.configProperty = new FALConfigSpawnEntryProperty(
                     name,
                     null,
                     enabledByDefault,

@@ -4,6 +4,7 @@ import mod.acats.fromanotherlibrary.registry.CommonMod;
 import mod.acats.fromanotherlibrary.registry.FALRegister;
 import mod.acats.fromanotherlibrary.registry.TabPopulator;
 import mod.acats.fromanotherlibrary.registry.client.ClientMod;
+import mod.acats.fromanotherworld.config.Config;
 import mod.acats.fromanotherworld.registry.*;
 import mod.azure.azurelib.AzureLib;
 import net.minecraft.world.entity.EntityType;
@@ -25,13 +26,12 @@ public class FromAnotherWorld implements CommonMod {
     public static final String MOD_ID = "fromanotherworld";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
-    public void init() {
+    @Override
+    public void preRegisterContent() {
         AzureLib.initialize();
-        ItemRegistry.register();
+        ItemRegistry.registerSpawnEggs();
         DatapackRegistry.register();
         SpawnEntryRegistry.register();
-
-        registerEverything();
     }
 
     @Override
@@ -77,5 +77,10 @@ public class FromAnotherWorld implements CommonMod {
     @Override
     public Optional<ClientMod> getClientMod() {
         return Optional.of(new FromAnotherWorldClient());
+    }
+
+    @Override
+    public void loadConfigs() {
+        Config.load(this.getConfigFolder());
     }
 }

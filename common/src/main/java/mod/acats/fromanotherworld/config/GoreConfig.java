@@ -1,39 +1,40 @@
 package mod.acats.fromanotherworld.config;
 
+import mod.acats.fromanotherlibrary.config.FALConfig;
 import mod.acats.fromanotherworld.constants.TimeInTicks;
 
-public class GoreConfig extends FAWConfig {
+public class GoreConfig extends FALConfig {
     @Override
-    String name() {
+    protected String name() {
         return "gore";
     }
 
     @Override
-    int version() {
+    protected int version() {
         return 1;
     }
 
-    public final FAWConfigBooleanProperty enabled = new FAWConfigBooleanProperty(
+    public final FALConfigBooleanProperty enabled = new FALConfigBooleanProperty(
             "enabled",
             "Should corpses that spread gore be placed when Things are killed?",
             true
     );
 
-    public final FAWConfigIntegerProperty wallPalmerChance = new FAWConfigIntegerProperty(
+    public final FALConfigIntegerProperty wallPalmerChance = new FALConfigIntegerProperty(
             "wall_palmer_chance",
             "1 in this number chance for any wall tentacle block with sufficient support to instead be a wall palmer.",
             10
     );
 
-    public final FAWConfigIntegerProperty tunnelGoreTime = new FAWConfigIntegerProperty(
+    public final FALConfigIntegerProperty tunnelGoreTime = new FALConfigIntegerProperty(
             "tunnel_gore_time",
             "Minimum age of a tunnel block in ticks required for it to start spreading gore blocks.\nSet to a negative value to disable.",
             TimeInTicks.HOUR
     );
 
     @Override
-    FAWConfigProperty<?>[] properties() {
-        return new FAWConfigProperty[]{
+    protected FALConfigProperty<?>[] properties() {
+        return new FALConfigProperty[]{
                 this.enabled,
                 this.wallPalmerChance,
                 this.tunnelGoreTime

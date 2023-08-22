@@ -1,7 +1,6 @@
 package mod.acats.fromanotherworld.forge;
 
 import mod.acats.fromanotherworld.FromAnotherWorld;
-import mod.acats.fromanotherworld.config.Config;
 import mod.acats.fromanotherworld.forge.biomemodifiers.FAWBiomeModifier;
 import mod.acats.fromanotherworld.forge.registry.*;
 import com.mojang.serialization.Codec;
@@ -10,15 +9,12 @@ import net.minecraftforge.common.world.BiomeModifier;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
 @Mod(FromAnotherWorld.MOD_ID)
 public class FromAnotherWorldForge {
     public FromAnotherWorldForge() {
-        Config.load(FMLPaths.CONFIGDIR.get());
-
         new FromAnotherWorld().init();
 
         final IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();

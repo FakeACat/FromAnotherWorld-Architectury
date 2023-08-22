@@ -1,93 +1,95 @@
 package mod.acats.fromanotherworld.config;
 
-public class DifficultyConfig extends FAWConfig {
+import mod.acats.fromanotherlibrary.config.FALConfig;
+
+public class DifficultyConfig extends FALConfig {
     @Override
-    String name() {
+    protected String name() {
         return "difficulty";
     }
 
     @Override
-    int version() {
+    protected int version() {
         return 1;
     }
 
-    public final FAWConfigIntegerProperty specialBehaviourRarity = new FAWConfigIntegerProperty(
+    public final FALConfigIntegerProperty specialBehaviourRarity = new FALConfigIntegerProperty(
             "special_behaviour_rarity",
             "1 in this number chance for Things to get each special ability.",
             25
     );
 
-    public final FAWConfigIntegerProperty maxMinibossTier = new FAWConfigIntegerProperty(
+    public final FALConfigIntegerProperty maxMinibossTier = new FALConfigIntegerProperty(
             "max_miniboss_tier",
             "Maximum tier that minibosses can grow to. They start at tier 0.",
             3
     );
 
-    public final FAWConfigIntegerProperty crawlerMergeChance = new FAWConfigIntegerProperty(
+    public final FALConfigIntegerProperty crawlerMergeChance = new FALConfigIntegerProperty(
             "crawler_merge_chance",
             "1 in this number chance every tick to attempt to merge.",
             800
     );
-    public final FAWConfigIntegerProperty julietteThingMergeChance = new FAWConfigIntegerProperty(
+    public final FALConfigIntegerProperty julietteThingMergeChance = new FALConfigIntegerProperty(
             "juliette_thing_merge_chance",
             null,
             800
     );
-    public final FAWConfigIntegerProperty palmerThingMergeChance = new FAWConfigIntegerProperty(
+    public final FALConfigIntegerProperty palmerThingMergeChance = new FALConfigIntegerProperty(
             "palmer_thing_merge_chance",
             null,
             800
     );
-    public final FAWConfigIntegerProperty splitFaceMergeChance = new FAWConfigIntegerProperty(
+    public final FALConfigIntegerProperty splitFaceMergeChance = new FALConfigIntegerProperty(
             "split_face_merge_chance",
             null,
             800
     );
-    public final FAWConfigIntegerProperty blairThingMergeChance = new FAWConfigIntegerProperty(
+    public final FALConfigIntegerProperty blairThingMergeChance = new FALConfigIntegerProperty(
             "blair_thing_merge_chance",
             null,
             800
     );
 
-    public final FAWConfigIntegerProperty dogBeastSpitterMergeChance = new FAWConfigIntegerProperty(
+    public final FALConfigIntegerProperty dogBeastSpitterMergeChance = new FALConfigIntegerProperty(
             "dogbeast_spitter_merge_chance",
             null,
             800
     );
-    public final FAWConfigIntegerProperty dogBeastMergeChance = new FAWConfigIntegerProperty(
+    public final FALConfigIntegerProperty dogBeastMergeChance = new FALConfigIntegerProperty(
             "dogbeast_merge_chance",
             null,
             800
     );
-    public final FAWConfigIntegerProperty impalerMergeChance = new FAWConfigIntegerProperty(
+    public final FALConfigIntegerProperty impalerMergeChance = new FALConfigIntegerProperty(
             "impaler_merge_chance",
             null,
             800
     );
-    public final FAWConfigIntegerProperty prowlerMergeChance = new FAWConfigIntegerProperty(
+    public final FALConfigIntegerProperty prowlerMergeChance = new FALConfigIntegerProperty(
             "prowler_merge_chance",
             null,
             1600
     );
-    public final FAWConfigIntegerProperty beastMergeChance = new FAWConfigIntegerProperty(
+    public final FALConfigIntegerProperty beastMergeChance = new FALConfigIntegerProperty(
             "beast_merge_chance",
             null,
             800
     );
-    public final FAWConfigBooleanProperty burrowing = new FAWConfigBooleanProperty(
+    public final FALConfigBooleanProperty burrowing = new FALConfigBooleanProperty(
             "burrowing",
             "Most Things should be able to burrow if they cannot reach where they are trying to pathfind to.",
             false
     );
-    public final FAWConfigFloatProperty maxGriefingHardness = new FAWConfigFloatProperty(
+    public final FALConfigFloatProperty maxGriefingHardness = new FALConfigFloatProperty(
             "maxGriefingHardness",
             "The maximum hardness that Things can break. Set to a negative value to disable all Thing block breaking.\nBlocks with negative hardness values can never be broken.\nTo blacklist specific blocks, add to the thing_immune tag using a data pack.",
             49.0F
     );
 
     @Override
-    FAWConfigProperty<?>[] properties() {
-        return new FAWConfigProperty[]{
+    protected FALConfigProperty<?>[] properties() {
+        return new FALConfigProperty[]{
                 this.specialBehaviourRarity,
                 this.maxMinibossTier,
                 this.crawlerMergeChance,

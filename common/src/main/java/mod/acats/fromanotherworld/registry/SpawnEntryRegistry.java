@@ -1,7 +1,7 @@
 package mod.acats.fromanotherworld.registry;
 
+import mod.acats.fromanotherlibrary.config.FALConfig;
 import mod.acats.fromanotherworld.config.Config;
-import mod.acats.fromanotherworld.config.FAWConfig;
 import mod.acats.fromanotherworld.config.SpawningConfig;
 import mod.acats.fromanotherworld.entity.thing.Thing;
 import mod.acats.fromanotherworld.tags.BiomeTags;
@@ -22,7 +22,7 @@ public class SpawnEntryRegistry {
         if (config.enabled.get()){
             for (SpawningConfig.Entry<?> entry:
                  config.entries) {
-                FAWConfig.FAWConfigSpawnEntryProperty property = entry.configProperty;
+                FALConfig.FALConfigSpawnEntryProperty property = entry.configProperty;
                 if (property.get() && property.getWeight() > 0 && property.getMax() > 0){
                     addThing(entry.supplier, property.getWeight(), property.getMin(), property.getMax());
                 }

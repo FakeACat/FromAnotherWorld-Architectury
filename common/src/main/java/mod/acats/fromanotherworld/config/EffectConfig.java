@@ -1,17 +1,19 @@
 package mod.acats.fromanotherworld.config;
 
-public class EffectConfig extends FAWConfig {
+import mod.acats.fromanotherlibrary.config.FALConfig;
+
+public class EffectConfig extends FALConfig {
     @Override
-    String name() {
+    protected String name() {
         return "effects";
     }
 
     @Override
-    int version() {
+    protected int version() {
         return 0;
     }
 
-    public final FAWConfigArrayProperty regenCancelling = new FAWConfigArrayProperty(
+    public final FALConfigArrayProperty regenCancelling = new FALConfigArrayProperty(
             "regen_cancelling",
             "Effects that prevent Things from resisting damage and healing.",
             new String[]{
@@ -20,7 +22,7 @@ public class EffectConfig extends FAWConfig {
             }
     );
 
-    public final FAWConfigArrayProperty thingImmune = new FAWConfigArrayProperty(
+    public final FALConfigArrayProperty thingImmune = new FALConfigArrayProperty(
             "thing_immune",
             "Effects that cannot be applied to Things.",
             new String[]{
@@ -30,8 +32,8 @@ public class EffectConfig extends FAWConfig {
     );
 
     @Override
-    FAWConfigProperty<?>[] properties() {
-        return new FAWConfigProperty[]{
+    protected FALConfigProperty<?>[] properties() {
+        return new FALConfigProperty[]{
                 this.regenCancelling,
                 this.thingImmune
         };

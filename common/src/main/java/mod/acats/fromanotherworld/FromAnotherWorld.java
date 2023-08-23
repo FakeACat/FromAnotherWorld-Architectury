@@ -7,6 +7,7 @@ import mod.acats.fromanotherlibrary.registry.client.ClientMod;
 import mod.acats.fromanotherworld.config.Config;
 import mod.acats.fromanotherworld.registry.*;
 import mod.azure.azurelib.AzureLib;
+import net.minecraft.core.particles.ParticleType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -17,6 +18,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -80,7 +82,12 @@ public class FromAnotherWorld implements CommonMod {
     }
 
     @Override
-    public void loadConfigs() {
-        Config.load(this.getConfigFolder());
+    public Optional<FALRegister<ParticleType<?>>> getParticleRegister() {
+        return Optional.of(ParticleRegistry.PARTICLE_REGISTRY);
+    }
+
+    @Override
+    public void loadConfigs(File file) {
+        Config.load(file);
     }
 }

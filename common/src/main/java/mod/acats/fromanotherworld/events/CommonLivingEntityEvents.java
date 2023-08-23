@@ -130,7 +130,7 @@ public class CommonLivingEntityEvents {
         PossibleDisguisedThing thing = ((PossibleDisguisedThing) entity);
         if (entity.level().isClientSide() && thing.faw$getSupercellConcentration() >= 1.0F){
             for(int i = 0; i < thing.faw$getSupercellConcentration() / 10; ++i) {
-                entity.level().addParticle(ParticleRegistry.THING_GORE, entity.getRandomX(0.6D), entity.getRandomY(), entity.getRandomZ(0.6D), 0, 0, 0);
+                entity.level().addParticle(ParticleRegistry.THING_GORE.get(), entity.getRandomX(0.6D), entity.getRandomY(), entity.getRandomZ(0.6D), 0, 0, 0);
             }
         }
     }

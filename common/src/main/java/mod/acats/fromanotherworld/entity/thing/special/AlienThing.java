@@ -252,7 +252,7 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
     public void aiStep() {
         if (this.getSwitchProgress() > 0){
             for (int i = 0; i < 20.0F * this.getSwitchProgress2(); i++){
-                this.level().addParticle(ParticleRegistry.THING_GORE, this.getRandomX(0.6D), this.getRandomY(), this.getRandomZ(0.6D), 0, 0, 0);
+                this.level().addParticle(ParticleRegistry.THING_GORE.get(), this.getRandomX(0.6D), this.getRandomY(), this.getRandomZ(0.6D), 0, 0, 0);
             }
         }
         if (this.burrowingOrEmerging()){

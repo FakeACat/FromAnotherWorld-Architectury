@@ -76,7 +76,7 @@ public class StarshipEntity extends Mob implements GeoEntity {
         }
         else if (this.level().isClientSide()){
             for(int i = 0; i < 5; ++i) {
-                this.level().addParticle(ParticleRegistry.BIG_FLAMES, this.getX(), this.getY(), this.getZ(), (this.random.nextDouble() - 0.5D) / 5, (this.random.nextDouble() - 0.5D) / 5 + this.getDeltaMovement().y, (this.random.nextDouble() - 0.5D) / 5);
+                this.level().addParticle(ParticleRegistry.BIG_FLAMES.get(), this.getX(), this.getY(), this.getZ(), (this.random.nextDouble() - 0.5D) / 5, (this.random.nextDouble() - 0.5D) / 5 + this.getDeltaMovement().y, (this.random.nextDouble() - 0.5D) / 5);
                 this.level().addParticle(ParticleTypes.CAMPFIRE_SIGNAL_SMOKE, this.getX(), this.getY(), this.getZ(), (this.random.nextDouble() - 0.5D) / 2, ((this.random.nextDouble() - 0.5D) + this.getDeltaMovement().y) / 2, (this.random.nextDouble() - 0.5D) / 2);
             }
         }

@@ -3,6 +3,7 @@ package mod.acats.fromanotherworld;
 import mod.acats.fromanotherlibrary.registry.client.BlockEntityRendererEntry;
 import mod.acats.fromanotherlibrary.registry.client.ClientMod;
 import mod.acats.fromanotherlibrary.registry.client.EntityRendererEntry;
+import mod.acats.fromanotherlibrary.registry.client.ParticleClientEntry;
 import mod.acats.fromanotherworld.block.entity.render.CorpseBlockEntityRenderer;
 import mod.acats.fromanotherworld.block.entity.render.TunnelBlockEntityRenderer;
 import mod.acats.fromanotherworld.entity.model.thing.growths.TentacleSegmentModel;
@@ -14,8 +15,12 @@ import mod.acats.fromanotherworld.entity.render.thing.resultant.*;
 import mod.acats.fromanotherworld.entity.render.thing.revealed.ChestSpitterRenderer;
 import mod.acats.fromanotherworld.entity.render.thing.special.AlienThingRenderer;
 import mod.acats.fromanotherworld.registry.BlockEntityRegistry;
+import mod.acats.fromanotherworld.registry.ParticleRegistry;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.particle.CampfireSmokeParticle;
+import net.minecraft.client.particle.SpitParticle;
+import net.minecraft.client.particle.WaterDropParticle;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 
 import java.util.Collection;
@@ -55,6 +60,15 @@ public class FromAnotherWorldClient implements ClientMod {
                 new EntityRendererEntry<>(SPLIT_FACE.get(), SplitFaceRenderer::new),
                 new EntityRendererEntry<>(TRANSITION.get(), TransitionEntityRenderer::new),
                 new EntityRendererEntry<>(PROWLER.get(), ProwlerRenderer::new)
+        ));
+    }
+
+    @Override
+    public Optional<Collection<ParticleClientEntry<?>>> getParticleClientEntries() {
+        return Optional.of(List.of(
+                new ParticleClientEntry<>(ParticleRegistry.THING_GORE.get(), WaterDropParticle.Provider::new),
+                new ParticleClientEntry<>(ParticleRegistry.THING_SPIT.get(), SpitParticle.Provider::new),
+                new ParticleClientEntry<>(ParticleRegistry.BIG_FLAMES.get(), CampfireSmokeParticle.SignalProvider::new)
         ));
     }
 

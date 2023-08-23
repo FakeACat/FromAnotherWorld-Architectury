@@ -336,7 +336,7 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing, Co
         else {
             if (this.getDisguiseProgress() > 0) {
                 for (int i = 0; i < this.getDisguiseProgress() / 3; i++) {
-                    this.level().addParticle(ParticleRegistry.THING_GORE, this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D), 0, 0, 0);
+                    this.level().addParticle(ParticleRegistry.THING_GORE.get(), this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D), 0, 0, 0);
                 }
             }
             if (this.isThingBurrowing() || this.isThingEmerging()) {

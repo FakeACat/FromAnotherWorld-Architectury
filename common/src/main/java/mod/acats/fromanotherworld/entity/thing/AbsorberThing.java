@@ -76,7 +76,7 @@ public abstract class AbsorberThing extends Thing implements TentacleThing {
     public void tickAbsorb(@NotNull LivingEntity victim){
         if (this.level().isClientSide()){
             for(int i = 0; i < this.getAbsorbProgress() / 10; ++i) {
-                this.level().addParticle(ParticleRegistry.THING_GORE, victim.getRandomX(0.6D), victim.getRandomY(), victim.getRandomZ(0.6D), 0.0D, 0.0D, 0.0D);
+                this.level().addParticle(ParticleRegistry.THING_GORE.get(), victim.getRandomX(0.6D), victim.getRandomY(), victim.getRandomZ(0.6D), 0.0D, 0.0D, 0.0D);
             }
             for (Tentacle tentacle:
                     absorbTentacles) {

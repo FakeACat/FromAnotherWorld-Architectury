@@ -196,7 +196,7 @@ public class TransitionEntity extends LivingEntity implements MaybeThing {
         }
         tentacleMass.scale *= 0.75F * this.entityData.get(WIDTH);
         for (int i = 0; i < (this.tickCount * this.tickCount) / 400; i++){
-            this.level().addParticle(ParticleRegistry.THING_GORE, this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D), 0, 0, 0);
+            this.level().addParticle(ParticleRegistry.THING_GORE.get(), this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D), 0, 0, 0);
         }
     }
 

@@ -64,7 +64,7 @@ public class AssimilationLiquidEntity extends ThrowableItemProjectile {
         double f = packet.getZa();
         float g = 0.25F;
         for(int i = 0; i < 7; ++i) {
-            this.level().addParticle(ParticleRegistry.THING_SPIT, this.getX(), this.getY(), this.getZ(), d + (this.random.nextFloat() - 0.5F) * g, e + (this.random.nextFloat() - 0.5F) * g, f + (this.random.nextFloat() - 0.5F) * g);
+            this.level().addParticle(ParticleRegistry.THING_SPIT.get(), this.getX(), this.getY(), this.getZ(), d + (this.random.nextFloat() - 0.5F) * g, e + (this.random.nextFloat() - 0.5F) * g, f + (this.random.nextFloat() - 0.5F) * g);
         }
     }
 }

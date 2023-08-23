@@ -20,7 +20,6 @@ public class FromAnotherWorldForge {
         final IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
         MinecraftForge.EVENT_BUS.register(eventBus);
 
-        ParticleRegistryForge.register(eventBus);
         SoundRegistryForge.register(eventBus);
         StatusEffectRegistryForge.register(eventBus);
         RecipeRegistryForge.register(eventBus);

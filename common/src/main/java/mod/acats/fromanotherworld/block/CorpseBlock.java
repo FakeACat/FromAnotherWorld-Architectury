@@ -1,5 +1,6 @@
 package mod.acats.fromanotherworld.block;
 
+import mod.acats.fromanotherlibrary.utilities.block.Flammable;
 import mod.acats.fromanotherlibrary.utilities.block.Waterloggable;
 import mod.acats.fromanotherworld.block.entity.CorpseBlockEntity;
 import mod.acats.fromanotherworld.block.interfaces.Gore;
@@ -26,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("deprecation")
-public class CorpseBlock extends BaseEntityBlock implements Gore, Waterloggable {
+public class CorpseBlock extends BaseEntityBlock implements Gore, Waterloggable, Flammable {
     public static final EnumProperty<CorpseType> TYPE = EnumProperty.create("type", CorpseType.class);
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     public static final BooleanProperty WATERLOGGED;
@@ -114,6 +115,16 @@ public class CorpseBlock extends BaseEntityBlock implements Gore, Waterloggable 
     public @NotNull BlockState updateShape(BlockState blockState, Direction direction, BlockState blockState2, LevelAccessor levelAccessor, BlockPos blockPos, BlockPos blockPos2) {
         this.waterloggedUpdateShape(blockState, levelAccessor, blockPos);
         return super.updateShape(blockState, direction, blockState2, levelAccessor, blockPos, blockPos2);
+    }
+
+    @Override
+    public int flammability() {
+        return 8;
+    }
+
+    @Override
+    public int fireSpread() {
+        return 25;
     }
 
     public enum CorpseType implements StringRepresentable {

@@ -1,6 +1,7 @@
 package mod.acats.fromanotherworld;
 
 import mod.acats.fromanotherlibrary.registry.CommonMod;
+import mod.acats.fromanotherlibrary.registry.DataPackLoader;
 import mod.acats.fromanotherlibrary.registry.FALRegister;
 import mod.acats.fromanotherlibrary.registry.TabPopulator;
 import mod.acats.fromanotherlibrary.registry.client.ClientMod;
@@ -32,7 +33,6 @@ public class FromAnotherWorld implements CommonMod {
     public void preRegisterContent() {
         AzureLib.initialize();
         ItemRegistry.registerSpawnEggs();
-        DatapackRegistry.register();
         SpawnEntryRegistry.register();
     }
 
@@ -84,6 +84,13 @@ public class FromAnotherWorld implements CommonMod {
     @Override
     public Optional<FALRegister<ParticleType<?>>> getParticleRegister() {
         return Optional.of(ParticleRegistry.PARTICLE_REGISTRY);
+    }
+
+    @Override
+    public Optional<DataPackLoader> getDataPacks() {
+        DataPackLoader loader = new DataPackLoader();
+        DatapackRegistry.register(loader);
+        return Optional.of(loader);
     }
 
     @Override

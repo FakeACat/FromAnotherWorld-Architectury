@@ -29,12 +29,12 @@ configurations {
 }
 
 repositories{
-    maven { url 'https://dl.cloudsmith.io/public/azuredoom-mods/azurelib/maven/'}
+    maven { url 'https://libs.azuredoom.com:4443/mods'}
 }
 
 dependencies {
     forge "net.minecraftforge:forge:${rootProject.minecraft_version}-${rootProject.forge_version}"
-    modImplementation "mod.azure.azurelib:azurelib-forge-${rootProject.minecraft_version}:${rootProject.azurelib_version_forge}"
+    modImplementation "mod.azure.azurelib:azurelib-neo-${rootProject.minecraft_version}:${rootProject.azurelib_version_forge}"
 
     modImplementation files(new File(rootDir.parentFile, "/FromAnotherLibrary/forge/build/libs/FromAnotherLibrary-forge-${rootProject.minecraft_version}-${rootProject.fromanotherlibrary_version}.jar"))
 

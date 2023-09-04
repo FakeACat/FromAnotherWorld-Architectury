@@ -9,7 +9,7 @@ loom {
 
 repositories{
     maven { url "https://maven.terraformersmc.com/releases" }
-    maven { url 'https://dl.cloudsmith.io/public/azuredoom-mods/azurelib/maven/'}
+    maven { url 'https://libs.azuredoom.com:4443/mods'}
 }
 
 dependencies {

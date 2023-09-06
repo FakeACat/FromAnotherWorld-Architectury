@@ -9,7 +9,6 @@ public class FromAnotherWorldFabric implements ModInitializer {
     @Override
     public void onInitialize() {
         new FromAnotherWorld().init();
-        StatusEffectRegistryFabric.register();
         EventRegistryFabric.register();
         RecipeRegistryFabric.register();
         SpawnEntryRegistryFabric.register();

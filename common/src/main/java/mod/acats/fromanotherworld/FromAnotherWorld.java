@@ -10,6 +10,7 @@ import mod.acats.fromanotherworld.registry.*;
 import mod.azure.azurelib.AzureLib;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -90,6 +91,11 @@ public class FromAnotherWorld implements CommonMod {
     @Override
     public Optional<FALRegister<SoundEvent>> getSoundEventRegister() {
         return Optional.of(SoundRegistry.SOUND_REGISTRY);
+    }
+
+    @Override
+    public Optional<FALRegister<MobEffect>> getMobEffectRegister() {
+        return Optional.of(StatusEffectRegistry.STATUS_EFFECT_REGISTRY);
     }
 
     @Override

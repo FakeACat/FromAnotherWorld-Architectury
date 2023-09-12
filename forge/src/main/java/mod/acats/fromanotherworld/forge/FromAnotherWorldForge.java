@@ -2,7 +2,6 @@ package mod.acats.fromanotherworld.forge;
 
 import mod.acats.fromanotherworld.FromAnotherWorld;
 import mod.acats.fromanotherworld.forge.biomemodifiers.FAWBiomeModifier;
-import mod.acats.fromanotherworld.forge.registry.*;
 import com.mojang.serialization.Codec;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.world.BiomeModifier;
@@ -20,7 +19,6 @@ public class FromAnotherWorldForge {
         final IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
         MinecraftForge.EVENT_BUS.register(eventBus);
 
-        RecipeRegistryForge.register(eventBus);
         final DeferredRegister<Codec<? extends BiomeModifier>> biomeModifiers = DeferredRegister.create(ForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, FromAnotherWorld.MOD_ID);
         biomeModifiers.register(eventBus);
         biomeModifiers.register("thing_spawns", FAWBiomeModifier::makeCodec);

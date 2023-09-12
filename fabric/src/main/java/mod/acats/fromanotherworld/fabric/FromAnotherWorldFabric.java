@@ -10,7 +10,6 @@ public class FromAnotherWorldFabric implements ModInitializer {
     public void onInitialize() {
         new FromAnotherWorld().init();
         EventRegistryFabric.register();
-        RecipeRegistryFabric.register();
         SpawnEntryRegistryFabric.register();
     }
 }

@@ -717,7 +717,9 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing, Co
     }
 
     public static boolean checkThingSpawnRules(EntityType<? extends Monster> entityType, ServerLevelAccessor serverLevelAccessor, MobSpawnType mobSpawnType, BlockPos blockPos, RandomSource randomSource){
-        return ServerUtilities.getDayReal(serverLevelAccessor) >= Config.SPAWNING_CONFIG.firstSpawningDay.get() && Monster.checkMonsterSpawnRules(entityType, serverLevelAccessor, mobSpawnType, blockPos, randomSource);
+        return ServerUtilities.getDayReal(serverLevelAccessor) >= Config.SPAWNING_CONFIG.firstSpawningDay.get() &&
+                Monster.checkMonsterSpawnRules(entityType, serverLevelAccessor, mobSpawnType, blockPos, randomSource) &&
+                randomSource.nextFloat() >= Config.SPAWNING_CONFIG.failureChance.get();
     }
 
     private @Nullable BlockPos lastTunnelExit = null;

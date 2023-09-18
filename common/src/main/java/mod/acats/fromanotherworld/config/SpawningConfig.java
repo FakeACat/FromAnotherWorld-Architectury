@@ -17,7 +17,7 @@ public class SpawningConfig extends FALConfig {
 
     @Override
     protected int version() {
-        return 0;
+        return 1;
     }
 
     public final ArrayList<Entry<?>> entries = new ArrayList<>();
@@ -42,6 +42,12 @@ public class SpawningConfig extends FALConfig {
             2
     );
 
+    public final FALConfigFloatProperty failureChance = new FALConfigFloatProperty(
+            "failure_chance",
+            "The chance for a Thing to fail to spawn even when all the criteria are met.\nCan be used to make Things spawn less than vanilla spawn weight values allow, which is useful considering they do not despawn\n0.0 - Things never fail to spawn\n1.0 - Things always fail to spawn",
+            0.95F
+    );
+
     @Override
     protected FALConfigProperty<?>[] properties() {
 
@@ -61,7 +67,11 @@ public class SpawningConfig extends FALConfig {
 
         create(EntityRegistry.ALIEN_THING::get, "alien_thing", 1, 1, 1, false);
 
-        ArrayList<FALConfigProperty<?>> list = Lists.newArrayList(this.enabled, this.firstSpawningDay);
+        ArrayList<FALConfigProperty<?>> list = Lists.newArrayList(
+                this.enabled,
+                this.firstSpawningDay,
+                this.failureChance
+        );
         for (Entry<?> e:
              entries) {
             list.add(e.configProperty);

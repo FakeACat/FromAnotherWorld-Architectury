@@ -162,6 +162,10 @@ public class DisguisedTendrilsBlock extends FleshBlock implements Gore, Colourab
     public void entityInside(BlockState blockState, Level level, BlockPos blockPos, Entity entity) {
         super.entityInside(blockState, level, blockPos, entity);
 
+        if (!blockState.getValue(DOWN)) {
+            return;
+        }
+
         Vec3 spawnPos = new Vec3(blockPos.getX() + 0.5D, blockPos.getY(), blockPos.getZ() + 0.5D);
 
         if (!level.isClientSide() &&

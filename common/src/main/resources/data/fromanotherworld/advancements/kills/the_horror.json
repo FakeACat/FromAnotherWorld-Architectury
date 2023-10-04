@@ -1,13 +1,13 @@
 {
   "criteria": {
-    "fromanotherworld:prowler": {
+    "fromanotherworld:beast": {
       "conditions": {
         "entity": [
           {
             "condition": "minecraft:entity_properties",
             "entity": "this",
             "predicate": {
-              "type": "fromanotherworld:prowler"
+              "type": "fromanotherworld:beast"
             }
           }
         ]
@@ -18,22 +18,22 @@
   "display": {
     "announce_to_chat": true,
     "description": {
-      "translate": "fromanotherworld.advancements.weird_and_pissed_off.description"
+      "translate": "fromanotherworld.advancements.the_horror.description"
     },
     "frame": "task",
     "hidden": false,
     "icon": {
-      "item": "fromanotherworld:prowler_spawn_egg"
+      "item": "fromanotherworld:beast_spawn_egg"
     },
     "show_toast": true,
     "title": {
-      "translate": "fromanotherworld.advancements.weird_and_pissed_off.title"
+      "translate": "fromanotherworld.advancements.the_horror.title"
     }
   },
-  "parent": "fromanotherworld:kills/weird_looking_dog",
+  "parent": "fromanotherworld:kills/weird_and_pissed_off",
   "requirements": [
     [
-      "fromanotherworld:prowler"
+      "fromanotherworld:beast"
     ]
   ]
 }

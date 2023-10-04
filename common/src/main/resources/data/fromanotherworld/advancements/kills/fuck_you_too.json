@@ -30,7 +30,7 @@
       "translate": "fromanotherworld.advancements.fuck_you_too.title"
     }
   },
-  "parent": "fromanotherworld:kills/among_us_joke",
+  "parent": "fromanotherworld:kills/double_kill",
   "requirements": [
     [
       "fromanotherworld:blair_thing"

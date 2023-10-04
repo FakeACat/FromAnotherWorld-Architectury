@@ -1,0 +1,39 @@
+{
+  "criteria": {
+    "fromanotherworld:vine_tentacles": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "fromanotherworld:vine_tentacles"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:player_killed_entity"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "fromanotherworld.advancements.impostor_grass.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "fromanotherworld:disguised_tendrils"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "fromanotherworld.advancements.impostor_grass.title"
+    }
+  },
+  "parent": "fromanotherworld:kills/dubious_little_creature",
+  "requirements": [
+    [
+      "fromanotherworld:vine_tentacles"
+    ]
+  ]
+}

@@ -13,6 +13,7 @@ import mod.acats.fromanotherworld.entity.render.projectile.NeedleEntityRenderer;
 import mod.acats.fromanotherworld.entity.render.thing.TransitionEntityRenderer;
 import mod.acats.fromanotherworld.entity.render.thing.resultant.*;
 import mod.acats.fromanotherworld.entity.render.thing.revealed.ChestSpitterRenderer;
+import mod.acats.fromanotherworld.entity.render.thing.revealed.VineTentaclesRenderer;
 import mod.acats.fromanotherworld.entity.render.thing.special.AlienThingRenderer;
 import mod.acats.fromanotherworld.registry.BlockEntityRegistry;
 import mod.acats.fromanotherworld.registry.ParticleRegistry;
@@ -59,7 +60,8 @@ public class FromAnotherWorldClient implements ClientMod {
                 new EntityRendererEntry<>(ALIEN_THING.get(), AlienThingRenderer::new),
                 new EntityRendererEntry<>(SPLIT_FACE.get(), SplitFaceRenderer::new),
                 new EntityRendererEntry<>(TRANSITION.get(), TransitionEntityRenderer::new),
-                new EntityRendererEntry<>(PROWLER.get(), ProwlerRenderer::new)
+                new EntityRendererEntry<>(PROWLER.get(), ProwlerRenderer::new),
+                new EntityRendererEntry<>(VINE_TENTACLES.get(), VineTentaclesRenderer::new)
         ));
     }
 

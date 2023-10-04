@@ -40,6 +40,7 @@
   "entity.fromanotherworld.alien_thing": "Alien Thing",
   "entity.fromanotherworld.split_face": "Split Face",
   "entity.fromanotherworld.prowler": "Prowler",
+  "entity.fromanotherworld.vine_tentacles": "Vine Tentacles",
 
   "fromanotherworld.advancements.from_another_world.title": "From Another World",
   "fromanotherworld.advancements.from_another_world.description": "Hope you enjoy the mod!",
@@ -61,6 +62,8 @@
   "fromanotherworld.advancements.to_resist_us_is_futile.description": "Reach the maximum level of Slow Assimilation",
   "fromanotherworld.advancements.leave_me_alone.title": "Leave Me Alone!",
   "fromanotherworld.advancements.leave_me_alone.description": "Kill an Alien Thing",
+  "fromanotherworld.advancements.impostor_grass.title": "Touch \"Grass\"",
+  "fromanotherworld.advancements.impostor_grass.description": "Kill Vine Tentacles before they can retreat",
 
   "fromanotherworld.advancements.small_injury.title": "Small Injury",
   "fromanotherworld.advancements.small_injury.description": "Get impaled",

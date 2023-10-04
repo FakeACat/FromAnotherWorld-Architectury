@@ -9,6 +9,7 @@ import mod.acats.fromanotherworld.entity.projectile.NeedleEntity;
 import mod.acats.fromanotherworld.entity.thing.TransitionEntity;
 import mod.acats.fromanotherworld.entity.thing.resultant.*;
 import mod.acats.fromanotherworld.entity.thing.revealed.ChestSpitter;
+import mod.acats.fromanotherworld.entity.thing.revealed.VineTentacles;
 import mod.acats.fromanotherworld.entity.thing.special.AlienThing;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.resources.ResourceLocation;
@@ -105,6 +106,11 @@ public class EntityRegistry {
             EntityType.Builder.of(Prowler::new, MobCategory.MONSTER).sized(0.8F, 1.8F).clientTrackingRange(TRACK_RANGE_MEDIUM)
     );
 
+    public static final FALRegistryObject<EntityType<VineTentacles>> VINE_TENTACLES = register(
+            "vine_tentacles",
+            EntityType.Builder.of(VineTentacles::new, MobCategory.MONSTER).sized(1.0F, 2.0F).clientTrackingRange(TRACK_RANGE_MEDIUM)
+    );
+
     public static HashMap<EntityType<? extends LivingEntity>, Supplier<AttributeSupplier.Builder>> getAttributes() {
         HashMap<EntityType<? extends LivingEntity>, Supplier<AttributeSupplier.Builder>> map = new HashMap<>();
 
@@ -123,6 +129,7 @@ public class EntityRegistry {
         map.put(SPLIT_FACE.get(), SplitFace::createSplitFaceAttributes);
         map.put(TRANSITION.get(), TransitionEntity::createTransitionAttributes);
         map.put(PROWLER.get(), Prowler::createProwlerAttributes);
+        map.put(VINE_TENTACLES.get(), VineTentacles::createVineTentaclesAttributes);
 
         return map;
     }

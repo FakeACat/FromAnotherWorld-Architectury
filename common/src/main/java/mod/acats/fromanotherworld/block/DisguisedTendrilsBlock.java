@@ -2,13 +2,18 @@ package mod.acats.fromanotherworld.block;
 
 import mod.acats.fromanotherlibrary.utilities.block.Colourable;
 import mod.acats.fromanotherworld.block.interfaces.Gore;
+import mod.acats.fromanotherworld.entity.thing.revealed.VineTentacles;
+import mod.acats.fromanotherworld.registry.EntityRegistry;
+import mod.acats.fromanotherworld.tags.EntityTags;
 import mod.acats.fromanotherworld.utilities.BlockUtilities;
 import com.google.common.collect.ImmutableMap;
+import mod.acats.fromanotherworld.utilities.EntityUtilities;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Block;
@@ -17,6 +22,8 @@ import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -149,6 +156,29 @@ public class DisguisedTendrilsBlock extends FleshBlock implements Gore, Colourab
             this.spread(serverLevel, blockPos, blockState);
         }
         super.tick(blockState, serverLevel, blockPos, randomSource);
+    }
+
+    @Override
+    public void entityInside(BlockState blockState, Level level, BlockPos blockPos, Entity entity) {
+        super.entityInside(blockState, level, blockPos, entity);
+
+        Vec3 spawnPos = new Vec3(blockPos.getX() + 0.5D, blockPos.getY(), blockPos.getZ() + 0.5D);
+
+        if (!level.isClientSide() &&
+                level.getRandom().nextInt(30) == 0 &&
+                (EntityUtilities.canAssimilate(entity) || entity.getType().is(EntityTags.ATTACKABLE_BUT_NOT_ASSIMILABLE)) &&
+                entity.distanceToSqr(spawnPos) < VineTentacles.RANGE_SQ) {
+
+            int dist = 4;
+            if (level.getEntitiesOfClass(VineTentacles.class, AABB.ofSize(spawnPos, dist, dist, dist)).isEmpty()) {
+                VineTentacles vineTentacles = EntityRegistry.VINE_TENTACLES.get().create(level);
+                if (vineTentacles != null) {
+                    vineTentacles.victim = entity;
+                    vineTentacles.setPos(spawnPos);
+                    level.addFreshEntity(vineTentacles);
+                }
+            }
+        }
     }
 
     @Override

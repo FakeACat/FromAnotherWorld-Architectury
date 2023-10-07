@@ -31,12 +31,12 @@ side = "BOTH"
 modId = "azurelib"
 mandatory = true
 versionRange="[1.0.15,)"
-ordering = "NONE"
+ordering = "BEFORE"
 side = "BOTH"
 
 [[dependencies.fromanotherworld]]
 modId = "fromanotherlibrary"
 mandatory = true
-versionRange="[1.0.0,)"
-ordering = "NONE"
+versionRange="[1.0.1,)"
+ordering = "BEFORE"
 side = "BOTH"

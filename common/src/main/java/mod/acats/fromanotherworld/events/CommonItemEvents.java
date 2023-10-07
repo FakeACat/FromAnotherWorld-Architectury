@@ -1,8 +1,8 @@
 package mod.acats.fromanotherworld.events;
 
 import mod.acats.fromanotherworld.block.ThingGoreBlock;
-import mod.acats.fromanotherworld.entity.thing.Thing;
 import mod.acats.fromanotherworld.registry.ItemRegistry;
+import mod.acats.fromanotherworld.tags.EntityTags;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 public class CommonItemEvents {
     @Nullable
     public static InteractionResult useOnEntity(ItemStack stack, Player user, LivingEntity entity, InteractionHand hand){
-        if (!user.level().isClientSide() && stack.getItem() == Items.FLINT_AND_STEEL && entity instanceof Thing){
+        if (!user.level().isClientSide() && stack.getItem() == Items.FLINT_AND_STEEL && entity.getType().is(EntityTags.THINGS)){
             entity.setSecondsOnFire(12);
             if (user instanceof ServerPlayer) {
                 stack.hurtAndBreak(1, user, (p) -> p.broadcastBreakEvent(hand));

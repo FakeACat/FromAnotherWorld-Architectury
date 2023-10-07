@@ -1,5 +1,6 @@
 package mod.acats.fromanotherworld.entity.thing;
 
+import mod.acats.fromanotherlibrary.config.FALConfig;
 import mod.acats.fromanotherworld.FromAnotherWorld;
 import mod.acats.fromanotherworld.block.CorpseBlock;
 import mod.acats.fromanotherworld.block.entity.TunnelBlockEntity;
@@ -810,30 +811,54 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing, Co
     }
 
     public enum ThingCategory {
-        REVEALED(false, 0.25F, 10),
-        FODDER(false, 1.0F, 6),
-        SPLIT(true, 0.2F, 12),
-        STANDARD(true, 0.2F, 16),
-        ELITE(true, 0.2F, 20),
-        MERGED(true, 0.1F, 30),
-        MINIBOSS(true, 0.05F, 40),
-        SPECIAL_MINIBOSS(false, 0.05F, 50);
+        REVEALED(false,
+                Config.DIFFICULTY_CONFIG.revealedDamageMultiplier,
+                10
+        ),
+        FODDER(false,
+                Config.DIFFICULTY_CONFIG.fodderDamageMultiplier,
+                6
+        ),
+        SPLIT(true,
+                Config.DIFFICULTY_CONFIG.splitDamageMultiplier,
+                12
+        ),
+        STANDARD(true,
+                Config.DIFFICULTY_CONFIG.standardDamageMultiplier,
+                16
+        ),
+        ELITE(true,
+                Config.DIFFICULTY_CONFIG.eliteDamageMultiplier,
+                20
+        ),
+        MERGED(true,
+                Config.DIFFICULTY_CONFIG.mergedDamageMultiplier,
+                30
+        ),
+        MINIBOSS(true,
+                Config.DIFFICULTY_CONFIG.minibossDamageMultiplier,
+                40
+        ),
+        SPECIAL_MINIBOSS(false,
+                Config.DIFFICULTY_CONFIG.specialMinibossDamageMultiplier,
+                50
+        );
 
-        ThingCategory(boolean canHaveSpecialAbilities, float damageMultiplierWhenNotBurning, int xpReward){
+        ThingCategory(boolean canHaveSpecialAbilities, FALConfig.FALConfigFloatProperty damageMultiplierWhenNotBurning, int xpReward){
             this.canHaveSpecialAbilities = canHaveSpecialAbilities;
             this.damageMultiplierWhenNotBurning = damageMultiplierWhenNotBurning;
             this.xpReward = xpReward;
         }
 
         private final boolean canHaveSpecialAbilities;
-        private final float damageMultiplierWhenNotBurning;
+        private final FALConfig.FALConfigFloatProperty damageMultiplierWhenNotBurning;
         private final int xpReward;
 
         public boolean canHaveSpecialAbilities(){
             return this.canHaveSpecialAbilities;
         }
         public float getDamageMultiplierWhenNotBurning(){
-            return this.damageMultiplierWhenNotBurning;
+            return this.damageMultiplierWhenNotBurning.get();
         }
         public int getXpReward(){
             return this.xpReward;

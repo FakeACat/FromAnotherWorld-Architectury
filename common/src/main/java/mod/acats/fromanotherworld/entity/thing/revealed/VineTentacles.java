@@ -2,7 +2,9 @@ package mod.acats.fromanotherworld.entity.thing.revealed;
 
 import mod.acats.fromanotherworld.constants.FAWAnimations;
 import mod.acats.fromanotherworld.entity.interfaces.MaybeThing;
+import mod.acats.fromanotherworld.entity.thing.Thing;
 import mod.acats.fromanotherworld.registry.SoundRegistry;
+import mod.acats.fromanotherworld.tags.DamageTypeTags;
 import mod.acats.fromanotherworld.utilities.EntityUtilities;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
@@ -112,6 +114,10 @@ public class VineTentacles extends LivingEntity implements MaybeThing, GeoEntity
             }
         }
         else {
+            if (this.tickCount % 10 == 0 && !EntityUtilities.isVulnerable(this)){
+                this.heal(1.0F);
+            }
+
             if (this.leaving()) {
                 this.setExitProgress(this.getExitProgress() + 1);
                 if (this.getExitProgress() > 20) {
@@ -136,6 +142,13 @@ public class VineTentacles extends LivingEntity implements MaybeThing, GeoEntity
                 this.victim.setDeltaMovement(this.getX() - this.victim.getX(), this.victim.getDeltaMovement().y(), this.getZ() - this.victim.getZ());
             }
         }
+    }
+
+    @Override
+    protected float getDamageAfterMagicAbsorb(DamageSource source, float amount) {
+        boolean vul1 = EntityUtilities.isVulnerable(this);
+        boolean vul2 = source.is(DamageTypeTags.ALWAYS_HURTS_THINGS);
+        return (vul1 || vul2) ? super.getDamageAfterMagicAbsorb(source, amount) : super.getDamageAfterMagicAbsorb(source, amount) * Thing.ThingCategory.REVEALED.getDamageMultiplierWhenNotBurning();
     }
 
     @Override

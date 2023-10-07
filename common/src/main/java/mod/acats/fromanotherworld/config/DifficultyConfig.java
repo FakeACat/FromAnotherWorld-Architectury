@@ -10,7 +10,7 @@ public class DifficultyConfig extends FALConfig {
 
     @Override
     protected int version() {
-        return 1;
+        return 2;
     }
 
     public final FALConfigIntegerProperty specialBehaviourRarity = new FALConfigIntegerProperty(
@@ -82,9 +82,66 @@ public class DifficultyConfig extends FALConfig {
             false
     );
     public final FALConfigFloatProperty maxGriefingHardness = new FALConfigFloatProperty(
-            "maxGriefingHardness",
+            "max_griefing_hardness",
             "The maximum hardness that Things can break. Set to a negative value to disable all Thing block breaking.\nBlocks with negative hardness values can never be broken.\nTo blacklist specific blocks, add to the thing_immune tag using a data pack.",
             49.0F
+    );
+
+    private FALConfigFloatProperty createDamageMultiplierOption(String category, String examples, float defaultValue) {
+        return new FALConfigFloatProperty(
+                category + "_damage_multiplier",
+                "The damage multiplier for " + category + " tier Things such as " + examples + " when not vulnerable\n" +
+                        "0.0 means they will take no damage, 0.5 means they will take half damage, 1.0 means they will take full damage",
+                defaultValue
+        );
+    }
+
+    public final FALConfigFloatProperty revealedDamageMultiplier = this.createDamageMultiplierOption(
+            "revealed",
+            "Chest Spitters and Vine Tentacles",
+            0.25F
+    );
+
+    public final FALConfigFloatProperty fodderDamageMultiplier = this.createDamageMultiplierOption(
+            "fodder",
+            "Blood Crawlers",
+            1.0F
+    );
+
+    public final FALConfigFloatProperty splitDamageMultiplier = this.createDamageMultiplierOption(
+            "split",
+            "Crawlers and DogBeast Spitters",
+            0.2F
+    );
+
+    public final FALConfigFloatProperty standardDamageMultiplier = this.createDamageMultiplierOption(
+            "standard",
+            "Juliette Things and DogBeasts",
+            0.2F
+    );
+
+    public final FALConfigFloatProperty eliteDamageMultiplier = this.createDamageMultiplierOption(
+            "elite",
+            "Palmer Things and Impalers",
+            0.2F
+    );
+
+    public final FALConfigFloatProperty mergedDamageMultiplier = this.createDamageMultiplierOption(
+            "merged",
+            "Split Faces and Prowlers",
+            0.1F
+    );
+
+    public final FALConfigFloatProperty minibossDamageMultiplier = this.createDamageMultiplierOption(
+            "miniboss",
+            "Blair Things and Beasts",
+            0.05F
+    );
+
+    public final FALConfigFloatProperty specialMinibossDamageMultiplier = this.createDamageMultiplierOption(
+            "special_miniboss",
+            "Alien Things",
+            0.05F
     );
 
     @Override
@@ -103,7 +160,15 @@ public class DifficultyConfig extends FALConfig {
                 this.prowlerMergeChance,
                 this.beastMergeChance,
                 this.burrowing,
-                this.maxGriefingHardness
+                this.maxGriefingHardness,
+                this.revealedDamageMultiplier,
+                this.fodderDamageMultiplier,
+                this.splitDamageMultiplier,
+                this.standardDamageMultiplier,
+                this.eliteDamageMultiplier,
+                this.mergedDamageMultiplier,
+                this.minibossDamageMultiplier,
+                this.specialMinibossDamageMultiplier
         };
     }
 }

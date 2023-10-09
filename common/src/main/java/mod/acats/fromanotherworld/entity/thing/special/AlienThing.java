@@ -1,6 +1,7 @@
 package mod.acats.fromanotherworld.entity.thing.special;
 
 import mod.acats.fromanotherworld.config.Config;
+import mod.acats.fromanotherworld.constants.FAWAnimations;
 import mod.acats.fromanotherworld.entity.interfaces.ImportantDeathMob;
 import mod.acats.fromanotherworld.entity.interfaces.StalkerThing;
 import mod.acats.fromanotherworld.entity.thing.Thing;
@@ -330,10 +331,6 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
         };
     }
 
-    private String currentAnimation(){
-        return "animation." + this.currentForm();
-    }
-
     @Override
     protected int calculateFallDamage(float fallDistance, float damageMultiplier) {
         return 0;
@@ -343,28 +340,28 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
         if (this.burrowingOrEmerging() || this.isThingBurrowing() || this.isThingEmerging()){
             event.getController().setAnimationSpeed(ANIMATION_SPEED_MULTIPLIER);
             if (this.isBurrowing() || this.isThingBurrowing()){
-                event.getController().setAnimation(RawAnimation.begin().thenPlay(this.currentAnimation() + ".burrow"));
+                event.getController().setAnimation(FAWAnimations.BURROW);
             }
             else{
-                event.getController().setAnimation(RawAnimation.begin().thenPlay(this.currentAnimation() + ".emerge"));
+                event.getController().setAnimation(FAWAnimations.EMERGE);
             }
         }
         else{
             if (this.isThingFrozen()){
-                event.getController().setAnimation(RawAnimation.begin().thenPlay(this.currentAnimation() + ".idle"));
+                event.getController().setAnimation(RawAnimation.begin().thenPlay("misc.idle"));
                 event.getController().setAnimationSpeed(0.0D);
             }
             else{
                 event.getController().setAnimationSpeed(this.getForm() == 2 && event.isMoving() ? 2.0D : 1.0D);
                 if (this.isUnderWater()){
-                    event.getController().setAnimation(RawAnimation.begin().thenPlay(this.currentAnimation() + ".swim"));
+                    event.getController().setAnimation(FAWAnimations.SWIM);
                 }
                 else{
                     if (event.isMoving() || (this.rotateWhenClimbing() && this.movingClimbing())){
-                        event.getController().setAnimation(RawAnimation.begin().thenPlay(this.currentAnimation() + ".walk"));
+                        event.getController().setAnimation(FAWAnimations.WALK);
                     }
                     else{
-                        event.getController().setAnimation(RawAnimation.begin().thenPlay(this.currentAnimation() + ".idle"));
+                        event.getController().setAnimation(RawAnimation.begin().thenPlay("misc.idle"));
                     }
                 }
             }
@@ -374,7 +371,7 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
 
     private <E extends GeoEntity> PlayState novellaPredicate(AnimationState<E> event) {
         if (this.getForm() == 0 && !this.isThingFrozen()){
-            event.getController().setAnimation(RawAnimation.begin().thenPlay("animation.alien_thing_novella.head_tentacles"));
+            event.getController().setAnimation(RawAnimation.begin().thenPlay("misc.head_tentacles"));
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;
@@ -383,10 +380,10 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
     private <E extends GeoEntity> PlayState ttfawPredicate(AnimationState<E> event){
         if (this.getForm() == 1 && !this.isThingFrozen() && event.isMoving() && !this.isUnderWater()){
             if (this.isAggressive()){
-                event.getController().setAnimation(RawAnimation.begin().thenPlay("animation.alien_thing_1951.arms_chase"));
+                event.getController().setAnimation(RawAnimation.begin().thenPlay("move.arms_chase"));
             }
             else{
-                event.getController().setAnimation(RawAnimation.begin().thenPlay("animation.alien_thing_1951.arms_walk"));
+                event.getController().setAnimation(RawAnimation.begin().thenPlay("move.arms_walk"));
             }
             return PlayState.CONTINUE;
         }

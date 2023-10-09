@@ -1,7 +1,7 @@
 {
 	"format_version": "1.8.0",
 	"animations": {
-		"animation.alien_thing_novella.walk": {
+		"move.walk": {
 			"loop": true,
 			"animation_length": 1,
 			"bones": {
@@ -207,7 +207,7 @@
 				}
 			}
 		},
-		"animation.alien_thing_novella.idle": {
+		"misc.idle": {
 			"loop": "hold_on_last_frame",
 			"bones": {
 				"Body2": {
@@ -272,7 +272,7 @@
 				}
 			}
 		},
-		"animation.alien_thing_novella.burrow": {
+		"move.burrow": {
 			"loop": "hold_on_last_frame",
 			"animation_length": 5,
 			"bones": {
@@ -424,7 +424,7 @@
 				}
 			}
 		},
-		"animation.alien_thing_novella.emerge": {
+		"move.emerge": {
 			"loop": "hold_on_last_frame",
 			"animation_length": 5,
 			"bones": {
@@ -549,7 +549,7 @@
 				}
 			}
 		},
-		"animation.alien_thing_novella.head_tentacles": {
+		"misc.head_tentacles": {
 			"loop": true,
 			"animation_length": 2,
 			"bones": {
@@ -950,7 +950,7 @@
 				}
 			}
 		},
-		"animation.alien_thing_novella.swim": {
+		"move.swim": {
 			"loop": true,
 			"animation_length": 2,
 			"bones": {

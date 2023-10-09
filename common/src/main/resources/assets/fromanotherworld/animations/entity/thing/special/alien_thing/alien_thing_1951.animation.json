@@ -1,7 +1,43 @@
 {
 	"format_version": "1.8.0",
 	"animations": {
-		"animation.alien_thing_1951.walk": {
+		"animation.alien_thing_1951.bite": {
+			"loop": true,
+			"animation_length": 0.5,
+			"bones": {
+				"Lower": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.25": {
+							"vector": [22.5, 0, 0],
+							"easing": "easeOutSine"
+						},
+						"0.5": {
+							"vector": [0, 0, 0],
+							"easing": "easeInSine"
+						}
+					}
+				},
+				"Upper": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.25": {
+							"vector": [-22.5, 0, 0],
+							"easing": "easeOutSine"
+						},
+						"0.5": {
+							"vector": [0, 0, 0],
+							"easing": "easeInSine"
+						}
+					}
+				}
+			}
+		},
+		"move.walk": {
 			"loop": true,
 			"animation_length": 1,
 			"bones": {
@@ -38,7 +74,7 @@
 				}
 			}
 		},
-		"animation.alien_thing_1951.arms_walk": {
+		"move.arms_walk": {
 			"loop": true,
 			"animation_length": 1,
 			"bones": {
@@ -74,7 +110,7 @@
 				}
 			}
 		},
-		"animation.alien_thing_1951.arms_chase": {
+		"move.arms_chase": {
 			"loop": true,
 			"animation_length": 2,
 			"bones": {
@@ -183,43 +219,7 @@
 				}
 			}
 		},
-		"animation.alien_thing_1951.bite": {
-			"loop": true,
-			"animation_length": 0.5,
-			"bones": {
-				"Lower": {
-					"rotation": {
-						"0.0": {
-							"vector": [0, 0, 0]
-						},
-						"0.25": {
-							"vector": [22.5, 0, 0],
-							"easing": "easeOutSine"
-						},
-						"0.5": {
-							"vector": [0, 0, 0],
-							"easing": "easeInSine"
-						}
-					}
-				},
-				"Upper": {
-					"rotation": {
-						"0.0": {
-							"vector": [0, 0, 0]
-						},
-						"0.25": {
-							"vector": [-22.5, 0, 0],
-							"easing": "easeOutSine"
-						},
-						"0.5": {
-							"vector": [0, 0, 0],
-							"easing": "easeInSine"
-						}
-					}
-				}
-			}
-		},
-		"animation.alien_thing_1951.idle": {
+		"misc.idle": {
 			"loop": "hold_on_last_frame",
 			"animation_length": 2,
 			"bones": {
@@ -236,7 +236,7 @@
 				}
 			}
 		},
-		"animation.alien_thing_1951.swim": {
+		"move.swim": {
 			"loop": true,
 			"animation_length": 2,
 			"bones": {
@@ -368,7 +368,7 @@
 				}
 			}
 		},
-		"animation.alien_thing_1951.emerge": {
+		"move.emerge": {
 			"loop": "hold_on_last_frame",
 			"animation_length": 5,
 			"bones": {
@@ -478,7 +478,7 @@
 				}
 			}
 		},
-		"animation.alien_thing_1951.burrow": {
+		"move.burrow": {
 			"loop": "hold_on_last_frame",
 			"animation_length": 5,
 			"bones": {

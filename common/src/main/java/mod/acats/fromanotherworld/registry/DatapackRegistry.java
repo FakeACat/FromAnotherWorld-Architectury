@@ -1,11 +1,17 @@
 package mod.acats.fromanotherworld.registry;
 
 import mod.acats.fromanotherlibrary.platform.ModLoaderSpecific;
-import mod.acats.fromanotherlibrary.registry.DataPackLoader;
+import mod.acats.fromanotherlibrary.registry.ResourcePackLoader;
 import mod.acats.fromanotherworld.config.Config;
 
 public class DatapackRegistry {
-    public static void register(DataPackLoader loader){
+    public static void register(ResourcePackLoader loader){
+        if (ModLoaderSpecific.INSTANCE.isInDev()) {
+            return;
+        }
+
+        loader.addResourcePack("programmer_art", false);
+
         loader.addModCompat("alexsmobs");
         loader.addModCompat("guardvillagers");
         loader.addModCompat("mca");
@@ -19,10 +25,10 @@ public class DatapackRegistry {
             }*/
 
             if (Config.COMPATIBILITY_CONFIG.fightFungus.get()) {
-                loader.addDataPack("spore_combat");
+                loader.addDataPack("spore_combat", true);
             }
             else {
-                loader.addDataPack("spore_alliance");
+                loader.addDataPack("spore_alliance", true);
             }
         }
         if (ModLoaderSpecific.INSTANCE.isModLoaded("sculkhorde")) {
@@ -33,14 +39,14 @@ public class DatapackRegistry {
             }*/
 
             if (Config.COMPATIBILITY_CONFIG.fightSculk.get()) {
-                loader.addDataPack("sculkhorde_combat");
+                loader.addDataPack("sculkhorde_combat", true);
             }
             else {
-                loader.addDataPack("sculkhorde_alliance");
+                loader.addDataPack("sculkhorde_alliance", true);
             }
         }
         if (ModLoaderSpecific.INSTANCE.isModLoaded("gigeresque") && Config.COMPATIBILITY_CONFIG.xenoAllies.get()) {
-            loader.addDataPack("gigeresque_alliance");
+            loader.addDataPack("gigeresque_alliance", true);
         }
     }
 }

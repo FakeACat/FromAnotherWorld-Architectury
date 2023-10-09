@@ -1,8 +1,8 @@
 package mod.acats.fromanotherworld;
 
 import mod.acats.fromanotherlibrary.registry.CommonMod;
-import mod.acats.fromanotherlibrary.registry.DataPackLoader;
 import mod.acats.fromanotherlibrary.registry.FALRegister;
+import mod.acats.fromanotherlibrary.registry.ResourcePackLoader;
 import mod.acats.fromanotherlibrary.registry.TabPopulator;
 import mod.acats.fromanotherlibrary.registry.client.ClientMod;
 import mod.acats.fromanotherworld.config.Config;
@@ -99,8 +99,8 @@ public class FromAnotherWorld implements CommonMod {
     }
 
     @Override
-    public Optional<DataPackLoader> getDataPacks() {
-        DataPackLoader loader = new DataPackLoader();
+    public Optional<ResourcePackLoader> getResourcePacks() {
+        ResourcePackLoader loader = new ResourcePackLoader();
         DatapackRegistry.register(loader);
         return Optional.of(loader);
     }

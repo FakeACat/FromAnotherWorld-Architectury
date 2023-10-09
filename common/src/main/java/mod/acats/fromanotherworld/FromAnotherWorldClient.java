@@ -24,7 +24,6 @@ import net.minecraft.client.particle.SpitParticle;
 import net.minecraft.client.particle.WaterDropParticle;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -34,7 +33,7 @@ import static mod.acats.fromanotherworld.registry.EntityRegistry.*;
 
 public class FromAnotherWorldClient implements ClientMod {
     @Override
-    public Optional<Collection<BlockEntityRendererEntry<?>>> getBlockEntityRendererEntries() {
+    public Optional<Iterable<BlockEntityRendererEntry<?>>> getBlockEntityRendererEntries() {
         return Optional.of(List.of(
                 new BlockEntityRendererEntry<>(BlockEntityRegistry.CORPSE_BLOCK_ENTITY.get(), p -> new CorpseBlockEntityRenderer()),
                 new BlockEntityRendererEntry<>(BlockEntityRegistry.TUNNEL_BLOCK_ENTITY.get(), p -> new TunnelBlockEntityRenderer())
@@ -42,7 +41,7 @@ public class FromAnotherWorldClient implements ClientMod {
     }
 
     @Override
-    public Optional<Collection<EntityRendererEntry<?>>> getEntityRendererEntries() {
+    public Optional<Iterable<EntityRendererEntry<?>>> getEntityRendererEntries() {
         return Optional.of(List.of(
                 new EntityRendererEntry<>(CRAWLER.get(), CrawlerRenderer::new),
                 new EntityRendererEntry<>(CHEST_SPITTER.get(), ChestSpitterRenderer::new),
@@ -66,7 +65,7 @@ public class FromAnotherWorldClient implements ClientMod {
     }
 
     @Override
-    public Optional<Collection<ParticleClientEntry<?>>> getParticleClientEntries() {
+    public Optional<Iterable<ParticleClientEntry<?>>> getParticleClientEntries() {
         return Optional.of(List.of(
                 new ParticleClientEntry<>(ParticleRegistry.THING_GORE.get(), WaterDropParticle.Provider::new),
                 new ParticleClientEntry<>(ParticleRegistry.THING_SPIT.get(), SpitParticle.Provider::new),

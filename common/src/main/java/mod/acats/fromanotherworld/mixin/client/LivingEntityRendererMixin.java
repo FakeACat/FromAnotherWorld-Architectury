@@ -2,7 +2,7 @@ package mod.acats.fromanotherworld.mixin.client;
 
 import mod.acats.fromanotherworld.entity.render.feature.RevealedThingFeatureRenderer;
 import mod.acats.fromanotherworld.entity.interfaces.PossibleDisguisedThing;
-import mod.acats.fromanotherworld.registry.EntityRegistry;
+import mod.acats.fromanotherworld.registry.client.ClientEntityRegistry;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -34,6 +34,6 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void init(EntityRendererProvider.Context ctx, M model, float shadowRadius, CallbackInfo ci){
-        this.addLayer(new RevealedThingFeatureRenderer<>(this, ctx.getModelSet().bakeLayer(EntityRegistry.SPIDER_LEGS_MODEL_LAYER)));
+        this.addLayer(new RevealedThingFeatureRenderer<>(this, ctx.getModelSet().bakeLayer(ClientEntityRegistry.SPIDER_LEGS_MODEL_LAYER)));
     }
 }

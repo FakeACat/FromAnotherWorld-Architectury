@@ -4,8 +4,8 @@ import mod.acats.fromanotherworld.entity.model.thing.growths.TentacleSegmentMode
 import mod.acats.fromanotherworld.entity.model.thing.revealed.ChestSpitterModel;
 import mod.acats.fromanotherworld.entity.render.thing.ThingRenderer;
 import mod.acats.fromanotherworld.entity.thing.revealed.ChestSpitter;
-import mod.acats.fromanotherworld.registry.EntityRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
+import mod.acats.fromanotherworld.registry.client.ClientEntityRegistry;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 
@@ -13,7 +13,7 @@ public class ChestSpitterRenderer extends ThingRenderer<ChestSpitter> {
     private final TentacleSegmentModel tentacleSegmentModel;
     public ChestSpitterRenderer(EntityRendererProvider.Context ctx) {
         super(ctx, new ChestSpitterModel());
-        this.tentacleSegmentModel = new TentacleSegmentModel(ctx.getModelSet().bakeLayer(EntityRegistry.TENTACLE_SEGMENT_MODEL_LAYER));
+        this.tentacleSegmentModel = new TentacleSegmentModel(ctx.getModelSet().bakeLayer(ClientEntityRegistry.TENTACLE_SEGMENT_MODEL_LAYER));
         this.shadowRadius = 0.0F;
     }
 

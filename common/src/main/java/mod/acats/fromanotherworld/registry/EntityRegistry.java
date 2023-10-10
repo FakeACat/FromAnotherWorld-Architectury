@@ -2,7 +2,6 @@ package mod.acats.fromanotherworld.registry;
 
 import mod.acats.fromanotherlibrary.registry.FALRegister;
 import mod.acats.fromanotherlibrary.registry.FALRegistryObject;
-import mod.acats.fromanotherworld.FromAnotherWorld;
 import mod.acats.fromanotherworld.entity.misc.StarshipEntity;
 import mod.acats.fromanotherworld.entity.projectile.AssimilationLiquidEntity;
 import mod.acats.fromanotherworld.entity.projectile.NeedleEntity;
@@ -11,8 +10,6 @@ import mod.acats.fromanotherworld.entity.thing.resultant.*;
 import mod.acats.fromanotherworld.entity.thing.revealed.ChestSpitter;
 import mod.acats.fromanotherworld.entity.thing.revealed.VineTentacles;
 import mod.acats.fromanotherworld.entity.thing.special.AlienThing;
-import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -137,7 +134,4 @@ public class EntityRegistry {
     private static <T extends Entity> FALRegistryObject<EntityType<T>> register(String id, EntityType.Builder<T> builder){
         return ENTITY_REGISTRY.register(id, () -> builder.build(id));
     }
-
-    public static final ModelLayerLocation SPIDER_LEGS_MODEL_LAYER = new ModelLayerLocation(new ResourceLocation(FromAnotherWorld.MOD_ID, "spider_legs"), "main");
-    public static final ModelLayerLocation TENTACLE_SEGMENT_MODEL_LAYER = new ModelLayerLocation(new ResourceLocation(FromAnotherWorld.MOD_ID, "tentacle_segment"), "main");
 }

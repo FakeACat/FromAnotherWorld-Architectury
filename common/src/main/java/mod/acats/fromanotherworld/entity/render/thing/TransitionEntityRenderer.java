@@ -2,8 +2,8 @@ package mod.acats.fromanotherworld.entity.render.thing;
 
 import mod.acats.fromanotherworld.entity.model.thing.growths.TentacleSegmentModel;
 import mod.acats.fromanotherworld.entity.thing.TransitionEntity;
-import mod.acats.fromanotherworld.registry.EntityRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
+import mod.acats.fromanotherworld.registry.client.ClientEntityRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -16,7 +16,7 @@ public class TransitionEntityRenderer extends EntityRenderer<TransitionEntity> {
     private final TentacleSegmentModel tentacleSegmentModel;
     public TransitionEntityRenderer(EntityRendererProvider.Context ctx) {
         super(ctx);
-        this.tentacleSegmentModel = new TentacleSegmentModel(ctx.getModelSet().bakeLayer(EntityRegistry.TENTACLE_SEGMENT_MODEL_LAYER));
+        this.tentacleSegmentModel = new TentacleSegmentModel(ctx.getModelSet().bakeLayer(ClientEntityRegistry.TENTACLE_SEGMENT_MODEL_LAYER));
     }
 
     @Override

@@ -1,7 +1,9 @@
 package mod.acats.fromanotherworld.entity.thing.special;
 
+import mod.acats.fromanotherworld.block.interfaces.Gore;
 import mod.acats.fromanotherworld.config.Config;
 import mod.acats.fromanotherworld.constants.FAWAnimations;
+import mod.acats.fromanotherworld.entity.goal.*;
 import mod.acats.fromanotherworld.entity.interfaces.ImportantDeathMob;
 import mod.acats.fromanotherworld.entity.interfaces.StalkerThing;
 import mod.acats.fromanotherworld.entity.thing.Thing;
@@ -9,10 +11,6 @@ import mod.acats.fromanotherworld.registry.ParticleRegistry;
 import mod.acats.fromanotherworld.spawning.SpawningManager;
 import mod.acats.fromanotherworld.utilities.EntityUtilities;
 import mod.acats.fromanotherworld.utilities.chunkloading.FAWChunkLoader;
-import mod.acats.fromanotherworld.entity.goal.AlienThingFleeGoal;
-import mod.acats.fromanotherworld.entity.goal.AlienThingSwimGoal;
-import mod.acats.fromanotherworld.entity.goal.StalkGoal;
-import mod.acats.fromanotherworld.entity.goal.ThingAttackGoal;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.core.animation.AnimationController;
@@ -20,6 +18,7 @@ import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -28,9 +27,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.OpenDoorGoal;
@@ -57,15 +55,14 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
     private static final EntityDataAccessor<Integer> BURROWING;
 
     public boolean fleeing;
-    private int switchTimer;
     public boolean bored;
+    private boolean leaping;
 
     private static final double DEFAULT_MOVEMENT_SPEED = 0.45D;
     private static final double DEFAULT_ATTACK_DAMAGE = 7.0D;
-    private static final double DEFAULT_KNOCKBACK_RESISTANCE = 0.0D;
 
     public static AttributeSupplier.Builder createAlienThingAttributes(){
-        return Monster.createMonsterAttributes().add(Attributes.FOLLOW_RANGE, 32).add(Attributes.MOVEMENT_SPEED, DEFAULT_MOVEMENT_SPEED).add(Attributes.ATTACK_DAMAGE, DEFAULT_ATTACK_DAMAGE).add(Attributes.MAX_HEALTH, 100.0D).add(Attributes.KNOCKBACK_RESISTANCE, DEFAULT_KNOCKBACK_RESISTANCE);
+        return Monster.createMonsterAttributes().add(Attributes.FOLLOW_RANGE, 24).add(Attributes.MOVEMENT_SPEED, DEFAULT_MOVEMENT_SPEED).add(Attributes.ATTACK_DAMAGE, DEFAULT_ATTACK_DAMAGE).add(Attributes.MAX_HEALTH, 100.0D).add(Attributes.KNOCKBACK_RESISTANCE, 0.5D);
     }
 
     @Override
@@ -87,6 +84,17 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
         this.goalSelector.addGoal(4, new StalkGoal(this));
     }
 
+    public int getIdealForm(@Nullable Player p) {
+        if (p != null && p.distanceToSqr(this) < 1600) {
+            return 0;
+        }
+
+        if (this.getY() < this.level().getSeaLevel()) {
+            return 1;
+        }
+
+        return 2;
+    }
 
     private void setAttributes(double speed, double damage, double kbResist){
         Objects.requireNonNull(this.getAttribute(Attributes.MOVEMENT_SPEED)).setBaseValue(speed);
@@ -177,15 +185,22 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
     protected void customServerAiStep() {
         if (!this.level().isClientSide()){
             if (!this.isThingFrozen()){
-                switchTimer++;
-                if (switchTimer > 1800){
-                    this.switchTimer = 0;
-                    if (this.getRandom().nextBoolean())
-                        this.initiateSwitch();
+                if (this.leaping) {
+                    this.grief(0, 1);
+                    if (this.onGround()) {
+                        this.leaping = false;
+                    }
                 }
+
                 if (this.tickCount % 20 == 0){
-                    if (this.fleeing || this.bored)
+                    if (this.getRandom().nextInt(5) == 0 && this.getForm() != this.getIdealForm(this.getTarget() instanceof Player p ? p : null)){
+                        this.initiateSwitch();
+                    }
+
+                    if (this.fleeing || this.bored) {
                         this.escape();
+                    }
+
                     if (this.tickCount % 60 == 0 &&
                             this.getTarget() != null &&
                             this.getForm() == 1 &&
@@ -215,6 +230,10 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
         super.threeSecondDelayServerTick();
         if (this.tickCount % 300 == 0) {
             this.createChunkLoader();
+        }
+
+        if (this.getForm() == 1 && this.getRandom().nextInt(6) == 0) {
+            Gore.attemptPlaceUndergroundGrowth(this.level(), this.blockPosition(), Direction.DOWN);
         }
     }
 
@@ -267,11 +286,23 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
         if (this.burrowingOrEmerging()) {
             return false;
         }
+
+        if (source.is(DamageTypes.LAVA) || source.is(DamageTypes.IN_FIRE)) {
+            this.setDeltaMovement(
+                    4.0F * (this.getRandom().nextFloat() - 0.5F),
+                    2.0F,
+                    4.0F * (this.getRandom().nextFloat() - 0.5F)
+            );
+            this.leaping = true;
+        }
+
         return super.hurt(source, amount);
     }
 
     private void initiateSwitch(){
-        this.setSwitchProgress(1);
+        if (this.getSwitchProgress() == 0) {
+            this.setSwitchProgress(1);
+        }
     }
 
     private void tickSwitch(){
@@ -288,22 +319,19 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
 
     private void changeForm(){
         this.heal(this.getMaxHealth());
-        int form = (this.getForm() + 1) % 3;
-        changeForm(form);
+        this.changeForm(this.getIdealForm(this.getTarget() instanceof Player p ? p : null));
     }
 
     public void changeForm(int form){
         this.setForm(form);
 
         switch (form) {
-            case 0 -> this.setAttributes(DEFAULT_MOVEMENT_SPEED, DEFAULT_ATTACK_DAMAGE, DEFAULT_KNOCKBACK_RESISTANCE);
+            case 0 -> this.setAttributes(DEFAULT_MOVEMENT_SPEED, DEFAULT_ATTACK_DAMAGE, 0.5D);
             case 1 -> this.setAttributes(DEFAULT_MOVEMENT_SPEED * 0.75D, DEFAULT_ATTACK_DAMAGE * 1.25D, 1.0D);
-            case 2 -> this.setAttributes(DEFAULT_MOVEMENT_SPEED * 1.125D, DEFAULT_ATTACK_DAMAGE * 0.75D, 0.5D);
+            case 2 -> this.setAttributes(DEFAULT_MOVEMENT_SPEED, DEFAULT_ATTACK_DAMAGE * 0.5D, 1.0D);
         }
 
-        this.canHunt = this.getRandom().nextInt(5) == 0;
-        this.canGrief = this.getRandom().nextInt(5) == 0;
-        this.canShootNeedles = form == 2 && this.getRandom().nextBoolean();
+        this.canGrief = form == 0;
     }
 
     private Player stalkTarget;
@@ -408,10 +436,17 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
     }
 
     @Override
+    public boolean killedEntity(ServerLevel serverLevel, LivingEntity livingEntity) {
+        if (livingEntity instanceof Player) { // Hopefully this should prevent it from spawnkilling
+            this.bored = true;
+        }
+        return super.killedEntity(serverLevel, livingEntity);
+    }
+
+    @Override
     public void addAdditionalSaveData(CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
         nbt.putBoolean("Fleeing", this.fleeing);
-        nbt.putInt("SwitchTimer", this.switchTimer);
         nbt.putInt("Form", this.getForm());
         nbt.putInt("SwitchProgress", this.getSwitchProgress());
         nbt.putInt("Emerging", this.entityData.get(EMERGING));
@@ -423,7 +458,6 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
     public void readAdditionalSaveData(CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
         this.fleeing = nbt.getBoolean("Fleeing");
-        this.switchTimer = nbt.getInt("SwitchTimer");
         this.setForm(nbt.getInt("Form"));
         this.setSwitchProgress(nbt.getInt("SwitchProgress"));
         this.entityData.set(EMERGING, nbt.getInt("Emerging"));
@@ -443,13 +477,13 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
     }
 
     @Override
-    public BurrowType getBurrowType() {
-        return BurrowType.CAN_BURROW;
+    public float getBurrowDepth() {
+        return 0.0F;
     }
 
     @Override
-    public float getBurrowDepth() {
-        return 0.0F;
+    public BurrowType getBurrowType() {
+        return Config.DIFFICULTY_CONFIG.burrowing.get() ? BurrowType.CAN_BURROW : BurrowType.CANNOT_BURROW;
     }
 
     static {

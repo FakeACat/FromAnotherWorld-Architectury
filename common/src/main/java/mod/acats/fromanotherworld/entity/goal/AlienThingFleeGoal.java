@@ -6,6 +6,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.ai.util.DefaultRandomPos;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 
 public class AlienThingFleeGoal extends AvoidEntityGoal<LivingEntity> {
@@ -19,6 +20,11 @@ public class AlienThingFleeGoal extends AvoidEntityGoal<LivingEntity> {
 
     @Override
     public boolean canUse() {
+
+        if (this.mob.getForm() == 0 || this.mob.getTarget() instanceof Player) {
+            return false;
+        }
+
         if (EntityUtilities.isVulnerable(mob) || mob.getHealth() < mob.getMaxHealth() * 0.6F)
             this.mob.fleeing = true;
         return this.mob.fleeing && this.canStart2();

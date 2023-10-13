@@ -36,11 +36,11 @@ public class CorpseBlockEntity extends BlockEntity implements GeoBlockEntity {
     }
 
     public static void tick(Level level, BlockPos blockPos, BlockState blockState, CorpseBlockEntity blockEntity){
-        if (!level.isClientSide() && level.getGameTime() % 100 == 0 && blockState.getBlock() instanceof Gore gore){
+        if (!level.isClientSide() && level.getGameTime() % 100 == 0){
             int size = CorpseBlock.getCorpseType(blockState).getSize();
             BlockUtilities.forEachBlockInCubeCentredAt(blockPos, size, blockPos1 -> {
                 if (level.random.nextInt(4) == 0)
-                    gore.attemptPlaceUndergroundGrowth(level, blockPos1, Direction.getRandom(level.getRandom()));
+                    Gore.attemptPlaceUndergroundGrowth(level, blockPos1, Direction.getRandom(level.getRandom()));
             });
         }
     }

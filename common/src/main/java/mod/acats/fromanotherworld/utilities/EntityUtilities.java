@@ -106,13 +106,14 @@ public class EntityUtilities {
         world.addFreshEntity(entity);
     }
 
-    public static boolean spawnOnEntityImproved(Mob entity, Level world, Entity targetEntity, int minRangeH, int maxRangeH, int rangeV, int tries){
+    public static boolean spawnOnEntityImproved(Mob entity, Level world, Entity targetEntity, int minRangeH, int maxRangeH, int rangeV, int tries, int yOffset){
         for (int i = 0; i < tries; i++){
             int x = Mth.floor(targetEntity.getX()) + world.getRandom().nextIntBetweenInclusive(minRangeH, maxRangeH) * (world.getRandom().nextBoolean() ? 1 : -1);
             int z = Mth.floor(targetEntity.getZ()) + world.getRandom().nextIntBetweenInclusive(minRangeH, maxRangeH) * (world.getRandom().nextBoolean() ? 1 : -1);
             for (int y = Mth.floor(targetEntity.getY()) + world.getRandom().nextInt(rangeV); y > (int)targetEntity.getY() - rangeV; y--){
-                if (world.getBlockState(new BlockPos(x, y - 1, z)).blocksMotion()){
-                    entity.setPos(x + 0.5D, y, z + 0.5D);
+                int realY = y + yOffset;
+                if (world.getBlockState(new BlockPos(x, realY - 1, z)).blocksMotion()){
+                    entity.setPos(x + 0.5D, realY, z + 0.5D);
                     if (world.noCollision(entity) && !world.containsAnyLiquid(entity.getBoundingBox()))
                         return world.addFreshEntity(entity);
                 }

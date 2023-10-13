@@ -57,20 +57,20 @@ public interface Gore {
     default void spreadUnderground(Level level, BlockPos pos, BlockState blockState) {
         Direction surface = surface(level, blockState);
 
-        this.forEachPossibleTentacleLocation(pos, surface, pos2 -> {
+        forEachPossibleTentacleLocation(pos, surface, pos2 -> {
             if (level.getRandom().nextInt(3) == 0) {
-                this.attemptPlaceUndergroundGrowth(level, pos2, level.getRandom().nextInt(10) == 0 ? Direction.getRandom(level.getRandom()) : surface);
+                attemptPlaceUndergroundGrowth(level, pos2, level.getRandom().nextInt(10) == 0 ? Direction.getRandom(level.getRandom()) : surface);
             }
         });
     }
 
-    default void attemptPlaceUndergroundGrowth(Level level, BlockPos pos, Direction surface){
+    static void attemptPlaceUndergroundGrowth(Level level, BlockPos pos, Direction surface){
         BlockState state = TentacleBlock.correctConnectionStates(level, pos, BlockRegistry.TENTACLE.get().defaultBlockState().setValue(TentacleBlock.SURFACE, surface));
 
         var ref = new Object() {
             int connectedTentacles = 0;
         };
-        this.forEachPossibleTentacleLocation(pos, surface, pos2 -> {
+        forEachPossibleTentacleLocation(pos, surface, pos2 -> {
             BlockState state2 = level.getBlockState(pos2);
             if (level.getBlockState(pos2).getBlock() instanceof Gore gore && gore.connectsHorizontally(state2, surface)) {
                 ref.connectedTentacles++;
@@ -91,7 +91,7 @@ public interface Gore {
             level.setBlockAndUpdate(pos, state);
         }
     }
-    default void forEachPossibleTentacleLocation(BlockPos pos, Direction surface, Consumer<BlockPos> function){
+    static void forEachPossibleTentacleLocation(BlockPos pos, Direction surface, Consumer<BlockPos> function){
         for (Direction direction:
                 Direction.values()) {
             if (!direction.equals(surface) && !direction.equals(surface.getOpposite())) {

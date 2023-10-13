@@ -1,7 +1,7 @@
 package mod.acats.fromanotherworld.entity.misc;
 
-import mod.acats.fromanotherworld.entity.thing.Thing;
 import mod.acats.fromanotherworld.entity.thing.resultant.BloodCrawler;
+import mod.acats.fromanotherworld.entity.thing.special.AlienThing;
 import mod.acats.fromanotherworld.registry.EntityRegistry;
 import mod.acats.fromanotherworld.registry.ParticleRegistry;
 import mod.azure.azurelib.animatable.GeoEntity;
@@ -64,11 +64,12 @@ public class StarshipEntity extends Mob implements GeoEntity {
         if (this.onGround()){
             if (!this.level().isClientSide()){
                 this.level().explode(null, this.getX(), this.getY() + 3.0D, this.getZ(), 9, Level.ExplosionInteraction.TNT);
-                Thing thing = EntityRegistry.ALIEN_THING.get().create(this.level());
+                AlienThing thing = EntityRegistry.ALIEN_THING.get().create(this.level());
                 if (thing != null) {
                     thing.setPos(this.position());
                     thing.finalizeSpawn((ServerLevelAccessor) this.level(), this.level().getCurrentDifficultyAt(this.blockPosition()), MobSpawnType.EVENT, null, null);
                     this.level().addFreshEntity(thing);
+                    thing.changeForm(0);
                 }
                 this.setReleasedContents(true);
                 this.level().playSound(null, this.blockPosition(), SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS, 16.0F, (1.0F + (this.level().random.nextFloat() - this.level().random.nextFloat()) * 0.2F) * 0.7F);

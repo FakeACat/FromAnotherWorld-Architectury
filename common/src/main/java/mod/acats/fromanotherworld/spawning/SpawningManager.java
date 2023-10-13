@@ -45,10 +45,10 @@ public class SpawningManager extends SavedData {
         if (player != null && !player.isCreative() && !player.isSpectator() && this.alienThingsToSpawn > 0){
             AlienThing alien = EntityRegistry.ALIEN_THING.get().create(world);
             if (alien != null){
-                alien.changeForm(world.getRandom().nextInt(3));
                 alien.finalizeSpawn(world, world.getCurrentDifficultyAt(player.blockPosition()), MobSpawnType.NATURAL, null, null);
                 alien.tickEmerging();
-                if (EntityUtilities.spawnOnEntityImproved(alien, world, player, 10, 20, 10, 20)){
+                if (EntityUtilities.spawnOnEntityImproved(alien, world, player, 20, 100, 80, 20, -50)){
+                    alien.changeForm(alien.getIdealForm(player));
                     this.alienThingsToSpawn--;
                     this.setDirty();
                 }

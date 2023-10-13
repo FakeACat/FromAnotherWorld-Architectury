@@ -14,7 +14,7 @@ public class CommonWorldEvents {
             spawningManager.update(world);
         }
 
-        if (world.getRandom().nextInt(2400) == 0){
+        if (world.getRandom().nextInt(300) == 0){
             SpawningManager spawningManager = SpawningManager.getSpawningManager(world);
             spawningManager.alienThingSpawner(world);
         }

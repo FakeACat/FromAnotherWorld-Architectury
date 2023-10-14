@@ -6,10 +6,13 @@ import mod.acats.fromanotherworld.constants.FAWAnimations;
 import mod.acats.fromanotherworld.entity.goal.*;
 import mod.acats.fromanotherworld.entity.interfaces.ImportantDeathMob;
 import mod.acats.fromanotherworld.entity.interfaces.StalkerThing;
+import mod.acats.fromanotherworld.entity.projectile.AssimilationLiquidEntity;
 import mod.acats.fromanotherworld.entity.thing.Thing;
 import mod.acats.fromanotherworld.registry.ParticleRegistry;
 import mod.acats.fromanotherworld.spawning.SpawningManager;
+import mod.acats.fromanotherworld.utilities.BlockUtilities;
 import mod.acats.fromanotherworld.utilities.EntityUtilities;
+import mod.acats.fromanotherworld.utilities.ProjectileUtilities;
 import mod.acats.fromanotherworld.utilities.chunkloading.FAWChunkLoader;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animation.AnimatableManager;
@@ -24,6 +27,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
@@ -39,6 +43,7 @@ import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -192,6 +197,8 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
                     }
                 }
 
+                this.tickSpit();
+
                 if (this.tickCount % 20 == 0){
                     if (this.getRandom().nextInt(5) == 0 && this.getForm() != this.getIdealForm(this.getTarget() instanceof Player p ? p : null)){
                         this.initiateSwitch();
@@ -223,6 +230,19 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
                 this.tickSwitch();
         }
         super.customServerAiStep();
+    }
+
+    private double randomSpread() {
+        return (this.getRandom().nextDouble() - 0.5D) * 3.0D;
+    }
+
+    private void tickSpit() {
+        BlockUtilities.forEachBlockInCubeCentredAt(this.blockPosition(), 1, blockPos -> {
+            if (this.level().getFluidState(blockPos).is(FluidTags.LAVA) || this.level().getBlockState(blockPos).is(Blocks.FIRE)) {
+                Vec3 target = new Vec3(blockPos.getX() + this.randomSpread(), blockPos.getY() + this.randomSpread(), blockPos.getZ() + this.randomSpread());
+                ProjectileUtilities.shootFromTo(new AssimilationLiquidEntity(this.level(), this), this, target, 1.0F, Vec3.ZERO);
+            }
+        });
     }
 
     @Override
@@ -287,11 +307,12 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
             return false;
         }
 
-        if (source.is(DamageTypes.LAVA) || source.is(DamageTypes.IN_FIRE)) {
+        if (source.is(DamageTypes.LAVA)) {
+            double speed = 1.0D;
             this.setDeltaMovement(
-                    4.0F * (this.getRandom().nextFloat() - 0.5F),
-                    2.0F,
-                    4.0F * (this.getRandom().nextFloat() - 0.5F)
+                    speed * (this.getRandom().nextFloat() - 0.5D) * 2.0D,
+                    speed,
+                    speed * (this.getRandom().nextFloat() - 0.5F) * 2.0D
             );
             this.leaping = true;
         }

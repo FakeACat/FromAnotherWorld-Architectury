@@ -5,12 +5,17 @@ import mod.acats.fromanotherworld.registry.ItemRegistry;
 import mod.acats.fromanotherworld.registry.ParticleRegistry;
 import mod.acats.fromanotherworld.utilities.EntityUtilities;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.NotNull;
@@ -49,10 +54,37 @@ public class AssimilationLiquidEntity extends ThrowableItemProjectile {
     }
 
     @Override
+    protected void onHitBlock(BlockHitResult blockHitResult) {
+        super.onHitBlock(blockHitResult);
+        if (!this.level().isClientSide()) {
+            if (this.level().getBlockState(this.blockPosition()).is(BlockTags.FIRE)) {
+                this.level().removeBlock(this.blockPosition(), false);
+            }
+        }
+    }
+
+    @Override
     protected void onHit(HitResult hitResult) {
         super.onHit(hitResult);
-        if (!this.level().isClientSide && hitResult.getType() != HitResult.Type.ENTITY) {
+        if (!this.level().isClientSide() && hitResult.getType() != HitResult.Type.ENTITY) {
             this.discard();
+        }
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if (!this.level().isClientSide()) {
+            FluidState fluidState = this.level().getFluidState(this.blockPosition());
+            if (fluidState.is(FluidTags.LAVA)) {
+                if (fluidState.isSource()) {
+                    this.level().setBlockAndUpdate(this.blockPosition(), Blocks.OBSIDIAN.defaultBlockState());
+                }
+                else {
+                    this.level().setBlockAndUpdate(this.blockPosition(), Blocks.COBBLESTONE.defaultBlockState());
+                }
+                this.discard();
+            }
         }
     }
 

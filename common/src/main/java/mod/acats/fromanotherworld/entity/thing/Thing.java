@@ -647,7 +647,7 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing, Co
 
     private void setRareAbilities(int chanceDenominator){
         this.canSpit = random.nextInt(chanceDenominator) == 0;
-        this.canHunt = random.nextInt(chanceDenominator) == 0;
+        //this.canHunt = random.nextInt(chanceDenominator) == 0;
         this.canGrief = random.nextInt(chanceDenominator) == 0;
         this.canShootNeedles = random.nextInt(chanceDenominator) == 0;
     }

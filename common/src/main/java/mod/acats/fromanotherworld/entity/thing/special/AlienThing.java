@@ -67,7 +67,7 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
     private static final double DEFAULT_ATTACK_DAMAGE = 7.0D;
 
     public static AttributeSupplier.Builder createAlienThingAttributes(){
-        return Monster.createMonsterAttributes().add(Attributes.FOLLOW_RANGE, 24).add(Attributes.MOVEMENT_SPEED, DEFAULT_MOVEMENT_SPEED).add(Attributes.ATTACK_DAMAGE, DEFAULT_ATTACK_DAMAGE).add(Attributes.MAX_HEALTH, 100.0D).add(Attributes.KNOCKBACK_RESISTANCE, 0.5D);
+        return Monster.createMonsterAttributes().add(Attributes.FOLLOW_RANGE, 24).add(Attributes.MOVEMENT_SPEED, DEFAULT_MOVEMENT_SPEED).add(Attributes.ATTACK_DAMAGE, DEFAULT_ATTACK_DAMAGE).add(Attributes.MAX_HEALTH, 100.0D).add(Attributes.KNOCKBACK_RESISTANCE, 0.0D);
     }
 
     @Override
@@ -173,15 +173,22 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
 
     @Override
     public int timeUntilBoredInThreeSeconds() {
-        return 20;
+        return 40;
     }
 
+    private int clientForm;
+    private int prevClientForm;
     @Override
     public void tick() {
         if (this.isEmerging())
             this.tickEmerging();
         else if (this.isBurrowing())
             this.tickBurrowing();
+
+        if (this.level().isClientSide()) {
+            this.prevClientForm = this.clientForm;
+            this.clientForm = this.getForm();
+        }
 
         super.tick();
     }
@@ -237,12 +244,25 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
     }
 
     private void tickSpit() {
+
+        if (this.tickCount % 20 == 0 && this.getTarget() instanceof Player p && this.cheeseDetected(p)) {
+            ProjectileUtilities.shootFromTo(new AssimilationLiquidEntity(this.level(), this), this, p, 2.0F, Vec3.ZERO);
+        }
+
         BlockUtilities.forEachBlockInCubeCentredAt(this.blockPosition(), 1, blockPos -> {
             if (this.level().getFluidState(blockPos).is(FluidTags.LAVA) || this.level().getBlockState(blockPos).is(Blocks.FIRE)) {
                 Vec3 target = new Vec3(blockPos.getX() + this.randomSpread(), blockPos.getY() + this.randomSpread(), blockPos.getZ() + this.randomSpread());
                 ProjectileUtilities.shootFromTo(new AssimilationLiquidEntity(this.level(), this), this, target, 1.0F, Vec3.ZERO);
             }
         });
+    }
+
+    private boolean cheeseDetected(Player p) {
+        double minHeight = this.getY();
+        if (!this.isInWater()) {
+            minHeight += 4;
+        }
+        return p.getY() > minHeight;
     }
 
     @Override
@@ -347,7 +367,7 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
         this.setForm(form);
 
         switch (form) {
-            case 0 -> this.setAttributes(DEFAULT_MOVEMENT_SPEED, DEFAULT_ATTACK_DAMAGE, 0.5D);
+            case 0 -> this.setAttributes(DEFAULT_MOVEMENT_SPEED, DEFAULT_ATTACK_DAMAGE, 0.0);
             case 1 -> this.setAttributes(DEFAULT_MOVEMENT_SPEED * 0.75D, DEFAULT_ATTACK_DAMAGE * 1.25D, 1.0D);
             case 2 -> this.setAttributes(DEFAULT_MOVEMENT_SPEED, DEFAULT_ATTACK_DAMAGE * 0.5D, 1.0D);
         }
@@ -381,11 +401,19 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
     }
 
     @Override
+    protected float getSoundVolume() {
+        return 2.0F;
+    }
+
+    @Override
     protected int calculateFallDamage(float fallDistance, float damageMultiplier) {
         return 0;
     }
 
     private <E extends GeoEntity> PlayState predicate(AnimationState<E> event) {
+        if (this.clientForm != this.prevClientForm) {
+            event.getController().forceAnimationReset();
+        }
         if (this.burrowingOrEmerging() || this.isThingBurrowing() || this.isThingEmerging()){
             event.getController().setAnimationSpeed(ANIMATION_SPEED_MULTIPLIER);
             if (this.isBurrowing() || this.isThingBurrowing()){
@@ -457,11 +485,11 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
     }
 
     @Override
-    public boolean killedEntity(ServerLevel serverLevel, LivingEntity livingEntity) {
-        if (livingEntity instanceof Player) { // Hopefully this should prevent it from spawnkilling
-            this.bored = true;
+    public void doEnchantDamageEffects(LivingEntity livingEntity, Entity entity) {
+        if (!entity.isAlive() && entity instanceof Player) { // Hopefully this should prevent it from spawnkilling
+            this.bored();
         }
-        return super.killedEntity(serverLevel, livingEntity);
+        super.doEnchantDamageEffects(livingEntity, entity);
     }
 
     @Override

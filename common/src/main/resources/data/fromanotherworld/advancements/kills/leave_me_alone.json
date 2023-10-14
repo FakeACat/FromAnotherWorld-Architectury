@@ -30,7 +30,7 @@
       "translate": "fromanotherworld.advancements.leave_me_alone.title"
     }
   },
-  "parent": "fromanotherworld:kills/dubious_little_creature",
+  "parent": "fromanotherworld:item/flamethrower",
   "requirements": [
     [
       "fromanotherworld:alien_thing"

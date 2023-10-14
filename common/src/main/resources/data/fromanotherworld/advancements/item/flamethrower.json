@@ -1,0 +1,37 @@
+{
+  "parent": "fromanotherworld:from_another_world",
+  "criteria": {
+    "fromanotherworld:flamethrower_mk_1": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "fromanotherworld:flamethrower_mk_1"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "fromanotherworld.advancements.flamethrower.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "fromanotherworld:flamethrower_mk_1"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "fromanotherworld.advancements.flamethrower.title"
+    }
+  },
+  "requirements": [
+    [
+      "fromanotherworld:flamethrower_mk_1"
+    ]
+  ]
+}

@@ -5,6 +5,7 @@ import mod.acats.fromanotherworld.FromAnotherWorld;
 import mod.acats.fromanotherworld.entity.model.thing.growths.TentacleSegmentModel;
 import mod.acats.fromanotherworld.entity.model.thing.revealed.SpiderLegsModel;
 import mod.acats.fromanotherworld.entity.render.misc.StarshipRenderer;
+import mod.acats.fromanotherworld.entity.render.projectile.FlamethrowerFireRenderer;
 import mod.acats.fromanotherworld.entity.render.projectile.NeedleEntityRenderer;
 import mod.acats.fromanotherworld.entity.render.thing.TransitionEntityRenderer;
 import mod.acats.fromanotherworld.entity.render.thing.resultant.*;
@@ -21,7 +22,6 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import static mod.acats.fromanotherworld.registry.EntityRegistry.*;
-import static mod.acats.fromanotherworld.registry.EntityRegistry.VINE_TENTACLES;
 
 public class ClientEntityRegistry {
     public static final ModelLayerLocation SPIDER_LEGS_MODEL_LAYER = new ModelLayerLocation(new ResourceLocation(FromAnotherWorld.MOD_ID, "spider_legs"), "main");
@@ -46,7 +46,8 @@ public class ClientEntityRegistry {
                 new EntityRendererEntry<>(SPLIT_FACE.get(), SplitFaceRenderer::new),
                 new EntityRendererEntry<>(TRANSITION.get(), TransitionEntityRenderer::new),
                 new EntityRendererEntry<>(PROWLER.get(), ProwlerRenderer::new),
-                new EntityRendererEntry<>(VINE_TENTACLES.get(), VineTentaclesRenderer::new)
+                new EntityRendererEntry<>(VINE_TENTACLES.get(), VineTentaclesRenderer::new),
+                new EntityRendererEntry<>(FLAMETHROWER_FIRE.get(), FlamethrowerFireRenderer::new)
         );
     }
 

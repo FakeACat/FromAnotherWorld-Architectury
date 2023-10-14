@@ -5,10 +5,8 @@ import mod.acats.fromanotherlibrary.registry.FALRegister;
 import mod.acats.fromanotherlibrary.registry.FALRegistryObject;
 import mod.acats.fromanotherlibrary.registry.TabPopulator;
 import mod.acats.fromanotherworld.FromAnotherWorld;
-import mod.acats.fromanotherworld.item.AssimilationLiquidItem;
-import mod.acats.fromanotherworld.item.FlamingArrowItem;
-import mod.acats.fromanotherworld.item.GoreBottleItem;
-import mod.acats.fromanotherworld.item.ImpostorDetectorItem;
+import mod.acats.fromanotherworld.item.*;
+
 import java.util.function.Supplier;
 
 import net.minecraft.core.registries.Registries;
@@ -54,10 +52,27 @@ public class ItemRegistry {
     public static final FALRegistryObject<Item> GORE_BOTTLE = register("gore_bottle", () -> new GoreBottleItem(new Item.Properties().stacksTo(64)));
     public static final FALRegistryObject<Item> FLAMING_ARROW = register("flaming_arrow", () -> new FlamingArrowItem(new Item.Properties().stacksTo(64)));
     public static final FALRegistryObject<Item> ALIEN_CIRCUITRY = register("alien_circuitry", () -> new Item(new Item.Properties().rarity(Rarity.EPIC).fireResistant()));
+    public static final FALRegistryObject<Item> FLAMETHROWER_MK_1 = registerExtraTabs(
+            "flamethrower_mk_1",
+            () -> new FlamethrowerItem(
+                    new Item.Properties().stacksTo(1),
+                    5.0F,
+                    1.2F,
+                    1
+            ),
+            CreativeModeTabs.COMBAT
+    );
 
     private static FALRegistryObject<Item> register(String id, Supplier<Item> sup) {
         FALRegistryObject<Item> obj = ITEM_REGISTRY.register(id, sup);
         TAB_POPULATOR.setTabs(obj::get, TAB_KEY);
         return obj;
+    }
+
+    @SafeVarargs
+    private static FALRegistryObject<Item> registerExtraTabs(String id, Supplier<Item> sup, ResourceKey<CreativeModeTab>... tabs) {
+        FALRegistryObject<Item> item = register(id, sup);
+        TAB_POPULATOR.setTabs(item::get, tabs);
+        return item;
     }
 }

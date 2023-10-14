@@ -4,6 +4,7 @@ import mod.acats.fromanotherlibrary.registry.FALRegister;
 import mod.acats.fromanotherlibrary.registry.FALRegistryObject;
 import mod.acats.fromanotherworld.entity.misc.StarshipEntity;
 import mod.acats.fromanotherworld.entity.projectile.AssimilationLiquidEntity;
+import mod.acats.fromanotherworld.entity.projectile.FlamethrowerFire;
 import mod.acats.fromanotherworld.entity.projectile.NeedleEntity;
 import mod.acats.fromanotherworld.entity.thing.TransitionEntity;
 import mod.acats.fromanotherworld.entity.thing.resultant.*;
@@ -106,6 +107,14 @@ public class EntityRegistry {
     public static final FALRegistryObject<EntityType<VineTentacles>> VINE_TENTACLES = register(
             "vine_tentacles",
             EntityType.Builder.of(VineTentacles::new, MobCategory.MONSTER).sized(1.0F, 2.0F).clientTrackingRange(TRACK_RANGE_MEDIUM)
+    );
+
+    public static final FALRegistryObject<EntityType<FlamethrowerFire>> FLAMETHROWER_FIRE = register(
+            "flamethrower_fire",
+            EntityType.Builder.<FlamethrowerFire>of(FlamethrowerFire::new, MobCategory.MISC)
+                    .updateInterval(10)
+                    .sized(0.25F, 0.25F)
+                    .updateInterval(TRACK_RANGE_SHORT)
     );
 
     public static HashMap<EntityType<? extends LivingEntity>, Supplier<AttributeSupplier.Builder>> getAttributes() {

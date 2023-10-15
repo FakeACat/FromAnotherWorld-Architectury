@@ -16,16 +16,16 @@ public class BloodCrawlerModel extends GeoModel<BloodCrawler> {
 
     @Override
     public ResourceLocation getModelResource(BloodCrawler object) {
-        return new ResourceLocation(FromAnotherWorld.MOD_ID, "geo/entity/thing/resultant/" + getVariant(object) + ".geo.json");
+        return new ResourceLocation(FromAnotherWorld.MOD_ID, "geo/entity/thing/resultant/blood_crawler/" + getVariant(object) + ".geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(BloodCrawler object) {
-        return new ResourceLocation(FromAnotherWorld.MOD_ID, "textures/block/thing_gore.png");
+        return new ResourceLocation(FromAnotherWorld.MOD_ID, "textures/entity/thing/resultant/blood_crawler/" + getVariant(object) + ".png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(BloodCrawler animatable) {
-        return new ResourceLocation(FromAnotherWorld.MOD_ID, "animations/entity/thing/resultant/" + getVariant(animatable) + ".animation.json");
+        return new ResourceLocation(FromAnotherWorld.MOD_ID, "animations/entity/thing/resultant/blood_crawler/" + getVariant(animatable) + ".animation.json");
     }
 }

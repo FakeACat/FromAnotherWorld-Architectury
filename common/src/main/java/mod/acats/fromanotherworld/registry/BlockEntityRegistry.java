@@ -2,6 +2,7 @@ package mod.acats.fromanotherworld.registry;
 
 import mod.acats.fromanotherlibrary.registry.FALRegister;
 import mod.acats.fromanotherlibrary.registry.FALRegistryObject;
+import mod.acats.fromanotherworld.block.entity.AssimilatedSculkTentaclesBlockEntity;
 import mod.acats.fromanotherworld.block.entity.CorpseBlockEntity;
 import mod.acats.fromanotherworld.block.entity.TunnelBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -21,5 +22,12 @@ public class BlockEntityRegistry {
             () -> BlockEntityType.Builder.of(
                     TunnelBlockEntity::new,
                     BlockRegistry.TUNNEL_BLOCK.get()
+            ).build(null));
+
+    public static final FALRegistryObject<BlockEntityType<AssimilatedSculkTentaclesBlockEntity>> ASSIMILATED_SCULK_TENTACLES_BLOCK_ENTITY = BLOCK_ENTITY_REGISTRY.register(
+            "assimilated_sculk_tentacles",
+            () -> BlockEntityType.Builder.of(
+                    AssimilatedSculkTentaclesBlockEntity::new,
+                    BlockRegistry.ASSIMILATED_SCULK_TENTACLES.get()
             ).build(null));
 }

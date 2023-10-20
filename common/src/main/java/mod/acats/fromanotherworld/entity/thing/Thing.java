@@ -92,6 +92,23 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing, Co
         }
     }
 
+    public static boolean hostileTowards(@Nullable LivingEntity target, boolean currentThreat) {
+        if (target == null || !target.canBeSeenAsEnemy()) {
+            return false;
+        }
+        return !target.getType().is(EntityTags.THING_ALLIES) &&
+                !EntityUtilities.isThing(target) &&
+                (currentThreat ||
+                        EntityUtilities.canAssimilate(target) ||
+                        target.getType().is(EntityTags.ATTACKABLE_BUT_NOT_ASSIMILABLE));
+    }
+    public static boolean hostileTowards(@Nullable Entity target) {
+        if (!(target instanceof LivingEntity e)) {
+            return false;
+        }
+        return Thing.hostileTowards(e, false);
+    }
+
     public void initializeFrom(Entity parent){
         if (parent.level() instanceof ServerLevel serverWorld){
             this.finalizeSpawn(serverWorld, serverWorld.getCurrentDifficultyAt(parent.blockPosition()), MobSpawnType.CONVERSION, null, null);
@@ -204,14 +221,7 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing, Co
 
     @Override
     public boolean canAttack(LivingEntity target) {
-        if (!target.getType().is(EntityTags.THING_ALLIES) &&
-                !EntityUtilities.isThing(target) &&
-                (target == this.currentThreat ||
-                        EntityUtilities.canAssimilate(target) ||
-                        target.getType().is(EntityTags.ATTACKABLE_BUT_NOT_ASSIMILABLE))){
-            return super.canAttack(target);
-        }
-        return false;
+        return Thing.hostileTowards(target, target == this.currentThreat) && super.canAttack(target);
     }
 
     public void addThingTargets(boolean prioritisePlayer){

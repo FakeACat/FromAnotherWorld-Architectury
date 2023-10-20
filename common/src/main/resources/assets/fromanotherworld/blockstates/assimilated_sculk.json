@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "revealed=false": { "model": "minecraft:block/sculk" },
+    "revealed=true": { "model": "fromanotherworld:block/sculk/assimilated_sculk" }
+  }
+}

@@ -14,5 +14,6 @@ public class FromAnotherWorldClientFabric implements ClientModInitializer {
 
         BlockRenderLayerMap.INSTANCE.putBlock(BlockRegistry.TENTACLE.get(), RenderType.cutout()); // note to self - forge does not handle this with code, must be done in the model json
         BlockRenderLayerMap.INSTANCE.putBlock(BlockRegistry.DISGUISED_TENDRILS.get(), RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(BlockRegistry.ASSIMILATED_SCULK_VEIN.get(), RenderType.cutout());
     }
 }

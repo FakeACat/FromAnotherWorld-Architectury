@@ -1,6 +1,5 @@
 package mod.acats.fromanotherworld.entity.thing.special;
 
-import mod.acats.fromanotherworld.block.interfaces.Gore;
 import mod.acats.fromanotherworld.config.Config;
 import mod.acats.fromanotherworld.constants.FAWAnimations;
 import mod.acats.fromanotherworld.entity.goal.*;
@@ -8,6 +7,7 @@ import mod.acats.fromanotherworld.entity.interfaces.ImportantDeathMob;
 import mod.acats.fromanotherworld.entity.interfaces.StalkerThing;
 import mod.acats.fromanotherworld.entity.projectile.AssimilationLiquidEntity;
 import mod.acats.fromanotherworld.entity.thing.Thing;
+import mod.acats.fromanotherworld.registry.BlockRegistry;
 import mod.acats.fromanotherworld.registry.ParticleRegistry;
 import mod.acats.fromanotherworld.spawning.SpawningManager;
 import mod.acats.fromanotherworld.utilities.BlockUtilities;
@@ -21,7 +21,6 @@ import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -272,8 +271,11 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
             this.createChunkLoader();
         }
 
-        if (this.getForm() == 1 && this.getRandom().nextInt(6) == 0) {
-            Gore.attemptPlaceUndergroundGrowth(this.level(), this.blockPosition(), Direction.DOWN);
+        if (this.getForm() == 1 &&
+                this.getRandom().nextInt(10) == 0 &&
+                this.breakOrPlaceable(this.blockPosition()) &&
+                this.onGround()) {
+            this.level().setBlockAndUpdate(this.blockPosition(), BlockRegistry.ASSIMILATED_SCULK_TENTACLES.get().disguisedBlockState());
         }
     }
 

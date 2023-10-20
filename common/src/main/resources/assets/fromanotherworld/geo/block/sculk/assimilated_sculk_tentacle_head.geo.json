@@ -1,0 +1,49 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.assimilated_sculk_tentacle_head",
+				"texture_width": 128,
+				"texture_height": 128,
+				"visible_bounds_width": 5,
+				"visible_bounds_height": 1.5,
+				"visible_bounds_offset": [0, 0.25, 0]
+			},
+			"bones": [
+				{
+					"name": "bone",
+					"pivot": [0, 0, 0],
+					"cubes": [
+						{"origin": [-0.5, -0.5, -8], "size": [1, 1, 24], "uv": [0, 0]},
+						{"origin": [-3.5, -3.5, 16], "size": [7, 7, 16], "uv": [0, 25]}
+					]
+				},
+				{
+					"name": "upper_head",
+					"parent": "bone",
+					"pivot": [0, 0, 16],
+					"rotation": [-12.5, 0, 2.5],
+					"cubes": [
+						{"origin": [-4, 0, 9], "size": [8, 4, 8], "uv": [26, 12]},
+						{"origin": [-4, -2.75, 9], "size": [8, 3, 8], "inflate": -0.1, "uv": [38, 40]},
+						{"origin": [-3, 0, 1], "size": [6, 3, 8], "uv": [48, 51]},
+						{"origin": [-3, -2.75, 1], "size": [6, 3, 8], "inflate": -0.1, "uv": [50, 4]}
+					]
+				},
+				{
+					"name": "lower_head",
+					"parent": "bone",
+					"pivot": [-0.25, 0, 16],
+					"rotation": [12.5, 0, 0],
+					"cubes": [
+						{"origin": [-4.25, -4, 9], "size": [8, 4, 8], "uv": [26, 0]},
+						{"origin": [-4.25, -0.25, 9], "size": [8, 3, 8], "inflate": -0.1, "uv": [30, 25]},
+						{"origin": [-3.25, -3, 1], "size": [6, 3, 8], "uv": [20, 51]},
+						{"origin": [-3.25, -0.25, 1], "size": [6, 3, 8], "inflate": -0.1, "uv": [0, 48]}
+					]
+				}
+			]
+		}
+	]
+}

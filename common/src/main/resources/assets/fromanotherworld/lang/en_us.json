@@ -24,6 +24,9 @@
   "block.fromanotherworld.wall_palmer": "Growing Palmer Thing",
   "block.fromanotherworld.tunnel": "Tunnel",
   "block.fromanotherworld.disguised_tendrils": "Disguised Tendrils",
+  "block.fromanotherworld.assimilated_sculk": "Assimilated Sculk",
+  "block.fromanotherworld.assimilated_sculk_vein": "Assimilated Sculk Vein",
+  "block.fromanotherworld.assimilated_sculk_tentacles": "Assimilated Sculk Tentacle",
 
   "entity.fromanotherworld.crawler": "Crawler",
   "entity.fromanotherworld.chest_spitter": "Chest Spitter",

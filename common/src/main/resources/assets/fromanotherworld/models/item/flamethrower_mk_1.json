@@ -1,6 +1,5 @@
 {
 	"credit": "Made with Blockbench",
-	"parent": "flamethrower_mk_1",
 	"textures": {
 		"0": "fromanotherworld:item/flamethrower_mk_1",
 		"particle": "fromanotherworld:item/flamethrower_mk_1"

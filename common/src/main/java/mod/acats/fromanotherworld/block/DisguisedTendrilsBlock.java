@@ -2,12 +2,11 @@ package mod.acats.fromanotherworld.block;
 
 import mod.acats.fromanotherlibrary.utilities.block.Colourable;
 import mod.acats.fromanotherworld.block.interfaces.Gore;
+import mod.acats.fromanotherworld.entity.thing.Thing;
 import mod.acats.fromanotherworld.entity.thing.revealed.VineTentacles;
 import mod.acats.fromanotherworld.registry.EntityRegistry;
-import mod.acats.fromanotherworld.tags.EntityTags;
 import mod.acats.fromanotherworld.utilities.BlockUtilities;
 import com.google.common.collect.ImmutableMap;
-import mod.acats.fromanotherworld.utilities.EntityUtilities;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -170,7 +169,7 @@ public class DisguisedTendrilsBlock extends FleshBlock implements Gore, Colourab
 
         if (!level.isClientSide() &&
                 level.getRandom().nextInt(30) == 0 &&
-                (EntityUtilities.canAssimilate(entity) || entity.getType().is(EntityTags.ATTACKABLE_BUT_NOT_ASSIMILABLE)) &&
+                Thing.hostileTowards(entity) &&
                 entity.distanceToSqr(spawnPos) < VineTentacles.RANGE_SQ) {
 
             int dist = 4;

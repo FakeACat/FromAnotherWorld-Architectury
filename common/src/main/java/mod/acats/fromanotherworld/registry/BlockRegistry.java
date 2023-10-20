@@ -4,7 +4,10 @@ import mod.acats.fromanotherlibrary.registry.FALRegister;
 import mod.acats.fromanotherlibrary.registry.FALRegistryObject;
 import mod.acats.fromanotherworld.block.*;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 
 import java.util.function.Supplier;
 
@@ -17,23 +20,40 @@ public class BlockRegistry {
     );
     public static final FALRegistryObject<CorpseBlock> CORPSE = registerToTab(
             "corpse",
-            () -> new CorpseBlock(BlockBehaviour.Properties.of().noCollission().noOcclusion().destroyTime(5.0F))
+            () -> new CorpseBlock(BlockBehaviour.Properties.of().forceSolidOn().noCollission().noOcclusion().destroyTime(5.0F))
     );
     public static final FALRegistryObject<TentacleBlock> TENTACLE = registerToTab(
             "tentacle",
-            () -> new TentacleBlock(BlockBehaviour.Properties.of().noCollission().noOcclusion().destroyTime(3.0F).randomTicks().ignitedByLava())
+            () -> new TentacleBlock(BlockBehaviour.Properties.of().forceSolidOn().noCollission().noOcclusion().destroyTime(3.0F).randomTicks().ignitedByLava())
     );
     public static final FALRegistryObject<WallPalmerBlock> WALL_PALMER = registerToTab(
             "wall_palmer",
-            () -> new WallPalmerBlock(BlockBehaviour.Properties.of().noCollission().noOcclusion().destroyTime(5.0F).randomTicks().ignitedByLava())
+            () -> new WallPalmerBlock(BlockBehaviour.Properties.of().forceSolidOn().noCollission().noOcclusion().destroyTime(5.0F).randomTicks().ignitedByLava())
     );
     public static final FALRegistryObject<TunnelBlock> TUNNEL_BLOCK = registerToTab(
             "tunnel",
-            () -> new TunnelBlock(BlockBehaviour.Properties.of().noCollission().noOcclusion().destroyTime(5.0F))
+            () -> new TunnelBlock(BlockBehaviour.Properties.of().forceSolidOn().noCollission().noOcclusion().destroyTime(5.0F))
     );
     public static final FALRegistryObject<DisguisedTendrilsBlock> DISGUISED_TENDRILS = registerToTab(
             "disguised_tendrils",
-            () -> new DisguisedTendrilsBlock(BlockBehaviour.Properties.of().noCollission().noOcclusion().instabreak().randomTicks().ignitedByLava())
+            () -> new DisguisedTendrilsBlock(BlockBehaviour.Properties.of().forceSolidOn().noCollission().noOcclusion().instabreak().randomTicks().ignitedByLava())
+    );
+
+    public static final FALRegistryObject<AssimilatedSculkBlock> ASSIMILATED_SCULK = registerToTab(
+            "assimilated_sculk",
+            () -> new AssimilatedSculkBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).strength(0.2F).sound(SoundType.SCULK))
+    );
+
+    public static final FALRegistryObject<AssimilatedSculkVeinBlock> ASSIMILATED_SCULK_VEIN = registerToTab(
+            "assimilated_sculk_vein",
+            () -> new AssimilatedSculkVeinBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).forceSolidOn().noCollission().strength(0.2F).sound(SoundType.SCULK_VEIN).pushReaction(PushReaction.DESTROY))
+    );
+
+    public static final FALRegistryObject<AssimilatedSculkTentaclesBlock> ASSIMILATED_SCULK_TENTACLES = registerToTab(
+            "assimilated_sculk_tentacles",
+            () -> new AssimilatedSculkTentaclesBlock(BlockBehaviour.Properties.of().forceSolidOn().noCollission().noOcclusion().mapColor(MapColor.COLOR_BLACK).strength(3.0F, 3.0F).sound(SoundType.SCULK_CATALYST).lightLevel((blockStatex) ->
+                    AssimilatedSculkSpecialBlock.getRevealed(blockStatex) ? 0 : 6
+            ))
     );
 
     private static <B extends Block> FALRegistryObject<B> registerToTab(String id, Supplier<B> supplier) {

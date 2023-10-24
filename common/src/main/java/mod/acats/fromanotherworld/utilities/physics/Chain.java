@@ -23,13 +23,17 @@ public class Chain {
         this.segments = segments;
     }
 
-    public Vec3 updatePosition(Vec3 desiredPos, Vec3 pointToPos, @Nullable Vec3 anchor, float maxTurnSpeed) {
+    public Vec3 updatePosition(Vec3 desiredPos, Vec3 pointToPos, @Nullable Vec3 anchor, float maxTurnSpeed, boolean rigid) {
         for (Segment segment:
              this.segments) {
             segment.pointTo(pointToPos, maxTurnSpeed);
             segment.moveTo(desiredPos);
             desiredPos = segment.getTailPos();
-            pointToPos = segment.position;
+            if (rigid) {
+                pointToPos = segment.getTipPos();
+            } else {
+                pointToPos = segment.getTailPos();
+            }
         }
 
         if (anchor != null) {
@@ -40,7 +44,7 @@ public class Chain {
             }
         }
 
-        return segments.get(0).position;
+        return segments.get(0).getTipPos();
     }
 
     public void writeTo(CompoundTag tag, String name) {
@@ -72,7 +76,7 @@ public class Chain {
 
     public static class Segment {
         public final float length;
-        public Vec3 position;
+        private Vec3 position;
 
         public float pitch;
         public float pitchRadians() {
@@ -89,7 +93,7 @@ public class Chain {
         }
 
         private void pointTo(Vec3 pointToPos, float maxTurnSpeed) {
-            Vec3 offset = pointToPos.subtract(this.position);
+            Vec3 offset = pointToPos.subtract(this.getTailPos());
             double d = offset.x;
             double e = offset.y;
             double f = offset.z;
@@ -102,7 +106,7 @@ public class Chain {
         }
 
         private void moveTo(Vec3 moveToPos) {
-            Vec3 offset2 = moveToPos.subtract(this.position);
+            Vec3 offset2 = moveToPos.subtract(this.getTipPos());
 
             this.position = this.position.add(offset2);
         }
@@ -113,8 +117,12 @@ public class Chain {
             return f + j;
         }
 
-        private Vec3 getTailPos() {
-            return Vec3.directionFromRotation(pitch, yaw).multiply(-this.length, -this.length, -this.length).add(this.position);
+        public Vec3 getTailPos() {
+            return this.position;
+        }
+
+        public Vec3 getTipPos() {
+            return Vec3.directionFromRotation(pitch, yaw).multiply(this.length, this.length, this.length).add(this.position);
         }
 
         private CompoundTag toCompoundTag() {

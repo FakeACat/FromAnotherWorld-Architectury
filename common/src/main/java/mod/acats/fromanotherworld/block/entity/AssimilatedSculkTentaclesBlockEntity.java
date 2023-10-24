@@ -41,7 +41,7 @@ public class AssimilatedSculkTentaclesBlockEntity extends AssimilatedSculkBlockE
         this.desiredPos2 = pos;
         this.tentacle = new Chain(pos,
                 32, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 24, 24, 24, 24, 24);
-        this.tentacle.updatePosition(pos, pos, pos, 360);
+        this.tentacle.updatePosition(pos, pos, pos, 360, true);
     }
 
     private Vec3 desiredPos;
@@ -101,7 +101,8 @@ public class AssimilatedSculkTentaclesBlockEntity extends AssimilatedSculkBlockE
                 this.desiredPos,
                 bl ? this.desiredPos.subtract(pos).multiply(2.0D, 0.0D, 2.0D).add(pos) : target.position().add(0.0D, target.getBbHeight() / 2.0D, 0.0D),
                 pos,
-                3.0F
+                3.0F,
+                true
         );
 
         if (!bl && tip.distanceToSqr(target.position().add(0.0D, target.getBbHeight() / 2.0D, 0.0D)) < 1.0D) {
@@ -147,13 +148,13 @@ public class AssimilatedSculkTentaclesBlockEntity extends AssimilatedSculkBlockE
             yaw[i] = this.tentacle.segments.get(i).yawRadians();
 
             prevX[i] = x[i];
-            x[i] = this.tentacle.segments.get(i).position.x();
+            x[i] = this.tentacle.segments.get(i).getTipPos().x();
 
             prevY[i] = y[i];
-            y[i] = this.tentacle.segments.get(i).position.y();
+            y[i] = this.tentacle.segments.get(i).getTipPos().y();
 
             prevZ[i] = z[i];
-            z[i] = this.tentacle.segments.get(i).position.z();
+            z[i] = this.tentacle.segments.get(i).getTipPos().z();
         }
     }
 

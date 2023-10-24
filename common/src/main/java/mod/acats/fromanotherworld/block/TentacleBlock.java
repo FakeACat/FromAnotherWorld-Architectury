@@ -1,5 +1,6 @@
 package mod.acats.fromanotherworld.block;
 
+import mod.acats.fromanotherworld.block.interfaces.AssimilatedSculk;
 import mod.acats.fromanotherworld.block.interfaces.Gore;
 import mod.acats.fromanotherworld.entity.thing.Thing;
 import mod.acats.fromanotherworld.registry.EntityRegistry;
@@ -197,18 +198,18 @@ public class TentacleBlock extends FleshBlock implements Gore {
     public void tick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource) {
         super.tick(blockState, serverLevel, blockPos, randomSource);
 
-        if (!serverLevel.isClientSide()){
-            if (serverLevel.getRandom().nextInt(3) == 0){
-                this.spread(serverLevel, blockPos, blockState);
-            }
+        if (serverLevel.getRandom().nextInt(3) == 0){
+            this.spread(serverLevel, blockPos, blockState);
+        }
 
-            if (blockState.getValue(SURFACE) == Direction.DOWN && serverLevel.getRandom().nextInt(5) == 0){
-                int assimilables = EntityUtilities.numAssimilablesInList(EntityUtilities.nearbyEntities(serverLevel, new Vec3i(blockPos.getX(), blockPos.getY(), blockPos.getZ()), 8, 4));
-                if (assimilables > 0){
-                    this.spawnThingFromGore(serverLevel, blockPos);
-                }
+        if (blockState.getValue(SURFACE) == Direction.DOWN && serverLevel.getRandom().nextInt(5) == 0){
+            int assimilables = EntityUtilities.numAssimilablesInList(EntityUtilities.nearbyEntities(serverLevel, new Vec3i(blockPos.getX(), blockPos.getY(), blockPos.getZ()), 8, 4));
+            if (assimilables > 0){
+                this.spawnThingFromGore(serverLevel, blockPos);
             }
         }
+
+        AssimilatedSculk.assimilateSurroundingSculk(serverLevel, blockPos);
     }
 
     private void spawnThingFromGore(ServerLevel level, BlockPos pos){

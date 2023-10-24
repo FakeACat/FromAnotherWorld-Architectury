@@ -1,10 +1,12 @@
 package mod.acats.fromanotherworld.block;
 
+import mod.acats.fromanotherworld.block.interfaces.AssimilatedSculk;
 import mod.acats.fromanotherworld.block.interfaces.AssimilatedSculkBehaviour;
 import mod.acats.fromanotherworld.block.spreading.AssimilatedSculkSpreader;
 import mod.acats.fromanotherworld.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
@@ -23,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 
+@SuppressWarnings("deprecation")
 public class AssimilatedSculkVeinBlock extends SculkVeinBlock implements AssimilatedSculkBehaviour {
     private final MultifaceSpreader assimilatedVeinSpreader;
     private final MultifaceSpreader sameSpaceAssimilatedVeinSpreader;
@@ -140,6 +143,19 @@ public class AssimilatedSculkVeinBlock extends SculkVeinBlock implements Assimil
             AssimilatedSculkBehaviour.super.onAssimilatedDischarged(levelAccessor, blockState, blockPos, randomSource);
         }
     }
+
+    @Override
+    public void tick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource) {
+        super.tick(blockState, serverLevel, blockPos, randomSource);
+
+        AssimilatedSculk.assimilateSurroundingSculk(serverLevel, blockPos);
+    }
+
+    /*@Override
+    public void spawnAfterBreak(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, ItemStack itemStack, boolean bl) {
+        super.spawnAfterBreak(blockState, serverLevel, blockPos, itemStack, bl);
+        AssimilatedSculk.alert(serverLevel, blockPos);
+    }*/
 
     private class AssimilatedSculkVeinSpreaderConfig extends MultifaceSpreader.DefaultSpreaderConfig {
         private final MultifaceSpreader.SpreadType[] spreadTypes;

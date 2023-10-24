@@ -5,11 +5,11 @@ import mod.acats.fromanotherworld.block.interfaces.AssimilatedSculkBehaviour;
 import mod.acats.fromanotherworld.block.spreading.AssimilatedSculkSpreader;
 import mod.acats.fromanotherworld.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -19,14 +19,13 @@ import net.minecraft.world.level.block.SculkBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.Fluids;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
 
+@SuppressWarnings("deprecation")
 public class AssimilatedSculkBlock extends SculkBlock implements AssimilatedSculkBehaviour, AssimilatedSculk {
-    private static final BooleanProperty REVEALED;
     public AssimilatedSculkBlock(Properties properties) {
         super(properties);
     }
@@ -79,7 +78,12 @@ public class AssimilatedSculkBlock extends SculkBlock implements AssimilatedScul
     }
 
     private BlockState getRandomGrowthState(LevelAccessor levelAccessor, BlockPos blockPos, RandomSource randomSource, boolean bl) {
-        BlockState blockState = BlockRegistry.ASSIMILATED_SCULK_TENTACLES.get().disguisedBlockState();
+        BlockState blockState;
+        if (randomSource.nextInt(40) == 0) {
+            blockState = BlockRegistry.ASSIMILATED_SCULK_TENTACLES.get().disguisedBlockState();
+        } else {
+            blockState = BlockRegistry.ASSIMILATED_SCULK_ACTIVATOR.get().disguisedBlockState();
+        }
         /*if (randomSource.nextInt(11) == 0) {
             blockState = Blocks.SCULK_SHRIEKER.defaultBlockState().setValue(SculkShriekerBlock.CAN_SUMMON, bl);
         } else {
@@ -118,17 +122,19 @@ public class AssimilatedSculkBlock extends SculkBlock implements AssimilatedScul
 
     @Override
     public void reveal(Level level, BlockPos pos, BlockState blockState) {
-        level.setBlockAndUpdate(pos, blockState.setValue(REVEALED, true));
+        level.setBlock(pos, blockState.setValue(REVEALED, true), 3);
     }
 
     @Override
-    public void stepOn(Level level, BlockPos blockPos, BlockState blockState, Entity entity) {
-        if (!level.isClientSide() && !blockState.getValue(REVEALED) && entity instanceof Player) {
-            AssimilatedSculk.revealNear(level, blockPos);
-        }
+    public void tick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource) {
+        super.tick(blockState, serverLevel, blockPos, randomSource);
+
+        AssimilatedSculk.assimilateSurroundingSculk(serverLevel, blockPos);
     }
 
-    static {
-        REVEALED = BooleanProperty.create("revealed");
+    @Override
+    public void spawnAfterBreak(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, ItemStack itemStack, boolean bl) {
+        super.spawnAfterBreak(blockState, serverLevel, blockPos, itemStack, bl);
+        AssimilatedSculk.alert(serverLevel, blockPos);
     }
 }

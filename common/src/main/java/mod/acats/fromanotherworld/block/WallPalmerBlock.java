@@ -1,5 +1,6 @@
 package mod.acats.fromanotherworld.block;
 
+import mod.acats.fromanotherworld.block.interfaces.AssimilatedSculk;
 import mod.acats.fromanotherworld.block.interfaces.Gore;
 import mod.acats.fromanotherworld.constants.VariantID;
 import mod.acats.fromanotherworld.entity.thing.Thing;
@@ -84,6 +85,8 @@ public class WallPalmerBlock extends FleshBlock implements Gore {
                         }},
                     () -> this.activate(serverLevel, blockPos));
         }
+
+        AssimilatedSculk.assimilateSurroundingSculk(serverLevel, blockPos);
     }
 
     private void activate(ServerLevel serverLevel, BlockPos blockPos) {

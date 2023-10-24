@@ -1,6 +1,7 @@
 package mod.acats.fromanotherworld.block;
 
 
+import mod.acats.fromanotherworld.block.interfaces.AssimilatedSculk;
 import mod.acats.fromanotherworld.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -35,15 +36,15 @@ public class ThingGoreBlock extends FleshBlock {
 
     @Override
     public void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
-        if (!world.isClientSide()){
-            int stage = state.getValue(STAGE);
-            if (stage == 2){
-                world.setBlockAndUpdate(pos, TentacleBlock.correctConnectionStates(world, pos, BlockRegistry.TENTACLE.get().defaultBlockState()));
-            }
-            else{
-                world.setBlockAndUpdate(pos, state.setValue(STAGE, stage + 1));
-            }
+        int stage = state.getValue(STAGE);
+        if (stage == 2){
+            world.setBlockAndUpdate(pos, TentacleBlock.correctConnectionStates(world, pos, BlockRegistry.TENTACLE.get().defaultBlockState()));
         }
+        else{
+            world.setBlockAndUpdate(pos, state.setValue(STAGE, stage + 1));
+        }
+
+        AssimilatedSculk.assimilateSurroundingSculk(world, pos);
     }
 
     @Override

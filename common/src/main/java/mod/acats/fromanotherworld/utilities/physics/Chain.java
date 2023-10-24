@@ -56,7 +56,10 @@ public class Chain {
         tag.put(name, compoundTag);
     }
 
-    public static Chain readFrom(CompoundTag tag, String name) {
+    public @Nullable static Chain readFrom(CompoundTag tag, String name) {
+        if (!tag.contains(name)) {
+            return null;
+        }
         CompoundTag compoundTag = tag.getCompound(name);
         List<Segment> segments1 = NonNullList.create();
         int i = 0;

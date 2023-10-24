@@ -2,6 +2,7 @@ package mod.acats.fromanotherworld.registry;
 
 import mod.acats.fromanotherlibrary.registry.FALRegister;
 import mod.acats.fromanotherlibrary.registry.FALRegistryObject;
+import mod.acats.fromanotherworld.entity.misc.SculkRevealer;
 import mod.acats.fromanotherworld.entity.misc.StarshipEntity;
 import mod.acats.fromanotherworld.entity.projectile.AssimilationLiquidEntity;
 import mod.acats.fromanotherworld.entity.projectile.FlamethrowerFire;
@@ -115,6 +116,11 @@ public class EntityRegistry {
                     .updateInterval(10)
                     .sized(0.25F, 0.25F)
                     .updateInterval(TRACK_RANGE_SHORT)
+    );
+
+    public static final FALRegistryObject<EntityType<SculkRevealer>> SCULK_REVEALER = register(
+            "sculk_revealer",
+            EntityType.Builder.of(SculkRevealer::new, MobCategory.MISC).sized(0.0F, 0.0F).clientTrackingRange(TRACK_RANGE_SHORT)
     );
 
     public static HashMap<EntityType<? extends LivingEntity>, Supplier<AttributeSupplier.Builder>> getAttributes() {

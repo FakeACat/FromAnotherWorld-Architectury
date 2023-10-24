@@ -2,6 +2,7 @@ package mod.acats.fromanotherworld.registry;
 
 import mod.acats.fromanotherlibrary.registry.FALRegister;
 import mod.acats.fromanotherlibrary.registry.FALRegistryObject;
+import mod.acats.fromanotherworld.block.entity.AssimilatedSculkActivatorBlockEntity;
 import mod.acats.fromanotherworld.block.entity.AssimilatedSculkTentaclesBlockEntity;
 import mod.acats.fromanotherworld.block.entity.CorpseBlockEntity;
 import mod.acats.fromanotherworld.block.entity.TunnelBlockEntity;
@@ -29,5 +30,12 @@ public class BlockEntityRegistry {
             () -> BlockEntityType.Builder.of(
                     AssimilatedSculkTentaclesBlockEntity::new,
                     BlockRegistry.ASSIMILATED_SCULK_TENTACLES.get()
+            ).build(null));
+
+    public static final FALRegistryObject<BlockEntityType<AssimilatedSculkActivatorBlockEntity>> ASSIMILATED_SCULK_ACTIVATOR_BLOCK_ENTITY = BLOCK_ENTITY_REGISTRY.register(
+            "assimilated_sculk_activator",
+            () -> BlockEntityType.Builder.of(
+                    AssimilatedSculkActivatorBlockEntity::new,
+                    BlockRegistry.ASSIMILATED_SCULK_ACTIVATOR.get()
             ).build(null));
 }

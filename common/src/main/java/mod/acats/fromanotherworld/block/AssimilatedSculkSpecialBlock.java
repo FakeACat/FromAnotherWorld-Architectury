@@ -3,6 +3,9 @@ package mod.acats.fromanotherworld.block;
 import mod.acats.fromanotherworld.block.entity.AssimilatedSculkBlockEntity;
 import mod.acats.fromanotherworld.block.interfaces.AssimilatedSculk;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
@@ -13,12 +16,11 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@SuppressWarnings("deprecation")
 public abstract class AssimilatedSculkSpecialBlock extends BaseEntityBlock implements AssimilatedSculk {
-    private static final BooleanProperty REVEALED;
     protected AssimilatedSculkSpecialBlock(Properties properties) {
         super(properties);
     }
@@ -40,9 +42,6 @@ public abstract class AssimilatedSculkSpecialBlock extends BaseEntityBlock imple
         return setRevealed(this.defaultBlockState(), false);
     }
 
-    public static boolean getRevealed(BlockState blockState) {
-        return blockState.getValue(REVEALED);
-    }
     public static BlockState setRevealed(BlockState blockState, boolean bl) {
         return blockState.setValue(REVEALED, bl);
     }
@@ -69,18 +68,25 @@ public abstract class AssimilatedSculkSpecialBlock extends BaseEntityBlock imple
 
     @Override
     public @NotNull RenderShape getRenderShape(BlockState blockState) {
-        return getRevealed(blockState) ? RenderShape.ENTITYBLOCK_ANIMATED : RenderShape.MODEL;
+        return revealed(blockState) ? RenderShape.ENTITYBLOCK_ANIMATED : RenderShape.MODEL;
     }
 
     @Override
     public void reveal(Level level, BlockPos pos, BlockState blockState) {
-        if (!getRevealed(blockState)) {
-            level.setBlockAndUpdate(pos, setRevealed(blockState, true));
-            AssimilatedSculk.revealNear(level, pos);
-        }
+        level.setBlock(pos, setRevealed(blockState, true), 3);
+        AssimilatedSculk.alert(level, pos);
     }
 
-    static {
-        REVEALED = BooleanProperty.create("revealed");
+    @Override
+    public void tick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource) {
+        super.tick(blockState, serverLevel, blockPos, randomSource);
+
+        AssimilatedSculk.assimilateSurroundingSculk(serverLevel, blockPos);
+    }
+
+    @Override
+    public void spawnAfterBreak(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, ItemStack itemStack, boolean bl) {
+        super.spawnAfterBreak(blockState, serverLevel, blockPos, itemStack, bl);
+        AssimilatedSculk.alert(serverLevel, blockPos);
     }
 }

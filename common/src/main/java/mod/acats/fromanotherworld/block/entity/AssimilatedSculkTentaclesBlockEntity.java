@@ -1,11 +1,11 @@
 package mod.acats.fromanotherworld.block.entity;
 
-import mod.acats.fromanotherworld.block.AssimilatedSculkSpecialBlock;
 import mod.acats.fromanotherworld.block.interfaces.AssimilatedSculk;
 import mod.acats.fromanotherworld.block.spreading.AssimilatedSculkSpreader;
 import mod.acats.fromanotherworld.constants.FAWAnimations;
 import mod.acats.fromanotherworld.entity.thing.Thing;
 import mod.acats.fromanotherworld.registry.BlockEntityRegistry;
+import mod.acats.fromanotherworld.registry.BlockRegistry;
 import mod.acats.fromanotherworld.registry.DamageTypeRegistry;
 import mod.acats.fromanotherworld.utilities.EntityUtilities;
 import mod.acats.fromanotherworld.utilities.physics.Chain;
@@ -52,14 +52,14 @@ public class AssimilatedSculkTentaclesBlockEntity extends AssimilatedSculkBlockE
     public void serverTick(Level level, BlockPos blockPos, BlockState blockState) {
         simSculker.updateCursors(level, blockPos, level.getRandom(), true);
 
-        if (AssimilatedSculkSpecialBlock.getRevealed(blockState)) {
+        if (BlockRegistry.ASSIMILATED_SCULK_TENTACLES.get().revealed(blockState)) {
             this.revealedTick(level, blockPos);
-        } else if (level.getRandom().nextInt(20) == 0 && level.getNearestPlayer(blockPos.getX() + 0.5D, blockPos.getY() + 0.5D, blockPos.getZ() + 0.5D, RANGE, true) != null) {
-            AssimilatedSculk.revealNear(level, blockPos);
+        } else if (level.getRandom().nextInt(20) == 0 && this.getClosestVisible(RANGE) != null) {
+            AssimilatedSculk.alert(level, blockPos);
         }
 
         if (level.getRandom().nextInt(3000) == 0) {
-            this.simSculker.addCursors(blockPos.relative(Direction.Plane.HORIZONTAL.getRandomDirection(level.getRandom())), 20);
+            this.simSculker.addCursors(blockPos.relative(Direction.Plane.HORIZONTAL.getRandomDirection(level.getRandom())), 200);
         }
 
         level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), Block.UPDATE_ALL);
@@ -136,7 +136,7 @@ public class AssimilatedSculkTentaclesBlockEntity extends AssimilatedSculkBlockE
 
     @Override
     public void clientTick(Level level, BlockPos blockPos, BlockState blockState) {
-        if (!AssimilatedSculkSpecialBlock.getRevealed(blockState)) {
+        if (!BlockRegistry.ASSIMILATED_SCULK_TENTACLES.get().revealed(blockState)) {
             return;
         }
         for (int i = 0; i < this.tentacle.segments.size(); i++) {

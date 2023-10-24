@@ -2,17 +2,16 @@ package mod.acats.fromanotherworld.block.entity.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import mod.acats.fromanotherworld.block.AssimilatedSculkSpecialBlock;
 import mod.acats.fromanotherworld.block.entity.AssimilatedSculkTentaclesBlockEntity;
 import mod.acats.fromanotherworld.block.entity.model.AssimilatedSculkTentacleHeadModel;
 import mod.acats.fromanotherworld.block.entity.model.AssimilatedSculkTentacleSegmentModel;
 import mod.acats.fromanotherworld.block.entity.model.AssimilatedSculkTentacleSpiderModel;
 import mod.acats.fromanotherworld.block.entity.model.AssimilatedSculkTentaclesBlockEntityModel;
+import mod.acats.fromanotherworld.registry.BlockRegistry;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
 import mod.azure.azurelib.cache.object.GeoBone;
 import mod.azure.azurelib.constant.DataTickets;
 import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.model.GeoModel;
 import mod.azure.azurelib.renderer.GeoBlockRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -40,7 +39,7 @@ public class AssimilatedSculkTentaclesBlockEntityRenderer extends GeoBlockRender
 
     @Override
     public boolean shouldRender(AssimilatedSculkTentaclesBlockEntity blockEntity, Vec3 vec3) {
-        if (!AssimilatedSculkSpecialBlock.getRevealed(blockEntity.getBlockState())) {
+        if (!BlockRegistry.ASSIMILATED_SCULK_TENTACLES.get().revealed(blockEntity.getBlockState())) {
             return false;
         }
         return super.shouldRender(blockEntity, vec3);
@@ -51,12 +50,16 @@ public class AssimilatedSculkTentaclesBlockEntityRenderer extends GeoBlockRender
 
         super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
 
+        if (isReRender) {
+            return;
+        }
+
         BakedGeoModel segmentBakedModel = segmentModel.getBakedModel(segmentModel.getModelResource(animatable));
         BakedGeoModel spiderBakedModel = spiderModel.getBakedModel(spiderModel.getModelResource(animatable));
         BakedGeoModel headBakedModel = headModel.getBakedModel(headModel.getModelResource(animatable));
 
         for (int i = 0; i < animatable.tentacle.segments.size(); i++) {
-            GeoModel<AssimilatedSculkTentaclesBlockEntity> geoModel = segmentModel;
+            AssimilatedSculkTentaclesBlockEntityModel geoModel = segmentModel;
             BakedGeoModel bakedGeoModel = segmentBakedModel;
             if (i == 0) {
                 geoModel = headModel;
@@ -76,6 +79,11 @@ public class AssimilatedSculkTentaclesBlockEntityRenderer extends GeoBlockRender
             bone.setRotY(-lerpedYaw(partialTick, i, animatable) + (float)Math.PI);
             //tentacleAnimations(partialTick);
             super.actuallyRender(poseStack, animatable, bakedGeoModel, renderType, bufferSource, v, true, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+
+            VertexConsumer overlay = bufferSource.getBuffer(RenderType.entityTranslucent(geoModel.getGlowTextureResource()));
+
+            super.actuallyRender(poseStack, animatable, bakedGeoModel, renderType, bufferSource, overlay, true, partialTick, 15728640, packedOverlay, 1.0F, 1.0F, 1.0F, alpha);
+
             poseStack.popPose();
         }
     }

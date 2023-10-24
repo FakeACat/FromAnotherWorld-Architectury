@@ -1,6 +1,7 @@
 package mod.acats.fromanotherworld.block;
 
 import mod.acats.fromanotherlibrary.utilities.block.Colourable;
+import mod.acats.fromanotherworld.block.interfaces.AssimilatedSculk;
 import mod.acats.fromanotherworld.block.interfaces.Gore;
 import mod.acats.fromanotherworld.entity.thing.Thing;
 import mod.acats.fromanotherworld.entity.thing.revealed.VineTentacles;
@@ -154,6 +155,7 @@ public class DisguisedTendrilsBlock extends FleshBlock implements Gore, Colourab
         if (serverLevel.getRandom().nextInt(4) == 0) {
             this.spread(serverLevel, blockPos, blockState);
         }
+        AssimilatedSculk.assimilateSurroundingSculk(serverLevel, blockPos);
         super.tick(blockState, serverLevel, blockPos, randomSource);
     }
 

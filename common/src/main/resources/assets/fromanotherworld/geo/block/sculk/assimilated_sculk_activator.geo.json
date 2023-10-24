@@ -1,0 +1,103 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.assimilated_sculk_activator",
+				"texture_width": 128,
+				"texture_height": 128,
+				"visible_bounds_width": 2,
+				"visible_bounds_height": 2.5,
+				"visible_bounds_offset": [0, 0.75, 0]
+			},
+			"bones": [
+				{
+					"name": "bb_main",
+					"pivot": [0, 0, 0],
+					"cubes": [
+						{"origin": [-8, 0, -8], "size": [16, 8, 16], "uv": [0, 0]}
+					]
+				},
+				{
+					"name": "eye",
+					"pivot": [0, 12, 0],
+					"cubes": [
+						{"origin": [-4, 8, -4], "size": [8, 8, 8], "uv": [0, 24]}
+					]
+				},
+				{
+					"name": "tether",
+					"parent": "eye",
+					"pivot": [0, 13, -4],
+					"rotation": [15, 0, 0],
+					"cubes": [
+						{"origin": [-0.5, 12.5, -15], "size": [1, 1, 12], "uv": [48, 38]}
+					]
+				},
+				{
+					"name": "bone",
+					"parent": "tether",
+					"pivot": [0, 13, -14.5],
+					"rotation": [117.5, 0, 0],
+					"cubes": [
+						{"origin": [-0.5, 12.5, -26.5], "size": [1, 1, 12], "inflate": -0.1, "uv": [48, 25]}
+					]
+				},
+				{
+					"name": "tether2",
+					"parent": "eye",
+					"pivot": [-1, 12, -4],
+					"rotation": [2.5, 22.5, 0],
+					"cubes": [
+						{"origin": [-1.5, 11.5, -15], "size": [1, 1, 12], "uv": [48, 0]}
+					]
+				},
+				{
+					"name": "bone2",
+					"parent": "tether2",
+					"pivot": [-1, 12, -14.5],
+					"rotation": [127.5, 0, 0],
+					"cubes": [
+						{"origin": [-1.5, 11.5, -26.5], "size": [1, 1, 12], "inflate": -0.1, "uv": [14, 41]}
+					]
+				},
+				{
+					"name": "tether3",
+					"parent": "eye",
+					"pivot": [0, 12, -4],
+					"rotation": [25, -10, 0],
+					"cubes": [
+						{"origin": [-0.5, 11.5, -15], "size": [1, 1, 12], "uv": [0, 40]}
+					]
+				},
+				{
+					"name": "bone3",
+					"parent": "tether3",
+					"pivot": [0, 12, -14.5],
+					"rotation": [132.5, 0, 0],
+					"cubes": [
+						{"origin": [-0.5, 11.5, -26.5], "size": [1, 1, 12], "inflate": -0.1, "uv": [34, 37]}
+					]
+				},
+				{
+					"name": "tether4",
+					"parent": "eye",
+					"pivot": [1, 12, -4],
+					"rotation": [10.34527, -14.76689, -2.66399],
+					"cubes": [
+						{"origin": [0.5, 11.5, -15], "size": [1, 1, 12], "uv": [34, 24]}
+					]
+				},
+				{
+					"name": "bone4",
+					"parent": "tether4",
+					"pivot": [1, 12, -14.5],
+					"rotation": [115, 0, 0],
+					"cubes": [
+						{"origin": [0.5, 11.5, -26.5], "size": [1, 1, 12], "inflate": -0.1, "uv": [20, 28]}
+					]
+				}
+			]
+		}
+	]
+}

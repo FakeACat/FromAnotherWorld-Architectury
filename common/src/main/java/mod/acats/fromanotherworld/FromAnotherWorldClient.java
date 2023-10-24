@@ -4,6 +4,7 @@ import mod.acats.fromanotherlibrary.registry.client.BlockEntityRendererEntry;
 import mod.acats.fromanotherlibrary.registry.client.ClientMod;
 import mod.acats.fromanotherlibrary.registry.client.EntityRendererEntry;
 import mod.acats.fromanotherlibrary.registry.client.ParticleClientEntry;
+import mod.acats.fromanotherworld.block.entity.render.AssimilatedSculkActivatorBlockEntityRenderer;
 import mod.acats.fromanotherworld.block.entity.render.AssimilatedSculkTentaclesBlockEntityRenderer;
 import mod.acats.fromanotherworld.block.entity.render.CorpseBlockEntityRenderer;
 import mod.acats.fromanotherworld.block.entity.render.TunnelBlockEntityRenderer;
@@ -27,7 +28,8 @@ public class FromAnotherWorldClient implements ClientMod {
         return Optional.of(List.of(
                 new BlockEntityRendererEntry<>(BlockEntityRegistry.CORPSE_BLOCK_ENTITY.get(), p -> new CorpseBlockEntityRenderer()),
                 new BlockEntityRendererEntry<>(BlockEntityRegistry.TUNNEL_BLOCK_ENTITY.get(), p -> new TunnelBlockEntityRenderer()),
-                new BlockEntityRendererEntry<>(BlockEntityRegistry.ASSIMILATED_SCULK_TENTACLES_BLOCK_ENTITY.get(), p -> new AssimilatedSculkTentaclesBlockEntityRenderer())
+                new BlockEntityRendererEntry<>(BlockEntityRegistry.ASSIMILATED_SCULK_TENTACLES_BLOCK_ENTITY.get(), p -> new AssimilatedSculkTentaclesBlockEntityRenderer()),
+                new BlockEntityRendererEntry<>(BlockEntityRegistry.ASSIMILATED_SCULK_ACTIVATOR_BLOCK_ENTITY.get(), p -> new AssimilatedSculkActivatorBlockEntityRenderer())
         ));
     }
 

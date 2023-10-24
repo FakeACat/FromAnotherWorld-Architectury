@@ -14,6 +14,7 @@ import mod.acats.fromanotherworld.entity.render.thing.revealed.VineTentaclesRend
 import mod.acats.fromanotherworld.entity.render.thing.special.AlienThingRenderer;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.renderer.entity.NoopRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.resources.ResourceLocation;
 
@@ -47,7 +48,8 @@ public class ClientEntityRegistry {
                 new EntityRendererEntry<>(TRANSITION.get(), TransitionEntityRenderer::new),
                 new EntityRendererEntry<>(PROWLER.get(), ProwlerRenderer::new),
                 new EntityRendererEntry<>(VINE_TENTACLES.get(), VineTentaclesRenderer::new),
-                new EntityRendererEntry<>(FLAMETHROWER_FIRE.get(), FlamethrowerFireRenderer::new)
+                new EntityRendererEntry<>(FLAMETHROWER_FIRE.get(), FlamethrowerFireRenderer::new),
+                new EntityRendererEntry<>(SCULK_REVEALER.get(), NoopRenderer::new)
         );
     }
 

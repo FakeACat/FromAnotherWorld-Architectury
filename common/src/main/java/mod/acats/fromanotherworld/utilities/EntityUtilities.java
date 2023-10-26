@@ -41,22 +41,23 @@ public class EntityUtilities {
     public static boolean assimilate(Entity e){
         return assimilate(e, 1.0F);
     }
-    public static boolean assimilate(Entity e, float supercellConcentration){
-        if (e instanceof Player playerEntity){
-            MobEffectInstance statusEffectInstance = playerEntity.getEffect(StatusEffectRegistry.SLOW_ASSIMILATION.get());
-            if (statusEffectInstance != null){
-                int amplifier = Math.min(statusEffectInstance.getAmplifier() + 1, 9);
-                int time = Math.min(statusEffectInstance.getDuration() + 400, 1200);
-                playerEntity.addEffect(new MobEffectInstance(StatusEffectRegistry.SLOW_ASSIMILATION.get(), time, amplifier, false, true));
+    public static boolean assimilate(Entity e, float assimilationStrength){
+        if (e instanceof Player player){
+            float f = assimilationStrength;
+            while (f >= 1.0F) {
+                stackSlowAssimilation(player);
+                f--;
             }
-            else{
-                playerEntity.addEffect(new MobEffectInstance(StatusEffectRegistry.SLOW_ASSIMILATION.get(), 400, 0, false, true));
+            if (f > 0) {
+                if (player.getRandom().nextFloat() <= f) {
+                    stackSlowAssimilation(player);
+                }
             }
             return false;
         }
         if (canAssimilate(e)){
             PossibleDisguisedThing thing = (PossibleDisguisedThing) e;
-            thing.faw$setSupercellConcentration(thing.faw$getSupercellConcentration() + supercellConcentration);
+            thing.faw$setSupercellConcentration(thing.faw$getSupercellConcentration() + assimilationStrength);
             if (e instanceof Mob e2){
                 e2.setPersistenceRequired();
             }
@@ -66,6 +67,19 @@ public class EntityUtilities {
             return false;
         }
     }
+
+    private static void stackSlowAssimilation(Player player) {
+        MobEffectInstance statusEffectInstance = player.getEffect(StatusEffectRegistry.SLOW_ASSIMILATION.get());
+        if (statusEffectInstance != null){
+            int amplifier = Math.min(statusEffectInstance.getAmplifier() + 1, 9);
+            int time = Math.min(statusEffectInstance.getDuration() + 400, 1200);
+            player.addEffect(new MobEffectInstance(StatusEffectRegistry.SLOW_ASSIMILATION.get(), time, amplifier, false, true));
+        }
+        else{
+            player.addEffect(new MobEffectInstance(StatusEffectRegistry.SLOW_ASSIMILATION.get(), 400, 0, false, true));
+        }
+    }
+
     public static boolean isAssimilableType(Entity e){
         return e.getType().is(EntityTags.HUMANOIDS) ||
                 e.getType().is(EntityTags.QUADRUPEDS) ||

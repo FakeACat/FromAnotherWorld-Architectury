@@ -42,6 +42,7 @@ import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
@@ -62,7 +63,7 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
     public boolean bored;
     private boolean leaping;
 
-    private static final double DEFAULT_MOVEMENT_SPEED = 0.45D;
+    private static final double DEFAULT_MOVEMENT_SPEED = 0.44D;
     private static final double DEFAULT_ATTACK_DAMAGE = 7.0D;
 
     public static AttributeSupplier.Builder createAlienThingAttributes(){
@@ -93,7 +94,8 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
             return 0;
         }
 
-        if (this.getY() < this.level().getSeaLevel()) {
+        float f = 0.8F;
+        if (this.getY() < ((float) this.level().getSeaLevel() * f + (float) this.level().getMinBuildHeight() * (1.0F - f)) * 0.5F) {
             return 1;
         }
 
@@ -272,9 +274,15 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
         }
 
         if (this.getForm() == 1 &&
-                this.getRandom().nextInt(10) == 0 &&
+                this.getRandom().nextInt(20) == 0 &&
                 this.breakOrPlaceable(this.blockPosition()) &&
                 this.onGround()) {
+            for (BlockState blockState:
+                    this.level().getBlockStates(this.getBoundingBox().inflate(24)).toList()) {
+                if (blockState.is(BlockRegistry.ASSIMILATED_SCULK_TENTACLES.get())) {
+                    return;
+                }
+            }
             this.level().setBlockAndUpdate(this.blockPosition(), BlockRegistry.ASSIMILATED_SCULK_TENTACLES.get().disguisedBlockState());
         }
     }

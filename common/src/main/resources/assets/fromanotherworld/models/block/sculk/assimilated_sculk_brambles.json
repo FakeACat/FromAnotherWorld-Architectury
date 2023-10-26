@@ -1,0 +1,7 @@
+{
+  "render_type": "cutout",
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "fromanotherworld:block/sculk/assimilated_sculk_brambles"
+  }
+}

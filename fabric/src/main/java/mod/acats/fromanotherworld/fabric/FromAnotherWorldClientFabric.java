@@ -16,5 +16,7 @@ public class FromAnotherWorldClientFabric implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(BlockRegistry.DISGUISED_TENDRILS.get(), RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(BlockRegistry.ASSIMILATED_SCULK_VEIN.get(), RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(BlockRegistry.ASSIMILATED_SCULK_ACTIVATOR.get(), RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(BlockRegistry.ASSIMILATED_SCULK_OVERGROWTH.get(), RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(BlockRegistry.ASSIMILATED_SCULK_BRAMBLES.get(), RenderType.cutout());
     }
 }

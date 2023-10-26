@@ -2,10 +2,7 @@ package mod.acats.fromanotherworld.registry;
 
 import mod.acats.fromanotherlibrary.registry.FALRegister;
 import mod.acats.fromanotherlibrary.registry.FALRegistryObject;
-import mod.acats.fromanotherworld.block.entity.AssimilatedSculkActivatorBlockEntity;
-import mod.acats.fromanotherworld.block.entity.AssimilatedSculkTentaclesBlockEntity;
-import mod.acats.fromanotherworld.block.entity.CorpseBlockEntity;
-import mod.acats.fromanotherworld.block.entity.TunnelBlockEntity;
+import mod.acats.fromanotherworld.block.entity.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
 public class BlockEntityRegistry {
@@ -37,5 +34,12 @@ public class BlockEntityRegistry {
             () -> BlockEntityType.Builder.of(
                     AssimilatedSculkActivatorBlockEntity::new,
                     BlockRegistry.ASSIMILATED_SCULK_ACTIVATOR.get()
+            ).build(null));
+
+    public static final FALRegistryObject<BlockEntityType<AssimilatedSculkOvergrowthBlockEntity>> ASSIMILATED_SCULK_OVERGROWTH_BLOCK_ENTITY = BLOCK_ENTITY_REGISTRY.register(
+            "assimilated_sculk_overgrowth",
+            () -> BlockEntityType.Builder.of(
+                    AssimilatedSculkOvergrowthBlockEntity::new,
+                    BlockRegistry.ASSIMILATED_SCULK_OVERGROWTH.get()
             ).build(null));
 }

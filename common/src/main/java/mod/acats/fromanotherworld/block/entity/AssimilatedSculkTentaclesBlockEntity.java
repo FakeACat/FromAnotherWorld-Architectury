@@ -1,26 +1,30 @@
 package mod.acats.fromanotherworld.block.entity;
 
-import mod.acats.fromanotherworld.block.interfaces.AssimilatedSculk;
 import mod.acats.fromanotherworld.block.spreading.AssimilatedSculkSpreader;
 import mod.acats.fromanotherworld.constants.FAWAnimations;
 import mod.acats.fromanotherworld.entity.thing.Thing;
 import mod.acats.fromanotherworld.registry.BlockEntityRegistry;
 import mod.acats.fromanotherworld.registry.BlockRegistry;
 import mod.acats.fromanotherworld.registry.DamageTypeRegistry;
+import mod.acats.fromanotherworld.registry.SoundRegistry;
 import mod.acats.fromanotherworld.utilities.EntityUtilities;
 import mod.acats.fromanotherworld.utilities.physics.Chain;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -42,11 +46,13 @@ public class AssimilatedSculkTentaclesBlockEntity extends AssimilatedSculkBlockE
         this.tentacle = new Chain(pos,
                 32, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 24, 24, 24, 24, 24);
         this.tentacle.updatePosition(pos, pos, pos, 360, true);
+        this.target = null;
     }
 
     private Vec3 desiredPos;
     private Vec3 desiredPos2;
     private float speed;
+    private LivingEntity target;
 
     @Override
     public void serverTick(Level level, BlockPos blockPos, BlockState blockState) {
@@ -54,12 +60,10 @@ public class AssimilatedSculkTentaclesBlockEntity extends AssimilatedSculkBlockE
 
         if (BlockRegistry.ASSIMILATED_SCULK_TENTACLES.get().revealed(blockState)) {
             this.revealedTick(level, blockPos);
-        } else if (level.getRandom().nextInt(20) == 0 && this.getClosestVisible(RANGE) != null) {
-            AssimilatedSculk.alert(level, blockPos);
         }
 
         if (level.getRandom().nextInt(3000) == 0) {
-            this.simSculker.addCursors(blockPos.relative(Direction.Plane.HORIZONTAL.getRandomDirection(level.getRandom())), 200);
+            this.simSculker.addCursors(blockPos.relative(Direction.Plane.HORIZONTAL.getRandomDirection(level.getRandom())), 100);
         }
 
         level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), Block.UPDATE_ALL);
@@ -67,14 +71,27 @@ public class AssimilatedSculkTentaclesBlockEntity extends AssimilatedSculkBlockE
 
     private void revealedTick(Level level, BlockPos blockPos) {
         Vec3 pos = new Vec3(blockPos.getX() + 0.5D, blockPos.getY() + 0.5D, blockPos.getZ() + 0.5D);
-        LivingEntity target = level.getNearestEntity(LivingEntity.class,
-                TargetingConditions.forNonCombat().selector(Thing::hostileTowards),
-                null,
-                pos.x,
-                pos.y,
-                pos.z,
-                AABB.ofSize(pos, 1 + RANGE * 2.0D, 1 + RANGE, 1 + RANGE * 2.0D)
-        );
+
+        if (level.getRandom().nextInt(20) == 0) {
+            LivingEntity prevTarget = this.target;
+            this.target = level.getNearestEntity(LivingEntity.class,
+                    TargetingConditions.forNonCombat().selector(Thing::hostileTowards),
+                    null,
+                    pos.x,
+                    pos.y,
+                    pos.z,
+                    AABB.ofSize(pos, RANGE * 2.0D, RANGE, RANGE * 2.0D)
+            );
+
+            if (prevTarget != this.target) {
+                Vec3 pos2 = this.tentacle.segments.get(0).getTipPos();
+                level.playSound(null, pos2.x(), pos2.y(), pos2.z(), SoundRegistry.STRONG_ALERT.get(), SoundSource.BLOCKS, 1.0F, 0.2F);
+            }
+        }
+
+        if (EntityUtilities.isThing(this.target)) {
+            this.target = null;
+        }
 
         boolean bl = target == null;
 
@@ -155,6 +172,12 @@ public class AssimilatedSculkTentaclesBlockEntity extends AssimilatedSculkBlockE
 
             prevZ[i] = z[i];
             z[i] = this.tentacle.segments.get(i).getTipPos().z();
+        }
+        Vec3 pos = this.tentacle.segments.get(0).getTipPos();
+        BlockPos blockPos1 = new BlockPos(Mth.floor(pos.x()), Mth.floor(pos.y()), Mth.floor(pos.z()));
+        BlockState blockState1 = level.getBlockState(blockPos1);
+        if (!blockState1.is(Blocks.AIR)) {
+            level.addParticle(new BlockParticleOption(ParticleTypes.BLOCK, blockState), pos.x, pos.y, pos.z, 0.0, 0.0, 0.0);
         }
     }
 

@@ -46,27 +46,20 @@ public class AssimilatedSculkActivatorBlockEntity extends AssimilatedSculkBlockE
             return;
         }
 
-        if (this.observed == null) {
-            this.tryFindPlayer(level);
-        } else {
+        this.tryFindPlayer(level);
+        if (this.observed != null) {
             Vec3 pos = new Vec3(blockPos.getX() + 0.5D, blockPos.getY() + 0.5D, blockPos.getZ() + 0.5D);
-            if (level.getRandom().nextInt(10) == 0 && !this.isVisible(observed, pos)) {
-                this.observed = null;
-            } else {
-                Vec3 offset = this.observed.position().subtract(pos);
-                this.yaw = -Mth.wrapDegrees((float)(Mth.atan2(offset.z, offset.x) * 57.2957763671875) - 90.0F);
-            }
+            Vec3 offset = this.observed.position().subtract(pos);
+            this.yaw = -Mth.wrapDegrees((float)(Mth.atan2(offset.z, offset.x) * 57.2957763671875) - 90.0F);
             level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), Block.UPDATE_ALL);
         }
     }
 
     private boolean tryFindPlayer(Level level) {
         if (level.getRandom().nextInt(20) == 0) {
-            Player player = this.getClosestVisible(6);
-            if (player != null) {
-                this.observed = player;
-                return true;
-            }
+            Player player = this.getClosestVisiblePlayer(6);
+            this.observed = player;
+            return player != null;
         }
         return false;
     }

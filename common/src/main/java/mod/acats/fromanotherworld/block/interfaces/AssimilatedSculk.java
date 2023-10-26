@@ -36,7 +36,7 @@ public interface AssimilatedSculk {
             } else if (currentState.is(Blocks.SCULK_SENSOR)) {
                 assimilatedState = BlockRegistry.ASSIMILATED_SCULK_ACTIVATOR.get().disguisedBlockState();
             } else if (currentState.is(Blocks.SCULK_SHRIEKER)) {
-                assimilatedState = Blocks.GOLD_BLOCK.defaultBlockState();
+                assimilatedState = BlockRegistry.ASSIMILATED_SCULK_OVERGROWTH.get().disguisedBlockState();
             } else if (currentState.is(Blocks.SCULK_CATALYST)) {
                 assimilatedState = BlockRegistry.ASSIMILATED_SCULK_TENTACLES.get().disguisedBlockState();
             } else {

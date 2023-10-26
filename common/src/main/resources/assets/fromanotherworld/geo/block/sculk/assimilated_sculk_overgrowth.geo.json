@@ -1,0 +1,63 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.assimilated_sculk_overgrowth",
+				"texture_width": 128,
+				"texture_height": 128,
+				"visible_bounds_width": 3,
+				"visible_bounds_height": 2.5,
+				"visible_bounds_offset": [0, 0.75, 0]
+			},
+			"bones": [
+				{
+					"name": "bb_main",
+					"pivot": [0, 0, 0],
+					"cubes": [
+						{"origin": [-8, 0, -8], "size": [16, 8, 16], "uv": [0, 0]}
+					]
+				},
+				{
+					"name": "brambles",
+					"pivot": [0, 0, 0],
+					"cubes": [
+						{"origin": [-7, 8, -7], "size": [14, 7, 14], "uv": [0, 24]}
+					]
+				},
+				{
+					"name": "bone",
+					"parent": "brambles",
+					"pivot": [0, 0, 0],
+					"cubes": [
+						{"origin": [0, 6, -9], "size": [0, 11, 18], "pivot": [0, 11.5, 0], "rotation": [0, -62.5, 0], "uv": [36, 38]}
+					]
+				},
+				{
+					"name": "bone2",
+					"parent": "brambles",
+					"pivot": [0, 0, 0],
+					"cubes": [
+						{"origin": [-3, 9, -9], "size": [0, 11, 18], "pivot": [0, 11.5, 0], "rotation": [-147.26759, 32.79775, -130.12074], "uv": [0, 38]}
+					]
+				},
+				{
+					"name": "bone3",
+					"parent": "brambles",
+					"pivot": [0, 0, 0],
+					"cubes": [
+						{"origin": [-4, 9, -9], "size": [0, 11, 18], "pivot": [0, 11.5, 0], "rotation": [0, -22.5, -45], "uv": [36, 27]}
+					]
+				},
+				{
+					"name": "bone4",
+					"parent": "brambles",
+					"pivot": [0, 0, 0],
+					"cubes": [
+						{"origin": [0, 6, -9], "size": [0, 11, 18], "pivot": [0, 11.5, 0], "rotation": [20.94102, 40.78947, 30.36119], "uv": [0, 27]}
+					]
+				}
+			]
+		}
+	]
+}

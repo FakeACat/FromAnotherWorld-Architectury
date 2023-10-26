@@ -92,7 +92,7 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing, Co
         }
     }
 
-    public static boolean hostileTowards(@Nullable LivingEntity target, boolean currentThreat) {
+    public static boolean hostileTowardsPossibleThreat(@Nullable LivingEntity target, boolean currentThreat) {
         if (target == null || !target.canBeSeenAsEnemy()) {
             return false;
         }
@@ -106,7 +106,7 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing, Co
         if (!(target instanceof LivingEntity e)) {
             return false;
         }
-        return Thing.hostileTowards(e, false);
+        return Thing.hostileTowardsPossibleThreat(e, false);
     }
 
     public void initializeFrom(Entity parent){
@@ -221,7 +221,7 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing, Co
 
     @Override
     public boolean canAttack(LivingEntity target) {
-        return Thing.hostileTowards(target, target == this.currentThreat) && super.canAttack(target);
+        return Thing.hostileTowardsPossibleThreat(target, target == this.currentThreat) && super.canAttack(target);
     }
 
     public void addThingTargets(boolean prioritisePlayer){

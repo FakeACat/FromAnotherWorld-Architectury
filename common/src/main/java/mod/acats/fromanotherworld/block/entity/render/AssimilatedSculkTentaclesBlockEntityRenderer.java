@@ -2,6 +2,7 @@ package mod.acats.fromanotherworld.block.entity.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import mod.acats.fromanotherworld.FromAnotherWorld;
 import mod.acats.fromanotherworld.block.entity.AssimilatedSculkTentaclesBlockEntity;
 import mod.acats.fromanotherworld.block.entity.model.AssimilatedSculkTentacleHeadModel;
 import mod.acats.fromanotherworld.block.entity.model.AssimilatedSculkTentacleSegmentModel;
@@ -15,6 +16,8 @@ import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.renderer.GeoBlockRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 
@@ -45,8 +48,28 @@ public class AssimilatedSculkTentaclesBlockEntityRenderer extends GeoBlockRender
         return super.shouldRender(blockEntity, vec3);
     }
 
+    private static final RenderType SPIDER;
+    private static final RenderType SEGMENT;
+    private static final RenderType HEAD;
+    private static final RenderType SPIDER_GLOW;
+    private static final RenderType SEGMENT_GLOW;
+    private static final RenderType HEAD_GLOW;
+
     @Override
-    public void actuallyRender(PoseStack poseStack, AssimilatedSculkTentaclesBlockEntity animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void actuallyRender(PoseStack poseStack,
+                               AssimilatedSculkTentaclesBlockEntity animatable,
+                               BakedGeoModel model,
+                               RenderType renderType,
+                               MultiBufferSource bufferSource,
+                               VertexConsumer buffer,
+                               boolean isReRender,
+                               float partialTick,
+                               int packedLight,
+                               int packedOverlay,
+                               float red,
+                               float green,
+                               float blue,
+                               float alpha) {
 
         super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
 
@@ -54,37 +77,38 @@ public class AssimilatedSculkTentaclesBlockEntityRenderer extends GeoBlockRender
             return;
         }
 
-        BakedGeoModel segmentBakedModel = segmentModel.getBakedModel(segmentModel.getModelResource(animatable));
-        BakedGeoModel spiderBakedModel = spiderModel.getBakedModel(spiderModel.getModelResource(animatable));
-        BakedGeoModel headBakedModel = headModel.getBakedModel(headModel.getModelResource(animatable));
-
         for (int i = 0; i < animatable.tentacle.segments.size(); i++) {
-            AssimilatedSculkTentaclesBlockEntityModel geoModel = segmentModel;
-            BakedGeoModel bakedGeoModel = segmentBakedModel;
+
+            BakedGeoModel bakedGeoModel = segmentModel.getBakedModel(segmentModel.getModelResource(animatable));
+            RenderType renderType1 = SEGMENT;
+            RenderType renderType2 = SEGMENT_GLOW;
             if (i == 0) {
-                geoModel = headModel;
-                bakedGeoModel = headBakedModel;
+                bakedGeoModel = headModel.getBakedModel(headModel.getModelResource(animatable));
+                renderType1 = HEAD;
+                renderType2 = HEAD_GLOW;
             } else if (i >= animatable.tentacle.segments.size() - 5) {
-                geoModel = spiderModel;
-                bakedGeoModel = spiderBakedModel;
+                bakedGeoModel = spiderModel.getBakedModel(spiderModel.getModelResource(animatable));
+                renderType1 = SPIDER;
+                renderType2 = SPIDER_GLOW;
             }
-            poseStack.pushPose();
-            VertexConsumer v = bufferSource.getBuffer(RenderType.entityTranslucent(geoModel.getTextureResource(animatable)));
-            Vec3 pos = lerpedPos(partialTick, i, animatable).subtract(animatable.getBlockPos().getX(), animatable.getBlockPos().getY(), animatable.getBlockPos().getZ()).add(-0.5D, 0, -0.5D).multiply(-16, 16, 16);
+
             GeoBone bone = bakedGeoModel.topLevelBones().get(0);
+            Vec3 pos = lerpedPos(partialTick, i, animatable)
+                    .subtract(
+                            animatable.getBlockPos().getX(),
+                            animatable.getBlockPos().getY(),
+                            animatable.getBlockPos().getZ()
+                    ).add(-0.5D, 0, -0.5D)
+                    .multiply(-16, 16, 16);
+
             bone.setPosX((float) pos.x());
             bone.setPosY((float) pos.y());
             bone.setPosZ((float) pos.z());
             bone.setRotX(-lerpedPitch(partialTick, i, animatable));
             bone.setRotY(-lerpedYaw(partialTick, i, animatable) + (float)Math.PI);
-            //tentacleAnimations(partialTick);
-            super.actuallyRender(poseStack, animatable, bakedGeoModel, renderType, bufferSource, v, true, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
 
-            VertexConsumer overlay = bufferSource.getBuffer(RenderType.entityTranslucent(geoModel.getGlowTextureResource()));
-
-            super.actuallyRender(poseStack, animatable, bakedGeoModel, renderType, bufferSource, overlay, true, partialTick, 15728640, packedOverlay, 1.0F, 1.0F, 1.0F, alpha);
-
-            poseStack.popPose();
+            this.reRender(bakedGeoModel, poseStack, bufferSource, animatable, renderType1, bufferSource.getBuffer(renderType1), partialTick, packedLight, packedOverlay, 1.0F, 1.0F, 1.0F, 1.0F);
+            this.reRender(bakedGeoModel, poseStack, bufferSource, animatable, renderType2, bufferSource.getBuffer(renderType2), partialTick, 15728640, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
         }
     }
 
@@ -114,5 +138,33 @@ public class AssimilatedSculkTentaclesBlockEntityRenderer extends GeoBlockRender
                 Mth.lerp(partialTick, blockEntity.prevY[segment], blockEntity.y[segment]),
                 Mth.lerp(partialTick, blockEntity.prevZ[segment], blockEntity.z[segment])
         );
+    }
+
+    static {
+        SPIDER = RenderType.entityTranslucent(new ResourceLocation(
+                FromAnotherWorld.MOD_ID,
+                "textures/block/sculk/assimilated_sculk_tentacle_spider.png"
+        ));
+        SEGMENT = RenderType.entityTranslucent(new ResourceLocation(
+                FromAnotherWorld.MOD_ID,
+                "textures/block/sculk/assimilated_sculk_tentacle_segment.png"
+        ));
+        HEAD = RenderType.entityTranslucent(new ResourceLocation(
+                FromAnotherWorld.MOD_ID,
+                "textures/block/sculk/assimilated_sculk_tentacle_head.png"
+        ));
+
+        SPIDER_GLOW = RenderType.eyes(new ResourceLocation(
+                FromAnotherWorld.MOD_ID,
+                "textures/block/sculk/assimilated_sculk_tentacle_spider_glowmask.png"
+        ));
+        SEGMENT_GLOW = RenderType.eyes(new ResourceLocation(
+                FromAnotherWorld.MOD_ID,
+                "textures/block/sculk/assimilated_sculk_tentacle_segment_glowmask.png"
+        ));
+        HEAD_GLOW = RenderType.eyes(new ResourceLocation(
+                FromAnotherWorld.MOD_ID,
+                "textures/block/sculk/assimilated_sculk_tentacle_head_glowmask.png"
+        ));
     }
 }

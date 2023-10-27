@@ -16,10 +16,6 @@ public class AssimilatedSculkTentaclesBlockEntityModel extends GeoModel<Assimila
         return new ResourceLocation(FromAnotherWorld.MOD_ID, "textures/block/sculk/assimilated_sculk_tentacles.png");
     }
 
-    public ResourceLocation getGlowTextureResource() {
-        return null;
-    }
-
     @Override
     public ResourceLocation getAnimationResource(AssimilatedSculkTentaclesBlockEntity animatable) {
         return new ResourceLocation(FromAnotherWorld.MOD_ID, "animations/block/sculk/assimilated_sculk_tentacles.animation.json");

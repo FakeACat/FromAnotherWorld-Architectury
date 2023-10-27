@@ -177,7 +177,7 @@ public class AssimilatedSculkTentaclesBlockEntity extends AssimilatedSculkBlockE
         BlockPos blockPos1 = new BlockPos(Mth.floor(pos.x()), Mth.floor(pos.y()), Mth.floor(pos.z()));
         BlockState blockState1 = level.getBlockState(blockPos1);
         if (!blockState1.is(Blocks.AIR)) {
-            level.addParticle(new BlockParticleOption(ParticleTypes.BLOCK, blockState), pos.x, pos.y, pos.z, 0.0, 0.0, 0.0);
+            level.addParticle(new BlockParticleOption(ParticleTypes.BLOCK, blockState1), pos.x, pos.y, pos.z, 0.0, 0.0, 0.0);
         }
     }
 

@@ -16,11 +16,6 @@ public class AssimilatedSculkTentacleHeadModel extends AssimilatedSculkTentacles
     }
 
     @Override
-    public ResourceLocation getGlowTextureResource() {
-        return new ResourceLocation(FromAnotherWorld.MOD_ID, "textures/block/sculk/assimilated_sculk_tentacle_head_glow.png");
-    }
-
-    @Override
     public ResourceLocation getAnimationResource(AssimilatedSculkTentaclesBlockEntity animatable) {
         return new ResourceLocation(FromAnotherWorld.MOD_ID, "animations/block/sculk/assimilated_sculk_tentacle_head.animation.json");
     }

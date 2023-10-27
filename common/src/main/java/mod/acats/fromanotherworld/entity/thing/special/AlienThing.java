@@ -63,7 +63,7 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
     public boolean bored;
     private boolean leaping;
 
-    private static final double DEFAULT_MOVEMENT_SPEED = 0.44D;
+    private static final double DEFAULT_MOVEMENT_SPEED = 0.35D;
     private static final double DEFAULT_ATTACK_DAMAGE = 7.0D;
 
     public static AttributeSupplier.Builder createAlienThingAttributes(){

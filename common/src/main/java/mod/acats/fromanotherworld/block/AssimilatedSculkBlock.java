@@ -4,14 +4,11 @@ import mod.acats.fromanotherworld.block.interfaces.AssimilatedSculk;
 import mod.acats.fromanotherworld.block.interfaces.AssimilatedSculkBehaviour;
 import mod.acats.fromanotherworld.block.spreading.AssimilatedSculkSpreader;
 import mod.acats.fromanotherworld.registry.BlockRegistry;
-import mod.acats.fromanotherworld.utilities.EntityUtilities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
@@ -136,14 +133,5 @@ public class AssimilatedSculkBlock extends SculkBlock implements AssimilatedScul
     public void spawnAfterBreak(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, ItemStack itemStack, boolean bl) {
         super.spawnAfterBreak(blockState, serverLevel, blockPos, itemStack, bl);
         AssimilatedSculk.alert(serverLevel, blockPos);
-    }
-
-    @Override
-    public void stepOn(Level level, BlockPos blockPos, BlockState blockState, Entity entity) {
-        super.stepOn(level, blockPos, blockState, entity);
-
-        if (level.getRandom().nextInt(60) == 0 && !(entity instanceof Player)) {
-            EntityUtilities.assimilate(entity);
-        }
     }
 }

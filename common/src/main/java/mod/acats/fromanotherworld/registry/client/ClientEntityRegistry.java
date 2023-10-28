@@ -53,6 +53,7 @@ public class ClientEntityRegistry {
         );
     }
 
+
     public static HashMap<ModelLayerLocation, Supplier<LayerDefinition>> registerModelLayers(HashMap<ModelLayerLocation, Supplier<LayerDefinition>> map) {
 
         map.put(SPIDER_LEGS_MODEL_LAYER, SpiderLegsModel::getTexturedModelData);

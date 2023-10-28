@@ -1,5 +1,6 @@
 package mod.acats.fromanotherworld.mixin.client;
 
+import mod.acats.fromanotherworld.entity.model.thing.revealed.SpiderLegsModel;
 import mod.acats.fromanotherworld.entity.render.feature.RevealedThingFeatureRenderer;
 import mod.acats.fromanotherworld.entity.interfaces.PossibleDisguisedThing;
 import mod.acats.fromanotherworld.registry.client.ClientEntityRegistry;
@@ -34,6 +35,8 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void init(EntityRendererProvider.Context ctx, M model, float shadowRadius, CallbackInfo ci){
-        this.addLayer(new RevealedThingFeatureRenderer<>(this, ctx.getModelSet().bakeLayer(ClientEntityRegistry.SPIDER_LEGS_MODEL_LAYER)));
+        if (SpiderLegsModel.loaded()) {
+            this.addLayer(new RevealedThingFeatureRenderer<>(this, ctx.getModelSet().bakeLayer(ClientEntityRegistry.SPIDER_LEGS_MODEL_LAYER)));
+        }
     }
 }

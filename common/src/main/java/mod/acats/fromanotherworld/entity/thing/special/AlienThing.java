@@ -26,6 +26,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
@@ -52,6 +53,8 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
     public AlienThing(EntityType<? extends AlienThing> entityType, Level world) {
         super(entityType, world);
         ((GroundPathNavigation)this.getNavigation()).setCanOpenDoors(true);
+        this.adaptiveKnockbackResist = 0.0F;
+        this.timeSinceHitTarget = 0;
     }
 
     private static final EntityDataAccessor<Integer> FORM;
@@ -62,8 +65,9 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
     public boolean fleeing;
     public boolean bored;
     private boolean leaping;
+    private int timeSinceHitTarget;
 
-    private static final double DEFAULT_MOVEMENT_SPEED = 0.35D;
+    private static final double DEFAULT_MOVEMENT_SPEED = 0.43D;
     private static final double DEFAULT_ATTACK_DAMAGE = 7.0D;
 
     public static AttributeSupplier.Builder createAlienThingAttributes(){
@@ -197,6 +201,7 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
     @Override
     protected void customServerAiStep() {
         if (!this.level().isClientSide()){
+            this.adaptiveKnockbackResist *= 0.995F;
             if (!this.isThingFrozen()){
                 if (this.leaping) {
                     this.grief(0, 1);
@@ -231,6 +236,8 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
                             this.level().setBlockAndUpdate(new BlockPos(x, y, z), Blocks.COBBLESTONE.defaultBlockState());
                         }
                     }
+
+                    this.updateGiveUpChase();
                 }
             }
 
@@ -238,6 +245,18 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
                 this.tickSwitch();
         }
         super.customServerAiStep();
+    }
+
+    private void updateGiveUpChase() {
+        if (this.getTarget() == null) {
+            this.timeSinceHitTarget--;
+        } else {
+            this.timeSinceHitTarget++;
+        }
+        this.timeSinceHitTarget = Mth.clamp(this.timeSinceHitTarget, 0, 20);
+        if (this.timeSinceHitTarget == 20) {
+            this.bored();
+        }
     }
 
     private double randomSpread() {
@@ -326,6 +345,9 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
             }
         }
         if (this.burrowingOrEmerging()){
+            if (this.tickCount % 2 == 0) {
+                this.level().playSound(null, this.blockPosition(), this.getBlockStateOn().getSoundType().getBreakSound(), SoundSource.HOSTILE, 2.0F, this.getVoicePitch());
+            }
             this.digParticles();
         }
         super.aiStep();
@@ -348,6 +370,15 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
         }
 
         return super.hurt(source, amount);
+    }
+
+    private float adaptiveKnockbackResist;
+    private static final float ADAPTATION_STRENGTH = 1.0F;
+    @Override
+    public void knockback(double d, double e, double f) {
+        d *= 1.0 - Mth.clamp(this.adaptiveKnockbackResist, 0.0F, 1.0F);
+        super.knockback(d, e, f);
+        this.adaptiveKnockbackResist += (float) (d * ADAPTATION_STRENGTH);
     }
 
     private void initiateSwitch(){
@@ -499,6 +530,9 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
         if (!entity.isAlive() && entity instanceof Player) { // Hopefully this should prevent it from spawnkilling
             this.bored();
         }
+
+        this.timeSinceHitTarget = 0;
+
         super.doEnchantDamageEffects(livingEntity, entity);
     }
 

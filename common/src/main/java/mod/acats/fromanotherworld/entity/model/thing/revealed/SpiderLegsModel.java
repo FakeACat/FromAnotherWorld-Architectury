@@ -70,7 +70,15 @@ public class SpiderLegsModel extends EntityModel<Entity> {
         this.bone24 = bone23.getChild("bone24");
         this.bone25 = bone24.getChild("bone25");
     }
+
+    public static boolean loaded() {
+        return loaded;
+    }
+
+    private static boolean loaded;
+
     public static LayerDefinition getTexturedModelData() {
+        loaded = true;
         MeshDefinition modelData = new MeshDefinition();
         PartDefinition modelPartData = modelData.getRoot();
         PartDefinition bone = modelPartData.addOrReplaceChild("bone", CubeListBuilder.create(), PartPose.offset(0.0F, 17.0F, 0.0F));

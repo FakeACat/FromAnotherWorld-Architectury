@@ -26,7 +26,9 @@ public class TransitionEntityRenderer extends EntityRenderer<TransitionEntity> {
         if (entity.shouldRenderFakeEntity())
             this.renderFakeEntity(entity.getFakeEntity(), yaw, tickDelta, matrices, vertexConsumers, light);
 
-        entity.tentacleMass.render(tentacleSegmentModel, matrices, vertexConsumers, light, tickDelta);
+        if (entity.tentacleMass.scale > 0) {
+            entity.tentacleMass.render(tentacleSegmentModel, matrices, vertexConsumers, light, tickDelta);
+        }
     }
 
     private <E extends Entity> void renderFakeEntity(E entity, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light){

@@ -55,7 +55,7 @@ public class FlamethrowerFire extends ThrowableProjectile {
         if (!this.level().isClientSide()) {
             Entity e = entityHitResult.getEntity();
             e.setSecondsOnFire(16);
-            e.hurt(this.level().damageSources().mobProjectile(this, (LivingEntity) this.getOwner()), 3.0F);
+            e.hurt(this.level().damageSources().mobProjectile(this, (LivingEntity) this.getOwner()), 5.0F);
         }
     }
 

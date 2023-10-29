@@ -17,6 +17,7 @@ public class DatapackRegistry {
         loader.addModCompat("mca");
         loader.addModCompat("biomemakeover");
         loader.addModCompat("ad_astra");
+        loader.addModCompat("alexscaves");
 
         if (ModLoaderSpecific.INSTANCE.isModLoaded("spore")){
             /*switch (Config.COMPATIBILITY_CONFIG.sporeCompatMode.get()) {

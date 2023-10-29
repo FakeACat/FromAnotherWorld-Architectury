@@ -10,7 +10,7 @@ public class EffectConfig extends FALConfig {
 
     @Override
     protected int version() {
-        return 0;
+        return 1;
     }
 
     public final FALConfigArrayProperty regenCancelling = new FALConfigArrayProperty(
@@ -18,7 +18,8 @@ public class EffectConfig extends FALConfig {
             "Effects that prevent Things from resisting damage and healing.",
             new String[]{
                     "gigeresque:acid",
-                    "minecraft:wither"
+                    "minecraft:wither",
+                    "alexscaves:irradiated"
             }
     );
 

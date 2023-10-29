@@ -3,6 +3,7 @@ package mod.acats.fromanotherworld.events;
 import mod.acats.fromanotherworld.config.Config;
 import mod.acats.fromanotherworld.entity.interfaces.CoordinatedThing;
 import mod.acats.fromanotherworld.entity.interfaces.PossibleDisguisedThing;
+import mod.acats.fromanotherworld.entity.interfaces.SimSculkObservable;
 import mod.acats.fromanotherworld.entity.projectile.AssimilationLiquidEntity;
 import mod.acats.fromanotherworld.entity.thing.Thing;
 import mod.acats.fromanotherworld.entity.thing.TransitionEntity;
@@ -112,6 +113,11 @@ public class CommonLivingEntityEvents {
                     entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20, 6, false, false));
                 }
             }
+        }
+
+        SimSculkObservable observable = (SimSculkObservable) entity;
+        if (observable.faw$getObservationTime() > 0) {
+            observable.faw$setObservationTime(observable.faw$getObservationTime() - 1);
         }
     }
 

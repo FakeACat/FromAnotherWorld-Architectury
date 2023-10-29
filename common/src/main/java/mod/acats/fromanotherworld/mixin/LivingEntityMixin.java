@@ -3,6 +3,7 @@ package mod.acats.fromanotherworld.mixin;
 import mod.acats.fromanotherworld.entity.interfaces.CoordinatedThing;
 import mod.acats.fromanotherworld.entity.interfaces.MaybeThing;
 import mod.acats.fromanotherworld.entity.interfaces.PossibleDisguisedThing;
+import mod.acats.fromanotherworld.entity.interfaces.SimSculkObservable;
 import mod.acats.fromanotherworld.events.CommonLivingEntityEvents;
 import mod.acats.fromanotherworld.memory.ThingBaseOfOperations;
 import net.minecraft.nbt.CompoundTag;
@@ -21,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Optional;
 
 @Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin implements PossibleDisguisedThing, MaybeThing, CoordinatedThing {
+public abstract class LivingEntityMixin implements PossibleDisguisedThing, MaybeThing, CoordinatedThing, SimSculkObservable {
     @Unique
     private SynchedEntityData dataTracker(){
         return ((LivingEntity) (Object) this).getEntityData();
@@ -40,6 +41,8 @@ public abstract class LivingEntityMixin implements PossibleDisguisedThing, Maybe
     private boolean sleeper;
     @Unique
     private ThingBaseOfOperations base = null;
+    @Unique
+    private int observationTime;
 
     @Inject(at = @At("HEAD"), method = "addAdditionalSaveData")
     private void addAdditionalSaveData(CompoundTag nbt, CallbackInfo ci){
@@ -166,6 +169,21 @@ public abstract class LivingEntityMixin implements PossibleDisguisedThing, Maybe
     @Override
     public void faw$setBase(@Nullable ThingBaseOfOperations base) {
         this.base = base;
+    }
+
+    @Override
+    public void faw$setObservationTime(int timeInTicks) {
+        this.observationTime = timeInTicks;
+    }
+
+    @Override
+    public int faw$getObservationTime() {
+        return this.observationTime;
+    }
+
+    @Override
+    public boolean faw$isObserved() {
+        return this.faw$getObservationTime() > 0;
     }
 
     static{

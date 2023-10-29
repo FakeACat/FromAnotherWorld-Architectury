@@ -2,7 +2,6 @@ package mod.acats.fromanotherworld.block.entity;
 
 import mod.acats.fromanotherworld.block.spreading.AssimilatedSculkSpreader;
 import mod.acats.fromanotherworld.constants.FAWAnimations;
-import mod.acats.fromanotherworld.entity.thing.Thing;
 import mod.acats.fromanotherworld.registry.BlockEntityRegistry;
 import mod.acats.fromanotherworld.registry.BlockRegistry;
 import mod.acats.fromanotherworld.registry.DamageTypeRegistry;
@@ -21,12 +20,10 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -34,7 +31,6 @@ import org.jetbrains.annotations.Nullable;
 public class AssimilatedSculkTentaclesBlockEntity extends AssimilatedSculkBlockEntity {
 
     public static final int TENTACLE_SEGMENTS = 18;
-    private static final double RANGE = 16;
     private final AssimilatedSculkSpreader simSculker = AssimilatedSculkSpreader.create();
 
     public Chain tentacle;
@@ -74,14 +70,7 @@ public class AssimilatedSculkTentaclesBlockEntity extends AssimilatedSculkBlockE
 
         if (level.getRandom().nextInt(20) == 0) {
             LivingEntity prevTarget = this.target;
-            this.target = level.getNearestEntity(LivingEntity.class,
-                    TargetingConditions.forNonCombat().selector(Thing::hostileTowards),
-                    null,
-                    pos.x,
-                    pos.y,
-                    pos.z,
-                    AABB.ofSize(pos, RANGE * 2.0D, RANGE, RANGE * 2.0D)
-            );
+            this.target = this.getClosestObservedEntity(16);
 
             if (prevTarget != this.target) {
                 Vec3 pos2 = this.tentacle.segments.get(0).getTipPos();

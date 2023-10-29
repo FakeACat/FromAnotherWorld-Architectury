@@ -593,7 +593,7 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing, Co
 
     @Override
     public boolean doHurtTarget(Entity target) {
-        if (EntityUtilities.assimilate(target, this.shouldMergeOnAssimilate() ? 10 : 1)){
+        if (EntityUtilities.assimilate(target, this.shouldMergeOnAssimilate() ? 5 : 1)){
             target.hurt(this.level().damageSources().mobAttack(this), 0.0F);
             if (this.shouldMergeOnAssimilate()){
                 this.discard();

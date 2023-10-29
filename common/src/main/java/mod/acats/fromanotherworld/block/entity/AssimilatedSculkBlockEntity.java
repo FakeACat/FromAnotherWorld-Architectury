@@ -1,5 +1,6 @@
 package mod.acats.fromanotherworld.block.entity;
 
+import mod.acats.fromanotherworld.entity.interfaces.SimSculkObservable;
 import mod.acats.fromanotherworld.entity.thing.Thing;
 import mod.azure.azurelib.animatable.GeoBlockEntity;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
@@ -48,7 +49,7 @@ public abstract class AssimilatedSculkBlockEntity extends BlockEntity implements
         return p;
     }
 
-    public @Nullable LivingEntity getClosestVisibleEntity(double range) {
+    public @Nullable LivingEntity getClosestObservedEntity(double range) {
         if (this.level == null) {
             return null;
         }
@@ -59,7 +60,7 @@ public abstract class AssimilatedSculkBlockEntity extends BlockEntity implements
         for (LivingEntity entity:
                 entities) {
             double d = entity.distanceToSqr(pos);
-            if (d < distSq && Thing.hostileTowards(entity) && this.isVisible(entity, pos)) {
+            if (d < distSq && Thing.hostileTowards(entity) && ((SimSculkObservable) entity).faw$isObserved()) {
                 distSq = d;
                 e = entity;
             }
@@ -69,7 +70,7 @@ public abstract class AssimilatedSculkBlockEntity extends BlockEntity implements
 
     public boolean isVisible(LivingEntity entity, Vec3 pos) {
         assert this.level != null;
-        return this.level.clip(new ClipContext(pos, entity.position().add(0.0D, entity.getBbHeight() * 0.5D, 0.0D), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity)).getType() == HitResult.Type.MISS;
+        return this.level.clip(new ClipContext(pos, entity.getEyePosition(), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity)).getType() == HitResult.Type.MISS;
     }
 
     @Override

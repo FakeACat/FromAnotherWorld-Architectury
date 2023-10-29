@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.List;
 
 public class AssimilatedSculkOvergrowthBlockEntity extends AssimilatedSculkBlockEntity {
-    public static final int RANGE = 12;
+    public static final int RANGE = 16;
     public AssimilatedSculkOvergrowthBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(BlockEntityRegistry.ASSIMILATED_SCULK_OVERGROWTH_BLOCK_ENTITY.get(), blockPos, blockState);
     }
@@ -27,7 +27,7 @@ public class AssimilatedSculkOvergrowthBlockEntity extends AssimilatedSculkBlock
             return;
         }
 
-        if (level.getRandom().nextInt(20) == 0 && this.getClosestVisibleEntity(RANGE) != null) {
+        if (level.getRandom().nextInt(20) == 0 && this.getClosestObservedEntity(RANGE) != null) {
             final List<BlockPos> currentBrambles = NonNullList.create();
 
             BlockUtilities.forEachBlockInCubeCentredAt(blockPos, RANGE, blockPos1 -> {

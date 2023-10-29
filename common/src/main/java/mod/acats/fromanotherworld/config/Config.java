@@ -10,6 +10,7 @@ public class Config {
     public static final SpawningConfig SPAWNING_CONFIG = new SpawningConfig();
     public static final WorldConfig WORLD_CONFIG = new WorldConfig();
     public static final CompatibilityConfig COMPATIBILITY_CONFIG = new CompatibilityConfig();
+    public static final AssimilatedSculkConfig ASSIMILATED_SCULK_CONFIG = new AssimilatedSculkConfig();
 
     public static void load(File folder){
         GORE_CONFIG.load(folder);
@@ -19,5 +20,6 @@ public class Config {
         SPAWNING_CONFIG.load(folder);
         WORLD_CONFIG.load(folder);
         COMPATIBILITY_CONFIG.load(folder);
+        ASSIMILATED_SCULK_CONFIG.load(folder);
     }
 }

@@ -31,7 +31,7 @@ public class NeedleEntity extends AbstractArrow {
     protected void onHitEntity(EntityHitResult entityHitResult) {
         if (!this.level().isClientSide()){
             Entity e = entityHitResult.getEntity();
-            if (!EntityUtilities.assimilate(e) && !EntityUtilities.isThingAlly(e)){
+            if (!EntityUtilities.assimilate(e, 0.5F) && !EntityUtilities.isThingAlly(e)){
                 e.hurt(this.level().damageSources().mobProjectile(this, (LivingEntity) this.getOwner()), 12.0F);
                 this.discard();
             }

@@ -57,7 +57,7 @@ public class AssimilatedSculkActivatorBlockEntity extends AssimilatedSculkBlockE
         this.tryFindEntity(level);
         if (this.observed != null) {
             Vec3 pos = new Vec3(blockPos.getX() + 0.5D, blockPos.getY() + 0.5D, blockPos.getZ() + 0.5D);
-            if (!this.isVisible(this.observed, pos)) {
+            if (level.getGameTime() % 4 == 0 && !this.isVisible(this.observed, pos)) {
                 this.observed = null;
                 return;
             }
@@ -67,7 +67,7 @@ public class AssimilatedSculkActivatorBlockEntity extends AssimilatedSculkBlockE
             level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), Block.UPDATE_ALL);
 
             if (level.getRandom().nextInt(60) == 0) {
-                SculkRevealer.create(level, blockPos, 0.25F, 128);
+                SculkRevealer.create(level, blockPos, 0.25F, 64);
             }
         }
     }

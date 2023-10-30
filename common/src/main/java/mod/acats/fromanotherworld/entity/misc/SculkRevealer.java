@@ -22,6 +22,7 @@ public class SculkRevealer extends Entity {
                 sculkRevealer.setPos(blockPos.getX() + 0.5D, blockPos.getY() + 0.5D, blockPos.getZ() + 0.5D);
                 sculkRevealer.expansionRate = blocksExpansionPerTick;
                 sculkRevealer.maxExpansionTime = ticksUntilDeletion;
+                sculkRevealer.prevPlacement = 0;
                 level.addFreshEntity(sculkRevealer);
             }
         }
@@ -30,6 +31,8 @@ public class SculkRevealer extends Entity {
     private float expansionRate;
     private int expansionProgress;
     private int maxExpansionTime;
+
+    private float prevPlacement;
 
     @Override
     protected void defineSynchedData() {
@@ -62,14 +65,17 @@ public class SculkRevealer extends Entity {
 
             float radius = this.expansionProgress * this.expansionRate;
 
-            BlockUtilities.forEachBlockInCubeCentredAt(this.blockPosition(), (int) radius, blockPos -> {
-                if (blockPos.distSqr(this.blockPosition()) < radius * radius) {
-                    BlockState blockState = this.level().getBlockState(blockPos);
-                    if (blockState.getBlock() instanceof AssimilatedSculk sculkBlock && !sculkBlock.revealed(blockState)) {
-                        sculkBlock.reveal(this.level(), blockPos, blockState);
+            if (radius >= this.prevPlacement + 1.0F) {
+                this.prevPlacement = radius;
+                BlockUtilities.forEachBlockInCubeCentredAt(this.blockPosition(), (int) radius, blockPos -> {
+                    if (blockPos.distSqr(this.blockPosition()) < radius * radius) {
+                        BlockState blockState = this.level().getBlockState(blockPos);
+                        if (blockState.getBlock() instanceof AssimilatedSculk sculkBlock && !sculkBlock.revealed(blockState)) {
+                            sculkBlock.reveal(this.level(), blockPos, blockState);
+                        }
                     }
-                }
-            });
+                });
+            }
         }
     }
 }

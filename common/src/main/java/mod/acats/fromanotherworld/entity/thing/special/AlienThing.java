@@ -443,7 +443,7 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
 
     @Override
     protected float getSoundVolume() {
-        return 2.0F;
+        return super.getSoundVolume() * 2.0F;
     }
 
     @Override

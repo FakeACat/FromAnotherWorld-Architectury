@@ -793,6 +793,11 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing, Co
     }
 
     @Override
+    protected float getSoundVolume() {
+        return this.isThingFrozen() ? 0.0F : super.getSoundVolume();
+    }
+
+    @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.animatableInstanceCache;
     }

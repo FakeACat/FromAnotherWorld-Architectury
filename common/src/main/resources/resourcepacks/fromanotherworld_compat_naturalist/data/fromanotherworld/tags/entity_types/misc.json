@@ -1,0 +1,22 @@
+{
+  "replace": false,
+  "values": [
+    "naturalist:canary",
+    "naturalist:cardinal",
+    "naturalist:caterpillar",
+    "naturalist:bluejay",
+    "naturalist:butterfly",
+    "naturalist:dragonfly",
+    "naturalist:duck",
+    "naturalist:finch",
+    "naturalist:firefly",
+    "naturalist:lizard",
+    "naturalist:robin",
+    "naturalist:snake",
+    "naturalist:snail",
+    "naturalist:rattlesnake",
+    "naturalist:sparrow",
+    "naturalist:vulture",
+    "naturalist:coral_snake"
+  ]
+}

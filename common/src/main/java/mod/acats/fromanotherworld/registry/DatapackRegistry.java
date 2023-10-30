@@ -18,6 +18,9 @@ public class DatapackRegistry {
         loader.addModCompat("biomemakeover");
         loader.addModCompat("ad_astra");
         loader.addModCompat("alexscaves");
+        loader.addModCompat("naturalist");
+        loader.addModCompat("untamedwilds");
+        loader.addModCompat("vampirism");
 
         if (ModLoaderSpecific.INSTANCE.isModLoaded("spore")){
             /*switch (Config.COMPATIBILITY_CONFIG.sporeCompatMode.get()) {

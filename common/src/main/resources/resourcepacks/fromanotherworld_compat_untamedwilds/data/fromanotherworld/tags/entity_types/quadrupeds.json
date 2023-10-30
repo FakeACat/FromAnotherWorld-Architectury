@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "untamedwilds:big_cat",
+    "untamedwilds:boar",
+    "untamedwilds:camel",
+    "untamedwilds:hyena",
+    "untamedwilds:opossum",
+    "untamedwilds:wildebeest"
+  ]
+}

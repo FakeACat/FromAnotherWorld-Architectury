@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "untamedwilds:baleen_whale",
+    "untamedwilds:catfish",
+    "untamedwilds:giant_clam",
+    "untamedwilds:giant_salamander",
+    "untamedwilds:manatee",
+    "untamedwilds:shark",
+    "untamedwilds:sunfish",
+    "untamedwilds:whale_shark"
+  ]
+}

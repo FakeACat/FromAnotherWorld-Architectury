@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "vampirism:advanced_hunter",
+    "vampirism:hunter",
+    "vampirism:hunter_trainer",
+    "vampirism:task_master_hunter",
+    "vampirism:hunter_trainer_dummy"
+  ]
+}

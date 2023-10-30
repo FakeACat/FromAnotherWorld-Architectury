@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "untamedwilds:large_snake",
+    "untamedwilds:monitor",
+    "untamedwilds:newt",
+    "untamedwilds:snake",
+    "untamedwilds:tarantula",
+    "untamedwilds:terror_bird",
+    "untamedwilds:tortoise"
+  ]
+}

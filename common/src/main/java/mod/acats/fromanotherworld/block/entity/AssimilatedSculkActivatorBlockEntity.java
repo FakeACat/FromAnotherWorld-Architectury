@@ -13,6 +13,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -83,12 +84,31 @@ public class AssimilatedSculkActivatorBlockEntity extends AssimilatedSculkBlockE
         for (LivingEntity entity:
                 entities) {
             double d = entity.distanceToSqr(pos);
-            if (d < distSq && Thing.hostileTowards(entity) && this.isVisible(entity, pos)) {
+            if (d < distSq && this.isVisible(entity, pos)) {
                 distSq = d;
                 e = entity;
             }
         }
         return e;
+    }
+
+
+    public @Nullable Player getClosestVisiblePlayer(double range) {
+        if (this.level == null) {
+            return null;
+        }
+        Player p = null;
+        double distSq = range * range;
+        Vec3 pos = new Vec3(this.getBlockPos().getX() + 0.5D, this.getBlockPos().getY() + 0.5D, this.getBlockPos().getZ() + 0.5D);
+        for (Player player:
+                level.players()) {
+            double d = player.distanceToSqr(pos);
+            if (d < distSq && EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(player) && this.isVisible(player, pos)) {
+                distSq = d;
+                p = player;
+            }
+        }
+        return p;
     }
 
     private boolean tryFindPlayer(Level level) {

@@ -41,6 +41,16 @@ public class AssimilatedSculkTentaclesBlockEntityRenderer extends GeoBlockRender
     }
 
     @Override
+    public boolean shouldRenderOffScreen(AssimilatedSculkTentaclesBlockEntity blockEntity) {
+        return true;
+    }
+
+    @Override
+    public int getViewDistance() {
+        return 128;
+    }
+
+    @Override
     public boolean shouldRender(AssimilatedSculkTentaclesBlockEntity blockEntity, Vec3 vec3) {
         if (!BlockRegistry.ASSIMILATED_SCULK_TENTACLES.get().revealed(blockEntity.getBlockState())) {
             return false;

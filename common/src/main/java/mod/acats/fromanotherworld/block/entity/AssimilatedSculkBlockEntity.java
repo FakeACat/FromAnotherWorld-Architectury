@@ -6,9 +6,7 @@ import mod.azure.azurelib.animatable.GeoBlockEntity;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.util.AzureLibUtil;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -31,24 +29,6 @@ public abstract class AssimilatedSculkBlockEntity extends BlockEntity implements
     public abstract void serverTick(Level level, BlockPos blockPos, BlockState blockState);
     public abstract void clientTick(Level level, BlockPos blockPos, BlockState blockState);
 
-    public @Nullable Player getClosestVisiblePlayer(double range) {
-        if (this.level == null) {
-            return null;
-        }
-        Player p = null;
-        double distSq = range * range;
-        Vec3 pos = new Vec3(this.getBlockPos().getX() + 0.5D, this.getBlockPos().getY() + 0.5D, this.getBlockPos().getZ() + 0.5D);
-        for (Player player:
-             level.players()) {
-            double d = player.distanceToSqr(pos);
-            if (d < distSq && EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(player) && this.isVisible(player, pos)) {
-                distSq = d;
-                p = player;
-            }
-        }
-        return p;
-    }
-
     public @Nullable LivingEntity getClosestObservedEntity(double range) {
         if (this.level == null) {
             return null;
@@ -70,6 +50,9 @@ public abstract class AssimilatedSculkBlockEntity extends BlockEntity implements
 
     public boolean isVisible(LivingEntity entity, Vec3 pos) {
         assert this.level != null;
+        if (entity.isInvisible()) {
+            return false;
+        }
         return this.level.clip(new ClipContext(pos, entity.getEyePosition(), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity)).getType() == HitResult.Type.MISS;
     }
 

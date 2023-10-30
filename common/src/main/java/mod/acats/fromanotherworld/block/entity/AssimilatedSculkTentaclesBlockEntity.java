@@ -6,11 +6,11 @@ import mod.acats.fromanotherworld.registry.BlockEntityRegistry;
 import mod.acats.fromanotherworld.registry.BlockRegistry;
 import mod.acats.fromanotherworld.registry.DamageTypeRegistry;
 import mod.acats.fromanotherworld.registry.SoundRegistry;
+import mod.acats.fromanotherworld.utilities.BlockUtilities;
 import mod.acats.fromanotherworld.utilities.EntityUtilities;
 import mod.acats.fromanotherworld.utilities.physics.Chain;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -27,6 +27,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AssimilatedSculkTentaclesBlockEntity extends AssimilatedSculkBlockEntity {
 
@@ -58,8 +61,16 @@ public class AssimilatedSculkTentaclesBlockEntity extends AssimilatedSculkBlockE
             this.revealedTick(level, blockPos);
         }
 
-        if (level.getRandom().nextInt(3000) == 0) {
-            this.simSculker.addCursors(blockPos.relative(Direction.Plane.HORIZONTAL.getRandomDirection(level.getRandom())), 100);
+        if (level.getRandom().nextInt(2000) == 0) {
+            List<BlockPos> blockPositions = new ArrayList<>();
+
+            BlockUtilities.forEachBlockInCubeCentredAt(blockPos, 1, blockPos1 -> {
+                if (!blockPos1.equals(blockPos)) {
+                    blockPositions.add(new BlockPos(blockPos1.getX(), blockPos1.getY(), blockPos1.getZ()));
+                }
+            });
+
+            this.simSculker.addCursors(blockPositions.get(level.getRandom().nextInt(blockPositions.size())), 100);
         }
 
         level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), Block.UPDATE_ALL);

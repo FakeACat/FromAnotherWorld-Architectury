@@ -288,6 +288,11 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
     @Override
     public void threeSecondDelayServerTick() {
         super.threeSecondDelayServerTick();
+
+        if (this.isThingFrozen()) {
+            return;
+        }
+
         if (this.tickCount % 300 == 0) {
             this.createChunkLoader();
         }

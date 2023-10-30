@@ -16,11 +16,13 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -127,6 +129,14 @@ public class AssimilatedSculkActivatorBlockEntity extends AssimilatedSculkBlockE
             return livingEntity != null;
         }
         return false;
+    }
+
+    public boolean isVisible(LivingEntity entity, Vec3 pos) {
+        assert this.level != null;
+        if (entity.getVisibilityPercent(null) < 0.1F) {
+            return false;
+        }
+        return this.level.clip(new ClipContext(pos, entity.getEyePosition(), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity)).getType() == HitResult.Type.MISS;
     }
 
     @Override

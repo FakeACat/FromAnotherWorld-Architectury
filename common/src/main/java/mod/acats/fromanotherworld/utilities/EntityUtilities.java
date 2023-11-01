@@ -79,16 +79,8 @@ public class EntityUtilities {
             player.addEffect(new MobEffectInstance(StatusEffectRegistry.SLOW_ASSIMILATION.get(), 400, 0, false, true));
         }
     }
-
-    public static boolean isAssimilableType(Entity e){
-        return e.getType().is(EntityTags.HUMANOIDS) ||
-                e.getType().is(EntityTags.QUADRUPEDS) ||
-                e.getType().is(EntityTags.LARGE_QUADRUPEDS) ||
-                e.getType().is(EntityTags.VERY_LARGE_QUADRUPEDS) ||
-                e.getType().is(EntityTags.MISC);
-    }
     public static boolean canAssimilate(Entity e){
-        return !isThing(e) && isAssimilableType(e);
+        return !isThing(e) && e.getType().is(EntityTags.ASSIMILABLE);
     }
     public static int numThingsInList(List<? extends LivingEntity> list){
         int t = 0;

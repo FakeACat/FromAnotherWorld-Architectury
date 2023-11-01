@@ -1,24 +1,22 @@
 package mod.acats.fromanotherworld.entity.thing;
 
 import mod.acats.fromanotherworld.FromAnotherWorld;
-import mod.acats.fromanotherworld.constants.VariantID;
 import mod.acats.fromanotherworld.entity.interfaces.MaybeThing;
 import mod.acats.fromanotherworld.entity.render.thing.growths.TentacleMass;
-import mod.acats.fromanotherworld.entity.thing.resultant.Beast;
-import mod.acats.fromanotherworld.entity.thing.resultant.BloodCrawler;
 import mod.acats.fromanotherworld.registry.EntityRegistry;
 import mod.acats.fromanotherworld.registry.ParticleRegistry;
 import mod.acats.fromanotherworld.registry.SoundRegistry;
 import mod.acats.fromanotherworld.tags.DamageTypeTags;
-import mod.acats.fromanotherworld.tags.EntityTags;
+import mod.acats.fromanotherworld.transformation.FormSelector;
+import mod.acats.fromanotherworld.transformation.TransformationContext;
 import mod.acats.fromanotherworld.utilities.EntityUtilities;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.util.Mth;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
@@ -205,95 +203,18 @@ public class TransitionEntity extends LivingEntity implements MaybeThing {
     }
 
     private void becomeResultant(){
-        Thing thing = null;
-        LivingEntity entity = this.getFakeEntity();
-        EntityType<?> type = entity.getType();
-        boolean smaller = false;
-        if (type.is(EntityTags.HUMANOIDS)){
-            switch (chooseStrength()) {
-                case 0 -> {
-                    thing = EntityRegistry.CRAWLER.get().create(this.level());
-                    spawnCrawlers(4);
+        TransformationContext ctx = new TransformationContext(
+                (ServerLevel) this.level(),
+                this.getFakeEntity(),
+                this.getFakeEntityNbt(),
+                this.position(),
+                this.getXRot(),
+                this.getYRot(),
+                this.getCustomName(),
+                this.entityData.get(WIDTH),
+                this.entityData.get(HEIGHT));
 
-                }
-                case 1 -> thing = EntityRegistry.JULIETTE_THING.get().create(this.level());
-                case 2 -> thing = EntityRegistry.PALMER_THING.get().create(this.level());
-            }
-            if (thing != null){
-                if (type.is(EntityTags.VILLAGERS))
-                    thing.setVariantID(VariantID.VILLAGER);
-                else if (type.is(EntityTags.ILLAGERS))
-                    thing.setVariantID(VariantID.ILLAGER);
-            }
-        }
-        else if (type.is(EntityTags.LARGE_QUADRUPEDS)){
-            thing = EntityRegistry.PROWLER.get().create(this.level());
-        }
-        else if (type.is(EntityTags.QUADRUPEDS)){
-            switch (chooseStrength()) {
-                case 0 -> {
-                    thing = EntityRegistry.DOGBEAST_SPITTER.get().create(this.level());
-                    spawnCrawlers(3);
-                    smaller = true;
-                }
-                case 1 -> thing = EntityRegistry.DOGBEAST.get().create(this.level());
-                case 2 -> thing = EntityRegistry.IMPALER.get().create(this.level());
-            }
-            if (thing != null){
-                if (type.is(EntityTags.COWS))
-                    thing.setVariantID(VariantID.COW);
-                else if (type.is(EntityTags.SHEEP))
-                    thing.setVariantID(VariantID.SHEEP);
-                else if (type.is(EntityTags.PIGS))
-                    thing.setVariantID(VariantID.PIG);
-                else if (type.is(EntityTags.HORSES))
-                    thing.setVariantID(VariantID.HORSE);
-                else if (type.is(EntityTags.LLAMAS))
-                    thing.setVariantID(VariantID.LLAMA);
-            }
-        }
-        else if (type.is(EntityTags.VERY_LARGE_QUADRUPEDS)){
-            thing = EntityRegistry.BEAST.get().create(entity.level());
-            if (thing != null){
-                ((Beast) thing).setTier(0, true);
-            }
-        }
-        else{
-            spawnCrawlers(Mth.ceil(vol() * 4.0F));
-        }
-        if (thing != null){
-            if (thing instanceof ResizeableThing resizeableThing){
-                float scale = smaller ? 0.7F : 1.0F;
-                resizeableThing.setupScale(this.entityData.get(WIDTH) * scale, this.entityData.get(HEIGHT) * scale);
-            }
-            thing.setCustomName(this.getCustomName());
-            thing.moveTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), this.getXRot());
-            thing.initializeFrom(this);
-            thing.setVictim(this.getFakeEntityNbt());
-            this.level().addFreshEntity(thing);
-        }
-    }
-
-    private void spawnCrawlers(int crawlers){
-        for (int i = 0; i < crawlers; i++){
-            BloodCrawler bloodCrawler = EntityRegistry.BLOOD_CRAWLER.get().create(this.level());
-            if (bloodCrawler != null) {
-                bloodCrawler.moveTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), this.getXRot());
-                bloodCrawler.initializeFrom(this);
-                this.level().addFreshEntity(bloodCrawler);
-            }
-        }
-    }
-
-    private int chooseStrength(){
-        if (this.getRandom().nextInt(10) == 0)
-            return 2;
-        return this.getRandom().nextInt(2);
-    }
-
-    private float vol(){
-        LivingEntity entity = this.getFakeEntity();
-        return entity.getBbWidth() * entity.getBbWidth() * entity.getBbHeight();
+        FormSelector.getWeightedRandomFor(ctx).transform(ctx);
     }
 
     @Override

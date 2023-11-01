@@ -33,7 +33,7 @@ import java.util.List;
 public class CommonLivingEntityEvents {
     public static void initGoals(Mob mob, GoalSelector goalSelector){
         if (!mob.getType().is(EntityTags.NOT_AFRAID_OF_THINGS) &&
-                EntityUtilities.isAssimilableType(mob) &&
+                mob.getType().is(EntityTags.ASSIMILABLE) &&
                 mob instanceof PathfinderMob pathfinderMob){
             goalSelector.addGoal(0, new AvoidEntityGoal<>(pathfinderMob, Thing.class, 6.0F, 1.0F, 1.2F));
         }

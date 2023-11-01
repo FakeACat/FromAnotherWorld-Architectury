@@ -34,6 +34,7 @@ public class FromAnotherWorld implements CommonMod {
     @Override
     public void preRegisterContent() {
         AzureLib.initialize();
+        TransformationRegistry.register();
         ItemRegistry.registerSpawnEggs();
         SpawnEntryRegistry.register();
     }

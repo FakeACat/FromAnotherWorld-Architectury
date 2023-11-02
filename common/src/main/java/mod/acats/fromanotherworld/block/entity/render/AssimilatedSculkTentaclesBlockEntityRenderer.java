@@ -8,6 +8,7 @@ import mod.acats.fromanotherworld.block.entity.model.AssimilatedSculkTentacleHea
 import mod.acats.fromanotherworld.block.entity.model.AssimilatedSculkTentacleSegmentModel;
 import mod.acats.fromanotherworld.block.entity.model.AssimilatedSculkTentacleSpiderModel;
 import mod.acats.fromanotherworld.block.entity.model.AssimilatedSculkTentaclesBlockEntityModel;
+import mod.acats.fromanotherworld.config.Config;
 import mod.acats.fromanotherworld.registry.BlockRegistry;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
 import mod.azure.azurelib.cache.object.GeoBone;
@@ -47,7 +48,7 @@ public class AssimilatedSculkTentaclesBlockEntityRenderer extends GeoBlockRender
 
     @Override
     public int getViewDistance() {
-        return 128;
+        return Config.ASSIMILATED_SCULK_CONFIG.tentacleViewRange.get();
     }
 
     @Override

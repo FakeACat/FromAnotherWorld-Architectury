@@ -10,7 +10,7 @@ public class AssimilatedSculkConfig extends FALConfig {
 
     @Override
     protected int version() {
-        return 0;
+        return 1;
     }
 
     public final FALConfigBooleanProperty revealFromMobs = new FALConfigBooleanProperty(
@@ -19,10 +19,17 @@ public class AssimilatedSculkConfig extends FALConfig {
             false
     );
 
+    public final FALConfigIntegerProperty tentacleViewRange = new FALConfigIntegerProperty(
+            "tentacle_view_range",
+            "How far should you be able to see Assimilated Sculk Tentacles from?\nReducing this should help with performance",
+            64
+    );
+
     @Override
     protected FALConfigProperty<?>[] properties() {
         return new FALConfigProperty[]{
-                this.revealFromMobs
+                this.revealFromMobs,
+                this.tentacleViewRange
         };
     }
 }

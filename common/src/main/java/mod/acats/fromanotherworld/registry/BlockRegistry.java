@@ -36,7 +36,7 @@ public class BlockRegistry {
     );
     public static final FALRegistryObject<TentacleBlock> TENTACLE = registerToTab(
             "tentacle",
-            () -> new TentacleBlock(BlockBehaviour.Properties.of().forceSolidOn().noCollission().noOcclusion().destroyTime(3.0F).randomTicks().ignitedByLava())
+            () -> new TentacleBlock(BlockBehaviour.Properties.of().forceSolidOn().noCollission().noOcclusion().destroyTime(3.0F).randomTicks().ignitedByLava().requiresCorrectToolForDrops())
     );
     public static final FALRegistryObject<WallPalmerBlock> WALL_PALMER = registerToTab(
             "wall_palmer",

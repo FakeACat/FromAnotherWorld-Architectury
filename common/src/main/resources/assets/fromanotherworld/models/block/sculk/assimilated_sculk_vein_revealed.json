@@ -1,0 +1,8 @@
+{
+  "render_type": "cutout",
+  "parent": "block/sculk_vein",
+  "textures": {
+    "particle": "fromanotherworld:block/sculk/assimilated_sculk_vein",
+    "sculk_vein": "fromanotherworld:block/sculk/assimilated_sculk_vein"
+  }
+}

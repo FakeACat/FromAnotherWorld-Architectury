@@ -59,7 +59,7 @@ public class AssimilatedSculkActivatorBlockEntity extends AssimilatedSculkBlockE
 
         this.tryFindEntity(level);
         if (this.observed != null) {
-            Vec3 pos = new Vec3(blockPos.getX() + 0.5D, blockPos.getY() + 0.5D, blockPos.getZ() + 0.5D);
+            Vec3 pos = new Vec3(blockPos.getX() + 0.5D, blockPos.getY() + 0.75D, blockPos.getZ() + 0.5D);
             if (level.getGameTime() % 4 == 0 && !this.isVisible(this.observed, pos)) {
                 this.observed = null;
                 return;
@@ -101,7 +101,7 @@ public class AssimilatedSculkActivatorBlockEntity extends AssimilatedSculkBlockE
         }
         Player p = null;
         double distSq = range * range;
-        Vec3 pos = new Vec3(this.getBlockPos().getX() + 0.5D, this.getBlockPos().getY() + 0.5D, this.getBlockPos().getZ() + 0.5D);
+        Vec3 pos = new Vec3(this.getBlockPos().getX() + 0.5D, this.getBlockPos().getY() + 0.75D, this.getBlockPos().getZ() + 0.5D);
         for (Player player:
                 level.players()) {
             double d = player.distanceToSqr(pos);

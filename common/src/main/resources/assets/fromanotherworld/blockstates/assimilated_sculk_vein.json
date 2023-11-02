@@ -5,7 +5,8 @@
         "model": "fromanotherworld:block/sculk/assimilated_sculk_vein"
       },
       "when": {
-        "north": "true"
+        "north": "true",
+        "revealed": "false"
       }
     },
     {
@@ -18,7 +19,8 @@
         "north": "false",
         "south": "false",
         "up": "false",
-        "west": "false"
+        "west": "false",
+        "revealed": "false"
       }
     },
     {
@@ -28,7 +30,8 @@
         "y": 90
       },
       "when": {
-        "east": "true"
+        "east": "true",
+        "revealed": "false"
       }
     },
     {
@@ -43,7 +46,8 @@
         "north": "false",
         "south": "false",
         "up": "false",
-        "west": "false"
+        "west": "false",
+        "revealed": "false"
       }
     },
     {
@@ -53,7 +57,8 @@
         "y": 180
       },
       "when": {
-        "south": "true"
+        "south": "true",
+        "revealed": "false"
       }
     },
     {
@@ -68,7 +73,8 @@
         "north": "false",
         "south": "false",
         "up": "false",
-        "west": "false"
+        "west": "false",
+        "revealed": "false"
       }
     },
     {
@@ -78,7 +84,8 @@
         "y": 270
       },
       "when": {
-        "west": "true"
+        "west": "true",
+        "revealed": "false"
       }
     },
     {
@@ -93,7 +100,8 @@
         "north": "false",
         "south": "false",
         "up": "false",
-        "west": "false"
+        "west": "false",
+        "revealed": "false"
       }
     },
     {
@@ -103,7 +111,8 @@
         "x": 270
       },
       "when": {
-        "up": "true"
+        "up": "true",
+        "revealed": "false"
       }
     },
     {
@@ -118,7 +127,8 @@
         "north": "false",
         "south": "false",
         "up": "false",
-        "west": "false"
+        "west": "false",
+        "revealed": "false"
       }
     },
     {
@@ -128,7 +138,8 @@
         "x": 90
       },
       "when": {
-        "down": "true"
+        "down": "true",
+        "revealed": "false"
       }
     },
     {
@@ -143,7 +154,167 @@
         "north": "false",
         "south": "false",
         "up": "false",
-        "west": "false"
+        "west": "false",
+        "revealed": "false"
+      }
+    },
+
+    {
+      "apply": {
+        "model": "fromanotherworld:block/sculk/assimilated_sculk_vein_revealed"
+      },
+      "when": {
+        "north": "true",
+        "revealed": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "fromanotherworld:block/sculk/assimilated_sculk_vein_revealed"
+      },
+      "when": {
+        "down": "false",
+        "east": "false",
+        "north": "false",
+        "south": "false",
+        "up": "false",
+        "west": "false",
+        "revealed": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "fromanotherworld:block/sculk/assimilated_sculk_vein_revealed",
+        "uvlock": true,
+        "y": 90
+      },
+      "when": {
+        "east": "true",
+        "revealed": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "fromanotherworld:block/sculk/assimilated_sculk_vein_revealed",
+        "uvlock": true,
+        "y": 90
+      },
+      "when": {
+        "down": "false",
+        "east": "false",
+        "north": "false",
+        "south": "false",
+        "up": "false",
+        "west": "false",
+        "revealed": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "fromanotherworld:block/sculk/assimilated_sculk_vein_revealed",
+        "uvlock": true,
+        "y": 180
+      },
+      "when": {
+        "south": "true",
+        "revealed": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "fromanotherworld:block/sculk/assimilated_sculk_vein_revealed",
+        "uvlock": true,
+        "y": 180
+      },
+      "when": {
+        "down": "false",
+        "east": "false",
+        "north": "false",
+        "south": "false",
+        "up": "false",
+        "west": "false",
+        "revealed": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "fromanotherworld:block/sculk/assimilated_sculk_vein_revealed",
+        "uvlock": true,
+        "y": 270
+      },
+      "when": {
+        "west": "true",
+        "revealed": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "fromanotherworld:block/sculk/assimilated_sculk_vein_revealed",
+        "uvlock": true,
+        "y": 270
+      },
+      "when": {
+        "down": "false",
+        "east": "false",
+        "north": "false",
+        "south": "false",
+        "up": "false",
+        "west": "false",
+        "revealed": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "fromanotherworld:block/sculk/assimilated_sculk_vein_revealed",
+        "uvlock": true,
+        "x": 270
+      },
+      "when": {
+        "up": "true",
+        "revealed": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "fromanotherworld:block/sculk/assimilated_sculk_vein_revealed",
+        "uvlock": true,
+        "x": 270
+      },
+      "when": {
+        "down": "false",
+        "east": "false",
+        "north": "false",
+        "south": "false",
+        "up": "false",
+        "west": "false",
+        "revealed": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "fromanotherworld:block/sculk/assimilated_sculk_vein_revealed",
+        "uvlock": true,
+        "x": 90
+      },
+      "when": {
+        "down": "true",
+        "revealed": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "fromanotherworld:block/sculk/assimilated_sculk_vein_revealed",
+        "uvlock": true,
+        "x": 90
+      },
+      "when": {
+        "down": "false",
+        "east": "false",
+        "north": "false",
+        "south": "false",
+        "up": "false",
+        "west": "false",
+        "revealed": "true"
       }
     }
   ]

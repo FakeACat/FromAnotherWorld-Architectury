@@ -65,7 +65,7 @@ public class BlockRegistry {
 
     public static final FALRegistryObject<AssimilatedSculkTentaclesBlock> ASSIMILATED_SCULK_TENTACLES = registerToTab(
             "assimilated_sculk_tentacles",
-            () -> new AssimilatedSculkTentaclesBlock(BlockBehaviour.Properties.of().isValidSpawn(BlockRegistry::never).randomTicks().forceSolidOn().noCollission().noOcclusion()
+            () -> new AssimilatedSculkTentaclesBlock(BlockBehaviour.Properties.of().isValidSpawn(BlockRegistry::never).randomTicks().noOcclusion()
                     .mapColor(MapColor.COLOR_BLACK).strength(3.0F, 3.0F).sound(SoundType.SCULK_CATALYST).lightLevel((blockStatex) ->
                             blockStatex.getValue(AssimilatedSculk.REVEALED) ? 0 : 6
             ))
@@ -73,7 +73,7 @@ public class BlockRegistry {
 
     public static final FALRegistryObject<AssimilatedSculkActivatorBlock> ASSIMILATED_SCULK_ACTIVATOR = registerToTab(
             "assimilated_sculk_activator",
-            () -> new AssimilatedSculkActivatorBlock(BlockBehaviour.Properties.of().isValidSpawn(BlockRegistry::never).randomTicks().forceSolidOn().noCollission().noOcclusion()
+            () -> new AssimilatedSculkActivatorBlock(BlockBehaviour.Properties.of().isValidSpawn(BlockRegistry::never).randomTicks().noOcclusion()
                     .mapColor(MapColor.COLOR_CYAN).strength(1.5F).sound(SoundType.SCULK_SENSOR).lightLevel((blockStatex) ->
                             blockStatex.getValue(AssimilatedSculk.REVEALED) ? 0 : 1
             ))
@@ -81,7 +81,7 @@ public class BlockRegistry {
 
     public static final FALRegistryObject<AssimilatedSculkOvergrowthBlock> ASSIMILATED_SCULK_OVERGROWTH = registerToTab(
             "assimilated_sculk_overgrowth",
-            () -> new AssimilatedSculkOvergrowthBlock(BlockBehaviour.Properties.of().isValidSpawn(BlockRegistry::never).randomTicks().forceSolidOn().noCollission().noOcclusion()
+            () -> new AssimilatedSculkOvergrowthBlock(BlockBehaviour.Properties.of().isValidSpawn(BlockRegistry::never).randomTicks().noOcclusion()
                     .mapColor(MapColor.COLOR_BLACK).strength(3.0F, 3.0F).sound(SoundType.SCULK_SHRIEKER))
     );
 

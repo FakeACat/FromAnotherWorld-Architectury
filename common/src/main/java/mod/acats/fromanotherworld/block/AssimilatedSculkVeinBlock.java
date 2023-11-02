@@ -14,9 +14,11 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.FluidState;
@@ -26,13 +28,14 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 
 @SuppressWarnings("deprecation")
-public class AssimilatedSculkVeinBlock extends SculkVeinBlock implements AssimilatedSculkBehaviour {
+public class AssimilatedSculkVeinBlock extends SculkVeinBlock implements AssimilatedSculkBehaviour, AssimilatedSculk {
     private final MultifaceSpreader assimilatedVeinSpreader;
     private final MultifaceSpreader sameSpaceAssimilatedVeinSpreader;
     public AssimilatedSculkVeinBlock(Properties properties) {
         super(properties);
         this.assimilatedVeinSpreader = new MultifaceSpreader(new AssimilatedSculkVeinSpreaderConfig(MultifaceSpreader.DEFAULT_SPREAD_ORDER));
         this.sameSpaceAssimilatedVeinSpreader = new MultifaceSpreader(new AssimilatedSculkVeinSpreaderConfig(MultifaceSpreader.SpreadType.SAME_POSITION));
+        this.registerDefaultState(this.defaultBlockState().setValue(REVEALED, false));
     }
 
     @Override
@@ -149,6 +152,17 @@ public class AssimilatedSculkVeinBlock extends SculkVeinBlock implements Assimil
         super.tick(blockState, serverLevel, blockPos, randomSource);
 
         AssimilatedSculk.assimilateSurroundingSculk(serverLevel, blockPos);
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
+        builder.add(REVEALED);
+    }
+
+    @Override
+    public void reveal(Level level, BlockPos pos, BlockState blockState) {
+        level.setBlock(pos, blockState.setValue(REVEALED, true), 3);
     }
 
     /*@Override

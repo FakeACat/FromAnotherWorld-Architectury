@@ -453,11 +453,6 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
         return super.getSoundVolume() * 2.0F;
     }
 
-    @Override
-    protected int calculateFallDamage(float fallDistance, float damageMultiplier) {
-        return 0;
-    }
-
     private <E extends GeoEntity> PlayState predicate(AnimationState<E> event) {
         if (this.clientForm != this.prevClientForm) {
             event.getController().forceAnimationReset();

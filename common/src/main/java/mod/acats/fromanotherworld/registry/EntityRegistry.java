@@ -3,7 +3,7 @@ package mod.acats.fromanotherworld.registry;
 import mod.acats.fromanotherlibrary.registry.FALRegister;
 import mod.acats.fromanotherlibrary.registry.FALRegistryObject;
 import mod.acats.fromanotherworld.entity.misc.SculkRevealer;
-import mod.acats.fromanotherworld.entity.misc.StarshipEntity;
+import mod.acats.fromanotherworld.entity.misc.Starship;
 import mod.acats.fromanotherworld.entity.projectile.AssimilationLiquidEntity;
 import mod.acats.fromanotherworld.entity.projectile.FlamethrowerFire;
 import mod.acats.fromanotherworld.entity.projectile.NeedleEntity;
@@ -56,9 +56,9 @@ public class EntityRegistry {
             "impaler",
             EntityType.Builder.of(Impaler::new, MobCategory.MONSTER).sized(0.9F, 1.4F).clientTrackingRange(TRACK_RANGE_MEDIUM)
     );
-    public static final FALRegistryObject<EntityType<StarshipEntity>> STARSHIP = register(
+    public static final FALRegistryObject<EntityType<Starship>> STARSHIP = register(
             "starship",
-            EntityType.Builder.of(StarshipEntity::new, MobCategory.MISC).sized(5.0F, 2.0F).clientTrackingRange(TRACK_RANGE_LONG)
+            EntityType.Builder.of(Starship::new, MobCategory.MISC).sized(5.0F, 2.0F).clientTrackingRange(TRACK_RANGE_LONG).fireImmune()
     );
     public static final FALRegistryObject<EntityType<Beast>> BEAST = register(
             "beast",
@@ -133,7 +133,7 @@ public class EntityRegistry {
         map.put(BLOOD_CRAWLER.get(), BloodCrawler::createBloodCrawlerAttributes);
         map.put(DOGBEAST_SPITTER.get(), DogBeastSpitter::createDogBeastSpitterAttributes);
         map.put(IMPALER.get(), Impaler::createImpalerAttributes);
-        map.put(STARSHIP.get(), StarshipEntity::createStarshipAttributes);
+        map.put(STARSHIP.get(), Starship::createStarshipAttributes);
         map.put(BEAST.get(), Beast::createBeastAttributes);
         map.put(PALMER_THING.get(), PalmerThing::createPalmerThingAttributes);
         map.put(BLAIR_THING.get(), BlairThing::createBlairThingAttributes);

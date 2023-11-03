@@ -27,11 +27,12 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import org.jetbrains.annotations.Nullable;
 
-public class StarshipEntity extends Mob implements GeoEntity {
+public class Starship extends Mob implements GeoEntity {
 
     private static final EntityDataAccessor<Boolean> RELEASED_CONTENTS;
 
@@ -51,7 +52,7 @@ public class StarshipEntity extends Mob implements GeoEntity {
 
     private final AnimatableInstanceCache animatableInstanceCache = AzureLibUtil.createInstanceCache(this);
 
-    public StarshipEntity(EntityType<? extends Mob> entityType, Level world) {
+    public Starship(EntityType<? extends Mob> entityType, Level world) {
         super(entityType, world);
     }
 
@@ -63,13 +64,15 @@ public class StarshipEntity extends Mob implements GeoEntity {
         }
         if (this.onGround()){
             if (!this.level().isClientSide()){
-                this.level().explode(null, this.getX(), this.getY() + 3.0D, this.getZ(), 9, Level.ExplosionInteraction.TNT);
+                if (this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
+                    this.level().explode(null, this.getX(), this.getY() + 3.0D, this.getZ(), 16, true, Level.ExplosionInteraction.TNT);
+                }
                 AlienThing thing = EntityRegistry.ALIEN_THING.get().create(this.level());
                 if (thing != null) {
                     thing.setPos(this.position());
                     thing.finalizeSpawn((ServerLevelAccessor) this.level(), this.level().getCurrentDifficultyAt(this.blockPosition()), MobSpawnType.EVENT, null, null);
                     this.level().addFreshEntity(thing);
-                    thing.changeForm(0);
+                    thing.changeForm(2);
                 }
                 this.setReleasedContents(true);
                 this.level().playSound(null, this.blockPosition(), SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS, 16.0F, (1.0F + (this.level().random.nextFloat() - this.level().random.nextFloat()) * 0.2F) * 0.7F);
@@ -106,11 +109,6 @@ public class StarshipEntity extends Mob implements GeoEntity {
         return Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 80)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 1);
-    }
-
-    @Override
-    protected int calculateFallDamage(float fallDistance, float damageMultiplier) {
-        return 0;
     }
 
     @Nullable
@@ -180,6 +178,6 @@ public class StarshipEntity extends Mob implements GeoEntity {
     }
 
     static {
-        RELEASED_CONTENTS = SynchedEntityData.defineId(StarshipEntity.class, EntityDataSerializers.BOOLEAN);
+        RELEASED_CONTENTS = SynchedEntityData.defineId(Starship.class, EntityDataSerializers.BOOLEAN);
     }
 }

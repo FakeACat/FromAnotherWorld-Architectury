@@ -1,6 +1,6 @@
 package mod.acats.fromanotherworld.spawning;
 
-import mod.acats.fromanotherworld.entity.misc.StarshipEntity;
+import mod.acats.fromanotherworld.entity.misc.Starship;
 import mod.acats.fromanotherworld.registry.EntityRegistry;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -12,7 +12,7 @@ public class StarshipEvent extends AbstractThingEvent{
 
     @Override
     public void run() {
-        StarshipEntity ship = EntityRegistry.STARSHIP.get().create(world);
+        Starship ship = EntityRegistry.STARSHIP.get().create(world);
         if (ship != null){
             ship.setPos(player.getX() - 128 + player.getRandom().nextInt(256), 500, player.getZ() - 128 + player.getRandom().nextInt(256));
             world.addFreshEntity(ship);

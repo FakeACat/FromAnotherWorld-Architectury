@@ -297,8 +297,10 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
             this.createChunkLoader();
         }
 
-        if (this.getForm() == 1 &&
-                this.getRandom().nextInt(20) == 0 &&
+        int chance = Config.ASSIMILATED_SCULK_CONFIG.alienSculkPlacement.get();
+        if (chance > 0 &&
+                this.getForm() == 1 &&
+                this.getRandom().nextInt(chance) == 0 &&
                 this.breakOrPlaceable(this.blockPosition()) &&
                 this.onGround()) {
             for (BlockState blockState:

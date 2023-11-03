@@ -10,7 +10,7 @@ public class AssimilatedSculkConfig extends FALConfig {
 
     @Override
     protected int version() {
-        return 1;
+        return 2;
     }
 
     public final FALConfigBooleanProperty revealFromMobs = new FALConfigBooleanProperty(
@@ -25,11 +25,19 @@ public class AssimilatedSculkConfig extends FALConfig {
             64
     );
 
+    public final FALConfigIntegerProperty alienSculkPlacement = new FALConfigIntegerProperty(
+            "alien_assimilated_sculk_placement",
+            "1 in this number chance every 3 seconds for the Alien Thing to attempt to place an Assimilated Sculk Tentacle while in the 1951 form.\n" +
+                    "Values less than 1 disable this feature.",
+            20
+    );
+
     @Override
     protected FALConfigProperty<?>[] properties() {
         return new FALConfigProperty[]{
                 this.revealFromMobs,
-                this.tentacleViewRange
+                this.tentacleViewRange,
+                this.alienSculkPlacement
         };
     }
 }

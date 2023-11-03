@@ -52,7 +52,7 @@ public class AssimilatedSculkActivatorBlockEntity extends AssimilatedSculkBlockE
 
         if (!blockState.getValue(AssimilatedSculk.REVEALED)) {
             if (Config.ASSIMILATED_SCULK_CONFIG.revealFromMobs.get() ? this.tryFindEntity(level) : this.tryFindPlayer(level)) {
-                SculkRevealer.create(level, blockPos, 0.25F, 128);
+                SculkRevealer.create(level, blockPos, 2.0F, 8, 1.0F);
             }
             return;
         }
@@ -70,7 +70,7 @@ public class AssimilatedSculkActivatorBlockEntity extends AssimilatedSculkBlockE
             level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), Block.UPDATE_ALL);
 
             if (level.getRandom().nextInt(60) == 0) {
-                SculkRevealer.create(level, blockPos, 0.25F, 64);
+                SculkRevealer.create(level, blockPos, 2.0F, 8, 1.0F);
             }
         }
     }

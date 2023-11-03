@@ -118,7 +118,7 @@ public class AssimilatedSculkBlock extends SculkBlock implements AssimilatedScul
     }
 
     @Override
-    public void reveal(Level level, BlockPos pos, BlockState blockState) {
+    public void reveal(Level level, BlockPos pos, BlockState blockState, float strength) {
         level.setBlock(pos, blockState.setValue(REVEALED, true), 3);
     }
 
@@ -127,11 +127,15 @@ public class AssimilatedSculkBlock extends SculkBlock implements AssimilatedScul
         super.tick(blockState, serverLevel, blockPos, randomSource);
 
         AssimilatedSculk.assimilateSurroundingSculk(serverLevel, blockPos);
+
+        if (this.revealed(blockState) && serverLevel.getRandom().nextInt(REDISGUISE_CHANCE) == 0) {
+            serverLevel.setBlockAndUpdate(blockPos, blockState.setValue(REVEALED, false));
+        }
     }
 
     @Override
     public void spawnAfterBreak(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, ItemStack itemStack, boolean bl) {
         super.spawnAfterBreak(blockState, serverLevel, blockPos, itemStack, bl);
-        AssimilatedSculk.alert(serverLevel, blockPos);
+        AssimilatedSculk.alert(serverLevel, blockPos, 1.0F);
     }
 }

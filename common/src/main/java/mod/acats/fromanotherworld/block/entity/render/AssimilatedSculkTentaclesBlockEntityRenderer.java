@@ -103,6 +103,8 @@ public class AssimilatedSculkTentaclesBlockEntityRenderer extends GeoBlockRender
                 renderType2 = SPIDER_GLOW;
             }
 
+            float scale = Mth.lerp(partialTick, animatable.prevClientScale, animatable.clientScale);
+
             GeoBone bone = bakedGeoModel.topLevelBones().get(0);
             Vec3 pos = lerpedPos(partialTick, i, animatable)
                     .subtract(
@@ -110,13 +112,16 @@ public class AssimilatedSculkTentaclesBlockEntityRenderer extends GeoBlockRender
                             animatable.getBlockPos().getY(),
                             animatable.getBlockPos().getZ()
                     ).add(-0.5D, 0, -0.5D)
-                    .multiply(-16, 16, 16);
+                    .multiply(-16.0F * scale, 16.0F * scale, 16.0F * scale);
 
             bone.setPosX((float) pos.x());
             bone.setPosY((float) pos.y());
             bone.setPosZ((float) pos.z());
             bone.setRotX(-lerpedPitch(partialTick, i, animatable));
             bone.setRotY(-lerpedYaw(partialTick, i, animatable) + (float)Math.PI);
+            bone.setScaleX(scale);
+            bone.setScaleY(scale);
+            bone.setScaleZ(scale);
 
             this.reRender(bakedGeoModel, poseStack, bufferSource, animatable, renderType1, bufferSource.getBuffer(renderType1), partialTick, packedLight, packedOverlay, 1.0F, 1.0F, 1.0F, 1.0F);
             this.reRender(bakedGeoModel, poseStack, bufferSource, animatable, renderType2, bufferSource.getBuffer(renderType2), partialTick, 15728640, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);

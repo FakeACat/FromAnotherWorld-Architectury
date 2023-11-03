@@ -1,5 +1,6 @@
 package mod.acats.fromanotherworld.block.entity;
 
+import mod.acats.fromanotherworld.block.interfaces.AssimilatedSculk;
 import mod.acats.fromanotherworld.block.spreading.AssimilatedSculkSpreader;
 import mod.acats.fromanotherworld.constants.FAWAnimations;
 import mod.acats.fromanotherworld.registry.BlockEntityRegistry;
@@ -24,6 +25,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -34,6 +36,7 @@ import java.util.List;
 public class AssimilatedSculkTentaclesBlockEntity extends AssimilatedSculkBlockEntity {
 
     public static final int TENTACLE_SEGMENTS = 18;
+    public static final int MAX_ACTIVE_TIME = 300;
     private final AssimilatedSculkSpreader simSculker = AssimilatedSculkSpreader.create();
 
     public Chain tentacle;
@@ -46,19 +49,25 @@ public class AssimilatedSculkTentaclesBlockEntity extends AssimilatedSculkBlockE
                 32, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 24, 24, 24, 24, 24);
         this.tentacle.updatePosition(pos, pos, pos, 360, true);
         this.target = null;
+        this.activeTime = MAX_ACTIVE_TIME;
+        this.scale = 0.0F;
     }
 
     private Vec3 desiredPos;
     private Vec3 desiredPos2;
     private float speed;
     private LivingEntity target;
+    public int activeTime;
+    private float scale;
 
     @Override
     public void serverTick(Level level, BlockPos blockPos, BlockState blockState) {
         simSculker.updateCursors(level, blockPos, level.getRandom(), true);
 
         if (BlockRegistry.ASSIMILATED_SCULK_TENTACLES.get().revealed(blockState)) {
-            this.revealedTick(level, blockPos);
+            this.revealedTick(level, blockPos, blockState);
+        } else {
+            this.scale = 0.0F;
         }
 
         if (level.getRandom().nextInt(2000) == 0) {
@@ -76,7 +85,14 @@ public class AssimilatedSculkTentaclesBlockEntity extends AssimilatedSculkBlockE
         level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), Block.UPDATE_ALL);
     }
 
-    private void revealedTick(Level level, BlockPos blockPos) {
+    private void revealedTick(Level level, BlockPos blockPos, BlockState blockState) {
+        this.activeTime--;
+        if (this.scale < 1.0F && this.activeTime > 20) {
+            this.scale += 0.05F;
+        }
+        if (this.activeTime == 0) {
+            level.setBlockAndUpdate(blockPos, blockState.setValue(AssimilatedSculk.REVEALED, false));
+        }
         Vec3 pos = new Vec3(blockPos.getX() + 0.5D, blockPos.getY() + 0.5D, blockPos.getZ() + 0.5D);
 
         if (level.getRandom().nextInt(20) == 0) {
@@ -97,14 +113,18 @@ public class AssimilatedSculkTentaclesBlockEntity extends AssimilatedSculkBlockE
 
         if (bl) {
             this.speed = 0;
-            if (this.desiredPos2.distanceToSqr(this.desiredPos) < 1.0D) {
-                this.desiredPos2 = new Vec3(
-                        (level.getRandom().nextDouble() - 0.5D) * 20.0D,
-                        3.0D + level.getRandom().nextDouble() * 7.0D,
-                        (level.getRandom().nextDouble() - 0.5D) * 20.0D
-                ).add(pos);
+            if (this.activeTime > 20) {
+                if (this.desiredPos2.distanceToSqr(this.desiredPos) < 1.0D) {
+                    this.desiredPos2 = new Vec3(
+                            (level.getRandom().nextDouble() - 0.5D) * 20.0D,
+                            3.0D + level.getRandom().nextDouble() * 7.0D,
+                            (level.getRandom().nextDouble() - 0.5D) * 20.0D
+                    ).add(pos);
+                }
+                this.desiredPos = lerpPos(0.02F, desiredPos, desiredPos2);
+            } else {
+                this.scale -= 0.05F;
             }
-            this.desiredPos = lerpPos(0.02F, desiredPos, desiredPos2);
         } else {
             if (this.speed > 0.04F) {
                 this.speed = 1.0F;
@@ -112,6 +132,7 @@ public class AssimilatedSculkTentaclesBlockEntity extends AssimilatedSculkBlockE
                 this.speed += 0.0005F;
             }
             this.desiredPos = lerpPos(speed, desiredPos.add(0.0D, 0.1D, 0.0D), target.position().add(0.0D, target.getBbHeight() / 2.0D, 0.0D));
+            this.activeTime = MAX_ACTIVE_TIME;
         }
 
         Vec3 tip = this.tentacle.updatePosition(
@@ -152,9 +173,16 @@ public class AssimilatedSculkTentaclesBlockEntity extends AssimilatedSculkBlockE
     public double[] z = new double[TENTACLE_SEGMENTS];
     public double[] prevZ = new double[TENTACLE_SEGMENTS];
 
+    public float clientScale;
+    public float prevClientScale;
+
+
+
     @Override
     public void clientTick(Level level, BlockPos blockPos, BlockState blockState) {
         if (!BlockRegistry.ASSIMILATED_SCULK_TENTACLES.get().revealed(blockState)) {
+            this.prevClientScale = 0;
+            this.clientScale = 0;
             return;
         }
         for (int i = 0; i < this.tentacle.segments.size(); i++) {
@@ -173,6 +201,8 @@ public class AssimilatedSculkTentaclesBlockEntity extends AssimilatedSculkBlockE
             prevZ[i] = z[i];
             z[i] = this.tentacle.segments.get(i).getTipPos().z();
         }
+        this.prevClientScale = this.clientScale;
+        this.clientScale = this.scale;
         Vec3 pos = this.tentacle.segments.get(0).getTipPos();
         BlockPos blockPos1 = new BlockPos(Mth.floor(pos.x()), Mth.floor(pos.y()), Mth.floor(pos.z()));
         BlockState blockState1 = level.getBlockState(blockPos1);
@@ -191,6 +221,7 @@ public class AssimilatedSculkTentaclesBlockEntity extends AssimilatedSculkBlockE
         compoundTag.putDouble("tip_x", desiredPos.x());
         compoundTag.putDouble("tip_y", desiredPos.y());
         compoundTag.putDouble("tip_z", desiredPos.z());
+        compoundTag.putFloat("scale", this.scale);
 
         this.tentacle.writeTo(compoundTag, "tentacle");
 
@@ -204,6 +235,7 @@ public class AssimilatedSculkTentaclesBlockEntity extends AssimilatedSculkBlockE
         super.load(compoundTag);
 
         this.desiredPos = new Vec3(compoundTag.getDouble("tip_x"), compoundTag.getDouble("tip_y"), compoundTag.getDouble("tip_z"));
+        this.scale = compoundTag.getFloat("scale");
 
         this.tentacle = Chain.readFrom(compoundTag, "tentacle");
 
@@ -219,5 +251,11 @@ public class AssimilatedSculkTentaclesBlockEntity extends AssimilatedSculkBlockE
     @Override
     public @NotNull CompoundTag getUpdateTag() {
         return this.saveWithoutMetadata();
+    }
+
+    // Not sure why forge needs this?
+    @SuppressWarnings("unused")
+    public AABB getRenderBoundingBox() {
+        return AABB.ofSize(Vec3.atCenterOf(this.getBlockPos()), 45, 45, 45);
     }
 }

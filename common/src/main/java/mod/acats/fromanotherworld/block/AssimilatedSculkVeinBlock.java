@@ -152,6 +152,10 @@ public class AssimilatedSculkVeinBlock extends SculkVeinBlock implements Assimil
         super.tick(blockState, serverLevel, blockPos, randomSource);
 
         AssimilatedSculk.assimilateSurroundingSculk(serverLevel, blockPos);
+
+        if (this.revealed(blockState) && serverLevel.getRandom().nextInt(REDISGUISE_CHANCE) == 0) {
+            serverLevel.setBlockAndUpdate(blockPos, blockState.setValue(REVEALED, false));
+        }
     }
 
     @Override
@@ -161,7 +165,7 @@ public class AssimilatedSculkVeinBlock extends SculkVeinBlock implements Assimil
     }
 
     @Override
-    public void reveal(Level level, BlockPos pos, BlockState blockState) {
+    public void reveal(Level level, BlockPos pos, BlockState blockState, float strength) {
         level.setBlock(pos, blockState.setValue(REVEALED, true), 3);
     }
 
@@ -181,7 +185,9 @@ public class AssimilatedSculkVeinBlock extends SculkVeinBlock implements Assimil
 
         public boolean stateCanBeReplaced(BlockGetter blockGetter, BlockPos blockPos, BlockPos blockPos2, Direction direction, BlockState blockState) {
             BlockState blockState2 = blockGetter.getBlockState(blockPos2.relative(direction));
-            if (!blockState2.is(BlockRegistry.ASSIMILATED_SCULK.get()) && !blockState2.is(Blocks.MOVING_PISTON)) {
+            if (!blockState2.is(BlockRegistry.ASSIMILATED_SCULK.get()) &&
+                    !blockState2.is(BlockRegistry.ASSIMILATED_SCULK_TENTACLES.get()) &&
+                    !blockState2.is(Blocks.MOVING_PISTON)) {
                 if (blockPos.distManhattan(blockPos2) == 2) {
                     BlockPos blockPos3 = blockPos.relative(direction.getOpposite());
                     if (blockGetter.getBlockState(blockPos3).isFaceSturdy(blockGetter, blockPos3, direction)) {

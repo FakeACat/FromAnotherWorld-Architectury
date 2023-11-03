@@ -2,9 +2,12 @@ package mod.acats.fromanotherworld.block;
 
 import mod.acats.fromanotherworld.block.entity.AssimilatedSculkBlockEntity;
 import mod.acats.fromanotherworld.block.interfaces.AssimilatedSculk;
+import mod.acats.fromanotherworld.entity.interfaces.SimSculkObservable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
@@ -72,9 +75,13 @@ public abstract class AssimilatedSculkSpecialBlock extends BaseEntityBlock imple
     }
 
     @Override
-    public void reveal(Level level, BlockPos pos, BlockState blockState) {
+    public void reveal(Level level, BlockPos pos, BlockState blockState, float strength) {
         level.setBlock(pos, setRevealed(blockState, true), 3);
-        AssimilatedSculk.alert(level, pos);
+        AssimilatedSculk.alert(level, pos, strength * 0.75F);
+    }
+
+    protected boolean canRedisguiseRandomly() {
+        return true;
     }
 
     @Override
@@ -82,11 +89,25 @@ public abstract class AssimilatedSculkSpecialBlock extends BaseEntityBlock imple
         super.tick(blockState, serverLevel, blockPos, randomSource);
 
         AssimilatedSculk.assimilateSurroundingSculk(serverLevel, blockPos);
+
+        if (this.revealed(blockState) && this.canRedisguiseRandomly() && serverLevel.getRandom().nextInt(REDISGUISE_CHANCE) == 0) {
+            serverLevel.setBlockAndUpdate(blockPos, blockState.setValue(REVEALED, false));
+        }
+    }
+
+    @Override
+    public void stepOn(Level level, BlockPos blockPos, BlockState blockState, Entity entity) {
+        if (entity instanceof Player) {
+            if (!this.revealed(blockState)) {
+                AssimilatedSculk.alert(level, blockPos, 1.0F);
+            }
+            ((SimSculkObservable) entity).faw$setObservationTime(60);
+        }
     }
 
     @Override
     public void spawnAfterBreak(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, ItemStack itemStack, boolean bl) {
         super.spawnAfterBreak(blockState, serverLevel, blockPos, itemStack, bl);
-        AssimilatedSculk.alert(serverLevel, blockPos);
+        AssimilatedSculk.alert(serverLevel, blockPos, 1.0F);
     }
 }

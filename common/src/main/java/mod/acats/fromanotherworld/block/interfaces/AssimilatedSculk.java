@@ -15,8 +15,9 @@ import java.util.Map;
 
 public interface AssimilatedSculk {
     BooleanProperty REVEALED = BooleanProperty.create("revealed");
-    static void alert(Level level, BlockPos blockPos){
-        SculkRevealer.create(level, blockPos, 0.1F + level.getRandom().nextFloat() * 0.1F, 60 + level.getRandom().nextInt(61));
+    int REDISGUISE_CHANCE = 3;
+    static void alert(Level level, BlockPos blockPos, float strength){
+        SculkRevealer.create(level, blockPos, (1.0F + level.getRandom().nextFloat()) * strength, 6, strength);
     }
 
     static void assimilateSurroundingSculk(Level level, BlockPos blockPos) {
@@ -50,7 +51,7 @@ public interface AssimilatedSculk {
         });
     }
 
-    void reveal(Level level, BlockPos pos, BlockState blockState);
+    void reveal(Level level, BlockPos pos, BlockState blockState, float strength);
     default boolean revealed(BlockState blockState) {
         return blockState.getValue(REVEALED);
     }

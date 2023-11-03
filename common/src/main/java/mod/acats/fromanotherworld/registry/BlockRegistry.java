@@ -88,7 +88,7 @@ public class BlockRegistry {
     public static final FALRegistryObject<AssimilatedSculkBramblesBlock> ASSIMILATED_SCULK_BRAMBLES = registerToTab(
             "assimilated_sculk_brambles",
             () -> new AssimilatedSculkBramblesBlock(BlockBehaviour.Properties.of().isValidSpawn(BlockRegistry::never).randomTicks().forceSolidOn().noCollission().noOcclusion()
-                    .mapColor(MapColor.COLOR_GRAY).strength(0.05F).sound(SoundType.GRASS).isViewBlocking(BlockRegistry::never).ignitedByLava().pushReaction(PushReaction.DESTROY).isRedstoneConductor(BlockRegistry::never))
+                    .mapColor(MapColor.COLOR_GRAY).instabreak().sound(SoundType.GRASS).isViewBlocking(BlockRegistry::never).ignitedByLava().pushReaction(PushReaction.DESTROY).isRedstoneConductor(BlockRegistry::never))
     );
 
     private static <B extends Block> FALRegistryObject<B> registerToTab(String id, Supplier<B> supplier) {

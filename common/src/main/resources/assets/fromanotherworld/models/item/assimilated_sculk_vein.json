@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "minecraft:block/sculk_vein"
+    "layer0": "fromanotherworld:block/sculk/assimilated_sculk_vein"
   }
 }

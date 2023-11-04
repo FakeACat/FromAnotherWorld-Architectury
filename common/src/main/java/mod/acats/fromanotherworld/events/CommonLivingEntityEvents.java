@@ -19,10 +19,7 @@ import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.entity.player.Player;
@@ -232,5 +229,15 @@ public class CommonLivingEntityEvents {
         }
         TransitionEntity.createFrom(entity);
         entity.discard();
+    }
+
+    public static void onSpawnChild(Mob parent1, Mob parent2, AgeableMob child) {
+        if (EntityUtilities.isThing(parent1) ||
+                EntityUtilities.isThing(parent2) ||
+                ((PossibleDisguisedThing) parent1).faw$getSupercellConcentration() > 0||
+                ((PossibleDisguisedThing) parent2).faw$getSupercellConcentration() > 0) {
+            ((PossibleDisguisedThing) child).faw$setAssimilated(true);
+            onAssimilation(child);
+        }
     }
 }

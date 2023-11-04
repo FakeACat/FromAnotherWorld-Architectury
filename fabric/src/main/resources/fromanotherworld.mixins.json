@@ -6,6 +6,7 @@
   "client": [
   ],
   "mixins": [
+    "AnimalMixin",
     "ItemMixin",
     "LivingEntityMixinFabric",
     "MobMixin"

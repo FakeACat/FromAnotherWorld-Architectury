@@ -50,7 +50,7 @@ public class AssimilatedSculkBramblesBlock extends Block {
     public void entityInside(BlockState blockState, Level level, BlockPos blockPos, Entity entity) {
         super.entityInside(blockState, level, blockPos, entity);
 
-        if (EntityUtilities.isThing(entity)) {
+        if (EntityUtilities.isThingAlly(entity)) {
             return;
         }
 

@@ -9,6 +9,7 @@ import mod.acats.fromanotherworld.constants.VariantID;
 import mod.acats.fromanotherworld.entity.goal.ThingTargetGoal;
 import mod.acats.fromanotherworld.entity.interfaces.CoordinatedThing;
 import mod.acats.fromanotherworld.entity.interfaces.MaybeThing;
+import mod.acats.fromanotherworld.entity.interfaces.PossibleDisguisedThing;
 import mod.acats.fromanotherworld.entity.navigation.ThingNavigation;
 import mod.acats.fromanotherworld.entity.projectile.NeedleEntity;
 import mod.acats.fromanotherworld.memory.Aggression;
@@ -221,6 +222,9 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing, Co
 
     @Override
     public boolean canAttack(LivingEntity target) {
+        if (this.shouldMergeOnAssimilate() && ((PossibleDisguisedThing) target).faw$getSupercellConcentration() > 0) {
+            return false;
+        }
         return Thing.hostileTowardsPossibleThreat(target, target == this.currentThreat) && super.canAttack(target);
     }
 

@@ -77,7 +77,8 @@ public class ImpostorDetectorItem extends Item {
         int things = EntityUtilities.numThingsInList(allEntities);
         SpawningManager spawningManager = SpawningManager.getSpawningManager((ServerLevel) world);
         msg(user, things + " Things");
-        msg(user, spawningManager.alienThingsToSpawn + " Alien Things waiting to spawn");
+        int waiting = spawningManager.numThingsToSpawn() + spawningManager.legacyAlienThingsToSpawn;
+        msg(user, waiting + " Things waiting to spawn");
     }
 
     private void chunkLoaders(Player user, Level world) {

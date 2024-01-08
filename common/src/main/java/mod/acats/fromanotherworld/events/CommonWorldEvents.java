@@ -16,7 +16,7 @@ public class CommonWorldEvents {
 
         if (world.getRandom().nextInt(300) == 0){
             SpawningManager spawningManager = SpawningManager.getSpawningManager(world);
-            spawningManager.alienThingSpawner(world);
+            spawningManager.thingRespawner(world);
         }
 
         if (world.getGameTime() % 1200 == 0){

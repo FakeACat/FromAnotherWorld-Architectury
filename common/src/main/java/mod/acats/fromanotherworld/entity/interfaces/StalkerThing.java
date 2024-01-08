@@ -32,4 +32,11 @@ public interface StalkerThing {
     default boolean isAcceptableStalkTarget(Player playerEntity){
         return playerEntity != null && !playerEntity.isCreative() && !playerEntity.isSpectator() && playerEntity.distanceToSqr((Entity) this) < HUNTING_RANGE_SQUARED;
     }
+
+    default void seesTargetFromDistance() {
+    }
+
+    default int errorDistance() {
+        return 64;
+    }
 }

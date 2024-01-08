@@ -139,7 +139,7 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing, Co
     public boolean canShootNeedles;
     public static final int HUNTING_RANGE = 128;
     public LivingEntity currentThreat;
-    private int timeSinceLastSeenTarget = 0;
+    protected int timeSinceLastSeenTarget = 0;
     private int alertSoundCooldown = 0;
     private boolean stopClimbing = false;
     private CompoundTag victim = null;

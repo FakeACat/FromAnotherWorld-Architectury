@@ -4,6 +4,7 @@ import mod.acats.fromanotherworld.config.Config;
 import mod.acats.fromanotherworld.constants.FAWAnimations;
 import mod.acats.fromanotherworld.entity.goal.*;
 import mod.acats.fromanotherworld.entity.interfaces.ImportantDeathMob;
+import mod.acats.fromanotherworld.entity.interfaces.RespawnableThing;
 import mod.acats.fromanotherworld.entity.interfaces.StalkerThing;
 import mod.acats.fromanotherworld.entity.projectile.AssimilationLiquidEntity;
 import mod.acats.fromanotherworld.entity.thing.Thing;
@@ -49,12 +50,17 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob {
+public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob, RespawnableThing {
     public AlienThing(EntityType<? extends AlienThing> entityType, Level world) {
         super(entityType, world);
         ((GroundPathNavigation)this.getNavigation()).setCanOpenDoors(true);
         this.adaptiveKnockbackResist = 0.0F;
-        this.timeSinceHitTarget = 0;
+        this.confidence = 0;
+        this.timeVulnerable = 0;
+        this.aggression = 0;
+        this.undergroundBias = true;
+        this.playerEncounters = 0;
+        this.encounteredPlayerThisTime = false;
     }
 
     private static final EntityDataAccessor<Integer> FORM;
@@ -62,10 +68,18 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
     private static final EntityDataAccessor<Integer> EMERGING;
     private static final EntityDataAccessor<Integer> BURROWING;
 
-    public boolean fleeing;
     public boolean bored;
     private boolean leaping;
-    private int timeSinceHitTarget;
+
+    private static final int MAX_CONFIDENCE = 600;
+    private int confidence;
+    private int timeVulnerable;
+    private static final int MAX_AGGRESSION = 144000;
+    private int aggression;
+    private boolean encounteredPlayerThisTime;
+    private int playerEncounters;
+
+    private boolean undergroundBias;
 
     private static final double DEFAULT_MOVEMENT_SPEED = 0.43D;
     private static final double DEFAULT_ATTACK_DAMAGE = 7.0D;
@@ -87,10 +101,9 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
     protected void registerGoals() {
         this.addThingTargets(true);
         this.goalSelector.addGoal(0, new AlienThingSwimGoal(this, 0.5F));
-        this.goalSelector.addGoal(1, new AlienThingFleeGoal(this));
-        this.goalSelector.addGoal(2, new OpenDoorGoal(this, true));
-        this.goalSelector.addGoal(3, new ThingAttackGoal(this, 1.0D, false));
-        this.goalSelector.addGoal(4, new StalkGoal(this));
+        this.goalSelector.addGoal(1, new OpenDoorGoal(this, true));
+        this.goalSelector.addGoal(2, new ThingAttackGoal(this, 1.0D, false));
+        this.goalSelector.addGoal(3, new StalkGoal(this));
     }
 
     public int getIdealForm(@Nullable Player p) {
@@ -140,7 +153,7 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
     private boolean isEmerging(){
         return this.entityData.get(EMERGING) > 0;
     }
-    public void tickEmerging(){
+    private void tickEmerging(){
         int emerging = this.entityData.get(EMERGING);
         if (emerging > EMERGE_TIME)
             emerging = -1;
@@ -161,9 +174,7 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
     private void leave(){
         if (!this.level().isClientSide()){
             SpawningManager spawningManager = SpawningManager.getSpawningManager((ServerLevel) this.level());
-            spawningManager.alienThingsToSpawn++;
-            spawningManager.setDirty();
-            this.discard();
+            spawningManager.removeAndRespawnLater(this);
         }
     }
 
@@ -211,13 +222,14 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
                 }
 
                 this.tickSpit();
+                this.tickLearning();
 
                 if (this.tickCount % 20 == 0){
                     if (this.getRandom().nextInt(5) == 0 && this.getForm() != this.getIdealForm(this.getTarget() instanceof Player p ? p : null)){
                         this.initiateSwitch();
                     }
 
-                    if (this.fleeing || this.bored) {
+                    if (this.bored) {
                         this.escape();
                     }
 
@@ -236,8 +248,6 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
                             this.level().setBlockAndUpdate(new BlockPos(x, y, z), Blocks.COBBLESTONE.defaultBlockState());
                         }
                     }
-
-                    this.updateGiveUpChase();
                 }
             }
 
@@ -247,16 +257,48 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
         super.customServerAiStep();
     }
 
-    private void updateGiveUpChase() {
-        if (this.getTarget() == null) {
-            this.timeSinceHitTarget--;
-        } else {
-            this.timeSinceHitTarget++;
+    private void tickLearning() {
+        if (EntityUtilities.isVulnerable(this) || this.getHealth() < this.getMaxHealth() * 0.6F) {
+            if (this.confidence < MAX_CONFIDENCE && this.level().getRandom().nextInt(4) != 0) {
+                this.confidence++;
+            }
+            this.timeVulnerable++;
+            if (this.timeVulnerable > this.confidence || (this.getForm() != 0 && !(this.getTarget() instanceof Player))) {
+                this.bored();
+            }
+        } else if (this.timeVulnerable > 0) {
+            this.timeVulnerable--;
         }
-        this.timeSinceHitTarget = Mth.clamp(this.timeSinceHitTarget, 0, 20);
-        if (this.timeSinceHitTarget == 20) {
-            this.bored();
+
+        if (this.aggression < MAX_AGGRESSION) {
+            this.aggression++;
         }
+
+        if (this.getTarget() instanceof Player) {
+            this.encounteredPlayerThisTime = true;
+            if (this.aggression < 12000 || this.playerEncounters < 2) {
+                this.bored();
+            }
+        }
+    }
+
+    private float aggressionFloat() {
+        return (float)this.aggression / (float)MAX_AGGRESSION;
+    }
+
+    @Override
+    public int maxHorizontalRange() {
+        return (int)Mth.lerp(this.aggressionFloat(), 100, 50);
+    }
+
+    @Override
+    public int verticalRange() {
+        return (int)Mth.lerp(this.aggressionFloat(), 80, 40);
+    }
+
+    @Override
+    public int verticalOffset() {
+        return undergroundBias ? 50 : 0;
     }
 
     private double randomSpread() {
@@ -303,6 +345,9 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
                 this.getRandom().nextInt(chance) == 0 &&
                 this.breakOrPlaceable(this.blockPosition()) &&
                 this.onGround()) {
+            if (this.getRandom().nextBoolean()) {
+                this.undergroundBias = false;
+            }
             for (BlockState blockState:
                     this.level().getBlockStates(this.getBoundingBox().inflate(24)).toList()) {
                 if (blockState.is(BlockRegistry.ASSIMILATED_SCULK_TENTACLES.get())) {
@@ -317,16 +362,6 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
         if (Config.WORLD_CONFIG.alienChunkLoading.get()) {
             FAWChunkLoader.create((ServerLevel) this.level(), (int) this.getX(), (int) this.getZ(), 5, 2);
         }
-    }
-
-    @Override
-    public boolean canClimb() {
-        return super.canClimb() && !this.fleeing;
-    }
-
-    @Override
-    public boolean onClimbable() {
-        return super.onClimbable() && !this.fleeing;
     }
 
     @Override
@@ -498,7 +533,7 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
     }
 
     private <E extends GeoEntity> PlayState ttfawPredicate(AnimationState<E> event){
-        if (this.getForm() == 1 && !this.isThingFrozen() && event.isMoving() && !this.isUnderWater()){
+        if (this.getForm() == 1 && !this.isThingFrozen() && event.isMoving() && !this.isUnderWater() && !this.burrowingOrEmerging()){
             if (this.isAggressive()){
                 event.getController().setAnimation(RawAnimation.begin().thenPlay("move.arms_chase"));
             }
@@ -519,7 +554,7 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
 
     @Override
     public boolean rotateWhenClimbing() {
-        return this.getForm() == 2 && !this.fleeing;
+        return this.getForm() == 2;
     }
 
     @Override
@@ -531,9 +566,8 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
     public void doEnchantDamageEffects(LivingEntity livingEntity, Entity entity) {
         if (!entity.isAlive() && entity instanceof Player) { // Hopefully this should prevent it from spawnkilling
             this.bored();
+            this.aggression /= 2;
         }
-
-        this.timeSinceHitTarget = 0;
 
         super.doEnchantDamageEffects(livingEntity, entity);
     }
@@ -541,23 +575,33 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
     @Override
     public void addAdditionalSaveData(CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
-        nbt.putBoolean("Fleeing", this.fleeing);
         nbt.putInt("Form", this.getForm());
         nbt.putInt("SwitchProgress", this.getSwitchProgress());
         nbt.putInt("Emerging", this.entityData.get(EMERGING));
         nbt.putInt("Burrowing", this.entityData.get(BURROWING));
         nbt.putBoolean("Bored", this.bored);
+
+        nbt.putInt("Confidence", this.confidence);
+        nbt.putInt("TimeVulnerable", this.timeVulnerable);
+        nbt.putInt("Aggression", this.aggression);
+        nbt.putBoolean("EncounteredPlayerThisTime", this.encounteredPlayerThisTime);
+        nbt.putInt("PlayerEncounters", this.playerEncounters);
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
-        this.fleeing = nbt.getBoolean("Fleeing");
         this.setForm(nbt.getInt("Form"));
         this.setSwitchProgress(nbt.getInt("SwitchProgress"));
         this.entityData.set(EMERGING, nbt.getInt("Emerging"));
         this.entityData.set(BURROWING, nbt.getInt("Burrowing"));
         this.bored = nbt.getBoolean("Bored");
+
+        this.confidence = nbt.getInt("Confidence");
+        this.timeVulnerable = nbt.getInt("TimeVulnerable");
+        this.aggression = nbt.getInt("Aggression");
+        this.encounteredPlayerThisTime = nbt.getBoolean("EncounteredPlayerThisTime");
+        this.playerEncounters = nbt.getInt("PlayerEncounters");
     }
 
     @Override
@@ -579,6 +623,42 @@ public class AlienThing extends Thing implements StalkerThing, ImportantDeathMob
     @Override
     public BurrowType getBurrowType() {
         return Config.DIFFICULTY_CONFIG.burrowing.get() ? BurrowType.CAN_BURROW : BurrowType.CANNOT_BURROW;
+    }
+
+    @Override
+    public void preAttemptRespawn(Player spawnOnPlayer) {
+        this.tickEmerging();
+    }
+
+    @Override
+    public void postRespawn(Player spawnOnPlayer) {
+        this.changeForm(this.getIdealForm(spawnOnPlayer));
+
+        this.heal(this.getMaxHealth());
+        this.setSwitchProgress(0);
+        this.entityData.set(BURROWING, 0);
+        this.bored = false;
+        if (!this.undergroundBias && this.getRandom().nextInt(10) == 0) {
+            this.undergroundBias = true;
+        }
+        if (this.encounteredPlayerThisTime) {
+            this.encounteredPlayerThisTime = false;
+            this.playerEncounters++;
+        }
+    }
+
+    @Override
+    public void seesTargetFromDistance() {
+        this.timeSinceLastSeenTarget = 0;
+
+        if (this.getRandom().nextInt(200) == 0 && this.aggression > 36000) {
+            this.getNavigation().moveTo(this.getStalkTarget(), 1.5D);
+        }
+    }
+
+    @Override
+    public int errorDistance() {
+        return (int) (128.0F - 128.0F * this.aggressionFloat());
     }
 
     static {

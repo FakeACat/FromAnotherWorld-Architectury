@@ -1,10 +1,11 @@
 package mod.acats.fromanotherworld.config;
 
-import mod.acats.fromanotherlibrary.config.FALConfig;
+import mod.acats.fromanotherlibrary.config.v2.ModConfig;
+import mod.acats.fromanotherlibrary.config.v2.properties.BooleanProperty;
 
-public class WorldConfig extends FALConfig {
+public class WorldConfig extends ModConfig {
     @Override
-    protected String name() {
+    public String name() {
         return "world";
     }
 
@@ -13,16 +14,10 @@ public class WorldConfig extends FALConfig {
         return 0;
     }
 
-    public final FALConfigBooleanProperty alienChunkLoading = new FALConfigBooleanProperty(
+    public final BooleanProperty alienChunkLoading = addProperty(new BooleanProperty(
             "alien_thing_chunk_loading",
             "Should the Alien Thing be able to keep chunks around it loaded?\nMay cause issues with other mods that load chunks.",
-            true
-    );
-
-    @Override
-    protected FALConfigProperty<?>[] properties() {
-        return new FALConfigProperty[] {
-                this.alienChunkLoading
-        };
-    }
+            true,
+            false
+    ));
 }

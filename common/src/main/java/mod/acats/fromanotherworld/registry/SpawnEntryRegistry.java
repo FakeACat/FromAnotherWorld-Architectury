@@ -1,6 +1,6 @@
 package mod.acats.fromanotherworld.registry;
 
-import mod.acats.fromanotherlibrary.config.FALConfig;
+import mod.acats.fromanotherlibrary.config.v2.SpawnValues;
 import mod.acats.fromanotherworld.config.Config;
 import mod.acats.fromanotherworld.config.SpawningConfig;
 import mod.acats.fromanotherworld.entity.thing.Thing;
@@ -20,11 +20,11 @@ public class SpawnEntryRegistry {
     public static void register(){
         SpawningConfig config = Config.SPAWNING_CONFIG;
         if (config.enabled.get()){
-            for (SpawningConfig.Entry<?> entry:
-                 config.entries) {
-                FALConfig.FALConfigSpawnEntryProperty property = entry.configProperty;
-                if (property.get() && property.getWeight() > 0 && property.getMax() > 0){
-                    addThing(entry.supplier, property.getWeight(), property.getMin(), property.getMax());
+            for (SpawningConfig.SpawnEntry<?> entry:
+                 config.spawnEntries) {
+                SpawnValues property = entry.values().get();
+                if (property.enabled() && property.weight() > 0 && property.groupMin() > 0){
+                    addThing(entry.typeSupplier(), property.weight(), property.groupMin(), property.groupMax());
                 }
             }
         }

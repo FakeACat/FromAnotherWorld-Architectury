@@ -1,5 +1,6 @@
 package mod.acats.fromanotherworld;
 
+import mod.acats.fromanotherlibrary.config.v2.ModConfig;
 import mod.acats.fromanotherlibrary.registry.CommonMod;
 import mod.acats.fromanotherlibrary.registry.FALRegister;
 import mod.acats.fromanotherlibrary.registry.ResourcePackLoader;
@@ -21,7 +22,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -107,7 +107,16 @@ public class FromAnotherWorld implements CommonMod {
     }
 
     @Override
-    public void loadConfigs(File file) {
-        Config.load(file);
+    public Optional<ModConfig[]> getConfigs() {
+        return Optional.of(new ModConfig[] {
+                Config.ASSIMILATED_SCULK_CONFIG,
+                Config.COMPATIBILITY_CONFIG,
+                Config.DIFFICULTY_CONFIG,
+                Config.EFFECT_CONFIG,
+                Config.EVENT_CONFIG,
+                Config.GORE_CONFIG,
+                Config.SPAWNING_CONFIG,
+                Config.WORLD_CONFIG
+        });
     }
 }

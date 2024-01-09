@@ -106,5 +106,76 @@
 
   "fromanotherworld.announcement.defeated": " has been defeated!",
 
-  "falresourcepack.fromanotherworld.programmer_art": "FAW: Programmer Art"
+  "falresourcepack.fromanotherworld.programmer_art": "FAW: Programmer Art",
+
+  "gui.fromanotherworld.config.name": "From Another World Config Files",
+
+  "gui.fromanotherworld.config.assimilated_sculk": "Assimilated Sculk",
+  "gui.fromanotherworld.config.assimilated_sculk.reveal_from_detecting_mobs": "Reveal From Detecting Mobs",
+  "gui.fromanotherworld.config.assimilated_sculk.tentacle_view_range": "Tentacle Render Distance",
+  "gui.fromanotherworld.config.assimilated_sculk.alien_assimilated_sculk_placement": "Alien Thing Placement Frequency",
+
+  "gui.fromanotherworld.config.mod_compat": "Mod Compatibility",
+  "gui.fromanotherworld.config.mod_compat.fight_fungus": "Fight Fungal Infection: Spore",
+  "gui.fromanotherworld.config.mod_compat.fight_sculk": "Fight Sculk Horde",
+  "gui.fromanotherworld.config.mod_compat.xeno_allies": "Xenomorphs Are Allies",
+
+  "gui.fromanotherworld.config.difficulty": "Difficulty",
+  "gui.fromanotherworld.config.difficulty.special_behaviour_rarity": "Special Behaviour Rarity",
+  "gui.fromanotherworld.config.difficulty.max_miniboss_tier": "Max. Miniboss Tier",
+  "gui.fromanotherworld.config.difficulty.crawler_merge_chance": "Crawler Merge Chance",
+  "gui.fromanotherworld.config.difficulty.juliette_thing_merge_chance": "Juliette Thing Merge Chance",
+  "gui.fromanotherworld.config.difficulty.palmer_thing_merge_chance": "Palmer Thing Merge Chance",
+  "gui.fromanotherworld.config.difficulty.split_face_merge_chance": "Split Face Merge Chance",
+  "gui.fromanotherworld.config.difficulty.blair_thing_merge_chance": "Blair Thing Merge Chance",
+  "gui.fromanotherworld.config.difficulty.dogbeast_spitter_merge_chance": "DogBeast Spitter Merge Chance",
+  "gui.fromanotherworld.config.difficulty.dogbeast_merge_chance": "DogBeast Merge Chance",
+  "gui.fromanotherworld.config.difficulty.impaler_merge_chance": "Impaler Merge Chance",
+  "gui.fromanotherworld.config.difficulty.prowler_merge_chance": "Prowler Merge Chance",
+  "gui.fromanotherworld.config.difficulty.beast_merge_chance": "Beast Merge Chance",
+  "gui.fromanotherworld.config.difficulty.burrowing": "Burrowing",
+  "gui.fromanotherworld.config.difficulty.max_griefing_hardness": "Max. Griefing Hardness",
+  "gui.fromanotherworld.config.difficulty.revealed_damage_multiplier": "Revealed Damage Multiplier",
+  "gui.fromanotherworld.config.difficulty.fodder_damage_multiplier": "Fodder Damage Multiplier",
+  "gui.fromanotherworld.config.difficulty.split_damage_multiplier": "Split Damage Multiplier",
+  "gui.fromanotherworld.config.difficulty.standard_damage_multiplier": "Standard Damage Multiplier",
+  "gui.fromanotherworld.config.difficulty.elite_damage_multiplier": "Elite Damage Multiplier",
+  "gui.fromanotherworld.config.difficulty.merged_damage_multiplier": "Merged Damage Multiplier",
+  "gui.fromanotherworld.config.difficulty.miniboss_damage_multiplier": "Miniboss Damage Multiplier",
+  "gui.fromanotherworld.config.difficulty.special_miniboss_damage_multiplier": "Special Miniboss Damage Multiplier",
+
+  "gui.fromanotherworld.config.effects": "Effects",
+  "gui.fromanotherworld.config.effects.regen_cancelling": "Regeneration Cancelling",
+  "gui.fromanotherworld.config.effects.thing_immune": "Thing Immune",
+
+  "gui.fromanotherworld.config.events": "Events",
+  "gui.fromanotherworld.config.events.enabled": "Enabled",
+  "gui.fromanotherworld.config.events.first_event_day": "First Event Day",
+  "gui.fromanotherworld.config.events.min_cooldown": "Min. Event Cooldown",
+  "gui.fromanotherworld.config.events.max_cooldown": "Max. Event Cooldown",
+
+  "gui.fromanotherworld.config.gore": "Gore",
+  "gui.fromanotherworld.config.gore.enabled": "Enabled",
+  "gui.fromanotherworld.config.gore.wall_palmer_chance": "Wall Palmer Chance",
+  "gui.fromanotherworld.config.gore.tunnel_gore_time": "Tunnel Gore Time",
+
+  "gui.fromanotherworld.config.spawning": "Spawning",
+  "gui.fromanotherworld.config.spawning.enabled": "Enabled",
+  "gui.fromanotherworld.config.spawning.first_spawning_day": "First Spawning Day",
+  "gui.fromanotherworld.config.spawning.failure_chance": "Failure Chance",
+  "gui.fromanotherworld.config.spawning.blood_crawler": "Blood Crawler",
+  "gui.fromanotherworld.config.spawning.crawler": "Crawler",
+  "gui.fromanotherworld.config.spawning.juliette_thing": "Juliette Thing",
+  "gui.fromanotherworld.config.spawning.palmer_thing": "Palmer Thing",
+  "gui.fromanotherworld.config.spawning.split_face": "Split Face",
+  "gui.fromanotherworld.config.spawning.blair_thing": "Blair Thing",
+  "gui.fromanotherworld.config.spawning.dogbeast_spitter": "DogBeast Spitter",
+  "gui.fromanotherworld.config.spawning.dogbeast": "DogBeast",
+  "gui.fromanotherworld.config.spawning.impaler": "Impaler",
+  "gui.fromanotherworld.config.spawning.prowler": "Prowler",
+  "gui.fromanotherworld.config.spawning.beast": "Beast",
+  "gui.fromanotherworld.config.spawning.alien_thing": "Alien Thing",
+
+  "gui.fromanotherworld.config.world": "World",
+  "gui.fromanotherworld.config.world.alien_thing_chunk_loading": "Alien Thing Chunk Loading"
 }

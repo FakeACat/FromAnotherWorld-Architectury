@@ -4,7 +4,6 @@ import mod.acats.fromanotherworld.block.interfaces.AssimilatedSculk;
 import mod.acats.fromanotherworld.block.interfaces.Gore;
 import mod.acats.fromanotherworld.constants.VariantID;
 import mod.acats.fromanotherworld.entity.thing.Thing;
-import mod.acats.fromanotherworld.memory.GlobalThingMemory;
 import mod.acats.fromanotherworld.registry.EntityRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -74,16 +73,6 @@ public class WallPalmerBlock extends FleshBlock implements Gore {
         if (serverLevel.getNearestPlayer(blockPos.getX(), blockPos.getY(), blockPos.getZ(), 16, true) != null){
             this.activate(serverLevel, blockPos);
             return;
-        }
-
-        if (serverLevel.getRandom().nextInt(16) == 0) {
-            GlobalThingMemory globalThingMemory = GlobalThingMemory.getGlobalThingMemory(serverLevel);
-            globalThingMemory.closestBase(blockPos.getX(), blockPos.getY(), blockPos.getZ()).ifPresentOrElse(
-                    thingBaseOfOperations -> {
-                        if (thingBaseOfOperations.director.getHunger().activateHibernating) {
-                            this.activate(serverLevel, blockPos);
-                        }},
-                    () -> this.activate(serverLevel, blockPos));
         }
 
         AssimilatedSculk.assimilateSurroundingSculk(serverLevel, blockPos);

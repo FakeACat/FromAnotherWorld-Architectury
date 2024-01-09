@@ -1,10 +1,11 @@
 package mod.acats.fromanotherworld.config;
 
-import mod.acats.fromanotherlibrary.config.FALConfig;
+import mod.acats.fromanotherlibrary.config.v2.ModConfig;
+import mod.acats.fromanotherlibrary.config.v2.properties.ArrayProperty;
 
-public class EffectConfig extends FALConfig {
+public class EffectConfig extends ModConfig {
     @Override
-    protected String name() {
+    public String name() {
         return "effects";
     }
 
@@ -13,30 +14,24 @@ public class EffectConfig extends FALConfig {
         return 1;
     }
 
-    public final FALConfigArrayProperty regenCancelling = new FALConfigArrayProperty(
+    public final ArrayProperty regenCancelling = addProperty(new ArrayProperty(
             "regen_cancelling",
             "Effects that prevent Things from resisting damage and healing.",
             new String[]{
                     "gigeresque:acid",
                     "minecraft:wither",
                     "alexscaves:irradiated"
-            }
-    );
+            },
+            false
+    ));
 
-    public final FALConfigArrayProperty thingImmune = new FALConfigArrayProperty(
+    public final ArrayProperty thingImmune = addProperty(new ArrayProperty(
             "thing_immune",
             "Effects that cannot be applied to Things.",
             new String[]{
                     "minecraft:poison",
                     "spore:*"
-            }
-    );
-
-    @Override
-    protected FALConfigProperty<?>[] properties() {
-        return new FALConfigProperty[]{
-                this.regenCancelling,
-                this.thingImmune
-        };
-    }
+            },
+            false
+    ));
 }

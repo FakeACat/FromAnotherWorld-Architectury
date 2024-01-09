@@ -1,6 +1,6 @@
 package mod.acats.fromanotherworld.entity.thing;
 
-import mod.acats.fromanotherlibrary.config.FALConfig;
+import mod.acats.fromanotherlibrary.config.v2.properties.FloatProperty;
 import mod.acats.fromanotherworld.FromAnotherWorld;
 import mod.acats.fromanotherworld.block.CorpseBlock;
 import mod.acats.fromanotherworld.block.entity.TunnelBlockEntity;
@@ -863,14 +863,14 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing, Co
                 50
         );
 
-        ThingCategory(boolean canHaveSpecialAbilities, FALConfig.FALConfigFloatProperty damageMultiplierWhenNotBurning, int xpReward){
+        ThingCategory(boolean canHaveSpecialAbilities, FloatProperty damageMultiplierWhenNotBurning, int xpReward){
             this.canHaveSpecialAbilities = canHaveSpecialAbilities;
             this.damageMultiplierWhenNotBurning = damageMultiplierWhenNotBurning;
             this.xpReward = xpReward;
         }
 
         private final boolean canHaveSpecialAbilities;
-        private final FALConfig.FALConfigFloatProperty damageMultiplierWhenNotBurning;
+        private final FloatProperty damageMultiplierWhenNotBurning;
         private final int xpReward;
 
         public boolean canHaveSpecialAbilities(){

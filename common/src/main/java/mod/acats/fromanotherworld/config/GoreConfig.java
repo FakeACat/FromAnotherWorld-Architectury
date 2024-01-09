@@ -1,11 +1,13 @@
 package mod.acats.fromanotherworld.config;
 
-import mod.acats.fromanotherlibrary.config.FALConfig;
+import mod.acats.fromanotherlibrary.config.v2.ModConfig;
+import mod.acats.fromanotherlibrary.config.v2.properties.BooleanProperty;
+import mod.acats.fromanotherlibrary.config.v2.properties.IntegerProperty;
 import mod.acats.fromanotherworld.constants.TimeInTicks;
 
-public class GoreConfig extends FALConfig {
+public class GoreConfig extends ModConfig {
     @Override
-    protected String name() {
+    public String name() {
         return "gore";
     }
 
@@ -14,30 +16,24 @@ public class GoreConfig extends FALConfig {
         return 1;
     }
 
-    public final FALConfigBooleanProperty enabled = new FALConfigBooleanProperty(
+    public final BooleanProperty enabled = addProperty(new BooleanProperty(
             "enabled",
             "Should corpses that spread gore be placed when Things are killed?",
-            true
-    );
+            true,
+            false
+    ));
 
-    public final FALConfigIntegerProperty wallPalmerChance = new FALConfigIntegerProperty(
+    public final IntegerProperty wallPalmerChance = addProperty(new IntegerProperty(
             "wall_palmer_chance",
             "1 in this number chance for any wall tentacle block with sufficient support to instead be a wall palmer.",
-            10
-    );
+            10,
+            false
+    ));
 
-    public final FALConfigIntegerProperty tunnelGoreTime = new FALConfigIntegerProperty(
+    public final IntegerProperty tunnelGoreTime = addProperty(new IntegerProperty(
             "tunnel_gore_time",
             "Minimum age of a tunnel block in ticks required for it to start spreading gore blocks.\nSet to a negative value to disable.",
-            TimeInTicks.HOUR
-    );
-
-    @Override
-    protected FALConfigProperty<?>[] properties() {
-        return new FALConfigProperty[]{
-                this.enabled,
-                this.wallPalmerChance,
-                this.tunnelGoreTime
-        };
-    }
+            TimeInTicks.HOUR,
+            false
+    ));
 }

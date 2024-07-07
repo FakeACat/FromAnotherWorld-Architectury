@@ -1,5 +1,6 @@
 package mod.acats.fromanotherworld.block.interfaces;
 
+import mod.acats.fromanotherworld.config.Config;
 import mod.acats.fromanotherworld.entity.misc.SculkRevealer;
 import mod.acats.fromanotherworld.registry.BlockRegistry;
 import mod.acats.fromanotherworld.utilities.BlockUtilities;
@@ -21,6 +22,10 @@ public interface AssimilatedSculk {
     }
 
     static void assimilateSurroundingSculk(Level level, BlockPos blockPos) {
+        if (!Config.ASSIMILATED_SCULK_CONFIG.enabled.get()) {
+            return;
+        }
+
         BlockUtilities.forEachBlockInCubeCentredAt(blockPos, 1, pos -> {
 
             if (level.getRandom().nextInt(5) == 0) {

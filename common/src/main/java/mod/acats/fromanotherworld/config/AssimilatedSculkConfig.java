@@ -12,8 +12,16 @@ public class AssimilatedSculkConfig extends ModConfig {
 
     @Override
     protected int version() {
-        return 2;
+        return 3;
     }
+
+    public final BooleanProperty enabled = addProperty(new BooleanProperty(
+            "enabled",
+            "Should assimilated sculk be enabled?\n" +
+                    "Disabling does not remove existing assimilated sculk, however it does stop it from spreading",
+            false,
+            false
+    ));
 
     public final BooleanProperty revealFromMobs = addProperty(new BooleanProperty(
             "reveal_from_detecting_mobs",

@@ -12,6 +12,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import mod.acats.fromanotherworld.block.AssimilatedSculkVeinBlock;
 import mod.acats.fromanotherworld.block.interfaces.AssimilatedSculkBehaviour;
+import mod.acats.fromanotherworld.config.Config;
 import mod.acats.fromanotherworld.tags.BlockTags;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
@@ -133,9 +134,7 @@ public class AssimilatedSculkSpreader {
         DataResult<Tag> var10000 = AssimilatedChargeCursor.CODEC.listOf().encodeStart(NbtOps.INSTANCE, this.cursors);
         Logger var10001 = LOGGER;
         Objects.requireNonNull(var10001);
-        var10000.resultOrPartial(var10001::error).ifPresent((tag) -> {
-            compoundTag.put("cursors", tag);
-        });
+        var10000.resultOrPartial(var10001::error).ifPresent((tag) -> compoundTag.put("cursors", tag));
     }
 
     public void addCursors(BlockPos blockPos, int i) {
@@ -148,6 +147,10 @@ public class AssimilatedSculkSpreader {
     }
 
     private void addCursor(AssimilatedChargeCursor chargeCursor) {
+        if (!Config.ASSIMILATED_SCULK_CONFIG.enabled.get()) {
+            return;
+        }
+
         if (this.cursors.size() < MAX_CURSORS) {
             this.cursors.add(chargeCursor);
         }

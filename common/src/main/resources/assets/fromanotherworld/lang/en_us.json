@@ -114,6 +114,7 @@
   "gui.fromanotherworld.config.assimilated_sculk.reveal_from_detecting_mobs": "Reveal From Detecting Mobs",
   "gui.fromanotherworld.config.assimilated_sculk.tentacle_view_range": "Tentacle Render Distance",
   "gui.fromanotherworld.config.assimilated_sculk.alien_assimilated_sculk_placement": "Alien Thing Placement Frequency",
+  "gui.fromanotherworld.config.assimilated_sculk.enabled": "Enabled",
 
   "gui.fromanotherworld.config.mod_compat": "Mod Compatibility",
   "gui.fromanotherworld.config.mod_compat.fight_fungus": "Fight Fungal Infection: Spore",

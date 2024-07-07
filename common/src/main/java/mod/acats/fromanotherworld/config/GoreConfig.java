@@ -13,13 +13,27 @@ public class GoreConfig extends ModConfig {
 
     @Override
     protected int version() {
-        return 1;
+        return 2;
     }
 
-    public final BooleanProperty enabled = addProperty(new BooleanProperty(
-            "enabled",
+    public final BooleanProperty corpsesEnabled = addProperty(new BooleanProperty(
+            "corpses_enabled",
             "Should corpses that spread gore be placed when Things are killed?",
             true,
+            false
+    ));
+
+    public final BooleanProperty sprawlingTentaclesEnabled = addProperty(new BooleanProperty(
+            "sprawling_tentacles_enabled",
+            "Disabling does not remove existing sprawling tentacles, however it does stop them from spreading",
+            false,
+            false
+    ));
+
+    public final BooleanProperty disguisedTendrilsEnabled = addProperty(new BooleanProperty(
+            "disguised_tendrils_enabled",
+            "Disabling does not remove existing disguised tendrils, however it does stop them from spreading",
+            false,
             false
     ));
 

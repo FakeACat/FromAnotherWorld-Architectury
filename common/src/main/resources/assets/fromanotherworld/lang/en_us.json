@@ -156,9 +156,11 @@
   "gui.fromanotherworld.config.events.max_cooldown": "Max. Event Cooldown",
 
   "gui.fromanotherworld.config.gore": "Gore",
-  "gui.fromanotherworld.config.gore.enabled": "Enabled",
+  "gui.fromanotherworld.config.gore.corpses_enabled": "Corpses Enabled",
   "gui.fromanotherworld.config.gore.wall_palmer_chance": "Wall Palmer Chance",
   "gui.fromanotherworld.config.gore.tunnel_gore_time": "Tunnel Gore Time",
+  "gui.fromanotherworld.config.gore.sprawling_tentacles_enabled": "Sprawling Tentacles Enabled",
+  "gui.fromanotherworld.config.gore.disguised_tendrils_enabled": "Disguised Tendrils Enabled",
 
   "gui.fromanotherworld.config.spawning": "Spawning",
   "gui.fromanotherworld.config.spawning.enabled": "Enabled",

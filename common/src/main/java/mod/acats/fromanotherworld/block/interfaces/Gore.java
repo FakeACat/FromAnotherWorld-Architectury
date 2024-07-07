@@ -44,6 +44,10 @@ public interface Gore {
     }
 
     default void attemptPlaceSurfaceGrowth(Level level, BlockPos pos) {
+        if (!Config.GORE_CONFIG.disguisedTendrilsEnabled.get()) {
+            return;
+        }
+
         if (!level.getBlockState(pos).canBeReplaced() || !level.getBlockState(pos).getFluidState().isEmpty()) {
             return;
         }
@@ -65,6 +69,10 @@ public interface Gore {
     }
 
     static void attemptPlaceUndergroundGrowth(Level level, BlockPos pos, Direction surface){
+        if (!Config.GORE_CONFIG.sprawlingTentaclesEnabled.get()) {
+            return;
+        }
+
         BlockState state = TentacleBlock.correctConnectionStates(level, pos, BlockRegistry.TENTACLE.get().defaultBlockState().setValue(TentacleBlock.SURFACE, surface));
 
         var ref = new Object() {

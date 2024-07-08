@@ -37,7 +37,7 @@ public interface Gore {
 
     default void spreadSurface(Level level, BlockPos pos, BlockState blockState) {
         BlockUtilities.forEachBlockInCubeCentredAt(pos, 1, blockPos -> {
-            if (level.getRandom().nextInt(3) == 0) {
+            if (level.getRandom().nextInt(Config.BLOCK_CONFIG.disguisedTendrilsSpreadChance.get()) == 0) {
                 this.attemptPlaceSurfaceGrowth(level, blockPos);
             }
         });
@@ -62,7 +62,7 @@ public interface Gore {
         Direction surface = surface(level, blockState);
 
         forEachPossibleTentacleLocation(pos, surface, pos2 -> {
-            if (level.getRandom().nextInt(3) == 0) {
+            if (level.getRandom().nextInt(Config.BLOCK_CONFIG.sprawlingTentaclesSpreadChance.get()) == 0) {
                 attemptPlaceUndergroundGrowth(level, pos2, level.getRandom().nextInt(10) == 0 ? Direction.getRandom(level.getRandom()) : surface);
             }
         });

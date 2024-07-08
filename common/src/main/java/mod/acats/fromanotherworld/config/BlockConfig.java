@@ -26,7 +26,14 @@ public class BlockConfig extends ModConfig {
     public final BooleanProperty sprawlingTentaclesEnabled = addProperty(new BooleanProperty(
             "sprawling_tentacles_enabled",
             "Disabling does not remove existing sprawling tentacles, however it does stop them from spreading",
-            false,
+            true,
+            false
+    ));
+
+    public final IntegerProperty sprawlingTentaclesSpreadChance = addProperty(new IntegerProperty(
+            "sprawling_tentacles_spread_chance",
+            "1 in this number chance for sprawling tentacles to attempt to spread every random tick",
+            6,
             false
     ));
 
@@ -34,6 +41,13 @@ public class BlockConfig extends ModConfig {
             "disguised_tendrils_enabled",
             "Disabling does not remove existing disguised tendrils, however it does stop them from spreading",
             false,
+            false
+    ));
+
+    public final IntegerProperty disguisedTendrilsSpreadChance = addProperty(new IntegerProperty(
+            "disguised_tendrils_spread_chance",
+            "1 in this number chance for disguised tendrils to attempt to spread every random tick",
+            6,
             false
     ));
 

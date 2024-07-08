@@ -162,6 +162,8 @@
   "gui.fromanotherworld.config.block.sprawling_tentacles_enabled": "Sprawling Tentacles Enabled",
   "gui.fromanotherworld.config.block.disguised_tendrils_enabled": "Disguised Tendrils Enabled",
   "gui.fromanotherworld.config.block.tunnels_enabled": "Tunnels Enabled",
+  "gui.fromanotherworld.config.block.sprawling_tentacles_spread_chance": "Tentacles Spread Chance",
+  "gui.fromanotherworld.config.block.disguised_tendrils_spread_chance": "Tendrils Spread Chance",
 
   "gui.fromanotherworld.config.spawning": "Spawning",
   "gui.fromanotherworld.config.spawning.enabled": "Enabled",

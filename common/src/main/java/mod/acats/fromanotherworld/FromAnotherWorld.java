@@ -114,7 +114,7 @@ public class FromAnotherWorld implements CommonMod {
                 Config.DIFFICULTY_CONFIG,
                 Config.EFFECT_CONFIG,
                 Config.EVENT_CONFIG,
-                Config.GORE_CONFIG,
+                Config.BLOCK_CONFIG,
                 Config.SPAWNING_CONFIG,
                 Config.WORLD_CONFIG
         });

@@ -77,7 +77,7 @@ public class TunnelBlockEntity extends BlockEntity implements GeoBlockEntity {
                 level.setBlockAndUpdate(blockPos, BlockRegistry.TUNNEL_BLOCK.get().defaultBlockState().setValue(TunnelBlock.TENTACLE_STATE, TunnelBlock.TentacleState.ACTIVE).setValue(TunnelBlock.WATERLOGGED, blockState.getValue(TunnelBlock.WATERLOGGED)));
             }
 
-            int minGoreAge = Config.GORE_CONFIG.tunnelGoreTime.get();
+            int minGoreAge = Config.BLOCK_CONFIG.tunnelGoreTime.get();
             if (minGoreAge > -1 && blockEntity.age > minGoreAge && level.getRandom().nextInt(300) == 0) {
                 Gore gore = (Gore) blockState.getBlock();
                 gore.spread(level, blockPos, blockState);

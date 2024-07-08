@@ -610,7 +610,7 @@ public abstract class Thing extends Monster implements GeoEntity, MaybeThing, Co
     @Override
     public void die(DamageSource damageSource) {
         super.die(damageSource);
-        if (Config.GORE_CONFIG.corpsesEnabled.get()) {
+        if (Config.BLOCK_CONFIG.corpsesEnabled.get()) {
             this.attemptPlaceCorpse();
         }
         if (this.deathsCountForDirector()) {

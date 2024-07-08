@@ -44,7 +44,7 @@ public interface Gore {
     }
 
     default void attemptPlaceSurfaceGrowth(Level level, BlockPos pos) {
-        if (!Config.GORE_CONFIG.disguisedTendrilsEnabled.get()) {
+        if (!Config.BLOCK_CONFIG.disguisedTendrilsEnabled.get()) {
             return;
         }
 
@@ -69,7 +69,7 @@ public interface Gore {
     }
 
     static void attemptPlaceUndergroundGrowth(Level level, BlockPos pos, Direction surface){
-        if (!Config.GORE_CONFIG.sprawlingTentaclesEnabled.get()) {
+        if (!Config.BLOCK_CONFIG.sprawlingTentaclesEnabled.get()) {
             return;
         }
 
@@ -86,7 +86,7 @@ public interface Gore {
         });
 
         if (ref.connectedTentacles < 2 && level.getBlockState(pos).canBeReplaced() && level.getBlockState(pos).getFluidState().isEmpty() && state.canSurvive(level, pos)){
-            if (level.getRandom().nextInt(Config.GORE_CONFIG.wallPalmerChance.get()) == 0 &&
+            if (level.getRandom().nextInt(Config.BLOCK_CONFIG.wallPalmerChance.get()) == 0 &&
                     surface.getAxis() != Direction.Axis.Y &&
                     level.getBlockState(pos.above()).getCollisionShape(level, pos.above()).isEmpty() &&
                     level.getBlockState(pos.below()).getCollisionShape(level, pos.below()).isEmpty() &&

@@ -1,7 +1,7 @@
 package mod.acats.fromanotherworld.config;
 
 public class Config {
-    public static final GoreConfig GORE_CONFIG = new GoreConfig();
+    public static final BlockConfig BLOCK_CONFIG = new BlockConfig();
     public static final EventConfig EVENT_CONFIG = new EventConfig();
     public static final DifficultyConfig DIFFICULTY_CONFIG = new DifficultyConfig();
     public static final EffectConfig EFFECT_CONFIG = new EffectConfig();

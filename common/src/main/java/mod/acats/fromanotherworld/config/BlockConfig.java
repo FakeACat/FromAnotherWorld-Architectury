@@ -5,15 +5,15 @@ import mod.acats.fromanotherlibrary.config.v2.properties.BooleanProperty;
 import mod.acats.fromanotherlibrary.config.v2.properties.IntegerProperty;
 import mod.acats.fromanotherworld.constants.TimeInTicks;
 
-public class GoreConfig extends ModConfig {
+public class BlockConfig extends ModConfig {
     @Override
     public String name() {
-        return "gore";
+        return "block";
     }
 
     @Override
     protected int version() {
-        return 2;
+        return 0;
     }
 
     public final BooleanProperty corpsesEnabled = addProperty(new BooleanProperty(
@@ -34,6 +34,14 @@ public class GoreConfig extends ModConfig {
             "disguised_tendrils_enabled",
             "Disabling does not remove existing disguised tendrils, however it does stop them from spreading",
             false,
+            false
+    ));
+
+    public final BooleanProperty tunnelsEnabled = addProperty(new BooleanProperty(
+            "tunnels_enabled",
+            "Should Things be allowed to place tunnels?\n" +
+                    "Disabling does not remove existing tunnels or prevent Things from using them, however no more will be placed",
+            true,
             false
     ));
 

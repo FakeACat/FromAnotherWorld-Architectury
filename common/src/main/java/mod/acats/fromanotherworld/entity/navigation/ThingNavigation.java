@@ -1,5 +1,6 @@
 package mod.acats.fromanotherworld.entity.navigation;
 
+import mod.acats.fromanotherworld.config.Config;
 import mod.acats.fromanotherworld.entity.thing.Thing;
 import mod.acats.fromanotherworld.registry.BlockRegistry;
 import mod.acats.fromanotherworld.utilities.BlockUtilities;
@@ -71,7 +72,7 @@ public class ThingNavigation extends AzureNavigation {
                     this.exitDistSq = Float.MAX_VALUE;
                     BlockUtilities.forEachBlockInCubeCentredAt(this.thing.blockPosition(), 8, this::tryUseTunnel);
                 }
-                else if (this.thing.getRandom().nextInt(1280) == 0 && this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
+                else if (this.thing.getRandom().nextInt(1280) == 0 && this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) && Config.BLOCK_CONFIG.tunnelsEnabled.get()) {
                     if (BlockUtilities.getClosestBlock(this.thing.blockPosition(), 8, blockPos -> this.thing.level().getBlockState(blockPos).is(BlockRegistry.TUNNEL_BLOCK.get())).isEmpty()) {
                         BlockUtilities.tryPlaceTunnelAt(this.thing.level(), this.thing.blockPosition());
                     }

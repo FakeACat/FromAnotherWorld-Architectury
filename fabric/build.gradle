@@ -30,6 +30,7 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
     modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}+${rootProject.minecraft_version}"
     modImplementation "mod.azure.azurelib:azurelib-fabric-${rootProject.minecraft_version}:${rootProject.azurelib_version_fabric}"
+    modImplementation "com.terraformersmc:modmenu:7.2.1"
 
     modImplementation files(new File(rootDir.parentFile, "/FromAnotherLibrary/fabric/build/libs/FromAnotherLibrary-fabric-${rootProject.minecraft_version}-${rootProject.fromanotherlibrary_version}.jar"))
 

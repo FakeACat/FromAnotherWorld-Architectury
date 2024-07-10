@@ -183,5 +183,10 @@
   "gui.fromanotherworld.config.spawning.alien_thing": "Alien Thing",
 
   "gui.fromanotherworld.config.world": "World",
-  "gui.fromanotherworld.config.world.alien_thing_chunk_loading": "Alien Thing Chunk Loading"
+  "gui.fromanotherworld.config.world.alien_thing_chunk_loading": "Alien Thing Chunk Loading",
+
+  "gui.fromanotherworld.config.misc": "Misc",
+  "gui.fromanotherworld.config.misc.warn_redistribution": "Warn About Redistribution",
+
+  "fromanotherworld.chat.warn_redistribution": "Thank you for playing From Another World!\nMake sure you downloaded the mod from Curseforge or Modrinth, all other sites with the mod are reuploads that may not be safe!\nThis message can be disabled in the \"Misc\" config."
 }

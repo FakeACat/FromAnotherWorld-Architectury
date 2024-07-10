@@ -9,4 +9,5 @@ public class Config {
     public static final WorldConfig WORLD_CONFIG = new WorldConfig();
     public static final CompatibilityConfig COMPATIBILITY_CONFIG = new CompatibilityConfig();
     public static final AssimilatedSculkConfig ASSIMILATED_SCULK_CONFIG = new AssimilatedSculkConfig();
+    public static final MiscConfig MISC_CONFIG = new MiscConfig();
 }

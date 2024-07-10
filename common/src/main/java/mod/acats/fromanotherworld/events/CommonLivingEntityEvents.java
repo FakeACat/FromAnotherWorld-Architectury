@@ -15,6 +15,7 @@ import mod.acats.fromanotherworld.registry.EntityRegistry;
 import mod.acats.fromanotherworld.registry.ParticleRegistry;
 import mod.acats.fromanotherworld.tags.EntityTags;
 import mod.acats.fromanotherworld.utilities.EntityUtilities;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -240,4 +241,15 @@ public class CommonLivingEntityEvents {
             onAssimilation(child);
         }
     }
+
+    private static boolean warnedThisSession = false;
+    public static void warnRedistribution(Player player) {
+        if (warnedThisSession || !Config.MISC_CONFIG.warnRedistribution.get()) {
+            return;
+        }
+
+        player.displayClientMessage(Component.translatable("fromanotherworld.chat.warn_redistribution"), false);
+        warnedThisSession = true;
+    }
+
 }
